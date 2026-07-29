@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 
 export interface Props {
   title: string;
@@ -72,5 +73,6 @@ const currentYear = 2026;
         </div>
       </div>
     </footer>
+    <Analytics />
   </body>
 </html>
