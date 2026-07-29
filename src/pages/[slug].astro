@@ -265,26 +265,36 @@ const contractorAutomationPhrase =
     ? 'automated contractor pay runs keep cross-border payouts on schedule without manual spreadsheet reconciliation'
     : 'structured payout workflows keep contractor payments organized even as the team scales into new markets';
 
-const winnerEdgeParagraph = cleanCopy(
-  `${winnerName} earns the top spot for ${comparison.niche_name} teams because its platform is built around the operational realities this segment faces day to day. Teams lean on ${
-    winnerFeatures[0] ? winnerFeatures[0].toLowerCase() : 'its core feature set'
-  }${winnerFeatures[1] ? ` and ${winnerFeatures[1].toLowerCase()}` : ''} to keep onboarding, compliance, and payroll cycles moving without manual busywork, while ${contractorAutomationPhrase}. Pricing reinforces the edge too: starting at ${winnerPrice} (${winnerPricingModel}), ${winnerName} keeps the cost of scaling predictable as headcount grows across new markets. Combined with ${
-    winnerPros[0] ? winnerPros[0].toLowerCase() : 'strong operational fundamentals'
-  }${winnerPros[1] ? ` and ${winnerPros[1].toLowerCase()}` : ''}, it is the more complete fit for ${comparison.niche_name.toLowerCase()} teams that need speed, compliance, and automation working together rather than bolted on after the fact.`
+function capitalizeAcronyms(text: string): string {
+  return text.replace(/\beor\b/gi, 'EOR').replace(/\bus\b/gi, 'US');
+}
+
+const winnerEdgeParagraph = capitalizeAcronyms(
+  cleanCopy(
+    `${winnerName} earns the top spot for ${comparison.niche_name} teams because its platform is built around the operational realities this segment faces day to day. Teams lean on ${
+      winnerFeatures[0] ? winnerFeatures[0].toLowerCase() : 'its core feature set'
+    }${winnerFeatures[1] ? ` and ${winnerFeatures[1].toLowerCase()}` : ''} to keep onboarding, compliance, and payroll cycles moving without manual busywork, while ${contractorAutomationPhrase}. Pricing reinforces the edge too: starting at ${winnerPrice} (${winnerPricingModel}), ${winnerName} keeps the cost of scaling predictable as headcount grows across new markets. Combined with ${
+      winnerPros[0] ? winnerPros[0].toLowerCase() : 'strong operational fundamentals'
+    }${winnerPros[1] ? ` and ${winnerPros[1].toLowerCase()}` : ''}, it is the more complete fit for ${comparison.niche_name.toLowerCase()} teams that need speed, compliance, and automation working together rather than bolted on after the fact.`
+  )
 );
 
-const runnerUpFitParagraph = cleanCopy(
-  `${runnerUpName} is not without merit, particularly for ${comparison.niche_name.toLowerCase()} teams that value ${
-    runnerUpPros[0] ? runnerUpPros[0].toLowerCase() : 'a simpler, more familiar workflow'
-  }${runnerUpPros[1] ? ` and ${runnerUpPros[1].toLowerCase()}` : ''}. It performs well on ${
-    runnerUpFeatures[0] ? runnerUpFeatures[0].toLowerCase() : 'its core feature set'
-  }, and its pricing, starting at ${runnerUpPrice} (${runnerUpPricingModel}), can look attractive at first glance. That said, ${runnerUpName} shows its limits here: ${
-    runnerUpCons[0] ? runnerUpCons[0].toLowerCase() : 'it lacks some of the deeper automation this niche eventually needs'
-  }, and it trails ${winnerName} on the international contractor workflows that matter most for ${comparison.niche_name.toLowerCase()} teams operating across borders. It remains a reasonable option if your priorities shift, but it is the secondary choice in this comparison, not the primary recommendation.`
+const runnerUpFitParagraph = capitalizeAcronyms(
+  cleanCopy(
+    `${runnerUpName} is not without merit, particularly for ${comparison.niche_name.toLowerCase()} teams that value ${
+      runnerUpPros[0] ? runnerUpPros[0].toLowerCase() : 'a simpler, more familiar workflow'
+    }${runnerUpPros[1] ? ` and ${runnerUpPros[1].toLowerCase()}` : ''}. It performs well on ${
+      runnerUpFeatures[0] ? runnerUpFeatures[0].toLowerCase() : 'its core feature set'
+    }, and its pricing, starting at ${runnerUpPrice} (${runnerUpPricingModel}), can look attractive at first glance. That said, ${runnerUpName} shows its limits here: ${
+      runnerUpCons[0] ? runnerUpCons[0].toLowerCase() : 'it lacks some of the deeper automation this niche eventually needs'
+    }, and it trails ${winnerName} on the international contractor workflows that matter most for ${comparison.niche_name.toLowerCase()} teams operating across borders. It remains a reasonable option if your priorities shift, but it is the secondary choice in this comparison, not the primary recommendation.`
+  )
 );
 
-const decisionFrameworkParagraph = cleanCopy(
-  `Choosing between ${comparison.tool_a_name} and ${comparison.tool_b_name} ultimately comes down to three variables: team size, global expansion plans, and budget. Smaller ${comparison.niche_name.toLowerCase()} teams with a handful of hires and no near-term plans to hire across borders can reasonably choose either platform, with cost likely deciding it. Teams that are actively expanding into new countries, adding contractors in multiple currencies, or scaling headcount quickly should prioritize ${winnerName} for its stronger automation and compliance coverage at ${winnerPrice}. If your roadmap stays narrower, mostly domestic payroll with occasional contractor hires, ${runnerUpName} at ${runnerUpPrice} remains a budget-friendly, lower-complexity alternative worth shortlisting alongside ${winnerName} before you commit.`
+const decisionFrameworkParagraph = capitalizeAcronyms(
+  cleanCopy(
+    `Choosing between ${comparison.tool_a_name} and ${comparison.tool_b_name} ultimately comes down to three variables: team size, global expansion plans, and budget. Smaller ${comparison.niche_name.toLowerCase()} teams with a handful of hires and no near-term plans to hire across borders can reasonably choose either platform, with cost likely deciding it. Teams that are actively expanding into new countries, adding contractors in multiple currencies, or scaling headcount quickly should prioritize ${winnerName} for its stronger automation and compliance coverage at ${winnerPrice}. If your roadmap stays narrower, mostly domestic payroll with occasional contractor hires, ${runnerUpName} at ${runnerUpPrice} remains a budget-friendly, lower-complexity alternative worth shortlisting alongside ${winnerName} before you commit.`
+  )
 );
 ---
 
