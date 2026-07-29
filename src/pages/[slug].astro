@@ -1,0 +1,647 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { loadComparisons } from '../lib/comparisons';
+import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
+
+export function getStaticPaths() {
+  const comparisons = loadComparisons();
+
+  function relatedScore(candidate: Comparison, current: Comparison): number {
+    let score = 0;
+    if (candidate.tool_a_id === current.tool_a_id || candidate.tool_a_id === current.tool_b_id) score += 1;
+    if (candidate.tool_b_id === current.tool_a_id || candidate.tool_b_id === current.tool_b_id) score += 1;
+    return score;
+  }
+
+  return comparisons.map((comparison) => {
+    const related = comparisons
+      .filter((candidate) => candidate.niche_id === comparison.niche_id && candidate.slug !== comparison.slug)
+      .sort((a, b) => relatedScore(b, comparison) - relatedScore(a, comparison))
+      .slice(0, 3);
+
+    return {
+      params: { slug: comparison.slug },
+      props: { comparison, related },
+    };
+  });
+}
+
+const { comparison, related } = Astro.props as { comparison: Comparison; related: Comparison[] };
+
+function parsePipeList(value: string): string[] {
+  if (!value?.trim()) return [];
+  return value.split('|').map((item) => item.trim()).filter(Boolean);
+}
+
+function parseFeatureMatrix(json: string): Record<string, FeatureMatrixEntry> {
+  if (!json?.trim()) return {};
+  try {
+    return JSON.parse(json) as Record<string, FeatureMatrixEntry>;
+  } catch {
+    return {};
+  }
+}
+
+function parseBool(value: string): boolean {
+  return value?.toLowerCase() === 'true';
+}
+
+function logoBadgeColor(name: string): string {
+  const colors = [
+    'bg-indigo-600',
+    'bg-violet-600',
+    'bg-sky-600',
+    'bg-emerald-600',
+    'bg-rose-600',
+    'bg-amber-600',
+    'bg-cyan-600',
+    'bg-fuchsia-600',
+  ];
+  let hash = 0;
+  for (let i = 0; i < name.length; i += 1) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+}
+
+function buildSchemaGraph(comparison: Comparison, pageUrl: string) {
+  const pageId = `${pageUrl}#webpage`;
+  const faqId = `${pageUrl}#faq`;
+  const toolAId = `${pageUrl}#${comparison.tool_a_id}`;
+  const toolBId = `${pageUrl}#${comparison.tool_b_id}`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'ItemPage',
+        '@id': pageId,
+        url: pageUrl,
+        name: comparison.meta_title,
+        description: comparison.meta_description,
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, item: { '@id': toolAId } },
+            { '@type': 'ListItem', position: 2, item: { '@id': toolBId } },
+          ],
+        },
+      },
+      {
+        '@type': 'SoftwareApplication',
+        '@id': toolAId,
+        name: comparison.tool_a_name,
+        applicationCategory: 'BusinessApplication',
+        offers: {
+          '@type': 'Offer',
+          price: comparison.tool_a_starting_price,
+          priceCurrency: 'USD',
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: comparison.tool_a_rating,
+          bestRating: '5',
+          worstRating: '1',
+        },
+      },
+      {
+        '@type': 'SoftwareApplication',
+        '@id': toolBId,
+        name: comparison.tool_b_name,
+        applicationCategory: 'BusinessApplication',
+        offers: {
+          '@type': 'Offer',
+          price: comparison.tool_b_starting_price,
+          priceCurrency: 'USD',
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: comparison.tool_b_rating,
+          bestRating: '5',
+          worstRating: '1',
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': faqId,
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: `Which is better for ${comparison.niche_name}, ${comparison.tool_a_name} or ${comparison.tool_b_name}?`,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: comparison.winner_reason,
+            },
+          },
+          {
+            '@type': 'Question',
+            name: `How does ${comparison.tool_a_name} pricing compare to ${comparison.tool_b_name}?`,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: `${comparison.tool_a_name} starts at ${comparison.tool_a_starting_price} (${comparison.tool_a_pricing_model}). ${comparison.tool_b_name} starts at ${comparison.tool_b_starting_price} (${comparison.tool_b_pricing_model}).`,
+            },
+          },
+        ],
+      },
+    ],
+  };
+}
+
+const toolAFeatures = parsePipeList(comparison.tool_a_key_features);
+const toolAPros = parsePipeList(comparison.tool_a_pros);
+const toolACons = parsePipeList(comparison.tool_a_cons);
+const toolBFeatures = parsePipeList(comparison.tool_b_key_features);
+const toolBPros = parsePipeList(comparison.tool_b_pros);
+const toolBCons = parsePipeList(comparison.tool_b_cons);
+const featureMatrix = parseFeatureMatrix(comparison.feature_matrix_json);
+const featureMatrixRows = Object.entries(featureMatrix);
+
+const winnerName =
+  comparison.winner_id === comparison.tool_a_id
+    ? comparison.tool_a_name
+    : comparison.winner_id === comparison.tool_b_id
+      ? comparison.tool_b_name
+      : comparison.winner_id;
+
+const toolAIsWinner = comparison.winner_id === comparison.tool_a_id;
+const toolBIsWinner = comparison.winner_id === comparison.tool_b_id;
+const toolABadgeColor = logoBadgeColor(comparison.tool_a_name);
+const toolBBadgeColor = logoBadgeColor(comparison.tool_b_name);
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const schemaGraph = buildSchemaGraph(comparison, pageUrl);
+---
+
+<Layout title={comparison.meta_title} description={comparison.meta_description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+
+  <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <!-- Hero Section -->
+      <header class="mb-10">
+        <nav aria-label="Breadcrumb">
+          <ol class="flex items-center gap-2 text-sm text-slate-500">
+            <li>
+              <a href="/" class="transition hover:text-indigo-600">Comparisons</a>
+            </li>
+            <li aria-hidden="true" class="text-slate-300">/</li>
+            <li class="font-medium text-indigo-600">{comparison.niche_name}</li>
+          </ol>
+        </nav>
+
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
+            2026 Verified
+          </span>
+        </div>
+
+        <div class="mt-4 flex items-center gap-3">
+          <div class="relative inline-flex h-10 w-10 shrink-0">
+            <img
+              src={comparison.tool_a_logo_url}
+              alt={`${comparison.tool_a_name} logo`}
+              class="w-10 h-10 rounded-lg object-contain bg-slate-100 p-1 border border-slate-200"
+              loading="lazy"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div
+              class:list={[
+                'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
+                toolABadgeColor,
+              ]}
+              aria-hidden="true"
+            >
+              {comparison.tool_a_name.charAt(0)}
+            </div>
+          </div>
+          <span class="text-sm font-semibold uppercase tracking-wide text-slate-400">vs</span>
+          <div class="relative inline-flex h-10 w-10 shrink-0">
+            <img
+              src={comparison.tool_b_logo_url}
+              alt={`${comparison.tool_b_name} logo`}
+              class="w-10 h-10 rounded-lg object-contain bg-slate-100 p-1 border border-slate-200"
+              loading="lazy"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div
+              class:list={[
+                'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
+                toolBBadgeColor,
+              ]}
+              aria-hidden="true"
+            >
+              {comparison.tool_b_name.charAt(0)}
+            </div>
+          </div>
+        </div>
+
+        <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+          {comparison.tool_a_name} vs {comparison.tool_b_name} for {comparison.niche_name}
+        </h1>
+
+        <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
+          {comparison.target_audience}
+        </p>
+      </header>
+
+      <!-- Winner Banner -->
+      <section
+        class="mb-10 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-slate-50 shadow-sm"
+        aria-label="Recommended winner"
+      >
+        <div class="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="inline-flex items-center rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+                  Recommended Choice
+                </span>
+              </div>
+              <h2 class="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
+                {winnerName} is the winner
+              </h2>
+              <p class="mt-2 max-w-2xl text-base leading-relaxed text-slate-600">
+                {comparison.winner_reason}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Side-by-Side Cards -->
+      <section class="mb-12 grid gap-6 lg:grid-cols-2" aria-label="Tool comparison cards">
+        <!-- Tool A -->
+        <article
+          class:list={[
+            'relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md sm:p-8',
+            toolAIsWinner ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200',
+          ]}
+        >
+          {toolAIsWinner && (
+            <span class="absolute -top-3 left-6 inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white shadow">
+              Winner
+            </span>
+          )}
+
+          <div class="flex items-center gap-4">
+            <div class="relative inline-flex h-10 w-10 shrink-0">
+              <img
+                src={comparison.tool_a_logo_url}
+                alt={`${comparison.tool_a_name} logo`}
+                class="w-10 h-10 rounded-lg object-contain bg-slate-100 p-1 border border-slate-200"
+                loading="lazy"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              />
+              <div
+                class:list={[
+                  'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
+                  toolABadgeColor,
+                ]}
+                aria-hidden="true"
+              >
+                {comparison.tool_a_name.charAt(0)}
+              </div>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_a_name}</h2>
+              <p class="mt-1 text-sm font-medium text-amber-600">
+                ⭐ {comparison.tool_a_rating}/5
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-6 space-y-3 border-t border-slate-100 pt-6">
+            <div class="flex items-baseline justify-between gap-4">
+              <span class="text-sm text-slate-500">Starting price</span>
+              <span class="text-2xl font-bold text-indigo-600">{comparison.tool_a_starting_price}</span>
+            </div>
+            <div class="flex items-start justify-between gap-4">
+              <span class="text-sm text-slate-500">Pricing model</span>
+              <span class="max-w-[60%] text-right text-sm font-medium text-slate-700">{comparison.tool_a_pricing_model}</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm text-slate-500">Free trial</span>
+              <span
+                class:list={[
+                  'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                  parseBool(comparison.tool_a_free_trial)
+                    ? 'bg-emerald-50 text-emerald-700'
+                    : 'bg-slate-100 text-slate-600',
+                ]}
+              >
+                {parseBool(comparison.tool_a_free_trial) ? 'Available' : 'Not available'}
+              </span>
+            </div>
+          </div>
+
+          {toolAFeatures.length > 0 && (
+            <ul class="mt-6 space-y-2 border-t border-slate-100 pt-6">
+              {toolAFeatures.map((feature) => (
+                <li class="flex items-start gap-2 text-sm text-slate-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <a
+            href={comparison.tool_a_affiliate_url}
+            class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+          >
+            Try {comparison.tool_a_name}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
+              <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        </article>
+
+        <!-- Tool B -->
+        <article
+          class:list={[
+            'relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md sm:p-8',
+            toolBIsWinner ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200',
+          ]}
+        >
+          {toolBIsWinner && (
+            <span class="absolute -top-3 left-6 inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white shadow">
+              Winner
+            </span>
+          )}
+
+          <div class="flex items-center gap-4">
+            <div class="relative inline-flex h-10 w-10 shrink-0">
+              <img
+                src={comparison.tool_b_logo_url}
+                alt={`${comparison.tool_b_name} logo`}
+                class="w-10 h-10 rounded-lg object-contain bg-slate-100 p-1 border border-slate-200"
+                loading="lazy"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              />
+              <div
+                class:list={[
+                  'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
+                  toolBBadgeColor,
+                ]}
+                aria-hidden="true"
+              >
+                {comparison.tool_b_name.charAt(0)}
+              </div>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_b_name}</h2>
+              <p class="mt-1 text-sm font-medium text-amber-600">
+                ⭐ {comparison.tool_b_rating}/5
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-6 space-y-3 border-t border-slate-100 pt-6">
+            <div class="flex items-baseline justify-between gap-4">
+              <span class="text-sm text-slate-500">Starting price</span>
+              <span class="text-2xl font-bold text-indigo-600">{comparison.tool_b_starting_price}</span>
+            </div>
+            <div class="flex items-start justify-between gap-4">
+              <span class="text-sm text-slate-500">Pricing model</span>
+              <span class="max-w-[60%] text-right text-sm font-medium text-slate-700">{comparison.tool_b_pricing_model}</span>
+            </div>
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-sm text-slate-500">Free trial</span>
+              <span
+                class:list={[
+                  'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                  parseBool(comparison.tool_b_free_trial)
+                    ? 'bg-emerald-50 text-emerald-700'
+                    : 'bg-slate-100 text-slate-600',
+                ]}
+              >
+                {parseBool(comparison.tool_b_free_trial) ? 'Available' : 'Not available'}
+              </span>
+            </div>
+          </div>
+
+          {toolBFeatures.length > 0 && (
+            <ul class="mt-6 space-y-2 border-t border-slate-100 pt-6">
+              {toolBFeatures.map((feature) => (
+                <li class="flex items-start gap-2 text-sm text-slate-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                  </svg>
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <a
+            href={comparison.tool_b_affiliate_url}
+            class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+          >
+            Try {comparison.tool_b_name}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
+              <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        </article>
+      </section>
+
+      <!-- Pros & Cons Section -->
+      <section class="mb-12" aria-label="Pros and cons comparison">
+        <h2 class="mb-6 text-2xl font-bold text-slate-900">Pros &amp; Cons</h2>
+        <div class="grid gap-6 lg:grid-cols-2">
+          <!-- Tool A Pros/Cons -->
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <h3 class="text-lg font-semibold text-slate-900">{comparison.tool_a_name}</h3>
+            <div class="mt-6 grid gap-6 sm:grid-cols-2">
+              <div>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
+                <ul class="space-y-3">
+                  {toolAPros.map((pro) => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      {pro}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
+                <ul class="space-y-3">
+                  {toolACons.map((con) => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                      </span>
+                      {con}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tool B Pros/Cons -->
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <h3 class="text-lg font-semibold text-slate-900">{comparison.tool_b_name}</h3>
+            <div class="mt-6 grid gap-6 sm:grid-cols-2">
+              <div>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
+                <ul class="space-y-3">
+                  {toolBPros.map((pro) => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      {pro}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
+                <ul class="space-y-3">
+                  {toolBCons.map((con) => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                      </span>
+                      {con}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature Matrix Table -->
+      {featureMatrixRows.length > 0 && (
+        <section class="mb-12" aria-label="Feature comparison matrix">
+          <h2 class="mb-6 text-2xl font-bold text-slate-900">Feature Comparison</h2>
+          <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[480px] text-left text-sm">
+                <thead>
+                  <tr class="border-b border-slate-200 bg-slate-50">
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-700">Feature</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-700">{comparison.tool_a_name}</th>
+                    <th scope="col" class="px-6 py-4 font-semibold text-slate-700">{comparison.tool_b_name}</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  {featureMatrixRows.map(([feature, value]) => (
+                    <tr class="transition hover:bg-slate-50/80">
+                      <td class="px-6 py-4 font-medium text-slate-900">{feature}</td>
+                      <td class="px-6 py-4">
+                        {value.a ? (
+                          <span class="inline-flex items-center text-emerald-600" aria-label="Yes">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                            </svg>
+                          </span>
+                        ) : (
+                          <span class="inline-flex items-center text-slate-400" aria-label="No">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                            </svg>
+                          </span>
+                        )}
+                      </td>
+                      <td class="px-6 py-4">
+                        {value.b ? (
+                          <span class="inline-flex items-center text-emerald-600" aria-label="Yes">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                            </svg>
+                          </span>
+                        ) : (
+                          <span class="inline-flex items-center text-slate-400" aria-label="No">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                            </svg>
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Verdict Box -->
+      <section
+        class="rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 shadow-sm sm:p-8"
+        aria-label="Final verdict"
+      >
+        <div class="flex items-start gap-4">
+          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+              <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-slate-900">Our Verdict</h2>
+            <p class="mt-3 text-base leading-relaxed text-slate-700">
+              {comparison.verdict_summary}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Related Comparisons -->
+      {related.length > 0 && (
+        <section class="mt-16" aria-label={`Related comparisons for ${comparison.niche_name}`}>
+          <h2 class="mb-6 text-2xl font-bold text-slate-900">
+            Related Comparisons for {comparison.niche_name}
+          </h2>
+          <div class="grid gap-6 sm:grid-cols-3">
+            {related.map((item) => (
+              <a
+                href={`/${item.slug}`}
+                class="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"
+              >
+                <span class="text-xs font-semibold uppercase tracking-wide text-indigo-600">
+                  {item.niche_name}
+                </span>
+                <h3 class="mt-2 text-lg font-semibold text-slate-900 transition group-hover:text-indigo-600">
+                  {item.tool_a_name} vs {item.tool_b_name}
+                </h3>
+                <p class="mt-2 line-clamp-2 text-sm text-slate-500">
+                  {item.target_audience}
+                </p>
+                <span class="mt-4 inline-flex items-center text-sm font-semibold text-indigo-600">
+                  View comparison
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1 h-4 w-4" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+    </main>
+</Layout>
