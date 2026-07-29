@@ -243,16 +243,48 @@ const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href
 const schemaGraph = buildSchemaGraph(comparison, pageUrl, faqItems, toolADisplayRating, toolBDisplayRating);
 
 const winnerPros = toolAIsWinner ? toolAPros : toolBPros;
+const winnerCons = toolAIsWinner ? toolACons : toolBCons;
+const winnerFeatures = toolAIsWinner ? toolAFeatures : toolBFeatures;
 const winnerPrice = toolAIsWinner ? comparison.tool_a_starting_price : comparison.tool_b_starting_price;
 const winnerPricingModel = toolAIsWinner ? comparison.tool_a_pricing_model : comparison.tool_b_pricing_model;
 const runnerUpName = toolAIsWinner ? comparison.tool_b_name : comparison.tool_a_name;
+const runnerUpPros = toolAIsWinner ? toolBPros : toolAPros;
+const runnerUpCons = toolAIsWinner ? toolBCons : toolACons;
+const runnerUpFeatures = toolAIsWinner ? toolBFeatures : toolAFeatures;
 const runnerUpPrice = toolAIsWinner ? comparison.tool_b_starting_price : comparison.tool_a_starting_price;
-const winnerHighlights = winnerPros.slice(0, 2).join(' and ').toLowerCase();
+const runnerUpPricingModel = toolAIsWinner ? comparison.tool_b_pricing_model : comparison.tool_a_pricing_model;
 
-const nicheVerdict = cleanCopy(
-  `For ${comparison.niche_name.toLowerCase()} teams specifically, ${winnerName} pulls ahead thanks to ${
-    winnerHighlights || 'its stronger overall fit for this use case'
-  }, starting at ${winnerPrice} (${winnerPricingModel}). ${runnerUpName} remains a capable alternative at ${runnerUpPrice}, but it doesn't match ${winnerName} on the priorities that matter most here.`
+const contractorAutoPayEntry = featureMatrix['Contractor Auto-Pay'];
+const winnerHasContractorAutoPay = contractorAutoPayEntry
+  ? toolAIsWinner
+    ? contractorAutoPayEntry.a
+    : contractorAutoPayEntry.b
+  : null;
+const contractorAutomationPhrase =
+  winnerHasContractorAutoPay === true
+    ? 'automated contractor pay runs keep cross-border payouts on schedule without manual spreadsheet reconciliation'
+    : 'structured payout workflows keep contractor payments organized even as the team scales into new markets';
+
+const winnerEdgeParagraph = cleanCopy(
+  `${winnerName} earns the top spot for ${comparison.niche_name} teams because its platform is built around the operational realities this segment faces day to day. Teams lean on ${
+    winnerFeatures[0] ? winnerFeatures[0].toLowerCase() : 'its core feature set'
+  }${winnerFeatures[1] ? ` and ${winnerFeatures[1].toLowerCase()}` : ''} to keep onboarding, compliance, and payroll cycles moving without manual busywork, while ${contractorAutomationPhrase}. Pricing reinforces the edge too: starting at ${winnerPrice} (${winnerPricingModel}), ${winnerName} keeps the cost of scaling predictable as headcount grows across new markets. Combined with ${
+    winnerPros[0] ? winnerPros[0].toLowerCase() : 'strong operational fundamentals'
+  }${winnerPros[1] ? ` and ${winnerPros[1].toLowerCase()}` : ''}, it is the more complete fit for ${comparison.niche_name.toLowerCase()} teams that need speed, compliance, and automation working together rather than bolted on after the fact.`
+);
+
+const runnerUpFitParagraph = cleanCopy(
+  `${runnerUpName} is not without merit, particularly for ${comparison.niche_name.toLowerCase()} teams that value ${
+    runnerUpPros[0] ? runnerUpPros[0].toLowerCase() : 'a simpler, more familiar workflow'
+  }${runnerUpPros[1] ? ` and ${runnerUpPros[1].toLowerCase()}` : ''}. It performs well on ${
+    runnerUpFeatures[0] ? runnerUpFeatures[0].toLowerCase() : 'its core feature set'
+  }, and its pricing, starting at ${runnerUpPrice} (${runnerUpPricingModel}), can look attractive at first glance. That said, ${runnerUpName} shows its limits here: ${
+    runnerUpCons[0] ? runnerUpCons[0].toLowerCase() : 'it lacks some of the deeper automation this niche eventually needs'
+  }, and it trails ${winnerName} on the international contractor workflows that matter most for ${comparison.niche_name.toLowerCase()} teams operating across borders. It remains a reasonable option if your priorities shift, but it is the secondary choice in this comparison, not the primary recommendation.`
+);
+
+const decisionFrameworkParagraph = cleanCopy(
+  `Choosing between ${comparison.tool_a_name} and ${comparison.tool_b_name} ultimately comes down to three variables: team size, global expansion plans, and budget. Smaller ${comparison.niche_name.toLowerCase()} teams with a handful of hires and no near-term plans to hire across borders can reasonably choose either platform, with cost likely deciding it. Teams that are actively expanding into new countries, adding contractors in multiple currencies, or scaling headcount quickly should prioritize ${winnerName} for its stronger automation and compliance coverage at ${winnerPrice}. If your roadmap stays narrower, mostly domestic payroll with occasional contractor hires, ${runnerUpName} at ${runnerUpPrice} remains a budget-friendly, lower-complexity alternative worth shortlisting alongside ${winnerName} before you commit.`
 );
 ---
 
@@ -705,24 +737,31 @@ const nicheVerdict = cleanCopy(
         </section>
       )}
 
-      <!-- Verdict Box -->
-      <section
-        class="rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 to-white p-6 shadow-sm sm:p-8"
-        aria-label="Final verdict"
-      >
-        <div class="flex items-start gap-4">
-          <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-              <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
-            </svg>
-          </div>
+      <!-- In-Depth Analysis Section -->
+      <section class="mb-12" aria-label="In-depth analysis">
+        <h2 class="mb-6 text-2xl font-bold text-slate-900">
+          In-Depth Breakdown for {comparison.niche_name}
+        </h2>
+        <article class="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <div>
-            <h2 class="text-xl font-bold text-slate-900">Our Verdict</h2>
-            <p class="mt-3 text-base leading-relaxed text-slate-700">
-              {nicheVerdict}
+            <h3 class="text-lg font-semibold text-slate-900">The Winner's Edge</h3>
+            <p class="mt-2 text-base leading-relaxed text-slate-700">
+              {winnerEdgeParagraph}
             </p>
           </div>
-        </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-900">Where {runnerUpName} Fits</h3>
+            <p class="mt-2 text-base leading-relaxed text-slate-700">
+              {runnerUpFitParagraph}
+            </p>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-slate-900">Final Recommendation</h3>
+            <p class="mt-2 text-base leading-relaxed text-slate-700">
+              {decisionFrameworkParagraph}
+            </p>
+          </div>
+        </article>
       </section>
 
       <!-- FAQ Section -->
