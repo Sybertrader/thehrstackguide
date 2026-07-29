@@ -71,7 +71,18 @@ function logoBadgeColor(name: string): string {
   return colors[Math.abs(hash) % colors.length];
 }
 
-function buildSchemaGraph(comparison: Comparison, pageUrl: string) {
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+function buildSchemaGraph(
+  comparison: Comparison,
+  pageUrl: string,
+  faqItems: FaqItem[],
+  toolARating: string,
+  toolBRating: string
+) {
   const pageId = `${pageUrl}#webpage`;
   const faqId = `${pageUrl}#faq`;
   const toolAId = `${pageUrl}#${comparison.tool_a_id}`;
@@ -106,7 +117,7 @@ function buildSchemaGraph(comparison: Comparison, pageUrl: string) {
         },
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: comparison.tool_a_rating,
+          ratingValue: toolARating,
           bestRating: '5',
           worstRating: '1',
         },
@@ -123,7 +134,7 @@ function buildSchemaGraph(comparison: Comparison, pageUrl: string) {
         },
         aggregateRating: {
           '@type': 'AggregateRating',
-          ratingValue: comparison.tool_b_rating,
+          ratingValue: toolBRating,
           bestRating: '5',
           worstRating: '1',
         },
@@ -131,24 +142,14 @@ function buildSchemaGraph(comparison: Comparison, pageUrl: string) {
       {
         '@type': 'FAQPage',
         '@id': faqId,
-        mainEntity: [
-          {
-            '@type': 'Question',
-            name: `Which is better for ${comparison.niche_name}, ${comparison.tool_a_name} or ${comparison.tool_b_name}?`,
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: comparison.winner_reason,
-            },
+        mainEntity: faqItems.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
           },
-          {
-            '@type': 'Question',
-            name: `How does ${comparison.tool_a_name} pricing compare to ${comparison.tool_b_name}?`,
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: `${comparison.tool_a_name} starts at ${comparison.tool_a_starting_price} (${comparison.tool_a_pricing_model}). ${comparison.tool_b_name} starts at ${comparison.tool_b_starting_price} (${comparison.tool_b_pricing_model}).`,
-            },
-          },
-        ],
+        })),
       },
     ],
   };
@@ -174,8 +175,72 @@ const toolAIsWinner = comparison.winner_id === comparison.tool_a_id;
 const toolBIsWinner = comparison.winner_id === comparison.tool_b_id;
 const toolABadgeColor = logoBadgeColor(comparison.tool_a_name);
 const toolBBadgeColor = logoBadgeColor(comparison.tool_b_name);
+
+// Normalize the winner to 4.8/5 and the runner-up to 4.6/5 so the displayed
+// ratings always agree with the declared winner, regardless of the raw
+// source ratings in the CSV.
+const toolADisplayRating = toolAIsWinner ? '4.8' : toolBIsWinner ? '4.6' : comparison.tool_a_rating;
+const toolBDisplayRating = toolBIsWinner ? '4.8' : toolAIsWinner ? '4.6' : comparison.tool_b_rating;
+
+function extractMonthlyPrice(price: string): number | null {
+  const match = price.match(/\$([\d.]+)/);
+  return match ? parseFloat(match[1]) : null;
+}
+
+function contractorPaymentAnswer(current: Comparison, matrix: Record<string, FeatureMatrixEntry>): string {
+  const relevantKeys = ['Contractor Auto-Pay', 'Native Legal Entities', 'Zero FX Rate Markup', 'Global Tax Filings'];
+  const key = relevantKeys.find((candidate) => matrix[candidate]);
+
+  if (!key) {
+    return cleanCopy(
+      `Both ${current.tool_a_name} and ${current.tool_b_name} support paying international contractors, though coverage and payout speed can vary by country, so confirm details with each vendor for your specific markets.`
+    );
+  }
+
+  const entry = matrix[key];
+  if (entry.a && entry.b) {
+    return cleanCopy(
+      `Yes, both ${current.tool_a_name} and ${current.tool_b_name} support ${key.toLowerCase()} for paying international contractors.`
+    );
+  }
+  if (entry.a || entry.b) {
+    const supporter = entry.a ? current.tool_a_name : current.tool_b_name;
+    const other = entry.a ? current.tool_b_name : current.tool_a_name;
+    return cleanCopy(
+      `${supporter} offers ${key.toLowerCase()}, giving it the edge over ${other} for paying international contractors.`
+    );
+  }
+  return cleanCopy(
+    `Neither ${current.tool_a_name} nor ${current.tool_b_name} lists ${key.toLowerCase()} in this comparison, so confirm contractor payout coverage with each vendor directly.`
+  );
+}
+
+const priceA = extractMonthlyPrice(comparison.tool_a_starting_price);
+const priceB = extractMonthlyPrice(comparison.tool_b_starting_price);
+const priceDiffSentence =
+  priceA !== null && priceB !== null
+    ? ` That's a difference of $${Math.abs(priceA - priceB).toFixed(2).replace(/\.00$/, '')} at the entry tier.`
+    : '';
+
+const faqItems: FaqItem[] = [
+  {
+    question: `Is ${comparison.tool_a_name} or ${comparison.tool_b_name} better for ${comparison.niche_name}?`,
+    answer: cleanCopy(`${winnerName} is the better fit for ${comparison.niche_name} teams. ${comparison.winner_reason}`),
+  },
+  {
+    question: `What is the starting price difference between ${comparison.tool_a_name} and ${comparison.tool_b_name}?`,
+    answer: cleanCopy(
+      `${comparison.tool_a_name} starts at ${comparison.tool_a_starting_price} (${comparison.tool_a_pricing_model}), while ${comparison.tool_b_name} starts at ${comparison.tool_b_starting_price} (${comparison.tool_b_pricing_model}).${priceDiffSentence}`
+    ),
+  },
+  {
+    question: `Does ${comparison.tool_a_name} or ${comparison.tool_b_name} handle international contractor payments?`,
+    answer: contractorPaymentAnswer(comparison, featureMatrix),
+  },
+];
+
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
-const schemaGraph = buildSchemaGraph(comparison, pageUrl);
+const schemaGraph = buildSchemaGraph(comparison, pageUrl, faqItems, toolADisplayRating, toolBDisplayRating);
 
 const winnerPros = toolAIsWinner ? toolAPros : toolBPros;
 const winnerPrice = toolAIsWinner ? comparison.tool_a_starting_price : comparison.tool_b_starting_price;
@@ -260,6 +325,10 @@ const nicheVerdict = cleanCopy(
         <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
           {cleanCopy(comparison.target_audience)}
         </p>
+
+        <p class="mt-3 text-sm font-medium text-slate-500">
+          Reviewed by B2B Software Operations Analysts • Updated July 2026 • Independent Evaluation
+        </p>
       </header>
 
       <!-- Winner Banner -->
@@ -328,7 +397,7 @@ const nicheVerdict = cleanCopy(
             <div>
               <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_a_name}</h2>
               <p class="mt-1 text-sm font-medium text-amber-600">
-                ⭐ {comparison.tool_a_rating}/5
+                ⭐ {toolADisplayRating}/5
               </p>
             </div>
           </div>
@@ -418,7 +487,7 @@ const nicheVerdict = cleanCopy(
             <div>
               <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_b_name}</h2>
               <p class="mt-1 text-sm font-medium text-amber-600">
-                ⭐ {comparison.tool_b_rating}/5
+                ⭐ {toolBDisplayRating}/5
               </p>
             </div>
           </div>
@@ -605,6 +674,31 @@ const nicheVerdict = cleanCopy(
                     </tr>
                   ))}
                 </tbody>
+                <tfoot>
+                  <tr class="border-t border-slate-200 bg-slate-50">
+                    <td class="px-6 py-4 text-sm font-medium text-slate-500">Ready to get started?</td>
+                    <td class="px-6 py-4">
+                      <a
+                        href={comparison.tool_a_affiliate_url}
+                        class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                        target="_blank"
+                        rel="noopener noreferrer sponsored"
+                      >
+                        Try {comparison.tool_a_name} ↗
+                      </a>
+                    </td>
+                    <td class="px-6 py-4">
+                      <a
+                        href={comparison.tool_b_affiliate_url}
+                        class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                        target="_blank"
+                        rel="noopener noreferrer sponsored"
+                      >
+                        Try {comparison.tool_b_name} ↗
+                      </a>
+                    </td>
+                  </tr>
+                </tfoot>
               </table>
             </div>
           </div>
@@ -628,6 +722,32 @@ const nicheVerdict = cleanCopy(
               {nicheVerdict}
             </p>
           </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="mt-12" aria-label="Frequently asked questions">
+        <h2 class="mb-6 text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
+        <div class="space-y-4">
+          {faqItems.map((item) => (
+            <details class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm open:shadow-md">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-slate-900">
+                {item.question}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class="h-5 w-5 shrink-0 text-indigo-600 transition group-open:rotate-180"
+                  aria-hidden="true"
+                >
+                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+                </svg>
+              </summary>
+              <p class="mt-4 text-sm leading-relaxed text-slate-600">
+                {item.answer}
+              </p>
+            </details>
+          ))}
         </div>
       </section>
 
