@@ -5,7 +5,7 @@ import json
 TOOLS = {
     "deel": {
         "name": "Deel",
-        "logo": "https://unavatar.io/deel.com",
+        "logo": "/deel.png",
         "rating": 4.8,
         "starting_price": "$49/mo",
         "pricing_model": "Per contractor / month ($599/mo for EOR)",
