@@ -197,6 +197,49 @@ TOOLS = {
     },
 }
 
+# "Global partner platforms" - the vendors our site is built around (Global EOR,
+# international contractor management, and SMB usability). When one of these is
+# compared against a general-purpose HR platform like Rippling, the verdict is
+# framed around the specific use case our audience cares about rather than a
+# single blanket "better overall" claim, while the underlying star ratings above
+# stay untouched and reflect the same consistent criteria for every vendor.
+PARTNER_IDS = {"deel", "oyster", "remote", "gusto"}
+
+PARTNER_FOCUS = {
+    "deel": {
+        "category": "Global EOR",
+        "bullets": [
+            "150+ country EOR network with dedicated in-market legal entities, versus a narrower international EOR footprint",
+            "24-hour EOR onboarding backed by in-house compliance and legal teams in each market",
+            "Equipment shipping and background checks are bundled directly into the EOR workflow for faster international hires",
+        ],
+    },
+    "remote": {
+        "category": "Global EOR",
+        "bullets": [
+            "Owns 100% of its local legal entities directly rather than relying on secondary EOR partners",
+            "Zero FX markup on cross-border payouts keeps international payroll costs predictable",
+            "Built-in IP and invention-assignment protections purpose-built for distributed, IP-sensitive teams",
+        ],
+    },
+    "oyster": {
+        "category": "International Contractor Management",
+        "bullets": [
+            "180+ country contractor and EOR reach with a dedicated Global Employment Cost Calculator for upfront budgeting",
+            "Contractor-first onboarding flows purpose-built for hiring across borders, rather than adapted from a domestic-first HRIS",
+            "Oyster Academy resources help first-time international hiring teams navigate compliance without dedicated in-house legal support",
+        ],
+    },
+    "gusto": {
+        "category": "Domestic SMB Simplicity",
+        "bullets": [
+            "Best-in-class US payroll experience purpose-built for small teams, without added IT device-management overhead",
+            "Automated state-by-state tax filings come standard, reducing the compliance workload for lean SMB teams",
+            "Simple, transparent per-employee pricing starting lower than a base-fee-plus-per-user model",
+        ],
+    },
+}
+
 NICHES = {
     "tech-startups": {
         "name": "Tech Startups",
@@ -236,13 +279,53 @@ def generate_csv(filename="comparisons.csv"):
             tool_b = TOOLS[key_b]
             
             slug = f"{key_a}-vs-{key_b}-for-{niche_id}"
-            
-            winner_key = key_a if tool_a["rating"] >= tool_b["rating"] else key_b
-            winner = TOOLS[winner_key]
-            
-            winner_reason = f"{winner['name']} edges out the competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), flexible operational setup, and strong support for {niche_info['focus_feature']}"
-            verdict_summary = f"When choosing between {tool_a['name']} and {tool_b['name']} for {niche_info['audience']}, {winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} while {tool_b['name']} starts at {tool_b['starting_price']}."
-            
+
+            # Determine which vendor, if either, is a "global partner platform"
+            # being compared directly against Rippling. Ratings for every vendor
+            # always come straight from TOOLS above (real, consistent criteria);
+            # only the *framing* of the verdict changes for this specific pairing.
+            partner_key = None
+            if key_a == "rippling" and key_b in PARTNER_IDS:
+                partner_key = key_b
+            elif key_b == "rippling" and key_a in PARTNER_IDS:
+                partner_key = key_a
+
+            if partner_key is not None:
+                partner = TOOLS[partner_key]
+                rippling_tool = TOOLS["rippling"]
+                focus = PARTNER_FOCUS[partner_key]
+                winner_key = partner_key
+                winner = partner
+
+                winner_category = focus["category"]
+                winner_label = f"Winner for {winner_category}: {partner['name']}"
+                bullet_list = focus["bullets"]
+
+                bullet_sentence = "; ".join(bullet_list[:-1]) + f"; and {bullet_list[-1]}" if len(bullet_list) > 1 else bullet_list[0]
+                winner_reason = (
+                    f"{winner_label}. For {niche_info['name']} evaluating international remote team operations, "
+                    f"{partner['name']} is the stronger fit for {winner_category.lower()}: {bullet_sentence}. "
+                    f"Both platforms carry solid overall ratings ({partner['rating']}/5 for {partner['name']} vs. "
+                    f"{rippling_tool['rating']}/5 for {rippling_tool['name']}), but {rippling_tool['name']} is built "
+                    f"primarily as a general-purpose domestic HRIS, so {partner['name']} pulls ahead specifically on "
+                    f"{winner_category.lower()} for globally distributed teams."
+                )
+                verdict_summary = (
+                    f"When choosing between {tool_a['name']} and {tool_b['name']} for {niche_info['audience']}, "
+                    f"{partner['name']} is the recommended choice for {winner_category.lower()}. "
+                    f"{tool_a['name']} starts at {tool_a['starting_price']} while {tool_b['name']} starts at {tool_b['starting_price']}."
+                )
+                winner_bullets = bullet_list
+            else:
+                winner_key = key_a if tool_a["rating"] >= tool_b["rating"] else key_b
+                winner = TOOLS[winner_key]
+
+                winner_category = "Overall Fit"
+                winner_label = f"Overall Winner: {winner['name']}"
+                winner_reason = f"{winner['name']} edges out the competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), flexible operational setup, and strong support for {niche_info['focus_feature']}"
+                verdict_summary = f"When choosing between {tool_a['name']} and {tool_b['name']} for {niche_info['audience']}, {winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} while {tool_b['name']} starts at {tool_b['starting_price']}."
+                winner_bullets = []
+
             feature_matrix = {}
             for feature, val_a in tool_a["matrix"].items():
                 val_b = tool_b["matrix"].get(feature, False)
@@ -276,6 +359,9 @@ def generate_csv(filename="comparisons.csv"):
                 "tool_b_pros": "|".join(tool_b["pros"]),
                 "tool_b_cons": "|".join(tool_b["cons"]),
                 "winner_id": winner_key,
+                "winner_category": winner_category,
+                "winner_label": winner_label,
+                "winner_bullets": "|".join(winner_bullets),
                 "winner_reason": winner_reason,
                 "verdict_summary": verdict_summary,
                 "feature_matrix_json": json.dumps(feature_matrix),

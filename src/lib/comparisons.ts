@@ -35,6 +35,9 @@ export interface Comparison {
   tool_b_pros: string;
   tool_b_cons: string;
   winner_id: string;
+  winner_category: string;
+  winner_label: string;
+  winner_bullets: string;
   winner_reason: string;
   verdict_summary: string;
   feature_matrix_json: string;
