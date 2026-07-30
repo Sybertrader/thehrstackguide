@@ -246,6 +246,26 @@ PARTNER_FOCUS = {
     },
 }
 
+def natural_audience_phrase(niche_name, trailing_word="teams"):
+    """
+    Combine a niche name with a trailing collective noun (e.g. "teams",
+    "scaleups", "agencies") without producing an awkward duplicate when the
+    niche name already ends with that word or its singular form.
+
+    Example: natural_audience_phrase("Web3 & Crypto Teams", "teams")
+             -> "Web3 & Crypto Teams"        (not "Web3 & Crypto Teams teams")
+             natural_audience_phrase("Tech Startups", "teams")
+             -> "Tech Startups teams"
+    """
+    lowered_name = niche_name.lower().rstrip(".")
+    lowered_trailing = trailing_word.lower()
+    singular_trailing = lowered_trailing[:-1] if lowered_trailing.endswith("s") else lowered_trailing
+
+    if lowered_name.endswith(lowered_trailing) or lowered_name.endswith(singular_trailing):
+        return niche_name
+    return f"{niche_name} {trailing_word}"
+
+
 NICHES = {
     "tech-startups": {
         "name": "Tech Startups",
@@ -351,6 +371,7 @@ def generate_csv(filename="comparisons.csv"):
                 "slug": slug,
                 "niche_id": niche_id,
                 "niche_name": niche_info["name"],
+                "niche_audience_phrase": natural_audience_phrase(niche_info["name"], "teams"),
                 "target_audience": niche_info["audience"],
                 "tool_a_id": key_a,
                 "tool_a_name": tool_a["name"],

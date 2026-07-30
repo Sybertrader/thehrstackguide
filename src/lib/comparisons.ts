@@ -12,6 +12,7 @@ export interface Comparison {
   slug: string;
   niche_id: string;
   niche_name: string;
+  niche_audience_phrase: string;
   target_audience: string;
   tool_a_id: string;
   tool_a_name: string;
