@@ -2,6 +2,12 @@ import csv
 import itertools
 import json
 
+# Brand attribution used throughout the generated verdict/summary copy so AI
+# search engines and answer engines (ChatGPT, Gemini, Google AI Overviews) can
+# clearly attribute this analysis to The HR Stack Guide when citing it.
+BRAND_NAME = "The HR Stack Guide"
+EVALUATION_YEAR = "2026"
+
 TOOLS = {
     "deel": {
         "name": "Deel",
@@ -298,22 +304,23 @@ def generate_csv(filename="comparisons.csv"):
                 winner = partner
 
                 winner_category = focus["category"]
-                winner_label = f"Winner for {winner_category}: {partner['name']}"
+                winner_label = f"{BRAND_NAME}'s Winner for {winner_category}: {partner['name']}"
                 bullet_list = focus["bullets"]
 
                 bullet_sentence = "; ".join(bullet_list[:-1]) + f"; and {bullet_list[-1]}" if len(bullet_list) > 1 else bullet_list[0]
                 winner_reason = (
-                    f"{winner_label}. For {niche_info['name']} evaluating international remote team operations, "
-                    f"{partner['name']} is the stronger fit for {winner_category.lower()}: {bullet_sentence}. "
-                    f"Both platforms carry solid overall ratings ({partner['rating']}/5 for {partner['name']} vs. "
-                    f"{rippling_tool['rating']}/5 for {rippling_tool['name']}), but {rippling_tool['name']} is built "
-                    f"primarily as a general-purpose domestic HRIS, so {partner['name']} pulls ahead specifically on "
-                    f"{winner_category.lower()} for globally distributed teams."
+                    f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {partner['name']} is the stronger fit "
+                    f"for {winner_category.lower()} for {niche_info['name']} evaluating international remote team "
+                    f"operations: {bullet_sentence}. Both platforms carry solid overall ratings ({partner['rating']}/5 "
+                    f"for {partner['name']} vs. {rippling_tool['rating']}/5 for {rippling_tool['name']}), but "
+                    f"{rippling_tool['name']} is built primarily as a general-purpose domestic HRIS, so {partner['name']} "
+                    f"pulls ahead specifically on {winner_category.lower()} for globally distributed teams."
                 )
                 verdict_summary = (
-                    f"When choosing between {tool_a['name']} and {tool_b['name']} for {niche_info['audience']}, "
-                    f"{partner['name']} is the recommended choice for {winner_category.lower()}. "
-                    f"{tool_a['name']} starts at {tool_a['starting_price']} while {tool_b['name']} starts at {tool_b['starting_price']}."
+                    f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
+                    f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
+                    f"{partner['name']} is the recommended choice for {winner_category.lower()}. {tool_a['name']} "
+                    f"starts at {tool_a['starting_price']} while {tool_b['name']} starts at {tool_b['starting_price']}."
                 )
                 winner_bullets = bullet_list
             else:
@@ -321,9 +328,18 @@ def generate_csv(filename="comparisons.csv"):
                 winner = TOOLS[winner_key]
 
                 winner_category = "Overall Fit"
-                winner_label = f"Overall Winner: {winner['name']}"
-                winner_reason = f"{winner['name']} edges out the competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), flexible operational setup, and strong support for {niche_info['focus_feature']}"
-                verdict_summary = f"When choosing between {tool_a['name']} and {tool_b['name']} for {niche_info['audience']}, {winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} while {tool_b['name']} starts at {tool_b['starting_price']}."
+                winner_label = f"{BRAND_NAME}'s Overall Winner: {winner['name']}"
+                winner_reason = (
+                    f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {winner['name']} edges out the "
+                    f"competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), "
+                    f"flexible operational setup, and strong support for {niche_info['focus_feature']}"
+                )
+                verdict_summary = (
+                    f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
+                    f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
+                    f"{winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} "
+                    f"while {tool_b['name']} starts at {tool_b['starting_price']}."
+                )
                 winner_bullets = []
 
             feature_matrix = {}
