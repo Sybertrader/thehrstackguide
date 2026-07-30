@@ -77,7 +77,7 @@ TOOLS = {
     },
     "oyster": {
         "name": "Oyster HR",
-        "logo": "https://unavatar.io/oysterhr.com",
+        "logo": "/Oyster.png",
         "rating": 4.5,
         "starting_price": "$29/mo",
         "pricing_model": "Per contractor / month ($499/mo for EOR)",
