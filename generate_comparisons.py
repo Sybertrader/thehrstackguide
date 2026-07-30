@@ -101,7 +101,7 @@ TOOLS = {
     },
     "gusto": {
         "name": "Gusto",
-        "logo": "https://unavatar.io/gusto.com",
+        "logo": "/Gusto.png",
         "rating": 4.7,
         "starting_price": "$40/mo",
         "pricing_model": "Base fee + $6 per user / month",
