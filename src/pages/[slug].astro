@@ -79,18 +79,34 @@ interface FaqItem {
 function buildSchemaGraph(
   comparison: Comparison,
   pageUrl: string,
+  siteRootUrl: string,
   faqItems: FaqItem[],
   toolARating: string,
   toolBRating: string
 ) {
   const pageId = `${pageUrl}#webpage`;
   const faqId = `${pageUrl}#faq`;
+  const breadcrumbId = `${pageUrl}#breadcrumb`;
   const toolAId = `${pageUrl}#${comparison.tool_a_id}`;
   const toolBId = `${pageUrl}#${comparison.tool_b_id}`;
 
   return {
     '@context': 'https://schema.org',
     '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        '@id': breadcrumbId,
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: siteRootUrl },
+          { '@type': 'ListItem', position: 2, name: 'Comparisons', item: siteRootUrl },
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: `${comparison.tool_a_name} vs ${comparison.tool_b_name}`,
+            item: pageUrl,
+          },
+        ],
+      },
       {
         '@type': 'ItemPage',
         '@id': pageId,
@@ -250,7 +266,8 @@ const faqItems: FaqItem[] = [
 ];
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
-const schemaGraph = buildSchemaGraph(comparison, pageUrl, faqItems, toolADisplayRating, toolBDisplayRating);
+const siteRootUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
+const schemaGraph = buildSchemaGraph(comparison, pageUrl, siteRootUrl, faqItems, toolADisplayRating, toolBDisplayRating);
 
 const winnerPros = toolAIsWinner ? toolAPros : toolBPros;
 const winnerCons = toolAIsWinner ? toolACons : toolBCons;
@@ -315,12 +332,18 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
       <!-- Hero Section -->
       <header class="mb-10">
         <nav aria-label="Breadcrumb">
-          <ol class="flex items-center gap-2 text-sm text-slate-500">
+          <ol class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+            <li>
+              <a href="/" class="transition hover:text-indigo-600">Home</a>
+            </li>
+            <li aria-hidden="true" class="text-slate-300">&gt;</li>
             <li>
               <a href="/" class="transition hover:text-indigo-600">Comparisons</a>
             </li>
-            <li aria-hidden="true" class="text-slate-300">/</li>
-            <li class="font-medium text-indigo-600">{comparison.niche_name}</li>
+            <li aria-hidden="true" class="text-slate-300">&gt;</li>
+            <li class="font-medium text-indigo-600" aria-current="page">
+              {comparison.tool_a_name} vs {comparison.tool_b_name}
+            </li>
           </ol>
         </nav>
 
@@ -382,6 +405,13 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
           Reviewed by B2B Software Operations Analysts • Updated July 2026 • Independent Evaluation
         </p>
       </header>
+
+      <!-- FTC/ASA Disclosure Bar -->
+      <p class="mb-8 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-relaxed text-slate-500 sm:text-sm">
+        <span class="font-semibold text-slate-600">Disclosure:</span> The HR Stack Guide is an independent evaluation
+        hub. We may earn a commission if you sign up through our links at no extra cost to you.
+        <a href="/affiliate-disclosure" class="font-medium text-indigo-600 underline-offset-2 hover:underline">Read our full disclosure</a>.
+      </p>
 
       <!-- Winner Banner -->
       <section
