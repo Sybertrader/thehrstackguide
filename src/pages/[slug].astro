@@ -152,11 +152,19 @@ function buildSchemaGraph(
           price: comparison.tool_a_starting_price,
           priceCurrency: 'USD',
         },
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: toolARating,
-          bestRating: '5',
-          worstRating: '1',
+        review: {
+          '@type': 'Review',
+          author: {
+            '@type': 'Organization',
+            name: 'The HR Stack Guide',
+            url: 'https://www.thehrstackguide.com',
+          },
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: toolARating,
+            bestRating: '5',
+            worstRating: '1',
+          },
         },
       },
       {
@@ -169,11 +177,19 @@ function buildSchemaGraph(
           price: comparison.tool_b_starting_price,
           priceCurrency: 'USD',
         },
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: toolBRating,
-          bestRating: '5',
-          worstRating: '1',
+        review: {
+          '@type': 'Review',
+          author: {
+            '@type': 'Organization',
+            name: 'The HR Stack Guide',
+            url: 'https://www.thehrstackguide.com',
+          },
+          reviewRating: {
+            '@type': 'Rating',
+            ratingValue: toolBRating,
+            bestRating: '5',
+            worstRating: '1',
+          },
         },
       },
       {
