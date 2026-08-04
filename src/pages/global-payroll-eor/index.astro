@@ -90,12 +90,15 @@ interface TabDef {
   label: string;
 }
 
-const nicheTabs: TabDef[] = tabOrder
+const tabs: TabDef[] = tabOrder
   .map((id) => nicheGroupById.get(id))
   .filter((group): group is NicheGroup => Boolean(group))
   .map((group) => ({ id: group.nicheId, label: tabLabelOverrides[group.nicheId] ?? group.nicheName }));
 
-const tabs: TabDef[] = [{ id: 'all', label: 'All Use Cases' }, ...nicheTabs];
+// No "All Use Cases" tab: only one niche's 28 comparisons are ever visible at
+// once (server-rendered this way too, not just after JS runs), so neither
+// users nor crawlers see all 140 links as a single wall of text.
+const defaultTabId = tabs[0]?.id ?? null;
 
 const buyerGuide = [
   {
@@ -310,7 +313,10 @@ const collectionSchema = {
           <a
             href={`/${comparison.slug}`}
             data-niche={comparison.niche_id}
-            class="comparison-card group flex flex-col gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
+            class:list={[
+              'comparison-card group flex flex-col gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md',
+              comparison.niche_id === defaultTabId ? '' : 'hidden opacity-0',
+            ]}
           >
             <span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
               {comparison.niche_name}
@@ -358,7 +364,7 @@ const collectionSchema = {
       function applyFilter(nicheId: string) {
         let visibleCount = 0;
         for (const card of cards) {
-          const matches = nicheId === 'all' || card.dataset.niche === nicheId;
+          const matches = card.dataset.niche === nicheId;
           if (matches) {
             visibleCount += 1;
             showCard(card);
