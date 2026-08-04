@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
+import { getToolProfile } from '../lib/tools';
 
 export function getStaticPaths() {
   const comparisons = loadComparisons();
@@ -91,6 +92,55 @@ function logoBadgeColor(name: string): string {
 interface FaqItem {
   question: string;
   answer: string;
+}
+
+interface ToolNarrative {
+  positioning: string;
+  textCompliance: string;
+  textGlobalReach: string;
+  textPricingTruth: string;
+  chooseIf: string[];
+}
+
+/**
+ * Resolves the SEO narrative engine content for one side of a comparison.
+ * Prefers editorial data from `src/data/tools.json` (keyed by tool id); tools
+ * that don't have a profile yet fall back to content derived from their own
+ * existing comparisons.csv fields, so the page never hardcodes another
+ * tool's specific facts and never renders blank/undefined copy.
+ */
+function resolveToolNarrative(
+  toolId: string,
+  toolName: string,
+  nicheAudiencePhrase: string,
+  features: string[],
+  pros: string[]
+): ToolNarrative {
+  const profile = getToolProfile(toolId);
+
+  const positioning =
+    profile?.positioning ??
+    cleanCopy(
+      `${toolName} is built for ${nicheAudiencePhrase.toLowerCase()} that want ${
+        features[0] ? features[0].toLowerCase() : 'a modern, all-in-one HR platform'
+      }.`
+    );
+
+  const chooseIf =
+    profile?.choose_if && profile.choose_if.length > 0
+      ? profile.choose_if
+      : pros.slice(0, 4).map((pro) => `You want ${pro.toLowerCase()}`);
+
+  const comingSoon = (topic: string) =>
+    `A detailed ${topic} breakdown for ${toolName} is being finalized. In the meantime, confirm the specifics directly on the vendor's site before making a decision.`;
+
+  return {
+    positioning,
+    textCompliance: profile?.text_compliance ?? comingSoon('tax, legal, and misclassification compliance'),
+    textGlobalReach: profile?.text_global_reach ?? comingSoon('global reach and workforce infrastructure'),
+    textPricingTruth: profile?.text_pricing_truth ?? comingSoon('pricing and hidden-fee'),
+    chooseIf,
+  };
 }
 
 function buildSchemaGraph(
@@ -216,6 +266,21 @@ const toolBPros = parsePipeList(comparison.tool_b_pros);
 const toolBCons = parsePipeList(comparison.tool_b_cons);
 const featureMatrix = parseFeatureMatrix(comparison.feature_matrix_json);
 const featureMatrixRows = Object.entries(featureMatrix);
+
+const toolANarrative = resolveToolNarrative(
+  comparison.tool_a_id,
+  comparison.tool_a_name,
+  comparison.niche_audience_phrase,
+  toolAFeatures,
+  toolAPros
+);
+const toolBNarrative = resolveToolNarrative(
+  comparison.tool_b_id,
+  comparison.tool_b_name,
+  comparison.niche_audience_phrase,
+  toolBFeatures,
+  toolBPros
+);
 
 const winnerName =
   comparison.winner_id === comparison.tool_a_id
@@ -448,7 +513,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         </div>
 
         <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-          {comparison.tool_a_name} vs {comparison.tool_b_name} for {comparison.niche_name}
+          {comparison.tool_a_name} vs {comparison.tool_b_name}: Detailed Comparison for 2026
         </h1>
 
         <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
@@ -459,9 +524,43 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
           Reviewed by B2B Software Operations Analysts • Updated July 2026 • Independent Evaluation
         </p>
 
+        <div class="mt-5 flex flex-wrap gap-3">
+          <span class="inline-flex max-w-full items-center rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-600 shadow-sm">
+            <span class="mr-1.5 font-semibold text-slate-900">{comparison.tool_a_name}:</span>
+            {toolANarrative.positioning}
+          </span>
+          <span class="inline-flex max-w-full items-center rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm text-slate-600 shadow-sm">
+            <span class="mr-1.5 font-semibold text-slate-900">{comparison.tool_b_name}:</span>
+            {toolBNarrative.positioning}
+          </span>
+        </div>
+
         <p class="mt-5 max-w-3xl rounded-xl border border-indigo-100 bg-indigo-50/60 px-4 py-3 text-sm leading-relaxed text-slate-700">
           <span class="font-semibold text-indigo-700">Quick summary:</span> {cleanCopy(comparison.verdict_summary)}
         </p>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a
+            href={comparison.tool_a_affiliate_url}
+            class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            data-track-vendor={comparison.tool_a_name}
+            data-track-location="hero"
+          >
+            Try {comparison.tool_a_name}
+          </a>
+          <a
+            href={comparison.tool_b_affiliate_url}
+            class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            data-track-vendor={comparison.tool_b_name}
+            data-track-location="hero"
+          >
+            Try {comparison.tool_b_name}
+          </a>
+        </div>
       </header>
 
       <!-- FTC/ASA Disclosure Bar -->
@@ -470,46 +569,10 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         <a href="/affiliate-disclosure" class="text-slate-500 underline underline-offset-2 hover:text-indigo-600">Read full disclosure</a>.
       </p>
 
-      <!-- Winner Banner -->
-      <section
-        class="mb-10 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-slate-50 shadow-sm"
-        aria-label="Recommended winner"
-      >
-        <div class="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <div class="flex items-start gap-4">
-            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6" aria-hidden="true">
-                <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
-              </svg>
-            </div>
-            <div>
-              <div class="flex flex-wrap items-center gap-2">
-                <span class="inline-flex items-center rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white">
-                  {isUseCaseVerdict ? `Best for ${comparison.winner_category}` : 'Recommended Choice'}
-                </span>
-              </div>
-              <h2 class="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
-                {isUseCaseVerdict ? comparison.winner_label : `${winnerName} is the winner`}
-              </h2>
-              <p class="mt-2 max-w-2xl text-base leading-relaxed text-slate-600">
-                {cleanCopy(comparison.winner_reason)}
-              </p>
-              {winnerBullets.length > 0 && (
-                <ul class="mt-3 max-w-2xl space-y-1.5">
-                  {winnerBullets.map((bullet) => (
-                    <li class="flex items-start gap-2 text-sm text-slate-600">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                      </svg>
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- SECTION 2: At-a-Glance Comparison Matrix -->
+      <h2 class="mb-6 text-2xl font-bold text-slate-900">
+        At a Glance: {comparison.tool_a_name} vs {comparison.tool_b_name}
+      </h2>
 
       <!-- Side-by-Side Cards -->
       <section class="mb-12 grid gap-6 lg:grid-cols-2" aria-label="Tool comparison cards">
@@ -698,90 +761,10 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         </article>
       </section>
 
-      <!-- Pros & Cons Section -->
-      <section class="mb-12" aria-label="Pros and cons comparison">
-        <h2 class="mb-6 text-2xl font-bold text-slate-900">Pros &amp; Cons</h2>
-        <div class="grid gap-6 lg:grid-cols-2">
-          <!-- Tool A Pros/Cons -->
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="text-lg font-semibold text-slate-900">{comparison.tool_a_name}</h3>
-            <div class="mt-6 grid gap-6 sm:grid-cols-2">
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
-                <ul class="space-y-3">
-                  {toolAPros.map((pro) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                        </svg>
-                      </span>
-                      {pro}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
-                <ul class="space-y-3">
-                  {toolACons.map((con) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                        </svg>
-                      </span>
-                      {con}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <!-- Tool B Pros/Cons -->
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="text-lg font-semibold text-slate-900">{comparison.tool_b_name}</h3>
-            <div class="mt-6 grid gap-6 sm:grid-cols-2">
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
-                <ul class="space-y-3">
-                  {toolBPros.map((pro) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                        </svg>
-                      </span>
-                      {pro}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
-                <ul class="space-y-3">
-                  {toolBCons.map((con) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                        </svg>
-                      </span>
-                      {con}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- Feature Matrix Table -->
       {featureMatrixRows.length > 0 && (
         <section class="mb-12" aria-label="Feature comparison matrix">
-          <h2 class="mb-6 text-2xl font-bold text-slate-900">Feature Comparison</h2>
+          <h3 class="mb-6 text-xl font-bold text-slate-900">Feature Comparison</h3>
           <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div class="overflow-x-auto">
               <table class="w-full min-w-[480px] text-left text-sm">
@@ -864,11 +847,239 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         </section>
       )}
 
-      <!-- In-Depth Analysis Section -->
-      <section class="mb-12" aria-label="In-depth analysis">
+      <!-- Pros & Cons Section -->
+      <section class="mb-12" aria-label="Pros and cons comparison">
+        <h3 class="mb-6 text-xl font-bold text-slate-900">Pros &amp; Cons</h3>
+        <div class="grid gap-6 lg:grid-cols-2">
+          <!-- Tool A Pros/Cons -->
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <h4 class="text-lg font-semibold text-slate-900">{comparison.tool_a_name}</h4>
+            <div class="mt-6 grid gap-6 sm:grid-cols-2">
+              <div>
+                <h5 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h5>
+                <ul class="space-y-3">
+                  {toolAPros.map((pro) => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      {pro}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h5 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h5>
+                <ul class="space-y-3">
+                  {toolACons.map((con) => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                      </span>
+                      {con}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tool B Pros/Cons -->
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <h4 class="text-lg font-semibold text-slate-900">{comparison.tool_b_name}</h4>
+            <div class="mt-6 grid gap-6 sm:grid-cols-2">
+              <div>
+                <h5 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h5>
+                <ul class="space-y-3">
+                  {toolBPros.map((pro) => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      {pro}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h5 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h5>
+                <ul class="space-y-3">
+                  {toolBCons.map((con) => (
+                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
+                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                      </span>
+                      {con}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 3: Feature-by-Feature Deep Dive (SEO Narrative Engine) -->
+      <section class="mb-12" aria-label="Feature-by-feature deep dive">
+        <h2 class="mb-2 text-2xl font-bold text-slate-900">Feature-by-Feature Deep Dive</h2>
+        <p class="mb-6 max-w-3xl text-sm text-slate-500">
+          A closer look at how {comparison.tool_a_name} and {comparison.tool_b_name} actually handle compliance, global reach, and pricing once you get past the marketing pages.
+        </p>
+
+        <div class="space-y-6">
+          <!-- Compliance -->
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <h3 class="text-lg font-bold text-slate-900">Tax, Legal &amp; Misclassification Compliance</h3>
+            <div class="mt-5 grid gap-6 sm:grid-cols-2">
+              <div class="rounded-xl bg-slate-50 p-5">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_a_name}</h4>
+                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolANarrative.textCompliance}</p>
+              </div>
+              <div class="rounded-xl bg-slate-50 p-5">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_b_name}</h4>
+                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolBNarrative.textCompliance}</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Global Reach -->
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <h3 class="text-lg font-bold text-slate-900">Global Reach &amp; Workforce Infrastructure</h3>
+            <div class="mt-5 grid gap-6 sm:grid-cols-2">
+              <div class="rounded-xl bg-slate-50 p-5">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_a_name}</h4>
+                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolANarrative.textGlobalReach}</p>
+              </div>
+              <div class="rounded-xl bg-slate-50 p-5">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_b_name}</h4>
+                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolBNarrative.textGlobalReach}</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Pricing Truth -->
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <h3 class="text-lg font-bold text-slate-900">The Real Cost: Pricing &amp; Hidden Fees</h3>
+            <div class="mt-5 grid gap-6 sm:grid-cols-2">
+              <div class="rounded-xl bg-slate-50 p-5">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_a_name}</h4>
+                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolANarrative.textPricingTruth}</p>
+              </div>
+              <div class="rounded-xl bg-slate-50 p-5">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_b_name}</h4>
+                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolBNarrative.textPricingTruth}</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- SECTION 4: Decision Checklist -->
+      <section class="mb-12" aria-label="Buyer decision checklist">
+        <h2 class="mb-6 text-2xl font-bold text-slate-900">The Decision Checklist</h2>
+        <div class="grid gap-6 lg:grid-cols-2">
+          <div class="rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:p-8">
+            <h3 class="text-lg font-bold text-indigo-900">Choose {comparison.tool_a_name} If...</h3>
+            <ul class="mt-4 space-y-3">
+              {toolANarrative.chooseIf.map((reason) => (
+                <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-5 w-5 shrink-0 text-indigo-600" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                  </svg>
+                  <span><span class="font-semibold text-slate-900">{reason}</span></span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href={comparison.tool_a_affiliate_url}
+              class="js-affiliate-cta mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-track-vendor={comparison.tool_a_name}
+              data-track-location="decision_checklist"
+            >
+              Try {comparison.tool_a_name}
+            </a>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
+            <h3 class="text-lg font-bold text-slate-900">Choose {comparison.tool_b_name} If...</h3>
+            <ul class="mt-4 space-y-3">
+              {toolBNarrative.chooseIf.map((reason) => (
+                <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-5 w-5 shrink-0 text-slate-500" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                  </svg>
+                  <span><span class="font-semibold text-slate-900">{reason}</span></span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href={comparison.tool_b_affiliate_url}
+              class="js-affiliate-cta mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-track-vendor={comparison.tool_b_name}
+              data-track-location="decision_checklist"
+            >
+              Try {comparison.tool_b_name}
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION 5: Final Verdict & Primary CTAs -->
+      <section class="mb-12" aria-label="Final verdict">
         <h2 class="mb-6 text-2xl font-bold text-slate-900">
-          In-Depth Breakdown for {comparison.niche_name}
+          Final Verdict for {comparison.niche_name}
         </h2>
+
+        <!-- Winner Banner -->
+        <div class="mb-6 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-slate-50 shadow-sm">
+          <div class="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+            <div class="flex items-start gap-4">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+                    {isUseCaseVerdict ? `Best for ${comparison.winner_category}` : 'Recommended Choice'}
+                  </span>
+                </div>
+                <h3 class="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
+                  {isUseCaseVerdict ? comparison.winner_label : `${winnerName} is the winner`}
+                </h3>
+                <p class="mt-2 max-w-2xl text-base leading-relaxed text-slate-600">
+                  {cleanCopy(comparison.winner_reason)}
+                </p>
+                {winnerBullets.length > 0 && (
+                  <ul class="mt-3 max-w-2xl space-y-1.5">
+                    {winnerBullets.map((bullet) => (
+                      <li class="flex items-start gap-2 text-sm text-slate-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
         <article class="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <div>
             <h3 class="text-lg font-semibold text-slate-900">The Winner's Edge</h3>
@@ -889,6 +1100,35 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
             </p>
           </div>
         </article>
+
+        <!-- Final Primary CTAs -->
+        <div class="mt-6 flex flex-col items-start gap-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <p class="text-sm leading-relaxed text-slate-700 sm:max-w-md">
+            <span class="font-semibold text-indigo-700">Bottom line:</span> {winnerName} is the stronger overall pick for {comparison.niche_audience_phrase.toLowerCase()}, with {runnerUpName} remaining a reasonable alternative depending on your priorities.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a
+              href={comparison.tool_a_affiliate_url}
+              class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-track-vendor={comparison.tool_a_name}
+              data-track-location="final_verdict"
+            >
+              Try {comparison.tool_a_name}
+            </a>
+            <a
+              href={comparison.tool_b_affiliate_url}
+              class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-track-vendor={comparison.tool_b_name}
+              data-track-location="final_verdict"
+            >
+              Try {comparison.tool_b_name}
+            </a>
+          </div>
+        </div>
       </section>
 
       <!-- FAQ Section -->

@@ -1,0 +1,98 @@
+{
+  "deel": {
+    "positioning": "The market leader for global workforce expansion, contractor hiring, and EOR compliance across 150+ countries.",
+    "text_compliance": "Deel handles compliance in 150+ countries using a vast network of fully-owned local entities and in-house legal experts. They automate misclassification protection, localized contract generation, tax withholdings, and statutory benefits compliance, backing their contracts with misclassification insurance guarantees.",
+    "text_global_reach": "Deel provides unmatched international coverage across 150+ countries with direct payroll and owned EOR entities in key tech and hiring hubs globally. They support multi-currency payouts, localized benefits administration, and fast local onboarding.",
+    "text_pricing_truth": "EOR hiring starts at $599/month per employee, while contractor management is $49/month. Optional add-ons include Deel Shield for misclassification protection and custom equipment shipping, with foreign exchange (FX) rates around 1% on currency transfers.",
+    "choose_if": [
+      "You need to hire full-time remote employees or contractors across 150+ countries rapidly.",
+      "You want an EOR that owns its local legal entities rather than leasing third-party partners.",
+      "You need built-in misclassification guarantees (Deel Shield) to protect against worker audits.",
+      "You want an all-in-one platform for international payroll, background checks, and hardware shipping."
+    ]
+  },
+  "gusto": {
+    "positioning": "The premier automated payroll, tax, and HR suite built specifically for US-based small-to-medium businesses.",
+    "text_compliance": "Gusto automates local, state, and federal US payroll taxes, including automated filings for 940/941 forms, W-2s, and 1099s. They ensure automated compliance with state-specific overtime laws, workers' compensation requirements, and ACA reporting for domestic teams.",
+    "text_global_reach": "Gusto is built primarily for US domestic hiring across all 50 states. While they offer international contractor payments to 120+ countries, they do not provide direct global EOR services for full-time international employees without third-party integrations.",
+    "text_pricing_truth": "Pricing starts with a base fee of $40/month plus $6/employee/month for Simple plans, scaling to $80/month base plus $12/employee for Premium tiers. International contractor payments carry straightforward per-transfer costs with transparent FX conversion.",
+    "choose_if": [
+      "Your workforce is primarily based in the US across multiple states and you want automated tax filings.",
+      "You need an intuitive, easy-to-use platform combining US payroll, health insurance, and 401(k) benefits.",
+      "You hire international contractors alongside US W-2 employees but don't need international EOR services.",
+      "You want affordable entry-level pricing tailored for small startups and growing US businesses."
+    ]
+  },
+  "multiplier": {
+    "positioning": "High-value, cost-effective global EOR optimized for rapidly scaling teams across Asia-Pacific and EMEA.",
+    "text_compliance": "Multiplier manages compliance across 150+ countries with automated employment contracts built around local labor laws. They assume employer liability, ensuring statutory benefit contributions, severance policies, and localized tax withholdings meet strict jurisdictional standards.",
+    "text_global_reach": "Multiplier has an exceptionally strong infrastructure footprint across the Asia-Pacific region and emerging markets, providing direct entity support in key tech hubs like India, Singapore, Vietnam, and the UAE alongside broader global coverage.",
+    "text_pricing_truth": "EOR services start at an aggressive $400/month per employee, making it one of the most budget-friendly premium EORs. Contractor management costs $40/month, though organizations should review local benefit package add-ons which carry separate monthly admin fees.",
+    "choose_if": [
+      "You are hiring heavily in APAC or EMEA markets and want competitive regional pricing.",
+      "You need a full EOR solution starting under $500/month per employee.",
+      "You want fast local contract generation with pre-vetted compliance templates.",
+      "You require integrated health and statutory benefits administration across multiple countries."
+    ]
+  },
+  "oyster": {
+    "positioning": "An intuitive, designer-friendly global employment platform built for mid-market remote companies prioritising team experience.",
+    "text_compliance": "Oyster automates local employment agreements and statutory compliance in 180+ countries. They handle misclassification safeguards, localized IP assignments, and statutory benefit filings through a mix of owned infrastructure and local HR partners.",
+    "text_global_reach": "Oyster supports hiring across 180+ countries, offering robust international onboarding tools, local currency payouts, and localized benefits administration tailored to distributed tech and creative teams.",
+    "text_pricing_truth": "EOR pricing lists at $699/month per employee (with volume discounts dropping rates to $450–$575/month at scale). Contractor management costs $29/month with a free tier for up to 2 contractors. Pay attention to FX spreads (~1–1.5%) and standard 1-month salary deposit requirements.",
+    "choose_if": [
+      "You value an exceptionally clean, user-friendly UI for both admins and international hires.",
+      "You want a free contractor management tier to test hires before converting them to EOR.",
+      "Your company scales past 10+ employees where volume discounts significantly lower the $699 base rate.",
+      "You require dedicated remote work tools, such as country-by-country salary calculators."
+    ]
+  },
+  "papaya": {
+    "positioning": "Enterprise-grade global workforce platform delivering deep payroll intelligence and consolidated multi-country financial analytics.",
+    "text_compliance": "Papaya Global uses AI-driven compliance engine checks paired with local in-country experts across 160+ jurisdictions. They oversee mandatory tax filings, worker classification risks, and legal contract amendments for complex corporate structures.",
+    "text_global_reach": "Operating in over 160 countries, Papaya specializes in unifying fragmented international payroll networks. They allow multinational enterprises to manage localized EOR workers, direct payroll entities, and global contractors from a single business intelligence console.",
+    "text_pricing_truth": "Papaya operates at a premium tier, charging $650–$770/month per employee for EOR services depending on jurisdiction and support level. Global contractor management starts at $30/month. Expect potential 10–15% markups on supplementary benefit plans and typical 1–1.5% FX transaction spreads.",
+    "choose_if": [
+      "Your finance department needs enterprise business intelligence and consolidated reporting across multiple foreign entities.",
+      "You operate a hybrid model of owned foreign subsidiaries alongside EOR employees.",
+      "You require white-glove corporate account management and custom legal review.",
+      "You manage large enterprise workforces across 20+ countries simultaneously."
+    ]
+  },
+  "plane": {
+    "positioning": "A streamlined, startup-first payroll and EOR platform designed for tech companies seeking transparent, low-fee international hiring.",
+    "text_compliance": "Plane (formerly Pilot) enforces compliant hiring across 100+ countries with standardized employment contracts, local tax withholding, and IP assignment protection. They streamline misclassification protection for hybrid remote engineering teams.",
+    "text_global_reach": "Plane provides coverage across major technology hiring markets worldwide. It excels at helping US and European tech startups quickly deploy global contractors and full-time remote developers without administrative bloat.",
+    "text_pricing_truth": "EOR plans are aggressively priced between $299 and $499/month per employee depending on market tier, with no hidden exchange rate markups on direct bank payouts. Contractor management is simple with transparent flat fees.",
+    "choose_if": [
+      "You run an early-stage or venture-backed tech startup looking for low per-employee EOR overhead.",
+      "You want transparent, mid-market FX rates without hidden bank transfer markups.",
+      "You primarily hire software developers and tech contractors across Latin America and Eastern Europe.",
+      "You prefer a lean, fast interface over bloated enterprise HR suites."
+    ]
+  },
+  "remote": {
+    "positioning": "The gold standard for global compliance purity, utilizing 100% owned legal entities to eliminate third-party EOR risks.",
+    "text_compliance": "Unlike platforms relying on third-party agencies, Remote owns its legal entities in every supported market. This guarantees end-to-end legal compliance, direct IP protection, bulletproof misclassification defense, and zero third-party data risk.",
+    "text_global_reach": "Remote operates owned infrastructure across 75+ core hiring markets while serving global contractor operations in 180+ countries. Their owned-entity model ensures direct control over employee contracts, local payroll, and government tax filings.",
+    "text_pricing_truth": "EOR pricing is $599/month per employee on an annual commitment ($699/month billed monthly). Contractor management runs $29/month per worker. IP protection and legal guarantees are baked directly into the base fee with transparent currency conversion.",
+    "choose_if": [
+      "Maximum IP security and compliance purity are non-negotiable for your board.",
+      "You prefer working with a provider that owns its local legal entities rather than leasing third-party agencies.",
+      "You hire in key remote hubs like Western Europe, Canada, Latin America, and APAC.",
+      "You want transparent $599/month EOR pricing with no unexpected third-party markup fees."
+    ]
+  },
+  "rippling": {
+    "positioning": "An all-in-one workforce operations system uniting HR, global payroll, IT device management, and app provisioning in one dashboard.",
+    "text_compliance": "Rippling automates compliance across US domestic payroll and global workforce expansions. Its engine automatically enforces local overtime laws, tax registration, mandatory sexual harassment training, and international labor standards based on worker location.",
+    "text_global_reach": "Rippling supports global hiring via direct payroll, local entity management, and integrated EOR services. It allows companies to manage US W-2 employees, international EOR staff, and worldwide contractors within a single unified HR cloud.",
+    "text_pricing_truth": "Rippling uses a modular framework starting at $35/month base fee plus $8/employee/month for the core Unity platform. Fully functional payroll and HR modules generally bring real costs to $25–$50/employee/month domestic, while international EOR services require dedicated add-on module quotes.",
+    "choose_if": [
+      "You want to manage IT assets (laptops, software app permissions, Google Workspace) alongside HR and payroll.",
+      "You have complex workflow automation needs (e.g., auto-triggering custom onboarding flows based on job role).",
+      "You manage both US domestic employees and international team members on one single platform.",
+      "You want a fully modular platform where you only pay for the specific HR and IT apps you activate."
+    ]
+  }
+}
