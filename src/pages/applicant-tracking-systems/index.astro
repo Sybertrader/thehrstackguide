@@ -30,11 +30,26 @@ for (const comparison of allComparisons) {
   logoById.set(comparison.tool_b_id, comparison.tool_b_logo_url);
 }
 
+// High-signal "best fit" summary for each platform, shown as a badge above
+// the tool name in the roster grid so readers can triage at a glance before
+// reading the full positioning copy.
+const bestForById: Record<string, string> = {
+  ashby: 'Best for All-in-One Recruiting Analytics',
+  greenhouse: 'Best for Enterprise Structured Hiring',
+  lever: 'Best for Outbound CRM & Candidate Nurture',
+  workable: 'Best for Built-in AI Candidate Sourcing',
+  'breezy-hr': 'Best for Visual Drag-and-Drop Pipelines',
+  jazzhr: 'Best for Budget SMB Unlimited Posting',
+  recruitee: 'Best for EU GDPR Data Residency & Employer Brand',
+  'bamboohr-ats': 'Best for BambooHR Ecosystem Integration',
+};
+
 const toolRoster = toolProfiles
   .map((profile) => ({
     ...profile,
     name: nameById.get(profile.id) ?? profile.id,
     logo: logoById.get(profile.id) ?? null,
+    bestFor: bestForById[profile.id] ?? null,
   }))
   .sort((a, b) => parseFloat(b.rating ?? '0') - parseFloat(a.rating ?? '0'));
 
@@ -56,6 +71,50 @@ for (const comparison of categoryComparisons) {
   group.comparisons.push(comparison);
 }
 
+// Tab order + short labels are curated for readability (e.g. "Remote-First"
+// instead of the longer on-page niche name), but the tab list itself is
+// still derived from the real niche groups above, so a tab silently drops
+// out (rather than pointing at an empty result set) if that niche's
+// comparisons ever disappear from comparisons.csv.
+const tabLabelOverrides: Record<string, string> = {
+  startups: 'Startups',
+  scaleups: 'Scaleups',
+  enterprise: 'Enterprise',
+  agencies: 'Agencies',
+  'remote-teams': 'Remote-First',
+};
+const tabOrder = ['startups', 'scaleups', 'enterprise', 'agencies', 'remote-teams'];
+
+interface TabDef {
+  id: string;
+  label: string;
+}
+
+const nicheTabs: TabDef[] = tabOrder
+  .map((id) => nicheGroupById.get(id))
+  .filter((group): group is NicheGroup => Boolean(group))
+  .map((group) => ({ id: group.nicheId, label: tabLabelOverrides[group.nicheId] ?? group.nicheName }));
+
+const tabs: TabDef[] = [{ id: 'all', label: 'All Use Cases' }, ...nicheTabs];
+
+const buyerGuide = [
+  {
+    title: 'Structured Scorecards vs. Freeform Notes',
+    description:
+      'Platforms like Greenhouse and Ashby enforce structured, weighted scorecards across every interviewer, reducing bias and creating an auditable hiring record you can defend later. Freeform-notes-only tools are faster to set up but make it much harder to compare candidates objectively once you\u2019re hiring at volume.',
+  },
+  {
+    title: 'Candidate Sourcing CRM Integration',
+    description:
+      'If outbound sourcing is a core part of your hiring motion, prioritize a platform with a built-in candidate CRM (Lever, Ashby) that lets you nurture silver-medalist candidates and re-engage past applicants, rather than tracking sourcing efforts in a separate spreadsheet or tool.',
+  },
+  {
+    title: 'Headcount vs. Seat-Based Pricing',
+    description:
+      'Some ATS platforms price by total employee headcount (a BambooHR-style model), while others price by active job openings or hiring-manager seats. Seat-based pricing can penalize you for looping in more interviewers; headcount-based pricing can get expensive fast as you scale, so model both against your actual hiring plan before committing.',
+  },
+];
+
 function logoBadgeColor(name: string): string {
   const colors = ['bg-indigo-600', 'bg-violet-600', 'bg-sky-600', 'bg-emerald-600', 'bg-rose-600', 'bg-amber-600', 'bg-cyan-600', 'bg-fuchsia-600'];
   let hash = 0;
@@ -64,12 +123,68 @@ function logoBadgeColor(name: string): string {
   }
   return colors[Math.abs(hash) % colors.length];
 }
+
+function parseReviewCount(value?: string): number | null {
+  if (!value) return null;
+  const parsed = parseInt(value.replace(/[^0-9]/g, ''), 10);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+const siteRootUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Applicant Tracking System (ATS) Comparisons',
+  description:
+    'Independent, data-driven comparisons of the leading Applicant Tracking Systems on structured hiring, sourcing, compliance, and real pricing.',
+  url: pageUrl,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'The HR Stack Guide',
+    url: siteRootUrl,
+  },
+  about: {
+    '@type': 'Thing',
+    name: 'Applicant Tracking System (ATS) Software',
+  },
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: toolRoster.length,
+    itemListElement: toolRoster.map((tool, index) => {
+      const reviewCount = parseReviewCount(tool.review_count);
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'SoftwareApplication',
+          name: tool.name,
+          applicationCategory: 'BusinessApplication',
+          operatingSystem: 'Web-based',
+          description: tool.positioning,
+          ...(tool.rating && reviewCount
+            ? {
+                aggregateRating: {
+                  '@type': 'AggregateRating',
+                  ratingValue: tool.rating,
+                  reviewCount,
+                },
+              }
+            : {}),
+        },
+      };
+    }),
+  },
+};
 ---
 
 <Layout
   title="Applicant Tracking Systems (ATS) Comparisons (2026) — The HR Stack Guide"
   description="Compare the leading Applicant Tracking Systems, including Ashby, Greenhouse, Lever, and Workable, on structured hiring, sourcing, compliance, and real pricing."
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+
   <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
     <!-- Hero -->
     <header class="mb-12">
@@ -99,6 +214,14 @@ function logoBadgeColor(name: string): string {
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {toolRoster.map((tool) => (
           <article class="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
+            {tool.bestFor && (
+              <span class="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-amber-700">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                  <path d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.454 1.405 1.02L10 15.591l4.069 2.485c.713.434 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" />
+                </svg>
+                {tool.bestFor}
+              </span>
+            )}
             <div class="flex items-center gap-3">
               <div class="relative inline-flex h-10 w-10 shrink-0">
                 {tool.logo && (
@@ -136,35 +259,135 @@ function logoBadgeColor(name: string): string {
       </div>
     </section>
 
-    <!-- Comparison Directory -->
-    <section aria-label="Comparison directory">
-      <h2 class="mb-2 text-2xl font-bold text-slate-900">Browse All Comparisons</h2>
-      <p class="mb-8 max-w-3xl text-sm text-slate-500">
-        {categoryComparisons.length} head-to-head comparisons across {nicheGroups.length} audience-specific use cases, organized below by team type.
+    <!-- Category Buyer's Guide -->
+    <section class="mb-16" aria-label="How to evaluate Applicant Tracking System platforms">
+      <h2 class="mb-2 text-2xl font-bold text-slate-900">How to Evaluate Applicant Tracking System (ATS) Platforms in 2026</h2>
+      <p class="mb-8 max-w-3xl text-base leading-relaxed text-slate-600">
+        Every ATS claims to "streamline hiring." Here's what actually separates them once you get past the demo and into daily use by your recruiters and hiring managers.
       </p>
-
-      <div class="space-y-10">
-        {nicheGroups.map((group) => (
-          <div>
-            <h3 class="mb-4 text-lg font-bold text-slate-900">{group.nicheName}</h3>
-            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {group.comparisons.map((comparison) => (
-                <a
-                  href={`/${comparison.slug}`}
-                  class="group flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md"
-                >
-                  <span class="font-semibold text-slate-800 transition group-hover:text-emerald-600">
-                    {comparison.tool_a_name} vs {comparison.tool_b_name}
-                  </span>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-emerald-600" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-                  </svg>
-                </a>
-              ))}
-            </div>
-          </div>
+      <div class="grid gap-6 sm:grid-cols-3">
+        {buyerGuide.map((item, index) => (
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-sm font-bold text-emerald-600">
+              {index + 1}
+            </span>
+            <h3 class="mt-4 text-lg font-bold text-slate-900">{item.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
+          </article>
         ))}
       </div>
     </section>
+
+    <!-- Comparison Directory -->
+    <section aria-label="Comparison directory">
+      <h2 class="mb-2 text-2xl font-bold text-slate-900">Browse All Comparisons</h2>
+      <p class="mb-6 max-w-3xl text-sm text-slate-500">
+        {categoryComparisons.length} head-to-head comparisons across {nicheGroups.length} audience-specific use cases. Filter by team type to jump straight to the 28 comparisons built for your situation.
+      </p>
+
+      <div class="mb-8 flex flex-wrap gap-2" role="tablist" aria-label="Filter comparisons by use case">
+        {tabs.map((tab, index) => (
+          <button
+            type="button"
+            role="tab"
+            id={`ats-tab-${tab.id}`}
+            data-niche-tab={tab.id}
+            aria-selected={index === 0 ? 'true' : 'false'}
+            class:list={[
+              'inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition',
+              index === 0
+                ? 'border-emerald-600 bg-emerald-600 text-white shadow-sm'
+                : 'border-slate-200 bg-white text-slate-600 hover:border-emerald-300 hover:text-emerald-700',
+            ]}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="ats-comparison-grid">
+        {categoryComparisons.map((comparison) => (
+          <a
+            href={`/${comparison.slug}`}
+            data-niche={comparison.niche_id}
+            class="comparison-card group flex flex-col gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md"
+          >
+            <span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              {comparison.niche_name}
+            </span>
+            <span class="flex items-center justify-between gap-3">
+              <span class="font-semibold text-slate-800 transition group-hover:text-emerald-600">
+                {comparison.tool_a_name} vs {comparison.tool_b_name}
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-emerald-600" aria-hidden="true">
+                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+              </svg>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <p id="ats-comparison-empty-state" class="hidden mt-10 text-center text-sm text-slate-500">
+        No comparisons found for this use case yet.
+      </p>
+    </section>
   </main>
+
+  <script>
+    function initNicheFilter() {
+      const ACTIVE_CLASSES = ['border-emerald-600', 'bg-emerald-600', 'text-white', 'shadow-sm'];
+      const INACTIVE_CLASSES = ['border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-emerald-300', 'hover:text-emerald-700'];
+
+      const tabButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-niche-tab]'));
+      const cards = Array.from(document.querySelectorAll<HTMLAnchorElement>('.comparison-card'));
+      const emptyState = document.getElementById('ats-comparison-empty-state');
+      if (!tabButtons.length || !cards.length) return;
+
+      function showCard(card: HTMLElement) {
+        card.classList.remove('hidden');
+        // Force a reflow so the removal of opacity-0 below still triggers a transition.
+        void card.offsetWidth;
+        card.classList.remove('opacity-0');
+      }
+
+      function hideCard(card: HTMLElement) {
+        card.classList.add('opacity-0');
+        window.setTimeout(() => card.classList.add('hidden'), 150);
+      }
+
+      function applyFilter(nicheId: string) {
+        let visibleCount = 0;
+        for (const card of cards) {
+          const matches = nicheId === 'all' || card.dataset.niche === nicheId;
+          if (matches) {
+            visibleCount += 1;
+            showCard(card);
+          } else {
+            hideCard(card);
+          }
+        }
+        emptyState?.classList.toggle('hidden', visibleCount > 0);
+      }
+
+      for (const button of tabButtons) {
+        button.addEventListener('click', () => {
+          const nicheId = button.dataset.nicheTab;
+          if (!nicheId) return;
+
+          for (const btn of tabButtons) {
+            const isActive = btn === button;
+            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            btn.classList.remove(...ACTIVE_CLASSES, ...INACTIVE_CLASSES);
+            btn.classList.add(...(isActive ? ACTIVE_CLASSES : INACTIVE_CLASSES));
+          }
+
+          applyFilter(nicheId);
+        });
+      }
+    }
+
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      initNicheFilter();
+    }
+  </script>
 </Layout>
