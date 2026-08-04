@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { loadComparisons } from '../lib/comparisons';
+import { loadToolProfiles } from '../lib/tools';
 
 const comparisons = loadComparisons();
 const bySlug = new Map(comparisons.map((c) => [c.slug, c]));
@@ -35,6 +36,73 @@ const featuredSlugs = [
 const featuredComparisons = featuredSlugs
   .map((slug) => bySlug.get(slug))
   .filter((comparison): comparison is NonNullable<typeof comparison> => Boolean(comparison));
+
+function logoBadgeColor(name: string): string {
+  const colors = [
+    'bg-indigo-600',
+    'bg-violet-600',
+    'bg-sky-600',
+    'bg-emerald-600',
+    'bg-rose-600',
+    'bg-amber-600',
+    'bg-cyan-600',
+    'bg-fuchsia-600',
+  ];
+  let hash = 0;
+  for (let i = 0; i < name.length; i += 1) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+}
+
+const eeatPillars = [
+  {
+    icon: 'M2.5 10a7.5 7.5 0 1 1 15 0 7.5 7.5 0 0 1-15 0Zm8.03-4.03a.75.75 0 0 0-1.06 0l-3.5 3.5a.75.75 0 0 0 1.06 1.06L9.25 8.31v5.44a.75.75 0 0 0 1.5 0V8.31l2.22 2.22a.75.75 0 0 0 1.06-1.06l-3.5-3.5Z',
+    title: 'Data-Driven Pricing Truth',
+    description:
+      'We analyze published tiers, hidden FX conversion markups, contract deposits, and seat penalties to uncover true total cost of ownership.',
+  },
+  {
+    icon: 'M10 1.75a.75.75 0 0 1 .3.063l6.25 2.708a.75.75 0 0 1 .45.688v3.958c0 4.706-3.087 8.13-6.634 9.463a.75.75 0 0 1-.532 0C6.287 17.296 3.2 13.872 3.2 9.167V5.209a.75.75 0 0 1 .45-.688L9.9 1.813a.75.75 0 0 1 .3-.063Z',
+    title: 'Compliance & Capability Audits',
+    description:
+      'We evaluate local entity ownership, global tax withholding automation, GDPR/EEOC tracking, and core workflow capabilities.',
+  },
+  {
+    icon: 'M3 3.75A.75.75 0 0 1 3.75 3h.5a.75.75 0 0 1 .75.75v12.5h11a.75.75 0 0 1 0 1.5H4.25A1.75 1.75 0 0 1 2.5 16V3.75c0-.414.336-.75.5-.75Zm4.25 10a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 .75.75v3a.75.75 0 0 1-.75.75h-1a.75.75 0 0 1-.75-.75v-3Zm4-4a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 .75.75v7a.75.75 0 0 1-.75.75h-1a.75.75 0 0 1-.75-.75v-7Zm4-3a.75.75 0 0 1 .75-.75h1a.75.75 0 0 1 .75.75v10a.75.75 0 0 1-.75.75h-1a.75.75 0 0 1-.75-.75v-10Z',
+    title: 'Audience Intent Benchmarking',
+    description:
+      'We score platforms based on operational fit across specific growth stages—from pre-seed startups to multi-national scaleups.',
+  },
+];
+
+// Lightweight search index for the hero search bar: every tool's display
+// name + the sub-vertical hub it belongs to, plus every comparison's tool
+// names + slug. Kept intentionally small (ids/names/slugs only) since it's
+// embedded directly in the page and parsed client-side with no dependencies.
+const toolProfiles = loadToolProfiles();
+const nameById = new Map<string, string>();
+for (const comparison of comparisons) {
+  nameById.set(comparison.tool_a_id, comparison.tool_a_name);
+  nameById.set(comparison.tool_b_id, comparison.tool_b_name);
+}
+const hubHrefByCategory: Record<string, string> = {
+  'payroll-eor': '/global-payroll-eor/',
+  ats: '/applicant-tracking-systems/',
+};
+
+const searchTools = Object.entries(toolProfiles).map(([id, profile]) => ({
+  name: nameById.get(id) ?? id,
+  href: (profile.category && hubHrefByCategory[profile.category]) || '/',
+}));
+
+const searchComparisons = comparisons.map((comparison) => ({
+  slug: comparison.slug,
+  a: comparison.tool_a_name,
+  b: comparison.tool_b_name,
+}));
+
+const searchData = JSON.stringify({ tools: searchTools, comparisons: searchComparisons });
 ---
 
 <Layout
@@ -66,6 +134,46 @@ const featuredComparisons = featuredSlugs
         >
           Explore ATS Platforms
         </a>
+      </div>
+
+      <!-- Hero Search -->
+      <div class="mx-auto mt-8 max-w-xl">
+        <form id="hero-search-form" class="relative" role="search" aria-label="Search HR software and comparisons">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <input
+            id="hero-search-input"
+            type="text"
+            name="q"
+            autocomplete="off"
+            placeholder="Search software (e.g. Deel, Ashby) or comparison..."
+            class="w-full rounded-2xl border border-slate-200 bg-white py-4 pl-12 pr-24 text-base text-slate-900 shadow-lg shadow-slate-200/60 outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          />
+          <button
+            type="submit"
+            aria-label="Search"
+            class="absolute right-2 top-1/2 -translate-y-1/2 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+          >
+            Search
+          </button>
+          <div
+            id="hero-search-results"
+            class="absolute inset-x-0 top-full z-20 mt-2 hidden max-h-80 overflow-y-auto rounded-2xl border border-slate-200 bg-white p-2 text-left shadow-xl"
+            role="listbox"
+          >
+          </div>
+        </form>
       </div>
     </section>
 
@@ -113,7 +221,46 @@ const featuredComparisons = featuredSlugs
               href={`/${comparison.slug}`}
               class="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
             >
-              <span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
+              <div class="flex items-center gap-2.5">
+                <div class="relative inline-flex h-9 w-9 shrink-0">
+                  <img
+                    src={comparison.tool_a_logo_url}
+                    alt={`${comparison.tool_a_name} logo`}
+                    class="h-9 w-9 rounded-lg border border-slate-200 bg-slate-100 object-contain p-1"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  />
+                  <div
+                    class:list={[
+                      'hidden h-9 w-9 items-center justify-center rounded-lg text-xs font-bold uppercase text-white',
+                      logoBadgeColor(comparison.tool_a_name),
+                    ]}
+                    aria-hidden="true"
+                  >
+                    {comparison.tool_a_name.charAt(0)}
+                  </div>
+                </div>
+                <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">vs</span>
+                <div class="relative inline-flex h-9 w-9 shrink-0">
+                  <img
+                    src={comparison.tool_b_logo_url}
+                    alt={`${comparison.tool_b_name} logo`}
+                    class="h-9 w-9 rounded-lg border border-slate-200 bg-slate-100 object-contain p-1"
+                    loading="lazy"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                  />
+                  <div
+                    class:list={[
+                      'hidden h-9 w-9 items-center justify-center rounded-lg text-xs font-bold uppercase text-white',
+                      logoBadgeColor(comparison.tool_b_name),
+                    ]}
+                    aria-hidden="true"
+                  >
+                    {comparison.tool_b_name.charAt(0)}
+                  </div>
+                </div>
+              </div>
+              <span class="mt-4 inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
                 {comparison.niche_name}
               </span>
               <h3 class="mt-3 text-lg font-semibold text-slate-900 transition group-hover:text-indigo-600">
@@ -130,5 +277,147 @@ const featuredComparisons = featuredSlugs
         </div>
       </section>
     )}
+
+    <!-- How We Build Independent HR Tech Guides (E-E-A-T) -->
+    <section class="mt-16" aria-label="Our evaluation methodology">
+      <div class="text-center sm:text-left">
+        <h2 class="text-2xl font-bold text-slate-900">How We Build Independent HR Tech Guides</h2>
+        <p class="mt-2 text-base text-slate-500">
+          Our objective evaluation framework for modern HR &amp; talent platforms in 2026.
+        </p>
+      </div>
+      <div class="mt-8 grid gap-6 sm:grid-cols-3">
+        {eeatPillars.map((pillar) => (
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-6 w-6" aria-hidden="true">
+                <path d={pillar.icon} />
+              </svg>
+            </div>
+            <h3 class="mt-5 text-lg font-bold text-slate-900">{pillar.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">{pillar.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
   </main>
+
+  <script type="application/json" id="hero-search-data" set:html={searchData} />
+
+  <script>
+    function escapeHtml(value: string): string {
+      const entities: Record<string, string> = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      };
+      return value.replace(/[&<>"']/g, (char) => entities[char] ?? char);
+    }
+
+    interface SearchTool {
+      name: string;
+      href: string;
+    }
+    interface SearchComparison {
+      slug: string;
+      a: string;
+      b: string;
+    }
+    interface SearchData {
+      tools: SearchTool[];
+      comparisons: SearchComparison[];
+    }
+
+    function initHeroSearch() {
+      const dataEl = document.getElementById('hero-search-data');
+      const input = document.getElementById('hero-search-input') as HTMLInputElement | null;
+      const results = document.getElementById('hero-search-results');
+      const form = document.getElementById('hero-search-form') as HTMLFormElement | null;
+      if (!dataEl?.textContent || !input || !results || !form) return;
+
+      let data: SearchData;
+      try {
+        data = JSON.parse(dataEl.textContent) as SearchData;
+      } catch {
+        return;
+      }
+
+      function findMatches(query: string) {
+        const q = query.trim().toLowerCase();
+        if (!q) return { tools: [] as SearchTool[], comparisons: [] as SearchComparison[], exactTool: null as SearchTool | null };
+
+        const exactTool = data.tools.find((tool) => tool.name.toLowerCase() === q) ?? null;
+        const tools = data.tools.filter((tool) => tool.name.toLowerCase().includes(q)).slice(0, 4);
+        const comparisons = data.comparisons
+          .filter((c) => c.a.toLowerCase().includes(q) || c.b.toLowerCase().includes(q))
+          .slice(0, 5);
+
+        return { tools, comparisons, exactTool };
+      }
+
+      function render(query: string) {
+        const { tools, comparisons } = findMatches(query);
+
+        if (!tools.length && !comparisons.length) {
+          results.classList.add('hidden');
+          results.innerHTML = '';
+          return;
+        }
+
+        let html = '';
+        if (tools.length) {
+          html += '<p class="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Software</p>';
+          html += tools
+            .map(
+              (tool) =>
+                `<a href="${tool.href}" class="flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-700"><span>${escapeHtml(tool.name)}</span><span class="text-xs text-slate-400">View category</span></a>`
+            )
+            .join('');
+        }
+        if (comparisons.length) {
+          html += '<p class="px-3 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Comparisons</p>';
+          html += comparisons
+            .map(
+              (c) =>
+                `<a href="/${c.slug}" class="flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-700"><span>${escapeHtml(c.a)} vs ${escapeHtml(c.b)}</span></a>`
+            )
+            .join('');
+        }
+
+        results.innerHTML = html;
+        results.classList.remove('hidden');
+      }
+
+      input.addEventListener('input', () => render(input.value));
+      input.addEventListener('focus', () => {
+        if (input.value) render(input.value);
+      });
+      document.addEventListener('click', (event) => {
+        if (!form.contains(event.target as Node)) {
+          results.classList.add('hidden');
+        }
+      });
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const query = input.value.trim();
+        if (!query) return;
+
+        const { tools, comparisons, exactTool } = findMatches(query);
+        if (exactTool) {
+          window.location.href = exactTool.href;
+        } else if (comparisons.length) {
+          window.location.href = `/${comparisons[0].slug}`;
+        } else if (tools.length) {
+          window.location.href = tools[0].href;
+        }
+      });
+    }
+
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      initHeroSearch();
+    }
+  </script>
 </Layout>
