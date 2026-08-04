@@ -103,12 +103,35 @@ const searchComparisons = comparisons.map((comparison) => ({
 }));
 
 const searchData = JSON.stringify({ tools: searchTools, comparisons: searchComparisons });
+
+// Sitelinks Searchbox schema: tells Google our homepage exposes a site search
+// so a search box can render directly under our result in the SERP. The
+// urlTemplate's query param ("q") matches the hero search input's name below,
+// and the hero search script reads that same param on load so the target
+// URL is a genuinely working search, not just a decorative homepage link.
+const siteUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'The HR Stack Guide',
+  url: siteUrl,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${siteUrl}?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
 ---
 
 <Layout
   title="The HR Stack Guide — The Independent Buyer's Guide for the Modern HR Tech Stack"
   description="Independent, data-driven comparisons of the leading global payroll, EOR, and applicant tracking system (ATS) platforms for 2026."
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+
   <main class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
     <!-- Hero Section -->
     <section class="mx-auto max-w-3xl text-center">
@@ -399,6 +422,15 @@ const searchData = JSON.stringify({ tools: searchTools, comparisons: searchCompa
           results.classList.add('hidden');
         }
       });
+
+      // Supports the WebSite/SearchAction structured data: when a visitor
+      // arrives via a Google Sitelinks Searchbox (e.g. "/?q=deel"), prefill
+      // and run the search immediately instead of landing on an empty box.
+      const initialQuery = new URLSearchParams(window.location.search).get('q');
+      if (initialQuery) {
+        input.value = initialQuery;
+        render(initialQuery);
+      }
 
       form.addEventListener('submit', (event) => {
         event.preventDefault();

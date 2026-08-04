@@ -1,0 +1,197 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const lastUpdated = 'August 4, 2026';
+
+const siteUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
+const aboutSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'About The HR Stack Guide',
+  url: new URL('/about', siteUrl).href,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'The HR Stack Guide',
+    url: siteUrl,
+  },
+  about: {
+    '@type': 'Organization',
+    name: 'Stack Guide Media',
+    url: siteUrl,
+    description:
+      'Stack Guide Media publishes The HR Stack Guide, an independent buyer\u2019s guide comparing global payroll, EOR, and applicant tracking system (ATS) platforms.',
+    email: 'hello@thehrstackguide.com',
+  },
+};
+
+const pillars = [
+  {
+    icon: 'M2.5 10a7.5 7.5 0 1 1 15 0 7.5 7.5 0 0 1-15 0Zm8.03-4.03a.75.75 0 0 0-1.06 0l-3.5 3.5a.75.75 0 0 0 1.06 1.06L9.25 8.31v5.44a.75.75 0 0 0 1.5 0V8.31l2.22 2.22a.75.75 0 0 0 1.06-1.06l-3.5-3.5Z',
+    title: 'Experience',
+    description:
+      'Every comparison is built by analysts who have run live vendor trials, read the actual master service agreements, and configured the platforms we write about, not just skimmed marketing pages.',
+  },
+  {
+    icon: 'M10 1.75a.75.75 0 0 1 .3.063l6.25 2.708a.75.75 0 0 1 .45.688v3.958c0 4.706-3.087 8.13-6.634 9.463a.75.75 0 0 1-.532 0C6.287 17.296 3.2 13.872 3.2 9.167V5.209a.75.75 0 0 1 .45-.688L9.9 1.813a.75.75 0 0 1 .3-.063Z',
+    title: 'Expertise',
+    description:
+      'Our team is made up of verified B2B software operations analysts with backgrounds in HR operations, global payroll compliance, and talent acquisition tooling.',
+  },
+  {
+    icon: 'M10 2a.75.75 0 0 1 .75.75v.5a6.5 6.5 0 0 1 5.34 9.86l.72.72a.75.75 0 1 1-1.06 1.06l-.72-.72A6.5 6.5 0 0 1 9.25 3.25v-.5A.75.75 0 0 1 10 2Zm-6.5 8a6.48 6.48 0 0 1 1.393-4.02.75.75 0 1 1 1.18.926A4.98 4.98 0 0 0 5 10a5 5 0 0 0 5 5 .75.75 0 0 1 0 1.5 6.5 6.5 0 0 1-6.5-6.5Z',
+    title: 'Authoritativeness',
+    description:
+      'We publish a documented, repeatable evaluation rubric, cite our sources, and keep every comparison dated so readers can see exactly when it was last verified.',
+  },
+  {
+    icon: 'M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.03-9.97a.75.75 0 0 0-1.06-1.06L8.5 10.44l-1.47-1.47a.75.75 0 0 0-1.06 1.06l2 2a.75.75 0 0 0 1.06 0l4-4Z',
+    title: 'Trustworthiness',
+    description:
+      'Our editorial ratings are never for sale. We disclose every affiliate relationship, separate sponsored placement from ranking, and welcome vendors to flag factual corrections.',
+  },
+];
+
+const steps = [
+  {
+    title: 'Source primary data',
+    description:
+      'We start with each vendor\u2019s own pricing pages, product documentation, help center, and public changelog rather than secondhand summaries.',
+  },
+  {
+    title: 'Run structured trials',
+    description:
+      'Where access allows, we sign up for trial or demo environments to verify onboarding flow, core workflows, and any gaps between marketing claims and the live product.',
+  },
+  {
+    title: 'Score against a fixed rubric',
+    description:
+      'Every tool in a given category is scored against the same criteria, weighted for the audience segment (e.g. seed-stage startup vs. multi-national scaleup) described on that page.',
+  },
+  {
+    title: 'Re-review on a schedule',
+    description:
+      'Pricing and features change; we periodically re-check published comparisons and update the "last updated" date whenever a material fact changes.',
+  },
+];
+---
+
+<Layout
+  title="About Us — The HR Stack Guide"
+  description="Learn who publishes The HR Stack Guide, how our B2B software operations analysts evaluate HR, payroll, and ATS platforms, and how we stay editorially independent."
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(aboutSchema)} />
+
+  <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <header class="mb-10">
+      <nav aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 text-sm text-slate-500">
+          <li><a href="/" class="transition hover:text-indigo-600">Home</a></li>
+          <li aria-hidden="true" class="text-slate-300">&gt;</li>
+          <li class="font-medium text-indigo-600" aria-current="page">About Us</li>
+        </ol>
+      </nav>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        About The HR Stack Guide
+      </h1>
+      <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
+    </header>
+
+    <article class="space-y-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <section>
+        <h2 class="text-lg font-semibold text-slate-900">Our mission</h2>
+        <p class="mt-2 text-base leading-relaxed text-slate-700">
+          The HR Stack Guide is an independent buyer's guide for the modern HR tech stack. We publish
+          side-by-side comparisons of global payroll, Employer of Record (EOR), and applicant tracking system
+          (ATS) platforms so that people leaders, founders, and HR operations teams can make confident software
+          decisions without wading through vendor marketing on their own.
+        </p>
+        <p class="mt-3 text-base leading-relaxed text-slate-700">
+          The Site is published and operated by Stack Guide Media. We don't build or sell HR software
+          ourselves — our only product is clear, well-sourced comparison content.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-slate-900">Who writes our comparisons</h2>
+        <p class="mt-2 text-base leading-relaxed text-slate-700">
+          Our content is produced by a team of verified B2B software operations analysts with hands-on
+          experience running payroll, managing global contractor and EOR relationships, and hiring through
+          modern applicant tracking systems. Rather than bylines on every page, we maintain a single
+          consistent editorial process across the Site — described below — so every comparison meets the same
+          bar regardless of who wrote it.
+        </p>
+      </section>
+
+      <section aria-label="How we evaluate software">
+        <h2 class="text-lg font-semibold text-slate-900">How we evaluate software (E-E-A-T)</h2>
+        <p class="mt-2 text-base leading-relaxed text-slate-700">
+          We build every guide around four principles: firsthand experience with the product, subject-matter
+          expertise in HR and payroll operations, authoritative and citable claims, and trustworthiness backed
+          by disclosed incentives.
+        </p>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2">
+          {pillars.map((pillar) => (
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                  <path d={pillar.icon} />
+                </svg>
+              </div>
+              <h3 class="mt-3 text-base font-semibold text-slate-900">{pillar.title}</h3>
+              <p class="mt-1.5 text-sm leading-relaxed text-slate-600">{pillar.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section aria-label="Our editorial methodology">
+        <h2 class="text-lg font-semibold text-slate-900">Our editorial methodology, step by step</h2>
+        <ol class="mt-4 space-y-4">
+          {steps.map((step, index) => (
+            <li class="flex gap-4">
+              <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-sm font-semibold text-white">
+                {index + 1}
+              </span>
+              <div>
+                <h3 class="text-base font-semibold text-slate-900">{step.title}</h3>
+                <p class="mt-1 text-sm leading-relaxed text-slate-600">{step.description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-slate-900">How we're funded</h2>
+        <p class="mt-2 text-base leading-relaxed text-slate-700">
+          The Site is free to use and supported primarily through affiliate commissions when readers sign up
+          for a vendor through one of our links, at no extra cost to them. Affiliate participation never
+          determines which vendors are included in a comparison or what rating they receive. Full details are
+          available in our
+          <a href="/affiliate-disclosure" class="font-medium text-indigo-600 hover:underline">Affiliate Disclosure</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-slate-900">Corrections &amp; vendor participation</h2>
+        <p class="mt-2 text-base leading-relaxed text-slate-700">
+          Vendors and readers are welcome to flag outdated pricing, missing features, or factual errors on any
+          comparison. We review every correction request against primary sources and update the page's "last
+          updated" date whenever we make a change.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-slate-900">Contact us</h2>
+        <p class="mt-2 text-base leading-relaxed text-slate-700">
+          Questions about a comparison, a correction request, or a partnership inquiry can be sent to
+          <a href="mailto:hello@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">hello@thehrstackguide.com</a>.
+          You can also review our
+          <a href="/privacy-policy" class="font-medium text-indigo-600 hover:underline">Privacy Policy</a>,
+          <a href="/terms" class="font-medium text-indigo-600 hover:underline">Terms of Service</a>, and
+          <a href="/affiliate-disclosure" class="font-medium text-indigo-600 hover:underline">Affiliate Disclosure</a>.
+        </p>
+      </section>
+    </article>
+  </main>
+</Layout>
