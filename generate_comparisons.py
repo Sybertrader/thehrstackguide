@@ -350,7 +350,7 @@ ATS_TOOLS = {
     },
     "recruitee": {
         "name": "Recruitee",
-        "logo": "https://unavatar.io/recruitee.com",
+        "logo": "/Recruitee.png",
         "rating": 4.5,
         "starting_price": "$269/mo",
         "pricing_model": "Tiered monthly plans (Startup tier up to 10 job slots)",
