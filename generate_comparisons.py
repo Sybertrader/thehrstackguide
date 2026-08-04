@@ -203,6 +203,201 @@ TOOLS = {
     },
 }
 
+ATS_TOOLS = {
+    "ashby": {
+        "name": "Ashby",
+        "logo": "https://unavatar.io/ashbyhq.com",
+        "rating": 4.7,
+        "starting_price": "$400/mo",
+        "pricing_model": "Flat monthly fee up to 100 employees (Foundations plan)",
+        "free_trial": False,
+        "affiliate_url": "https://www.ashbyhq.com",
+        "key_features": ["Sourcing CRM & Analytics", "AI Candidate Summaries", "Structured Scorecards", "Multi-Time-Zone Scheduling"],
+        "pros": ["Deep recruiting analytics built into the ATS", "Combines ATS, CRM, and scheduling in one tool", "Predictable flat-tier pricing with no per-seat fees"],
+        "cons": ["No published free trial", "Steeper learning curve for advanced analytics"],
+        "matrix": {
+            "Structured Scorecards": True,
+            "Candidate Sourcing CRM": True,
+            "AI Candidate Sourcing": True,
+            "Job Board Syndication": False,
+            "Multi-Language Support": False,
+            "Native HRIS Integration": False,
+            "Unlimited User Seats": True,
+            "GDPR Compliance Tools": True,
+            "Background Check Integrations": False,
+            "Free Trial Available": False
+        }
+    },
+    "greenhouse": {
+        "name": "Greenhouse",
+        "logo": "https://unavatar.io/greenhouse.io",
+        "rating": 4.4,
+        "starting_price": "$6,000/yr",
+        "pricing_model": "Custom annual contract (Core tier from ~$6,000-$9,000/yr)",
+        "free_trial": False,
+        "affiliate_url": "https://www.greenhouse.io",
+        "key_features": ["Structured Hiring Scorecards", "400+ Native Integrations", "DEI & Compliance Reporting", "Global Job Board Postings"],
+        "pros": ["Industry-leading integration ecosystem", "Rigorous, auditable structured hiring methodology", "Best-in-class DEI and compliance reporting"],
+        "cons": ["Custom pricing requires a sales call", "Steep setup and learning curve for smaller teams"],
+        "matrix": {
+            "Structured Scorecards": True,
+            "Candidate Sourcing CRM": False,
+            "AI Candidate Sourcing": False,
+            "Job Board Syndication": True,
+            "Multi-Language Support": True,
+            "Native HRIS Integration": True,
+            "Unlimited User Seats": False,
+            "GDPR Compliance Tools": True,
+            "Background Check Integrations": True,
+            "Free Trial Available": False
+        }
+    },
+    "lever": {
+        "name": "Lever",
+        "logo": "https://unavatar.io/lever.co",
+        "rating": 4.3,
+        "starting_price": "$7,000/yr",
+        "pricing_model": "Custom annual contract based on headcount",
+        "free_trial": False,
+        "affiliate_url": "https://www.lever.co",
+        "key_features": ["Candidate Relationship Management", "Automated Nurture Campaigns", "Built-in E-Signature", "Visual Pipeline Tracking"],
+        "pros": ["Strong outbound sourcing and CRM tooling", "Clean, fast UI that hiring managers adopt quickly", "Automated candidate rediscovery for silver medalists"],
+        "cons": ["Custom pricing lacks upfront transparency", "Fewer native analytics than Ashby"],
+        "matrix": {
+            "Structured Scorecards": True,
+            "Candidate Sourcing CRM": True,
+            "AI Candidate Sourcing": False,
+            "Job Board Syndication": False,
+            "Multi-Language Support": False,
+            "Native HRIS Integration": False,
+            "Unlimited User Seats": False,
+            "GDPR Compliance Tools": True,
+            "Background Check Integrations": False,
+            "Free Trial Available": False
+        }
+    },
+    "workable": {
+        "name": "Workable",
+        "logo": "https://unavatar.io/workable.com",
+        "rating": 4.4,
+        "starting_price": "$299/mo",
+        "pricing_model": "Published monthly plans (up to 20 employees)",
+        "free_trial": True,
+        "affiliate_url": "https://www.workable.com",
+        "key_features": ["One-Click Job Board Syndication", "AI Candidate Sourcing", "Background Check Integrations", "Basic HR Onboarding Tools"],
+        "pros": ["Transparent published pricing, no sales calls required", "One-click distribution to 200+ job boards", "Built-in AI sourcing database of 400M+ profiles"],
+        "cons": ["Add-on fees for video interviewing and texting", "Less depth for complex enterprise hiring programs"],
+        "matrix": {
+            "Structured Scorecards": False,
+            "Candidate Sourcing CRM": False,
+            "AI Candidate Sourcing": True,
+            "Job Board Syndication": True,
+            "Multi-Language Support": False,
+            "Native HRIS Integration": False,
+            "Unlimited User Seats": False,
+            "GDPR Compliance Tools": True,
+            "Background Check Integrations": True,
+            "Free Trial Available": True
+        }
+    },
+    "breezy-hr": {
+        "name": "Breezy HR",
+        "logo": "https://unavatar.io/breezy.hr",
+        "rating": 4.4,
+        "starting_price": "$157/mo",
+        "pricing_model": "Flat monthly fee for unlimited jobs and candidates",
+        "free_trial": True,
+        "affiliate_url": "https://www.breezy.hr",
+        "key_features": ["Drag-and-Drop Pipelines", "Async Video Screening", "Self-Service Interview Scheduling", "Automated Candidate Messaging"],
+        "pros": ["Free tier available to test the platform", "Intuitive, Trello-style visual pipeline", "Built-in asynchronous video screening"],
+        "cons": ["Fewer enterprise-grade compliance tools", "Smaller third-party integration marketplace"],
+        "matrix": {
+            "Structured Scorecards": False,
+            "Candidate Sourcing CRM": False,
+            "AI Candidate Sourcing": False,
+            "Job Board Syndication": True,
+            "Multi-Language Support": False,
+            "Native HRIS Integration": False,
+            "Unlimited User Seats": False,
+            "GDPR Compliance Tools": True,
+            "Background Check Integrations": False,
+            "Free Trial Available": True
+        }
+    },
+    "jazzhr": {
+        "name": "JazzHR",
+        "logo": "https://unavatar.io/jazzhr.com",
+        "rating": 4.4,
+        "starting_price": "$49/mo",
+        "pricing_model": "Tiered monthly plans (Hero plan up to 3 active jobs)",
+        "free_trial": True,
+        "affiliate_url": "https://www.jazzhr.com",
+        "key_features": ["Unlimited User Seats", "Job Board Syndication", "Customizable Hiring Workflows", "OFCCP/EEOC Reporting"],
+        "pros": ["Ultra-affordable entry-level pricing", "Unlimited free user seats for every interviewer", "Simple, no-nonsense candidate tracking"],
+        "cons": ["Primarily focused on US/North American hiring", "Fewer advanced sourcing or CRM tools"],
+        "matrix": {
+            "Structured Scorecards": False,
+            "Candidate Sourcing CRM": False,
+            "AI Candidate Sourcing": False,
+            "Job Board Syndication": True,
+            "Multi-Language Support": False,
+            "Native HRIS Integration": False,
+            "Unlimited User Seats": True,
+            "GDPR Compliance Tools": False,
+            "Background Check Integrations": False,
+            "Free Trial Available": True
+        }
+    },
+    "recruitee": {
+        "name": "Recruitee",
+        "logo": "https://unavatar.io/recruitee.com",
+        "rating": 4.5,
+        "starting_price": "$269/mo",
+        "pricing_model": "Tiered monthly plans (Startup tier up to 10 job slots)",
+        "free_trial": True,
+        "affiliate_url": "https://recruitee.com",
+        "key_features": ["Multi-Language Careers Sites", "Visual Pipeline Management", "European GDPR Data Residency", "Collaborative Evaluations"],
+        "pros": ["Strong European GDPR compliance and data residency", "Beautiful, custom-branded multi-language careers pages", "Unlimited team member seats across departments"],
+        "cons": ["Smaller North American market presence", "Fewer AI-driven sourcing features"],
+        "matrix": {
+            "Structured Scorecards": False,
+            "Candidate Sourcing CRM": False,
+            "AI Candidate Sourcing": False,
+            "Job Board Syndication": True,
+            "Multi-Language Support": True,
+            "Native HRIS Integration": False,
+            "Unlimited User Seats": True,
+            "GDPR Compliance Tools": True,
+            "Background Check Integrations": False,
+            "Free Trial Available": True
+        }
+    },
+    "bamboohr-ats": {
+        "name": "BambooHR ATS",
+        "logo": "https://unavatar.io/bamboohr.com",
+        "rating": 4.4,
+        "starting_price": "$8/employee/mo",
+        "pricing_model": "Bundled with BambooHR Advantage or Pro HRIS tiers",
+        "free_trial": False,
+        "affiliate_url": "https://www.bamboohr.com",
+        "key_features": ["Native BambooHR HRIS Sync", "Candidate-to-Employee Conversion", "Mobile Hiring Approvals", "Secure E-Signatures"],
+        "pros": ["Zero manual data entry from candidate to employee record", "Single mobile app for HR admin and recruiting", "Simple, streamlined pipeline for small teams"],
+        "cons": ["Only sold bundled with the BambooHR HRIS", "Fewer standalone ATS features than dedicated tools"],
+        "matrix": {
+            "Structured Scorecards": False,
+            "Candidate Sourcing CRM": False,
+            "AI Candidate Sourcing": False,
+            "Job Board Syndication": False,
+            "Multi-Language Support": False,
+            "Native HRIS Integration": True,
+            "Unlimited User Seats": False,
+            "GDPR Compliance Tools": False,
+            "Background Check Integrations": False,
+            "Free Trial Available": False
+        }
+    },
+}
+
 # "Global partner platforms" - the vendors our site is built around (Global EOR,
 # international contractor management, and SMB usability). When one of these is
 # compared against a general-purpose HR platform like Rippling, the verdict is
@@ -294,17 +489,100 @@ NICHES = {
     }
 }
 
-def generate_csv(filename="comparisons.csv"):
+# Audience intents for the Applicant Tracking Systems (ATS) sub-vertical. Kept
+# in a separate namespace from NICHES above (Global Payroll & EOR) even though
+# a couple of names overlap ("scaleups", "agencies") in spirit, since these
+# describe a different tool category with its own tool_a_id/tool_b_id space,
+# so slugs never collide and "related comparisons" naturally stay within the
+# same sub-vertical (it ranks candidates by shared tool ids, and every ATS row
+# always has same-category matches that outscore any cross-category overlap).
+ATS_NICHES = {
+    "startups": {
+        "name": "Startups",
+        "audience": "Early-stage startups building their first structured hiring process without a dedicated recruiting team.",
+        "focus_feature": "fast setup, transparent pricing, and flexible seat-based collaboration."
+    },
+    "scaleups": {
+        "name": "Scaleups",
+        "audience": "Fast-growing 50-500 employee companies scaling recruiting operations and interview consistency.",
+        "focus_feature": "structured scorecards, recruiting analytics, and predictable flat-tier pricing."
+    },
+    "enterprise": {
+        "name": "Enterprise",
+        "audience": "Large organizations running high-volume hiring with dedicated recruiting operations and compliance requirements.",
+        "focus_feature": "rigorous compliance reporting, deep integrations, and enterprise-grade structured hiring."
+    },
+    "agencies": {
+        "name": "Staffing & Recruiting Agencies",
+        "audience": "Agencies managing multiple concurrent client requisitions and high candidate throughput.",
+        "focus_feature": "high-volume sourcing, candidate CRM tooling, and multi-client pipeline visibility."
+    },
+    "remote-teams": {
+        "name": "Remote-First Teams",
+        "audience": "Distributed companies hiring across time zones and countries with fully remote interview loops.",
+        "focus_feature": "multi-time-zone scheduling, multi-language support, and asynchronous collaboration tools."
+    }
+}
+
+def build_row(tool_a, tool_b, key_a, key_b, niche_id, niche_info, winner_key, winner_category, winner_label, winner_bullets, winner_reason, verdict_summary):
+    """Assembles one comparisons.csv row dict from two resolved tool records
+    and an already-decided verdict, shared by both the Global Payroll & EOR
+    and Applicant Tracking Systems (ATS) row generators below."""
+    feature_matrix = {}
+    for feature, val_a in tool_a["matrix"].items():
+        val_b = tool_b["matrix"].get(feature, False)
+        feature_matrix[feature] = {"a": val_a, "b": val_b}
+
+    return {
+        "slug": f"{key_a}-vs-{key_b}-for-{niche_id}",
+        "niche_id": niche_id,
+        "niche_name": niche_info["name"],
+        "niche_audience_phrase": natural_audience_phrase(niche_info["name"], "teams"),
+        "target_audience": niche_info["audience"],
+        "tool_a_id": key_a,
+        "tool_a_name": tool_a["name"],
+        "tool_a_logo_url": tool_a["logo"],
+        "tool_a_rating": tool_a["rating"],
+        "tool_a_starting_price": tool_a["starting_price"],
+        "tool_a_pricing_model": tool_a["pricing_model"],
+        "tool_a_free_trial": str(tool_a["free_trial"]).lower(),
+        "tool_a_affiliate_url": tool_a["affiliate_url"],
+        "tool_a_key_features": "|".join(tool_a["key_features"]),
+        "tool_a_pros": "|".join(tool_a["pros"]),
+        "tool_a_cons": "|".join(tool_a["cons"]),
+        "tool_b_id": key_b,
+        "tool_b_name": tool_b["name"],
+        "tool_b_logo_url": tool_b["logo"],
+        "tool_b_rating": tool_b["rating"],
+        "tool_b_starting_price": tool_b["starting_price"],
+        "tool_b_pricing_model": tool_b["pricing_model"],
+        "tool_b_free_trial": str(tool_b["free_trial"]).lower(),
+        "tool_b_affiliate_url": tool_b["affiliate_url"],
+        "tool_b_key_features": "|".join(tool_b["key_features"]),
+        "tool_b_pros": "|".join(tool_b["pros"]),
+        "tool_b_cons": "|".join(tool_b["cons"]),
+        "winner_id": winner_key,
+        "winner_category": winner_category,
+        "winner_label": winner_label,
+        "winner_bullets": "|".join(winner_bullets),
+        "winner_reason": winner_reason,
+        "verdict_summary": verdict_summary,
+        "feature_matrix_json": json.dumps(feature_matrix),
+        "meta_title": f"{tool_a['name']} vs {tool_b['name']} for {niche_info['name']} (2026 Comparison)",
+        "meta_description": f"Detailed comparison of {tool_a['name']} vs {tool_b['name']} for {niche_info['name']}."
+    }
+
+
+def generate_eor_rows():
+    """Generates the original 140 Global Payroll & EOR comparison rows."""
     tool_keys = list(TOOLS.keys())
     tool_pairs = list(itertools.combinations(tool_keys, 2))
     rows = []
-    
+
     for niche_id, niche_info in NICHES.items():
         for key_a, key_b in tool_pairs:
             tool_a = TOOLS[key_a]
             tool_b = TOOLS[key_b]
-            
-            slug = f"{key_a}-vs-{key_b}-for-{niche_id}"
 
             # Determine which vendor, if either, is a "global partner platform"
             # being compared directly against Rippling. Ratings for every vendor
@@ -362,57 +640,68 @@ def generate_csv(filename="comparisons.csv"):
                 )
                 winner_bullets = []
 
-            feature_matrix = {}
-            for feature, val_a in tool_a["matrix"].items():
-                val_b = tool_b["matrix"].get(feature, False)
-                feature_matrix[feature] = {"a": val_a, "b": val_b}
-            
-            row = {
-                "slug": slug,
-                "niche_id": niche_id,
-                "niche_name": niche_info["name"],
-                "niche_audience_phrase": natural_audience_phrase(niche_info["name"], "teams"),
-                "target_audience": niche_info["audience"],
-                "tool_a_id": key_a,
-                "tool_a_name": tool_a["name"],
-                "tool_a_logo_url": tool_a["logo"],
-                "tool_a_rating": tool_a["rating"],
-                "tool_a_starting_price": tool_a["starting_price"],
-                "tool_a_pricing_model": tool_a["pricing_model"],
-                "tool_a_free_trial": str(tool_a["free_trial"]).lower(),
-                "tool_a_affiliate_url": tool_a["affiliate_url"],
-                "tool_a_key_features": "|".join(tool_a["key_features"]),
-                "tool_a_pros": "|".join(tool_a["pros"]),
-                "tool_a_cons": "|".join(tool_a["cons"]),
-                "tool_b_id": key_b,
-                "tool_b_name": tool_b["name"],
-                "tool_b_logo_url": tool_b["logo"],
-                "tool_b_rating": tool_b["rating"],
-                "tool_b_starting_price": tool_b["starting_price"],
-                "tool_b_pricing_model": tool_b["pricing_model"],
-                "tool_b_free_trial": str(tool_b["free_trial"]).lower(),
-                "tool_b_affiliate_url": tool_b["affiliate_url"],
-                "tool_b_key_features": "|".join(tool_b["key_features"]),
-                "tool_b_pros": "|".join(tool_b["pros"]),
-                "tool_b_cons": "|".join(tool_b["cons"]),
-                "winner_id": winner_key,
-                "winner_category": winner_category,
-                "winner_label": winner_label,
-                "winner_bullets": "|".join(winner_bullets),
-                "winner_reason": winner_reason,
-                "verdict_summary": verdict_summary,
-                "feature_matrix_json": json.dumps(feature_matrix),
-                "meta_title": f"{tool_a['name']} vs {tool_b['name']} for {niche_info['name']} (2026 Comparison)",
-                "meta_description": f"Detailed comparison of {tool_a['name']} vs {tool_b['name']} for {niche_info['name']}."
-            }
-            rows.append(row)
-            
+            rows.append(build_row(
+                tool_a, tool_b, key_a, key_b, niche_id, niche_info,
+                winner_key, winner_category, winner_label, winner_bullets, winner_reason, verdict_summary
+            ))
+
+    return rows
+
+
+def generate_ats_rows():
+    """Generates the 140 new Applicant Tracking Systems (ATS) comparison rows
+    (28 unique tool pairings x 5 audience intents). Every ATS pairing uses the
+    simple "Overall Fit" verdict style (the same style used for the vast
+    majority of the existing Global Payroll & EOR rows) since there is no
+    Rippling-style general-purpose platform in this sub-vertical that needs a
+    special use-case framing."""
+    tool_keys = list(ATS_TOOLS.keys())
+    tool_pairs = list(itertools.combinations(tool_keys, 2))
+    rows = []
+
+    for niche_id, niche_info in ATS_NICHES.items():
+        for key_a, key_b in tool_pairs:
+            tool_a = ATS_TOOLS[key_a]
+            tool_b = ATS_TOOLS[key_b]
+
+            winner_key = key_a if tool_a["rating"] >= tool_b["rating"] else key_b
+            winner = ATS_TOOLS[winner_key]
+
+            winner_category = "Overall Fit"
+            winner_label = f"{BRAND_NAME}'s Overall Winner: {winner['name']}"
+            winner_reason = (
+                f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {winner['name']} edges out the "
+                f"competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), "
+                f"flexible operational setup, and strong support for {niche_info['focus_feature']}"
+            )
+            verdict_summary = (
+                f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
+                f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
+                f"{winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} "
+                f"while {tool_b['name']} starts at {tool_b['starting_price']}."
+            )
+            winner_bullets = []
+
+            rows.append(build_row(
+                tool_a, tool_b, key_a, key_b, niche_id, niche_info,
+                winner_key, winner_category, winner_label, winner_bullets, winner_reason, verdict_summary
+            ))
+
+    return rows
+
+
+def generate_csv(filename="comparisons.csv"):
+    # ATS rows are appended after the original Global Payroll & EOR rows so
+    # the first 140 rows (and every existing page they generate) stay
+    # byte-for-byte identical.
+    rows = generate_eor_rows() + generate_ats_rows()
+
     fieldnames = list(rows[0].keys())
     with open(filename, mode="w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
-        
+
     print(f"Success: Updated {len(rows)} pSEO comparison rows in '{filename}'.")
 
 

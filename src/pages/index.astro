@@ -5,67 +5,107 @@ import { loadComparisons } from '../lib/comparisons';
 const comparisons = loadComparisons();
 const bySlug = new Map(comparisons.map((c) => [c.slug, c]));
 
-const categoryBadges = ['Global EOR', 'US & Global Payroll', 'Contractor Compliance', 'PEO Services'];
+const categoryCards = [
+  {
+    title: 'Global Payroll & EOR',
+    href: '/global-payroll-eor/',
+    description: 'Deel, Rippling, Remote, Oyster, Gusto, and more, compared on compliance, global reach, and real pricing.',
+    badge: '8 tools · 140 comparisons',
+    accent: 'from-indigo-500 to-violet-600',
+  },
+  {
+    title: 'Applicant Tracking Systems (ATS)',
+    href: '/applicant-tracking-systems/',
+    description: 'Ashby, Greenhouse, Lever, Workable, and more, compared on structured hiring, sourcing, and pricing.',
+    badge: '8 tools · 140 comparisons',
+    accent: 'from-emerald-500 to-teal-600',
+  },
+];
 
-// "Gusto vs BambooHR" and "ADP vs Rippling" were requested but neither BambooHR nor ADP
-// exist in our dataset, so they're swapped for two other real, high-intent pairs.
+// A curated mix of high-intent comparisons spanning both sub-verticals.
 const featuredSlugs = [
-  'deel-vs-rippling-for-tech-startups',
+  'deel-vs-remote-for-tech-startups',
+  'ashby-vs-greenhouse-for-scaleups',
   'rippling-vs-gusto-for-scaleups',
-  'remote-vs-oyster-for-agencies',
-  'deel-vs-remote-for-us-latam',
-  'gusto-vs-multiplier-for-web3-crypto',
+  'workable-vs-jazzhr-for-startups',
+  'greenhouse-vs-lever-for-enterprise',
   'deel-vs-oyster-for-tech-startups',
 ];
 
 const featuredComparisons = featuredSlugs
   .map((slug) => bySlug.get(slug))
   .filter((comparison): comparison is NonNullable<typeof comparison> => Boolean(comparison));
-
-const categoryBreakdown = [
-  {
-    title: 'Global Payroll & EOR',
-    description: 'Managing remote teams, tax compliance, and local legal entities.',
-  },
-  {
-    title: 'US Payroll & Benefits',
-    description: 'Small business payroll, health insurance, and 401(k) management.',
-  },
-  {
-    title: 'Contractor Management',
-    description: 'Cross-border invoicing, automated payouts, and W-8/W-9 compliance.',
-  },
-];
 ---
 
 <Layout
-  title="The HR Stack Guide — Global HR Tool Comparisons"
-  description="Independent, data-driven comparisons of the leading global payroll, EOR, and HR platforms."
+  title="The HR Stack Guide — The Independent Buyer's Guide for the Modern HR Tech Stack"
+  description="Independent, data-driven comparisons of the leading global payroll, EOR, and applicant tracking system (ATS) platforms for 2026."
 >
   <main class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
     <!-- Hero Section -->
     <section class="mx-auto max-w-3xl text-center">
-      <h1 class="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-        Compare HR, Global Payroll &amp; EOR Software
+      <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold text-indigo-700">
+        2026 Edition
+      </span>
+      <h1 class="mt-5 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+        The Independent Buyer's Guide for the Modern HR Tech Stack in 2026
       </h1>
       <p class="mt-4 text-lg leading-relaxed text-slate-600">
-        Unbiased side-by-side comparisons covering payroll, Employer of Record (EOR) platforms, contractor compliance, and HR tech for modern businesses.
+        Unbiased, side-by-side comparisons of the global payroll, Employer of Record (EOR), and applicant tracking system (ATS) platforms that power modern people teams, backed by real pricing, feature matrices, and buyer checklists.
       </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="/global-payroll-eor/"
+          class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+        >
+          Explore Payroll &amp; EOR
+        </a>
+        <a
+          href="/applicant-tracking-systems/"
+          class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+        >
+          Explore ATS Platforms
+        </a>
+      </div>
+    </section>
 
-      <div class="mt-6 flex flex-wrap items-center justify-center gap-2">
-        {categoryBadges.map((badge) => (
-          <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold text-indigo-700">
-            {badge}
-          </span>
+    <!-- Category Grid -->
+    <section class="mt-16" aria-label="Browse by category">
+      <h2 class="mb-6 text-center text-2xl font-bold text-slate-900 sm:text-left">
+        Browse by Category
+      </h2>
+      <div class="grid gap-6 sm:grid-cols-2">
+        {categoryCards.map((category) => (
+          <a
+            href={category.href}
+            class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-lg"
+          >
+            <div class:list={['absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r', category.accent]} aria-hidden="true"></div>
+            <span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
+              {category.badge}
+            </span>
+            <h3 class="mt-4 text-2xl font-bold text-slate-900 transition group-hover:text-indigo-600">
+              {category.title}
+            </h3>
+            <p class="mt-3 text-base leading-relaxed text-slate-600">
+              {category.description}
+            </p>
+            <span class="mt-6 inline-flex items-center text-sm font-semibold text-indigo-600">
+              View all comparisons
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1 h-4 w-4" aria-hidden="true">
+                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+              </svg>
+            </span>
+          </a>
         ))}
       </div>
     </section>
 
-    <!-- Featured Comparisons Grid -->
+    <!-- Popular Comparisons -->
     {featuredComparisons.length > 0 && (
-      <section class="mt-16" aria-label="Featured comparisons">
+      <section class="mt-16" aria-label="Popular comparisons">
         <h2 class="mb-6 text-center text-2xl font-bold text-slate-900 sm:text-left">
-          Featured Comparisons
+          Popular Comparisons
         </h2>
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featuredComparisons.map((comparison) => (
@@ -90,22 +130,5 @@ const categoryBreakdown = [
         </div>
       </section>
     )}
-
-    <!-- Category Breakdown -->
-    <section class="mt-16" aria-label="What we cover">
-      <h2 class="mb-6 text-center text-2xl font-bold text-slate-900 sm:text-left">
-        What We Cover
-      </h2>
-      <div class="grid gap-6 sm:grid-cols-3">
-        {categoryBreakdown.map((category) => (
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="text-lg font-semibold text-slate-900">{category.title}</h3>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600">
-              {category.description}
-            </p>
-          </div>
-        ))}
-      </div>
-    </section>
   </main>
 </Layout>

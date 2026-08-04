@@ -8,6 +8,7 @@ import path from 'node:path';
  * tool itself (not a specific A-vs-B pairing).
  */
 export interface ToolProfile {
+  category?: string;
   rating?: string;
   review_count?: string;
   rating_source?: string;
@@ -32,4 +33,12 @@ export function loadToolProfiles(): Record<string, ToolProfile> {
 export function getToolProfile(toolId: string): ToolProfile | null {
   const profiles = loadToolProfiles();
   return profiles[toolId] ?? null;
+}
+
+/** Returns all tool profiles (with their ids) matching a given category, e.g. 'payroll-eor' or 'ats'. */
+export function getToolsByCategory(category: string): Array<ToolProfile & { id: string }> {
+  const profiles = loadToolProfiles();
+  return Object.entries(profiles)
+    .filter(([, profile]) => profile.category === category)
+    .map(([id, profile]) => ({ id, ...profile }));
 }
