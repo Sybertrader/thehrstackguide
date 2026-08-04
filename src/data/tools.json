@@ -1,5 +1,8 @@
 {
   "deel": {
+    "rating": "4.8",
+    "review_count": "3,850",
+    "rating_source": "G2 & Industry Benchmark",
     "positioning": "The market leader for global workforce expansion, contractor hiring, and EOR compliance across 150+ countries.",
     "text_compliance": "Deel handles compliance in 150+ countries using a vast network of fully-owned local entities and in-house legal experts. They automate misclassification protection, localized contract generation, tax withholdings, and statutory benefits compliance, backing their contracts with misclassification insurance guarantees.",
     "text_global_reach": "Deel provides unmatched international coverage across 150+ countries with direct payroll and owned EOR entities in key tech and hiring hubs globally. They support multi-currency payouts, localized benefits administration, and fast local onboarding.",
@@ -12,6 +15,9 @@
     ]
   },
   "gusto": {
+    "rating": "4.7",
+    "review_count": "4,120",
+    "rating_source": "G2 & Industry Benchmark",
     "positioning": "The premier automated payroll, tax, and HR suite built specifically for US-based small-to-medium businesses.",
     "text_compliance": "Gusto automates local, state, and federal US payroll taxes, including automated filings for 940/941 forms, W-2s, and 1099s. They ensure automated compliance with state-specific overtime laws, workers' compensation requirements, and ACA reporting for domestic teams.",
     "text_global_reach": "Gusto is built primarily for US domestic hiring across all 50 states. While they offer international contractor payments to 120+ countries, they do not provide direct global EOR services for full-time international employees without third-party integrations.",
@@ -24,6 +30,9 @@
     ]
   },
   "multiplier": {
+    "rating": "4.6",
+    "review_count": "850",
+    "rating_source": "G2 & Industry Benchmark",
     "positioning": "High-value, cost-effective global EOR optimized for rapidly scaling teams across Asia-Pacific and EMEA.",
     "text_compliance": "Multiplier manages compliance across 150+ countries with automated employment contracts built around local labor laws. They assume employer liability, ensuring statutory benefit contributions, severance policies, and localized tax withholdings meet strict jurisdictional standards.",
     "text_global_reach": "Multiplier has an exceptionally strong infrastructure footprint across the Asia-Pacific region and emerging markets, providing direct entity support in key tech hubs like India, Singapore, Vietnam, and the UAE alongside broader global coverage.",
@@ -36,6 +45,9 @@
     ]
   },
   "oyster": {
+    "rating": "4.5",
+    "review_count": "1,140",
+    "rating_source": "G2 & Industry Benchmark",
     "positioning": "An intuitive, designer-friendly global employment platform built for mid-market remote companies prioritising team experience.",
     "text_compliance": "Oyster automates local employment agreements and statutory compliance in 180+ countries. They handle misclassification safeguards, localized IP assignments, and statutory benefit filings through a mix of owned infrastructure and local HR partners.",
     "text_global_reach": "Oyster supports hiring across 180+ countries, offering robust international onboarding tools, local currency payouts, and localized benefits administration tailored to distributed tech and creative teams.",
@@ -48,6 +60,9 @@
     ]
   },
   "papaya": {
+    "rating": "4.4",
+    "review_count": "620",
+    "rating_source": "G2 & Industry Benchmark",
     "positioning": "Enterprise-grade global workforce platform delivering deep payroll intelligence and consolidated multi-country financial analytics.",
     "text_compliance": "Papaya Global uses AI-driven compliance engine checks paired with local in-country experts across 160+ jurisdictions. They oversee mandatory tax filings, worker classification risks, and legal contract amendments for complex corporate structures.",
     "text_global_reach": "Operating in over 160 countries, Papaya specializes in unifying fragmented international payroll networks. They allow multinational enterprises to manage localized EOR workers, direct payroll entities, and global contractors from a single business intelligence console.",
@@ -60,6 +75,9 @@
     ]
   },
   "plane": {
+    "rating": "4.6",
+    "review_count": "410",
+    "rating_source": "G2 & Industry Benchmark",
     "positioning": "A streamlined, startup-first payroll and EOR platform designed for tech companies seeking transparent, low-fee international hiring.",
     "text_compliance": "Plane (formerly Pilot) enforces compliant hiring across 100+ countries with standardized employment contracts, local tax withholding, and IP assignment protection. They streamline misclassification protection for hybrid remote engineering teams.",
     "text_global_reach": "Plane provides coverage across major technology hiring markets worldwide. It excels at helping US and European tech startups quickly deploy global contractors and full-time remote developers without administrative bloat.",
@@ -72,6 +90,9 @@
     ]
   },
   "remote": {
+    "rating": "4.6",
+    "review_count": "1,980",
+    "rating_source": "G2 & Industry Benchmark",
     "positioning": "The gold standard for global compliance purity, utilizing 100% owned legal entities to eliminate third-party EOR risks.",
     "text_compliance": "Unlike platforms relying on third-party agencies, Remote owns its legal entities in every supported market. This guarantees end-to-end legal compliance, direct IP protection, bulletproof misclassification defense, and zero third-party data risk.",
     "text_global_reach": "Remote operates owned infrastructure across 75+ core hiring markets while serving global contractor operations in 180+ countries. Their owned-entity model ensures direct control over employee contracts, local payroll, and government tax filings.",
@@ -84,6 +105,9 @@
     ]
   },
   "rippling": {
+    "rating": "4.8",
+    "review_count": "4,500",
+    "rating_source": "G2 & Industry Benchmark",
     "positioning": "An all-in-one workforce operations system uniting HR, global payroll, IT device management, and app provisioning in one dashboard.",
     "text_compliance": "Rippling automates compliance across US domestic payroll and global workforce expansions. Its engine automatically enforces local overtime laws, tax registration, mandatory sexual harassment training, and international labor standards based on worker location.",
     "text_global_reach": "Rippling supports global hiring via direct payroll, local entity management, and integrated EOR services. It allows companies to manage US W-2 employees, international EOR staff, and worldwide contractors within a single unified HR cloud.",

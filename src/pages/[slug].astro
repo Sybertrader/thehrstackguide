@@ -95,6 +95,10 @@ interface FaqItem {
 }
 
 interface ToolNarrative {
+  rating: string;
+  reviewCountLabel: string | null;
+  reviewCountNumeric: number | null;
+  ratingSource: string | null;
   positioning: string;
   textCompliance: string;
   textGlobalReach: string;
@@ -114,9 +118,14 @@ function resolveToolNarrative(
   toolName: string,
   nicheAudiencePhrase: string,
   features: string[],
-  pros: string[]
+  pros: string[],
+  csvRating: string
 ): ToolNarrative {
   const profile = getToolProfile(toolId);
+
+  const reviewCountNumeric = profile?.review_count
+    ? parseInt(profile.review_count.replace(/,/g, ''), 10)
+    : null;
 
   const positioning =
     profile?.positioning ??
@@ -135,6 +144,10 @@ function resolveToolNarrative(
     `A detailed ${topic} breakdown for ${toolName} is being finalized. In the meantime, confirm the specifics directly on the vendor's site before making a decision.`;
 
   return {
+    rating: profile?.rating ?? csvRating,
+    reviewCountLabel: profile?.review_count ?? null,
+    reviewCountNumeric: reviewCountNumeric && !Number.isNaN(reviewCountNumeric) ? reviewCountNumeric : null,
+    ratingSource: profile?.rating_source ?? null,
     positioning,
     textCompliance: profile?.text_compliance ?? comingSoon('tax, legal, and misclassification compliance'),
     textGlobalReach: profile?.text_global_reach ?? comingSoon('global reach and workforce infrastructure'),
@@ -272,15 +285,41 @@ const toolANarrative = resolveToolNarrative(
   comparison.tool_a_name,
   comparison.niche_audience_phrase,
   toolAFeatures,
-  toolAPros
+  toolAPros,
+  comparison.tool_a_rating
 );
 const toolBNarrative = resolveToolNarrative(
   comparison.tool_b_id,
   comparison.tool_b_name,
   comparison.niche_audience_phrase,
   toolBFeatures,
-  toolBPros
+  toolBPros,
+  comparison.tool_b_rating
 );
+
+const richSnippetSchema = [
+  {
+    tool: comparison.tool_a_name,
+    narrative: toolANarrative,
+  },
+  {
+    tool: comparison.tool_b_name,
+    narrative: toolBNarrative,
+  },
+]
+  .filter((entry) => entry.narrative.reviewCountNumeric !== null)
+  .map((entry) => ({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: entry.tool,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web-based',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: entry.narrative.rating,
+      reviewCount: entry.narrative.reviewCountNumeric,
+    },
+  }));
 
 const winnerName =
   comparison.winner_id === comparison.tool_a_id
@@ -438,6 +477,9 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
 
 <Layout title={comparison.meta_title} description={comparison.meta_description}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+  {richSnippetSchema.length > 0 && (
+    <script slot="head" type="application/ld+json" set:html={JSON.stringify(richSnippetSchema)} />
+  )}
   <meta slot="head" property="og:updated_time" content={lastUpdatedIso} />
   <meta slot="head" name="revised" content={lastUpdatedIso} />
 
@@ -610,9 +652,12 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
             </div>
             <div>
               <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_a_name}</h2>
-              <p class="mt-1 text-sm font-medium text-amber-600">
-                ⭐ {toolADisplayRating}/5
+              <p class="mt-1 text-sm font-medium text-slate-500">
+                ⭐️ {toolANarrative.rating}/5{toolANarrative.reviewCountLabel && ` (${toolANarrative.reviewCountLabel}+ reviews)`}
               </p>
+              {toolANarrative.ratingSource && (
+                <p class="mt-1 text-xs text-slate-400">Based on {toolANarrative.ratingSource} user reviews</p>
+              )}
             </div>
           </div>
 
@@ -702,9 +747,12 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
             </div>
             <div>
               <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_b_name}</h2>
-              <p class="mt-1 text-sm font-medium text-amber-600">
-                ⭐ {toolBDisplayRating}/5
+              <p class="mt-1 text-sm font-medium text-slate-500">
+                ⭐️ {toolBNarrative.rating}/5{toolBNarrative.reviewCountLabel && ` (${toolBNarrative.reviewCountLabel}+ reviews)`}
               </p>
+              {toolBNarrative.ratingSource && (
+                <p class="mt-1 text-xs text-slate-400">Based on {toolBNarrative.ratingSource} user reviews</p>
+              )}
             </div>
           </div>
 

@@ -8,6 +8,9 @@ import path from 'node:path';
  * tool itself (not a specific A-vs-B pairing).
  */
 export interface ToolProfile {
+  rating?: string;
+  review_count?: string;
+  rating_source?: string;
   positioning: string;
   text_compliance: string;
   text_global_reach: string;
