@@ -3,6 +3,18 @@ import Layout from '../layouts/Layout.astro';
 import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { getToolProfile } from '../lib/tools';
+import { affiliateLinks } from '../config/affiliates';
+
+/**
+ * Routes outbound CTAs through our own `/go/{slug}` redirect for any tool
+ * with a registered affiliate link (see src/config/affiliates.ts), so the
+ * tracked partner URL lives in one place and can be swapped without editing
+ * comparison content. Tools without a registered affiliate link fall back to
+ * their plain vendor URL from comparisons.csv.
+ */
+function resolveOutboundHref(toolId: string, fallbackUrl: string): string {
+  return affiliateLinks[toolId] ? `/go/${toolId}` : fallbackUrl;
+}
 
 export function getStaticPaths() {
   const comparisons = loadComparisons();
@@ -330,6 +342,8 @@ const winnerName =
 
 const toolAIsWinner = comparison.winner_id === comparison.tool_a_id;
 const toolBIsWinner = comparison.winner_id === comparison.tool_b_id;
+const toolAAffiliateHref = resolveOutboundHref(comparison.tool_a_id, comparison.tool_a_affiliate_url);
+const toolBAffiliateHref = resolveOutboundHref(comparison.tool_b_id, comparison.tool_b_affiliate_url);
 const toolABadgeColor = logoBadgeColor(comparison.tool_a_name);
 const toolBBadgeColor = logoBadgeColor(comparison.tool_b_name);
 
@@ -583,7 +597,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
 
         <div class="mt-6 flex flex-wrap gap-3">
           <a
-            href={comparison.tool_a_affiliate_url}
+            href={toolAAffiliateHref}
             class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             target="_blank"
             rel="noopener noreferrer sponsored"
@@ -593,7 +607,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
             Try {comparison.tool_a_name}
           </a>
           <a
-            href={comparison.tool_b_affiliate_url}
+            href={toolBAffiliateHref}
             class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             target="_blank"
             rel="noopener noreferrer sponsored"
@@ -699,7 +713,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
           )}
 
           <a
-            href={comparison.tool_a_affiliate_url}
+            href={toolAAffiliateHref}
             class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             target="_blank"
             rel="noopener noreferrer sponsored"
@@ -794,7 +808,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
           )}
 
           <a
-            href={comparison.tool_b_affiliate_url}
+            href={toolBAffiliateHref}
             class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             target="_blank"
             rel="noopener noreferrer sponsored"
@@ -865,7 +879,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
                     <td class="px-6 py-4 text-sm font-medium text-slate-500">Ready to get started?</td>
                     <td class="px-6 py-4">
                       <a
-                        href={comparison.tool_a_affiliate_url}
+                        href={toolAAffiliateHref}
                         class="js-affiliate-cta inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
                         target="_blank"
                         rel="noopener noreferrer sponsored"
@@ -877,7 +891,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
                     </td>
                     <td class="px-6 py-4">
                       <a
-                        href={comparison.tool_b_affiliate_url}
+                        href={toolBAffiliateHref}
                         class="js-affiliate-cta inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
                         target="_blank"
                         rel="noopener noreferrer sponsored"
@@ -1047,7 +1061,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
               ))}
             </ul>
             <a
-              href={comparison.tool_a_affiliate_url}
+              href={toolAAffiliateHref}
               class="js-affiliate-cta mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
               target="_blank"
               rel="noopener noreferrer sponsored"
@@ -1071,7 +1085,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
               ))}
             </ul>
             <a
-              href={comparison.tool_b_affiliate_url}
+              href={toolBAffiliateHref}
               class="js-affiliate-cta mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
               target="_blank"
               rel="noopener noreferrer sponsored"
@@ -1156,7 +1170,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
           </p>
           <div class="flex flex-wrap gap-3">
             <a
-              href={comparison.tool_a_affiliate_url}
+              href={toolAAffiliateHref}
               class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
               target="_blank"
               rel="noopener noreferrer sponsored"
@@ -1166,7 +1180,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
               Try {comparison.tool_a_name}
             </a>
             <a
-              href={comparison.tool_b_affiliate_url}
+              href={toolBAffiliateHref}
               class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
               target="_blank"
               rel="noopener noreferrer sponsored"
