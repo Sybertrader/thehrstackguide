@@ -1,33 +1,34 @@
 ---
 interface Props {
   brandName: string;
-  modalId?: string;
   formActionUrl?: string;
 }
 
 const { 
   brandName, 
-  modalId = `lead-modal-${brandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
   formActionUrl = "https://formspree.io/f/YOUR_FORM_ID"
 } = Astro.props;
+
+// Unique ID per component instance to prevent duplicate DOM ID conflicts on comparison pages
+const uniqueId = Math.random().toString(36).substring(2, 7);
+const modalId = `modal-${brandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${uniqueId}`;
 ---
 
 <!-- Trigger Button -->
 <button
   type="button"
-  onclick={`(function(){ var m = document.getElementById('${modalId}'); if(m){ document.body.appendChild(m); m.classList.remove('hidden'); document.body.style.overflow='hidden'; } })()`}
+  onclick={`document.getElementById('${modalId}').showModal()`}
   class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer"
 >
   Request Intro & Pricing
 </button>
 
-<!-- Modal Overlay (Portals to body root when opened) -->
-<div
+<!-- Native HTML Dialog (Bypasses all Z-index and CSS stacking context limitations) -->
+<dialog
   id={modalId}
-  class="modal-backdrop fixed inset-0 z-[9999] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
-  aria-hidden="true"
+  class="p-0 rounded-2xl shadow-2xl max-w-lg w-full border-0 bg-transparent backdrop:bg-slate-900/70 backdrop:backdrop-blur-sm m-auto"
 >
-  <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 my-8 text-left z-[10000]">
+  <div class="relative w-full bg-white rounded-2xl overflow-hidden border border-slate-100 text-left my-auto">
     
     <!-- Header -->
     <div class="bg-slate-900 px-6 py-5 text-white flex justify-between items-center">
@@ -37,7 +38,7 @@ const {
       </div>
       <button
         type="button"
-        onclick={`(function(){ var m = document.getElementById('${modalId}'); if(m){ m.classList.add('hidden'); document.body.style.overflow=''; } })()`}
+        onclick={`document.getElementById('${modalId}').close()`}
         class="text-slate-400 hover:text-white text-2xl font-bold leading-none p-1 rounded-lg focus:outline-none cursor-pointer"
         aria-label="Close modal"
       >
@@ -185,7 +186,7 @@ const {
         </p>
         <button
           type="button"
-          onclick={`(function(){ var m = document.getElementById('${modalId}'); if(m){ m.classList.add('hidden'); document.body.style.overflow=''; } })()`}
+          onclick={`document.getElementById('${modalId}').close()`}
           class="mt-4 px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg text-sm transition cursor-pointer"
         >
           Close Window
@@ -193,12 +194,25 @@ const {
       </div>
     </div>
   </div>
-</div>
+</dialog>
 
 <script is:inline>
+  // Close modal when clicking outside form content on backdrop
+  document.addEventListener('click', function(e) {
+    if (e.target.tagName === 'DIALOG' && e.target.open) {
+      var rect = e.target.getBoundingClientRect();
+      var isInDialog = (rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX && e.clientX <= rect.left + rect.width);
+      if (!isInDialog) {
+        e.target.close();
+      }
+    }
+  });
+
+  // Submit handler
   document.addEventListener('submit', async function(e) {
     var form = e.target;
-    if (!form || !form.id || form.id.indexOf('form-lead-modal-') !== 0) return;
+    if (!form || !form.id || form.id.indexOf('form-modal-') !== 0) return;
 
     e.preventDefault();
 
