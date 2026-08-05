@@ -4,6 +4,7 @@ import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublishe
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { getToolProfile } from '../lib/tools';
 import { affiliateLinks } from '../config/affiliates';
+import ManualLeadModal from '../components/ManualLeadModal.astro';
 
 /**
  * Routes outbound CTAs through our own `/go/{slug}` redirect for any tool
@@ -14,6 +15,23 @@ import { affiliateLinks } from '../config/affiliates';
  */
 function resolveOutboundHref(toolId: string, fallbackUrl: string): string {
   return affiliateLinks[toolId] ? `/go/${toolId}` : fallbackUrl;
+}
+
+/**
+ * Brands without an approved affiliate link yet get routed to a manual lead
+ * capture form (see src/components/ManualLeadModal.astro + VendorCTA.astro)
+ * instead of an outbound link. This mirrors VendorCTA.astro's exact routing
+ * rule so every CTA on a comparison page (hero, cards, feature table,
+ * decision checklist, final verdict) stays consistent without duplicating
+ * five near-identical `<VendorCTA>` calls per tool across the template.
+ * Remote and every other standard brand are completely untouched.
+ */
+const MANUAL_LEAD_BRANDS = ['plane', 'rippling', 'lever', 'jazzhr'];
+function isManualLeadBrand(toolId: string): boolean {
+  return MANUAL_LEAD_BRANDS.includes(toolId.toLowerCase().trim());
+}
+function manualLeadModalId(brandName: string): string {
+  return `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`;
 }
 
 export function getStaticPaths() {
@@ -376,6 +394,10 @@ const toolAIsWinner = comparison.winner_id === comparison.tool_a_id;
 const toolBIsWinner = comparison.winner_id === comparison.tool_b_id;
 const toolAAffiliateHref = resolveOutboundHref(comparison.tool_a_id, comparison.tool_a_affiliate_url);
 const toolBAffiliateHref = resolveOutboundHref(comparison.tool_b_id, comparison.tool_b_affiliate_url);
+const toolAIsManualLead = isManualLeadBrand(comparison.tool_a_id);
+const toolBIsManualLead = isManualLeadBrand(comparison.tool_b_id);
+const toolAModalId = manualLeadModalId(comparison.tool_a_name);
+const toolBModalId = manualLeadModalId(comparison.tool_b_name);
 const toolABadgeColor = logoBadgeColor(comparison.tool_a_name);
 const toolBBadgeColor = logoBadgeColor(comparison.tool_b_name);
 
@@ -532,6 +554,25 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
   <meta slot="head" name="revised" content={lastUpdatedIso} />
 
   <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <!--
+        Manual lead-capture modals for brands awaiting affiliate approval
+        (Plane, Rippling, Lever, JazzHR). Mounted once per tool so every CTA
+        button below can open the same modal instance via
+        data-modal-target={toolXModalId} without duplicating element ids.
+        The component's own default trigger button is hidden since every
+        real CTA on this page renders its own matching "open-modal-btn".
+      -->
+      {toolAIsManualLead && (
+        <div class="hidden">
+          <ManualLeadModal brandName={comparison.tool_a_name} />
+        </div>
+      )}
+      {toolBIsManualLead && (
+        <div class="hidden">
+          <ManualLeadModal brandName={comparison.tool_b_name} />
+        </div>
+      )}
+
       <!-- Hero Section -->
       <header class="mb-10">
         <nav aria-label="Breadcrumb">
@@ -630,26 +671,46 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         </p>
 
         <div class="mt-6 flex flex-wrap gap-3">
-          <a
-            href={toolAAffiliateHref}
-            class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            data-track-vendor={comparison.tool_a_name}
-            data-track-location="hero"
-          >
-            Try {comparison.tool_a_name}
-          </a>
-          <a
-            href={toolBAffiliateHref}
-            class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            data-track-vendor={comparison.tool_b_name}
-            data-track-location="hero"
-          >
-            Try {comparison.tool_b_name}
-          </a>
+          {toolAIsManualLead ? (
+            <button
+              type="button"
+              data-modal-target={toolAModalId}
+              class="open-modal-btn inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Request Intro &amp; Pricing for {comparison.tool_a_name}
+            </button>
+          ) : (
+            <a
+              href={toolAAffiliateHref}
+              class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-track-vendor={comparison.tool_a_name}
+              data-track-location="hero"
+            >
+              Try {comparison.tool_a_name}
+            </a>
+          )}
+          {toolBIsManualLead ? (
+            <button
+              type="button"
+              data-modal-target={toolBModalId}
+              class="open-modal-btn inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Request Intro &amp; Pricing for {comparison.tool_b_name}
+            </button>
+          ) : (
+            <a
+              href={toolBAffiliateHref}
+              class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-track-vendor={comparison.tool_b_name}
+              data-track-location="hero"
+            >
+              Try {comparison.tool_b_name}
+            </a>
+          )}
         </div>
       </header>
 
@@ -746,19 +807,29 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
             </ul>
           )}
 
-          <a
-            href={toolAAffiliateHref}
-            class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            data-track-vendor={comparison.tool_a_name}
-            data-track-location="comparison_card"
-          >
-            Try {comparison.tool_a_name}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
-              <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-            </svg>
-          </a>
+          {toolAIsManualLead ? (
+            <button
+              type="button"
+              data-modal-target={toolAModalId}
+              class="open-modal-btn mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Request Intro &amp; Pricing
+            </button>
+          ) : (
+            <a
+              href={toolAAffiliateHref}
+              class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-track-vendor={comparison.tool_a_name}
+              data-track-location="comparison_card"
+            >
+              Try {comparison.tool_a_name}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
+                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          )}
         </article>
 
         <!-- Tool B -->
@@ -841,19 +912,29 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
             </ul>
           )}
 
-          <a
-            href={toolBAffiliateHref}
-            class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            target="_blank"
-            rel="noopener noreferrer sponsored"
-            data-track-vendor={comparison.tool_b_name}
-            data-track-location="comparison_card"
-          >
-            Try {comparison.tool_b_name}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
-              <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-            </svg>
-          </a>
+          {toolBIsManualLead ? (
+            <button
+              type="button"
+              data-modal-target={toolBModalId}
+              class="open-modal-btn mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Request Intro &amp; Pricing
+            </button>
+          ) : (
+            <a
+              href={toolBAffiliateHref}
+              class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              data-track-vendor={comparison.tool_b_name}
+              data-track-location="comparison_card"
+            >
+              Try {comparison.tool_b_name}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
+                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          )}
         </article>
       </section>
 
@@ -912,28 +993,48 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
                   <tr class="border-t border-slate-200 bg-slate-50">
                     <td class="px-6 py-4 text-sm font-medium text-slate-500">Ready to get started?</td>
                     <td class="px-6 py-4">
-                      <a
-                        href={toolAAffiliateHref}
-                        class="js-affiliate-cta inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-                        target="_blank"
-                        rel="noopener noreferrer sponsored"
-                        data-track-vendor={comparison.tool_a_name}
-                        data-track-location="feature_table"
-                      >
-                        Try {comparison.tool_a_name} ↗
-                      </a>
+                      {toolAIsManualLead ? (
+                        <button
+                          type="button"
+                          data-modal-target={toolAModalId}
+                          class="open-modal-btn inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                        >
+                          Request Pricing ↗
+                        </button>
+                      ) : (
+                        <a
+                          href={toolAAffiliateHref}
+                          class="js-affiliate-cta inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                          target="_blank"
+                          rel="noopener noreferrer sponsored"
+                          data-track-vendor={comparison.tool_a_name}
+                          data-track-location="feature_table"
+                        >
+                          Try {comparison.tool_a_name} ↗
+                        </a>
+                      )}
                     </td>
                     <td class="px-6 py-4">
-                      <a
-                        href={toolBAffiliateHref}
-                        class="js-affiliate-cta inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-                        target="_blank"
-                        rel="noopener noreferrer sponsored"
-                        data-track-vendor={comparison.tool_b_name}
-                        data-track-location="feature_table"
-                      >
-                        Try {comparison.tool_b_name} ↗
-                      </a>
+                      {toolBIsManualLead ? (
+                        <button
+                          type="button"
+                          data-modal-target={toolBModalId}
+                          class="open-modal-btn inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                        >
+                          Request Pricing ↗
+                        </button>
+                      ) : (
+                        <a
+                          href={toolBAffiliateHref}
+                          class="js-affiliate-cta inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                          target="_blank"
+                          rel="noopener noreferrer sponsored"
+                          data-track-vendor={comparison.tool_b_name}
+                          data-track-location="feature_table"
+                        >
+                          Try {comparison.tool_b_name} ↗
+                        </a>
+                      )}
                     </td>
                   </tr>
                 </tfoot>
@@ -1094,16 +1195,26 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
                 </li>
               ))}
             </ul>
-            <a
-              href={toolAAffiliateHref}
-              class="js-affiliate-cta mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              data-track-vendor={comparison.tool_a_name}
-              data-track-location="decision_checklist"
-            >
-              Try {comparison.tool_a_name}
-            </a>
+            {toolAIsManualLead ? (
+              <button
+                type="button"
+                data-modal-target={toolAModalId}
+                class="open-modal-btn mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+              >
+                Request Intro &amp; Pricing
+              </button>
+            ) : (
+              <a
+                href={toolAAffiliateHref}
+                class="js-affiliate-cta mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                data-track-vendor={comparison.tool_a_name}
+                data-track-location="decision_checklist"
+              >
+                Try {comparison.tool_a_name}
+              </a>
+            )}
           </div>
 
           <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
@@ -1118,16 +1229,26 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
                 </li>
               ))}
             </ul>
-            <a
-              href={toolBAffiliateHref}
-              class="js-affiliate-cta mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              data-track-vendor={comparison.tool_b_name}
-              data-track-location="decision_checklist"
-            >
-              Try {comparison.tool_b_name}
-            </a>
+            {toolBIsManualLead ? (
+              <button
+                type="button"
+                data-modal-target={toolBModalId}
+                class="open-modal-btn mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+              >
+                Request Intro &amp; Pricing
+              </button>
+            ) : (
+              <a
+                href={toolBAffiliateHref}
+                class="js-affiliate-cta mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                data-track-vendor={comparison.tool_b_name}
+                data-track-location="decision_checklist"
+              >
+                Try {comparison.tool_b_name}
+              </a>
+            )}
           </div>
         </div>
       </section>
@@ -1203,26 +1324,46 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
             <span class="font-semibold text-indigo-700">Bottom line:</span> {winnerName} is the stronger overall pick for {comparison.niche_audience_phrase.toLowerCase()}, with {runnerUpName} remaining a reasonable alternative depending on your priorities.
           </p>
           <div class="flex flex-wrap gap-3">
-            <a
-              href={toolAAffiliateHref}
-              class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              data-track-vendor={comparison.tool_a_name}
-              data-track-location="final_verdict"
-            >
-              Try {comparison.tool_a_name}
-            </a>
-            <a
-              href={toolBAffiliateHref}
-              class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-              target="_blank"
-              rel="noopener noreferrer sponsored"
-              data-track-vendor={comparison.tool_b_name}
-              data-track-location="final_verdict"
-            >
-              Try {comparison.tool_b_name}
-            </a>
+            {toolAIsManualLead ? (
+              <button
+                type="button"
+                data-modal-target={toolAModalId}
+                class="open-modal-btn inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+              >
+                Request Intro &amp; Pricing for {comparison.tool_a_name}
+              </button>
+            ) : (
+              <a
+                href={toolAAffiliateHref}
+                class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                data-track-vendor={comparison.tool_a_name}
+                data-track-location="final_verdict"
+              >
+                Try {comparison.tool_a_name}
+              </a>
+            )}
+            {toolBIsManualLead ? (
+              <button
+                type="button"
+                data-modal-target={toolBModalId}
+                class="open-modal-btn inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+              >
+                Request Intro &amp; Pricing for {comparison.tool_b_name}
+              </button>
+            ) : (
+              <a
+                href={toolBAffiliateHref}
+                class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                data-track-vendor={comparison.tool_b_name}
+                data-track-location="final_verdict"
+              >
+                Try {comparison.tool_b_name}
+              </a>
+            )}
           </div>
         </div>
       </section>
