@@ -7,7 +7,8 @@ interface Props {
 
 const { 
   brandName, 
-  modalId = `lead-modal-${brandName.toLowerCase().replace(/[^a-z0-9]/g, '')}`,
+  // Must match [slug].astro manualLeadModalId() — spaces become hyphens.
+  modalId = `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`,
   formActionUrl = "https://formspree.io/f/YOUR_FORM_ID"
 } = Astro.props;
 ---
@@ -209,6 +210,11 @@ const {
           var modal = document.getElementById(modalId);
           if (modal) {
             e.preventDefault();
+            // Teleport to body so fixed positioning is never trapped by
+            // ancestor overflow/transform stacking contexts.
+            if (modal.parentElement !== document.body) {
+              document.body.appendChild(modal);
+            }
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
           }

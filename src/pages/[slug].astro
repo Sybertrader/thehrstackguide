@@ -556,21 +556,16 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
   <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       <!--
         Manual lead-capture modals for brands awaiting affiliate approval
-        (Plane, Rippling, Lever, JazzHR). Mounted once per tool so every CTA
-        button below can open the same modal instance via
-        data-modal-target={toolXModalId} without duplicating element ids.
-        The component's own default trigger button is hidden since every
-        real CTA on this page renders its own matching "open-modal-btn".
+        (Plane, Rippling, Lever, JazzHR). Mounted once per tool (not wrapped
+        in display:none — that permanently hid the backdrop) so every CTA
+        below can open the same instance via data-modal-target={toolXModalId}.
+        modalId is passed explicitly so it always matches the button attribute.
       -->
       {toolAIsManualLead && (
-        <div class="hidden">
-          <ManualLeadModal brandName={comparison.tool_a_name} />
-        </div>
+        <ManualLeadModal brandName={comparison.tool_a_name} modalId={toolAModalId} />
       )}
       {toolBIsManualLead && (
-        <div class="hidden">
-          <ManualLeadModal brandName={comparison.tool_b_name} />
-        </div>
+        <ManualLeadModal brandName={comparison.tool_b_name} modalId={toolBModalId} />
       )}
 
       <!-- Hero Section -->
