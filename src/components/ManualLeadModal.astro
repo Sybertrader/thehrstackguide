@@ -9,7 +9,7 @@ const {
   brandName, 
   // Must match [slug].astro manualLeadModalId() — spaces become hyphens.
   modalId = `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`,
-  formActionUrl = "https://formspree.io/f/YOUR_FORM_ID"
+  formActionUrl = "https://api.web3forms.com/submit"
 } = Astro.props;
 ---
 
@@ -38,8 +38,9 @@ const {
     <!-- Form Container -->
     <div class="p-6">
       <form id={`form-${modalId}`} action={formActionUrl} method="POST" class="space-y-4">
+        <input type="hidden" name="access_key" value="9e3cce58-b062-4436-9834-24ba34373412" />
         <input type="hidden" name="target_software" value={brandName} />
-        <input type="hidden" name="_subject" value={`New Referral Inquiry: ${brandName} via The HR Stack Guide`} />
+        <input type="hidden" name="subject" value={`New Referral Inquiry: ${brandName} via The HR Stack Guide`} />
 
         <!-- First & Last Name -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
