@@ -270,14 +270,15 @@
     "free_trial": true
   },
   "bamboohr-ats": {
+    "name": "BambooHR",
     "category": "ats",
     "rating": "4.4",
     "review_count": "5,600",
     "rating_source": "G2 & Industry Benchmark",
     "positioning": "An integrated applicant tracking module seamlessly built into the popular BambooHR HRIS ecosystem for small and mid-market teams.",
-    "text_compliance": "BambooHR ATS connects directly with the core HRIS database to ensure EEOC compliance, secure e-signatures, and seamless candidate-to-employee onboarding records.",
-    "text_global_reach": "BambooHR ATS supports international applicant tracking for organizations expanding across multiple country locations using the primary BambooHR platform.",
-    "text_pricing_truth": "BambooHR ATS is sold as part of custom-quoted Advantage/Pro HRIS packages rather than a standalone public price list. Expect implementation and per-employee HRIS fees to dominate total cost versus a point ATS.",
+    "text_compliance": "BambooHR connects directly with the core HRIS database to ensure EEOC compliance, secure e-signatures, and seamless candidate-to-employee onboarding records.",
+    "text_global_reach": "BambooHR supports international applicant tracking for organizations expanding across multiple country locations using the primary BambooHR platform.",
+    "text_pricing_truth": "BambooHR ATS capabilities are sold as part of custom-quoted Advantage/Pro HRIS packages rather than a standalone public price list. Expect implementation and per-employee HRIS fees to dominate total cost versus a point ATS.",
     "choose_if": [
       "You already use (or plan to adopt) BambooHR as your core HRIS database.",
       "You want candidate data to convert instantly into employee W-4/onboarding files with zero manual data entry.",

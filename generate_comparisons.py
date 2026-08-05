@@ -373,7 +373,7 @@ ATS_TOOLS = {
         }
     },
     "bamboohr-ats": {
-        "name": "BambooHR ATS",
+        "name": "BambooHR",
         "logo": "https://unavatar.io/bamboohr.com",
         "rating": 4.4,
         "starting_price": "Custom quote",
