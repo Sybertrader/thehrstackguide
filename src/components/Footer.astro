@@ -17,6 +17,14 @@ const atsLinks = [
   { href: '/ashby-vs-lever-for-startups', label: 'Ashby vs Lever' },
 ];
 
+const pmLinks = [
+  { href: '/15five-vs-lattice-for-scaleups', label: '15Five vs Lattice' },
+  { href: '/leapsome-vs-culture-amp-for-people-ops', label: 'Leapsome vs Culture Amp' },
+  { href: '/leapsome-vs-lattice-for-enterprise', label: 'Leapsome vs Lattice' },
+  { href: '/15five-vs-performyard-for-startups', label: '15Five vs PerformYard' },
+  { href: '/lattice-vs-culture-amp-for-people-ops', label: 'Lattice vs Culture Amp' },
+];
+
 const legalLinks = [
   { href: '/about', label: 'About Us' },
   { href: '/privacy-policy', label: 'Privacy Policy' },
@@ -27,7 +35,7 @@ const legalLinks = [
 
 <footer class="border-t border-slate-200 bg-white">
   <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
       <!-- Col 1: Brand & Trust -->
       <div>
         <a href="/" class="flex items-center gap-2.5">
@@ -75,7 +83,21 @@ const legalLinks = [
         </ul>
       </div>
 
-      <!-- Col 4: Legal & Methodology -->
+      <!-- Col 4: Performance Management -->
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">
+          <a href="/performance-management/" class="transition hover:text-indigo-600">Performance Management</a>
+        </h3>
+        <ul class="mt-4 space-y-2.5">
+          {pmLinks.map((link) => (
+            <li>
+              <a href={link.href} class="text-sm text-slate-500 transition hover:text-indigo-600">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Col 5: Legal & Methodology -->
       <div>
         <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">Legal &amp; Methodology</h3>
         <ul class="mt-4 space-y-2.5">

@@ -398,6 +398,177 @@ ATS_TOOLS = {
     },
 }
 
+PM_TOOLS = {
+    "15five": {
+        "name": "15Five",
+        "logo": "https://unavatar.io/15five.com",
+        "rating": 4.6,
+        "starting_price": "$4/user/mo",
+        "pricing_model": "Per user / month (Engage, Perform, and Total Platform tiers)",
+        "free_trial": True,
+        "affiliate_url": "https://www.15five.com",
+        "key_features": ["Weekly Check-ins", "OKRs & Goals", "1:1 Agenda Tools", "Manager Coaching"],
+        "pros": ["Excellent manager coaching and weekly check-in cadence", "Strong OKR cascading with lightweight reviews", "Transparent published pricing with a free trial"],
+        "cons": ["Engagement survey depth trails Culture Amp", "Compensation calibration is less mature than Lattice"],
+        "matrix": {
+            "OKRs & Goal Cascading": True,
+            "Continuous Feedback": True,
+            "360 Degree Reviews": True,
+            "1:1 Meeting Tools": True,
+            "Engagement Surveys": True,
+            "Compensation Calibration": False,
+            "Career Pathing": True,
+            "AI Performance Insights": True,
+            "Slack/Teams Integration": True,
+            "Free Trial Available": True
+        }
+    },
+    "performyard": {
+        "name": "PerformYard",
+        "logo": "https://unavatar.io/performyard.com",
+        "rating": 4.5,
+        "starting_price": "$5/user/mo",
+        "pricing_model": "Per user / month with configurable review cycle modules",
+        "free_trial": True,
+        "affiliate_url": "https://www.performyard.com",
+        "key_features": ["Configurable Review Cycles", "Goal Tracking", "360 Feedback", "Performance Dashboards"],
+        "pros": ["Highly configurable review templates without heavy implementation", "Affordable mid-market pricing", "Strong customer support for HR admins"],
+        "cons": ["Fewer AI-driven insights than Lattice or Leapsome", "Engagement survey suite is lighter than dedicated culture platforms"],
+        "matrix": {
+            "OKRs & Goal Cascading": True,
+            "Continuous Feedback": True,
+            "360 Degree Reviews": True,
+            "1:1 Meeting Tools": False,
+            "Engagement Surveys": False,
+            "Compensation Calibration": True,
+            "Career Pathing": False,
+            "AI Performance Insights": False,
+            "Slack/Teams Integration": True,
+            "Free Trial Available": True
+        }
+    },
+    "leapsome": {
+        "name": "Leapsome",
+        "logo": "https://unavatar.io/leapsome.com",
+        "rating": 4.7,
+        "starting_price": "$8/user/mo",
+        "pricing_model": "Modular per-user pricing (Reviews, Goals, Engagement, Learning)",
+        "free_trial": True,
+        "affiliate_url": "https://www.leapsome.com",
+        "key_features": ["Modular Reviews & Goals", "Learning Paths", "Engagement Surveys", "AI Writing Assist"],
+        "pros": ["Best-in-class modular suite spanning reviews, learning, and engagement", "Strong European GDPR posture", "AI assists for review writing and goal drafting"],
+        "cons": ["Per-module pricing can stack for full-suite buyers", "North American brand awareness still catching up"],
+        "matrix": {
+            "OKRs & Goal Cascading": True,
+            "Continuous Feedback": True,
+            "360 Degree Reviews": True,
+            "1:1 Meeting Tools": True,
+            "Engagement Surveys": True,
+            "Compensation Calibration": True,
+            "Career Pathing": True,
+            "AI Performance Insights": True,
+            "Slack/Teams Integration": True,
+            "Free Trial Available": True
+        }
+    },
+    "lattice": {
+        "name": "Lattice",
+        "logo": "https://unavatar.io/lattice.com",
+        "rating": 4.7,
+        "starting_price": "$11/user/mo",
+        "pricing_model": "Per user / month across Performance, Engagement, Grow, and Compensation modules",
+        "free_trial": False,
+        "affiliate_url": "https://lattice.com",
+        "key_features": ["Performance Reviews", "OKRs", "Compensation Bands", "Talent Reviews"],
+        "pros": ["Deep compensation calibration tied to performance data", "Mature OKR and talent review workflows", "Strong analytics for People leaders"],
+        "cons": ["Premium per-seat pricing", "No self-serve free trial; requires a sales demo"],
+        "matrix": {
+            "OKRs & Goal Cascading": True,
+            "Continuous Feedback": True,
+            "360 Degree Reviews": True,
+            "1:1 Meeting Tools": True,
+            "Engagement Surveys": True,
+            "Compensation Calibration": True,
+            "Career Pathing": True,
+            "AI Performance Insights": True,
+            "Slack/Teams Integration": True,
+            "Free Trial Available": False
+        }
+    },
+    "culture-amp": {
+        "name": "Culture Amp",
+        "logo": "https://unavatar.io/cultureamp.com",
+        "rating": 4.6,
+        "starting_price": "$7/user/mo",
+        "pricing_model": "Per user / month (Engage, Perform, Develop platform bundles)",
+        "free_trial": False,
+        "affiliate_url": "https://www.cultureamp.com",
+        "key_features": ["Science-Backed Engagement Surveys", "Performance Reviews", "Development Plans", "People Science Benchmarks"],
+        "pros": ["Industry-leading engagement survey science and benchmarks", "Actionable people-science insights for HRBPs", "Strong development planning alongside performance"],
+        "cons": ["Performance module is secondary to engagement strengths", "Enterprise sales cycle for full platform access"],
+        "matrix": {
+            "OKRs & Goal Cascading": True,
+            "Continuous Feedback": True,
+            "360 Degree Reviews": True,
+            "1:1 Meeting Tools": False,
+            "Engagement Surveys": True,
+            "Compensation Calibration": False,
+            "Career Pathing": True,
+            "AI Performance Insights": True,
+            "Slack/Teams Integration": True,
+            "Free Trial Available": False
+        }
+    },
+    "reflektive": {
+        "name": "Reflektive",
+        "logo": "https://unavatar.io/reflektive.com",
+        "rating": 4.2,
+        "starting_price": "$6/user/mo",
+        "pricing_model": "Per user / month (legacy platform; Workday-era packaging varies)",
+        "free_trial": False,
+        "affiliate_url": "https://www.reflektive.com",
+        "key_features": ["Real-Time Feedback", "Goals", "Review Cycles", "Recognition Feed"],
+        "pros": ["Lightweight continuous feedback and recognition UX", "Familiar for teams already on legacy Reflektive workflows", "Solid Slack-native feedback loops"],
+        "cons": ["Product roadmap uncertainty after Workday acquisition", "Fewer modern AI and compensation modules than Lattice/Leapsome"],
+        "matrix": {
+            "OKRs & Goal Cascading": True,
+            "Continuous Feedback": True,
+            "360 Degree Reviews": True,
+            "1:1 Meeting Tools": False,
+            "Engagement Surveys": False,
+            "Compensation Calibration": False,
+            "Career Pathing": False,
+            "AI Performance Insights": False,
+            "Slack/Teams Integration": True,
+            "Free Trial Available": False
+        }
+    },
+    "clearcompany": {
+        "name": "ClearCompany",
+        "logo": "https://unavatar.io/clearcompany.com",
+        "rating": 4.4,
+        "starting_price": "$6/user/mo",
+        "pricing_model": "Bundled talent suite pricing (ATS + Performance + Onboarding modules)",
+        "free_trial": True,
+        "affiliate_url": "https://www.clearcompany.com",
+        "key_features": ["Performance Reviews", "Goal Alignment", "Talent Suite Bundle", "Onboarding Handoff"],
+        "pros": ["Performance data connected to hiring and onboarding in one suite", "Good fit for mid-market teams consolidating vendors", "Configurable review workflows without heavy IT"],
+        "cons": ["Performance depth trails dedicated PM specialists", "Best value only when buying the broader ClearCompany suite"],
+        "matrix": {
+            "OKRs & Goal Cascading": True,
+            "Continuous Feedback": True,
+            "360 Degree Reviews": True,
+            "1:1 Meeting Tools": False,
+            "Engagement Surveys": True,
+            "Compensation Calibration": False,
+            "Career Pathing": True,
+            "AI Performance Insights": False,
+            "Slack/Teams Integration": True,
+            "Free Trial Available": True
+        }
+    },
+}
+
 # "Global partner platforms" - the vendors our site is built around (Global EOR,
 # international contractor management, and SMB usability). When one of these is
 # compared against a general-purpose HR platform like Rippling, the verdict is
@@ -521,6 +692,37 @@ ATS_NICHES = {
         "name": "Remote-First Teams",
         "audience": "Distributed companies hiring across time zones and countries with fully remote interview loops.",
         "focus_feature": "multi-time-zone scheduling, multi-language support, and asynchronous collaboration tools."
+    }
+}
+
+# Audience intents for the Performance Management sub-vertical. Separate
+# namespace from NICHES / ATS_NICHES so slugs never collide across categories
+# even when niche ids overlap (e.g. "startups", "scaleups", "enterprise").
+PM_NICHES = {
+    "startups": {
+        "name": "Startups",
+        "audience": "Early-stage startups replacing ad-hoc feedback with their first lightweight review and goal cadence.",
+        "focus_feature": "fast setup, transparent per-seat pricing, and simple continuous feedback loops."
+    },
+    "scaleups": {
+        "name": "Scaleups",
+        "audience": "Fast-growing 50-500 employee companies standardizing OKRs, reviews, and manager 1:1s across teams.",
+        "focus_feature": "OKR cascading, structured review cycles, and manager coaching workflows."
+    },
+    "enterprise": {
+        "name": "Enterprise",
+        "audience": "Large organizations running calibrated talent reviews, compensation cycles, and audit-ready performance records.",
+        "focus_feature": "compensation calibration, talent reviews, and enterprise analytics."
+    },
+    "remote-teams": {
+        "name": "Remote-First Teams",
+        "audience": "Distributed companies needing async feedback, Slack/Teams integrations, and timezone-friendly 1:1 tooling.",
+        "focus_feature": "async continuous feedback, Slack/Teams integrations, and remote-friendly 1:1 agendas."
+    },
+    "people-ops": {
+        "name": "People Ops Teams",
+        "audience": "People Ops and HRBP teams running company-wide engagement, development, and performance programs.",
+        "focus_feature": "engagement surveys, career pathing, and people-science benchmarks."
     }
 }
 
@@ -690,11 +892,49 @@ def generate_ats_rows():
     return rows
 
 
+def generate_pm_rows():
+    """Generates Performance Management comparison rows (21 unique tool
+    pairings x 5 audience intents = 105 rows). Uses the same Overall Fit
+    verdict style as ATS rows."""
+    tool_keys = list(PM_TOOLS.keys())
+    tool_pairs = list(itertools.combinations(tool_keys, 2))
+    rows = []
+
+    for niche_id, niche_info in PM_NICHES.items():
+        for key_a, key_b in tool_pairs:
+            tool_a = PM_TOOLS[key_a]
+            tool_b = PM_TOOLS[key_b]
+
+            winner_key = key_a if tool_a["rating"] >= tool_b["rating"] else key_b
+            winner = PM_TOOLS[winner_key]
+
+            winner_category = "Overall Fit"
+            winner_label = f"{BRAND_NAME}'s Overall Winner: {winner['name']}"
+            winner_reason = (
+                f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {winner['name']} edges out the "
+                f"competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), "
+                f"flexible operational setup, and strong support for {niche_info['focus_feature']}"
+            )
+            verdict_summary = (
+                f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
+                f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
+                f"{winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} "
+                f"while {tool_b['name']} starts at {tool_b['starting_price']}."
+            )
+            winner_bullets = []
+
+            rows.append(build_row(
+                tool_a, tool_b, key_a, key_b, niche_id, niche_info,
+                winner_key, winner_category, winner_label, winner_bullets, winner_reason, verdict_summary
+            ))
+
+    return rows
+
+
 def generate_csv(filename="comparisons.csv"):
-    # ATS rows are appended after the original Global Payroll & EOR rows so
-    # the first 140 rows (and every existing page they generate) stay
-    # byte-for-byte identical.
-    rows = generate_eor_rows() + generate_ats_rows()
+    # ATS then Performance Management rows are appended after the original
+    # Global Payroll & EOR rows so earlier categories stay stable.
+    rows = generate_eor_rows() + generate_ats_rows() + generate_pm_rows()
 
     fieldnames = list(rows[0].keys())
     with open(filename, mode="w", newline="", encoding="utf-8") as f:

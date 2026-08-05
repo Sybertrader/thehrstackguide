@@ -35,7 +35,7 @@ export function getToolProfile(toolId: string): ToolProfile | null {
   return profiles[toolId] ?? null;
 }
 
-/** Returns all tool profiles (with their ids) matching a given category, e.g. 'payroll-eor' or 'ats'. */
+/** Returns all tool profiles (with their ids) matching a given category, e.g. 'payroll-eor', 'ats', or 'performance-management'. */
 export function getToolsByCategory(category: string): Array<ToolProfile & { id: string }> {
   const profiles = loadToolProfiles();
   return Object.entries(profiles)

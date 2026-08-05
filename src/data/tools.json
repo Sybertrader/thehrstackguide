@@ -254,5 +254,117 @@
       "You want a single unified mobile app for both HR administration and recruiting approvals.",
       "You prefer a simple, streamlined hiring pipeline that integrates natively with employee reporting."
     ]
+  },
+  "15five": {
+    "category": "performance-management",
+    "rating": "4.6",
+    "review_count": "2,100",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "A manager-effectiveness platform combining weekly check-ins, OKRs, lightweight reviews, and coaching tools for high-growth teams.",
+    "text_compliance": "15Five supports structured review cycles with configurable access controls, audit-friendly review history, and GDPR-ready data handling for employee feedback records across Engage and Perform modules.",
+    "text_global_reach": "15Five supports distributed and international teams with Slack/Teams-native check-ins, async feedback workflows, and multi-timezone 1:1 agendas so remote managers can run consistent performance cadences.",
+    "text_pricing_truth": "Pricing is published per user starting around $4/user/month on Engage, with Perform and Total Platform tiers adding reviews, OKRs, and coaching. Expect seat-based annual contracts; confirm manager coaching and AI add-ons before budgeting.",
+    "choose_if": [
+      "You want weekly check-ins and manager coaching—not just annual review software.",
+      "You need lightweight OKRs tied to continuous feedback without an enterprise sales cycle.",
+      "You want transparent published pricing and a free trial before rolling out company-wide.",
+      "Your managers need structured 1:1 agendas and coaching prompts baked into the workflow."
+    ]
+  },
+  "performyard": {
+    "category": "performance-management",
+    "rating": "4.5",
+    "review_count": "780",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "A configurable mid-market performance platform focused on flexible review cycles, goals, and 360 feedback without heavyweight implementation.",
+    "text_compliance": "PerformYard provides configurable review templates, role-based permissions, and retained review history suitable for HR audit trails, with standard SOC 2 and GDPR-oriented data practices for employee performance records.",
+    "text_global_reach": "PerformYard works well for US and mid-market multi-location employers that need consistent review cycles across departments, with Slack integrations for feedback reminders rather than deep multi-language localization.",
+    "text_pricing_truth": "Plans typically start near $5/user/month depending on modules and cycle complexity. Implementation is lighter than enterprise suites, but advanced compensation and engagement add-ons should be quoted separately.",
+    "choose_if": [
+      "You need highly configurable review templates without a six-month implementation project.",
+      "You are a mid-market HR team replacing spreadsheets and Google Docs reviews.",
+      "You want strong customer support for admins running custom performance cycles.",
+      "You need goals and 360 feedback without paying enterprise Lattice/Culture Amp premiums."
+    ]
+  },
+  "leapsome": {
+    "category": "performance-management",
+    "rating": "4.7",
+    "review_count": "1,250",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "A modular people-enablement suite spanning performance reviews, OKRs, engagement, learning, and compensation for modern scaleups.",
+    "text_compliance": "Leapsome emphasizes GDPR-ready data residency and consent controls suited to European and global employers, with structured review workflows, access permissions, and exportable audit history for performance and engagement data.",
+    "text_global_reach": "Leapsome is especially strong for European and multi-national scaleups, supporting multi-language experiences, distributed team feedback, and integrations with Slack, Teams, and common HRIS platforms worldwide.",
+    "text_pricing_truth": "Modular pricing often starts around $8/user/month per active module (Reviews, Goals, Engagement, Learning). Full-suite rollouts can stack costs—model your module mix carefully against Lattice-style all-in bundles.",
+    "choose_if": [
+      "You want one modular platform for reviews, learning paths, engagement, and goals.",
+      "You operate in Europe or need strong GDPR and multi-language support.",
+      "You value AI assists for writing reviews and drafting goals at scale.",
+      "You want compensation calibration connected to performance without buying a separate comp tool."
+    ]
+  },
+  "lattice": {
+    "category": "performance-management",
+    "rating": "4.7",
+    "review_count": "3,200",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "An enterprise-ready performance, engagement, and compensation platform built for People teams running calibrated talent and pay cycles.",
+    "text_compliance": "Lattice supports enterprise access controls, talent-review confidentiality, compensation-band governance, and audit-friendly performance history designed for regulated and large-employer review processes.",
+    "text_global_reach": "Lattice serves global and multi-entity employers with multi-language support, HRIS integrations, and workflows for distributed talent calibration across regions and business units.",
+    "text_pricing_truth": "Performance typically starts around $11/user/month, with Engagement, Grow, and Compensation sold as add-on modules. Expect demo-led annual contracts; model total seat cost across all modules before comparing to lighter tools.",
+    "choose_if": [
+      "You need compensation calibration tightly linked to performance and talent reviews.",
+      "You run formal talent cycles with People partners and need mature analytics.",
+      "You want OKRs, reviews, engagement, and career pathing in one premium suite.",
+      "Your organization can support a demo-led enterprise sales and implementation process."
+    ]
+  },
+  "culture-amp": {
+    "category": "performance-management",
+    "rating": "4.6",
+    "review_count": "2,650",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "A people-science platform led by engagement surveys and benchmarks, with performance and development modules for culture-driven organizations.",
+    "text_compliance": "Culture Amp provides enterprise-grade survey anonymity controls, GDPR-aligned data handling, and role-based access for sensitive engagement and performance insights used in People Ops decision-making.",
+    "text_global_reach": "Culture Amp supports large global workforces with multi-language surveys, regional benchmarks, and distributed action-planning workflows for international People teams.",
+    "text_pricing_truth": "Engage/Perform/Develop bundles are commonly priced from roughly $7/user/month on annual contracts, with enterprise packaging varying by headcount and module mix. Full people-science suites are rarely self-serve.",
+    "choose_if": [
+      "Engagement survey science and external benchmarks are your primary buying reason.",
+      "You want performance and development plans connected to culture and engagement data.",
+      "Your People team relies on research-backed insights rather than lightweight pulse tools alone.",
+      "You are comfortable with an enterprise sales motion for platform-wide rollout."
+    ]
+  },
+  "reflektive": {
+    "category": "performance-management",
+    "rating": "4.2",
+    "review_count": "620",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "A continuous-feedback and goals platform known for real-time recognition feeds and lightweight review cycles (now in the broader Workday ecosystem).",
+    "text_compliance": "Reflektive historically offered role-based review access and retained feedback history suitable for standard HR performance records; buyers should validate current Workday-era security and data-processing terms before renewal.",
+    "text_global_reach": "Reflektive's Slack-native feedback loops suit distributed US and tech teams; multi-region localization and modern global benchmarking trail Culture Amp and Leapsome.",
+    "text_pricing_truth": "Legacy pricing often landed near $6/user/month, but packaging and renewal terms now vary under Workday ownership. Treat public list pricing as directional and confirm current SKU availability.",
+    "choose_if": [
+      "Your team already runs on legacy Reflektive continuous-feedback workflows.",
+      "You prioritize lightweight real-time recognition and Slack feedback over deep compensation tools.",
+      "You need basic goals and review cycles without a full Lattice-style suite.",
+      "You are evaluating migration paths within the Workday talent ecosystem."
+    ]
+  },
+  "clearcompany": {
+    "category": "performance-management",
+    "rating": "4.4",
+    "review_count": "980",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "A mid-market talent suite that connects performance reviews and goals with recruiting and onboarding for consolidated HR stacks.",
+    "text_compliance": "ClearCompany supports configurable review permissions, documented performance history, and talent-suite audit trails that connect hiring-to-performance records for mid-market compliance workflows.",
+    "text_global_reach": "ClearCompany is strongest for US mid-market employers consolidating ATS, onboarding, and performance; global multi-language depth is more limited than Lattice, Leapsome, or Culture Amp.",
+    "text_pricing_truth": "Performance is commonly bundled into broader ClearCompany talent suite pricing (often modeled around $6/user/month equivalent depending on modules). Standalone value is highest when you also need ATS/onboarding.",
+    "choose_if": [
+      "You want performance tied to the same suite as recruiting and onboarding.",
+      "You are a mid-market team consolidating multiple HR point solutions.",
+      "You need configurable review cycles without enterprise People-science complexity.",
+      "You prefer a free trial or lighter sales motion than Lattice or Culture Amp."
+    ]
   }
 }
