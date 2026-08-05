@@ -166,6 +166,12 @@ const collectionSchema = {
           applicationCategory: 'BusinessApplication',
           operatingSystem: 'Web-based',
           description: tool.positioning,
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+            description: 'Contact for custom enterprise pricing / Free demo',
+          },
           ...(tool.rating && reviewCount
             ? {
                 aggregateRating: {

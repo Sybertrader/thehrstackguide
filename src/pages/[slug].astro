@@ -326,6 +326,12 @@ const richSnippetSchema = [
     name: entry.tool,
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web-based',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      description: 'Contact for custom enterprise pricing / Free demo',
+    },
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: entry.narrative.rating,
