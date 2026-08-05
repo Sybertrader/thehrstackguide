@@ -19,7 +19,7 @@ TOOLS = {
         "affiliate_url": "https://www.deel.com",
         "key_features": ["150+ Country EOR", "Contractor Auto-Pay", "Equipment Shipping", "Background Checks"],
         "pros": ["Fast 24-hr onboarding", "Comprehensive localized tax compliance", "Flexible payout options"],
-        "cons": ["EOR pricing can be steep for small teams", "Admin UI has a learning curve"],
+        "cons": ["EOR pricing can be steep for small teams", "Dense multi-product admin (EOR + payroll + equipment) takes longer to operationalize than SMB payroll tools"],
         "matrix": {
             "Native Legal Entities": True,
             "Contractor Auto-Pay": True,
@@ -43,7 +43,7 @@ TOOLS = {
         "affiliate_url": "https://www.rippling.com",
         "key_features": ["Unified HR & IT", "US & Global Payroll", "Device Management", "App Provisioning"],
         "pros": ["Automates IT device setup alongside HR", "Powerful custom workflow engine", "Native US payroll integration"],
-        "cons": ["Base platform fee required", "EOR feature set is secondary to HRIS"],
+        "cons": ["Payroll, IT, and global EOR modules are add-ons—core $8/user pricing rarely equals all-in cost.", "EOR feature set is secondary to HRIS"],
         "matrix": {
             "Native Legal Entities": False,
             "Contractor Auto-Pay": True,
@@ -90,7 +90,7 @@ TOOLS = {
         "free_trial": True,
         "affiliate_url": "https://www.oysterhr.com",
         "key_features": ["180+ Country Reach", "Oyster Academy", "Global Employment Cost Calculator", "Equity Admin"],
-        "pros": ["Extremely intuitive UI", "Great tools for early-stage founder estimation", "B-Corp social mission"],
+        "pros": ["Clean admin UX for first-time international contractor onboarding", "Global Employment Cost Calculator for founder budgeting", "180+ country contractor and EOR reach for distributed creative teams"],
         "cons": ["Relies on third-party local partners in select markets", "Slightly higher EOR base rate"],
         "matrix": {
             "Native Legal Entities": False,
@@ -114,8 +114,8 @@ TOOLS = {
         "free_trial": True,
         "affiliate_url": "https://www.gusto.com",
         "key_features": ["US Native Payroll", "Benefits Administration", "International Contractor Pay", "Time Tracking"],
-        "pros": ["Best-in-class user experience for US teams", "Automated state tax filings", "Affordable pricing"],
-        "cons": ["Not a full global EOR (contractor pay only internationally)", "US-centric only"],
+        "pros": ["Best-in-class user experience for US teams", "Automated state tax filings", "Transparent $49/mo + $6/user US payroll pricing without EOR-tier fees"],
+        "cons": ["No full-time international EOR—global coverage is contractor payments only", "Domestic-first benefits administration with limited non-US statutory coverage"],
         "matrix": {
             "Native Legal Entities": False,
             "Contractor Auto-Pay": True,
@@ -138,8 +138,8 @@ TOOLS = {
         "free_trial": False,
         "affiliate_url": "https://papayaglobal.com",
         "key_features": ["Enterprise Payroll", "Workforce Intelligence", "Embedded Payments", "160+ Countries"],
-        "pros": ["Built for complex enterprise security and ERPs", "Consolidated global payroll analytics", "Bank-grade security"],
-        "cons": ["High minimum spend limits", "Overkill for early-stage startups"],
+        "pros": ["Built for complex enterprise security and ERPs", "Consolidated global payroll analytics", "Enterprise payroll controls suited to ERP-linked multi-entity finance teams"],
+        "cons": ["High minimums and enterprise packaging poorly fit sub-50 headcount teams", "Implementation overhead geared to complex multi-entity payroll rather than lean startups"],
         "matrix": {
             "Native Legal Entities": False,
             "Contractor Auto-Pay": True,
@@ -163,7 +163,7 @@ TOOLS = {
         "affiliate_url": "https://www.usemultiplier.com",
         "key_features": ["Self-Serve EOR", "Instant Employment Contracts", "Global Insurance", "Multi-Currency Payouts"],
         "pros": ["Competitive baseline EOR pricing ($400/mo)", "Instant contract generation", "Strong Asian market presence"],
-        "cons": ["Smaller user community", "Fewer third-party software integrations"],
+        "cons": ["Fewer third-party HRIS/payroll integrations than Deel or Rippling", "Narrower self-serve contractor tooling versus larger EOR marketplaces"],
         "matrix": {
             "Native Legal Entities": True,
             "Contractor Auto-Pay": True,
@@ -186,7 +186,7 @@ TOOLS = {
         "free_trial": True,
         "affiliate_url": "https://plane.com",
         "key_features": ["Zero FX Markup", "Stock Option Grants", "Flat-Fee Pricing", "Direct Crypto/Fiat Pay"],
-        "pros": ["No exchange rate markup fees", "Lowest EOR rate in the market ($299/mo)", "Transparent pricing"],
+        "pros": ["Transparent contractor pricing from $20/contractor/month with low FX markup on bank payouts", "Stock option grants for distributed tech teams", "Direct crypto and fiat payout options for global contractors"],
         "cons": ["Fewer automated localized HR add-ons", "Smaller legal footprint"],
         "matrix": {
             "Native Legal Entities": True,
@@ -432,7 +432,7 @@ PM_TOOLS = {
         "free_trial": True,
         "affiliate_url": "https://www.performyard.com",
         "key_features": ["Configurable Review Cycles", "Goal Tracking", "360 Feedback", "Performance Dashboards"],
-        "pros": ["Highly configurable review templates without heavy implementation", "Affordable mid-market pricing", "Strong customer support for HR admins"],
+        "pros": ["Highly configurable review templates without heavy implementation", "Configurable review cycles from $5/user/mo without enterprise implementation overhead", "Strong customer support for HR admins"],
         "cons": ["Fewer AI-driven insights than Lattice or Leapsome", "Engagement survey suite is lighter than dedicated culture platforms"],
         "matrix": {
             "OKRs & Goal Cascading": True,
@@ -481,7 +481,7 @@ PM_TOOLS = {
         "affiliate_url": "https://lattice.com",
         "key_features": ["Performance Reviews", "OKRs", "Compensation Bands", "Talent Reviews"],
         "pros": ["Deep compensation calibration tied to performance data", "Mature OKR and talent review workflows", "Strong analytics for People leaders"],
-        "cons": ["Premium per-seat pricing", "No self-serve free trial; requires a sales demo"],
+        "cons": ["Module add-ons (Engagement, Grow, Compensation) can push total seat cost well above the $8 Performance base.", "No self-serve free trial; requires a sales demo"],
         "matrix": {
             "OKRs & Goal Cascading": True,
             "Continuous Feedback": True,
@@ -552,7 +552,7 @@ PM_TOOLS = {
         "free_trial": False,
         "affiliate_url": "https://www.clearcompany.com",
         "key_features": ["Performance Reviews", "Goal Alignment", "Talent Suite Bundle", "Onboarding Handoff"],
-        "pros": ["Performance data connected to hiring and onboarding in one suite", "Good fit for mid-market teams consolidating vendors", "Configurable review workflows without heavy IT"],
+        "pros": ["Performance reviews connected to the same suite as ATS and onboarding", "Configurable review workflows without heavy IT", "Talent data handoff from hiring into ongoing performance cycles"],
         "cons": ["Performance depth trails dedicated PM specialists", "Best value only when buying the broader ClearCompany suite"],
         "matrix": {
             "OKRs & Goal Cascading": True,
@@ -726,6 +726,83 @@ PM_NICHES = {
     }
 }
 
+CATEGORY_DIFFERENTIATORS = {
+    "eor": "entity ownership, global payroll routing, and FX conversion margins",
+    "ats": "interview scorecards, candidate pipeline stages, and sourcing CRM",
+    "pm": "OKR tracking, continuous feedback loops, and performance calibration",
+}
+
+
+def format_price_clause(tool_name, starting_price):
+    """Natural-language price clause; avoids 'starts at Custom quote'."""
+    if starting_price.strip().lower() == "custom quote":
+        return f"{tool_name} is quote-based with no public starter price"
+    return f"{tool_name} starts at {starting_price}"
+
+
+def matrix_feature_score(tool):
+    return sum(1 for value in tool["matrix"].values() if value)
+
+
+def pick_overall_winner(key_a, key_b, tool_a, tool_b):
+    """Pick a winner by rating, then niche-relevant feature coverage on ties.
+    Returns (winner_key, tie_broken_by_matrix, ratings_tied)."""
+    rating_a = tool_a["rating"]
+    rating_b = tool_b["rating"]
+    if rating_a > rating_b:
+        return key_a, False, False
+    if rating_b > rating_a:
+        return key_b, False, False
+
+    score_a = matrix_feature_score(tool_a)
+    score_b = matrix_feature_score(tool_b)
+    if score_a > score_b:
+        return key_a, True, True
+    if score_b > score_a:
+        return key_b, True, True
+
+    # Perfect rating + matrix tie: stable alphabetical by display name, flagged as balanced.
+    if tool_a["name"].lower() <= tool_b["name"].lower():
+        return key_a, False, True
+    return key_b, False, True
+
+
+def build_overall_fit_copy(winner, winner_key, tool_a, tool_b, key_a, key_b, niche_info, differentiator, ratings_tied, matrix_tiebreak):
+    """Shared Overall Fit winner_reason + verdict_summary without generic filler."""
+    winner_category = "Overall Fit"
+    winner_label = f"{BRAND_NAME}'s Overall Winner: {winner['name']}"
+
+    if ratings_tied and matrix_tiebreak:
+        winner_reason = (
+            f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {winner['name']} edges ahead for "
+            f"{niche_info['name']} despite matching {tool_a['rating']}/5 overall scores, because it covers more of "
+            f"the capabilities that matter here—{differentiator}—and stronger support for {niche_info['focus_feature']}"
+        )
+    elif ratings_tied:
+        winner_reason = (
+            f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {tool_a['name']} and {tool_b['name']} are closely "
+            f"matched at {winner['rating']}/5 for {niche_info['name']}; {winner['name']} is the slight recommended lean "
+            f"based on {differentiator}, plus stronger support for {niche_info['focus_feature']}"
+        )
+    else:
+        winner_reason = (
+            f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {winner['name']} edges out the "
+            f"competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), "
+            f"strength in {differentiator}, and strong support for {niche_info['focus_feature']}"
+        )
+
+    verdict_summary = (
+        f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
+        f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
+        f"{winner['name']} is the recommended choice. {format_price_clause(tool_a['name'], tool_a['starting_price'])} "
+        f"while {format_price_clause(tool_b['name'], tool_b['starting_price'])}."
+    )
+    # Fix doubled "while X is quote-based" grammar when both custom — still fine.
+    # When second clause repeats full sentence subject, normalize second clause to lowercase start after while.
+    # format_price_clause always starts with tool name — "while Tool starts at" is correct.
+    return winner_category, winner_label, winner_reason, verdict_summary, []
+
+
 def build_row(tool_a, tool_b, key_a, key_b, niche_id, niche_info, winner_key, winner_category, winner_label, winner_bullets, winner_reason, verdict_summary):
     """Assembles one comparisons.csv row dict from two resolved tool records
     and an already-decided verdict, shared by both the Global Payroll & EOR
@@ -810,37 +887,27 @@ def generate_eor_rows():
                 bullet_sentence = "; ".join(bullet_list[:-1]) + f"; and {bullet_list[-1]}" if len(bullet_list) > 1 else bullet_list[0]
                 winner_reason = (
                     f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {partner['name']} is the stronger fit "
-                    f"for {winner_category.lower()} for {niche_info['name']} evaluating international remote team "
+                    f"for {winner_category} for {niche_info['name']} evaluating international remote team "
                     f"operations: {bullet_sentence}. Both platforms carry solid overall ratings ({partner['rating']}/5 "
                     f"for {partner['name']} vs. {rippling_tool['rating']}/5 for {rippling_tool['name']}), but "
                     f"{rippling_tool['name']} is built primarily as a general-purpose domestic HRIS, so {partner['name']} "
-                    f"pulls ahead specifically on {winner_category.lower()} for globally distributed teams."
+                    f"pulls ahead specifically on {winner_category} for globally distributed teams."
                 )
                 verdict_summary = (
                     f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
                     f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
-                    f"{partner['name']} is the recommended choice for {winner_category.lower()}. {tool_a['name']} "
-                    f"starts at {tool_a['starting_price']} while {tool_b['name']} starts at {tool_b['starting_price']}."
+                    f"{partner['name']} is the recommended choice for {winner_category}. "
+                    f"{format_price_clause(tool_a['name'], tool_a['starting_price'])} while "
+                    f"{format_price_clause(tool_b['name'], tool_b['starting_price'])}."
                 )
                 winner_bullets = bullet_list
             else:
-                winner_key = key_a if tool_a["rating"] >= tool_b["rating"] else key_b
+                winner_key, matrix_tiebreak, ratings_tied = pick_overall_winner(key_a, key_b, tool_a, tool_b)
                 winner = TOOLS[winner_key]
-
-                winner_category = "Overall Fit"
-                winner_label = f"{BRAND_NAME}'s Overall Winner: {winner['name']}"
-                winner_reason = (
-                    f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {winner['name']} edges out the "
-                    f"competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), "
-                    f"flexible operational setup, and strong support for {niche_info['focus_feature']}"
+                winner_category, winner_label, winner_reason, verdict_summary, winner_bullets = build_overall_fit_copy(
+                    winner, winner_key, tool_a, tool_b, key_a, key_b, niche_info,
+                    CATEGORY_DIFFERENTIATORS["eor"], ratings_tied, matrix_tiebreak,
                 )
-                verdict_summary = (
-                    f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
-                    f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
-                    f"{winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} "
-                    f"while {tool_b['name']} starts at {tool_b['starting_price']}."
-                )
-                winner_bullets = []
 
             rows.append(build_row(
                 tool_a, tool_b, key_a, key_b, niche_id, niche_info,
@@ -866,23 +933,12 @@ def generate_ats_rows():
             tool_a = ATS_TOOLS[key_a]
             tool_b = ATS_TOOLS[key_b]
 
-            winner_key = key_a if tool_a["rating"] >= tool_b["rating"] else key_b
+            winner_key, matrix_tiebreak, ratings_tied = pick_overall_winner(key_a, key_b, tool_a, tool_b)
             winner = ATS_TOOLS[winner_key]
-
-            winner_category = "Overall Fit"
-            winner_label = f"{BRAND_NAME}'s Overall Winner: {winner['name']}"
-            winner_reason = (
-                f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {winner['name']} edges out the "
-                f"competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), "
-                f"flexible operational setup, and strong support for {niche_info['focus_feature']}"
+            winner_category, winner_label, winner_reason, verdict_summary, winner_bullets = build_overall_fit_copy(
+                winner, winner_key, tool_a, tool_b, key_a, key_b, niche_info,
+                CATEGORY_DIFFERENTIATORS["ats"], ratings_tied, matrix_tiebreak,
             )
-            verdict_summary = (
-                f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
-                f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
-                f"{winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} "
-                f"while {tool_b['name']} starts at {tool_b['starting_price']}."
-            )
-            winner_bullets = []
 
             rows.append(build_row(
                 tool_a, tool_b, key_a, key_b, niche_id, niche_info,
@@ -905,23 +961,12 @@ def generate_pm_rows():
             tool_a = PM_TOOLS[key_a]
             tool_b = PM_TOOLS[key_b]
 
-            winner_key = key_a if tool_a["rating"] >= tool_b["rating"] else key_b
+            winner_key, matrix_tiebreak, ratings_tied = pick_overall_winner(key_a, key_b, tool_a, tool_b)
             winner = PM_TOOLS[winner_key]
-
-            winner_category = "Overall Fit"
-            winner_label = f"{BRAND_NAME}'s Overall Winner: {winner['name']}"
-            winner_reason = (
-                f"Based on {BRAND_NAME}'s {EVALUATION_YEAR} evaluation, {winner['name']} edges out the "
-                f"competition for {niche_info['name']} due to its superior score ({winner['rating']}/5), "
-                f"flexible operational setup, and strong support for {niche_info['focus_feature']}"
+            winner_category, winner_label, winner_reason, verdict_summary, winner_bullets = build_overall_fit_copy(
+                winner, winner_key, tool_a, tool_b, key_a, key_b, niche_info,
+                CATEGORY_DIFFERENTIATORS["pm"], ratings_tied, matrix_tiebreak,
             )
-            verdict_summary = (
-                f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
-                f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
-                f"{winner['name']} is the recommended choice. {tool_a['name']} starts at {tool_a['starting_price']} "
-                f"while {tool_b['name']} starts at {tool_b['starting_price']}."
-            )
-            winner_bullets = []
 
             rows.append(build_row(
                 tool_a, tool_b, key_a, key_b, niche_id, niche_info,
