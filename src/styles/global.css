@@ -3,3 +3,12 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
+
+/*
+ * Reserve intrinsic box size for vendor logos (CLS).
+ * HTML width/height attrs are the primary signal; aspect-ratio reinforces
+ * square framing when CSS height:auto overrides one dimension.
+ */
+img.aspect-square {
+  aspect-ratio: 1 / 1;
+}

@@ -263,8 +263,11 @@ const websiteSchema = {
                   <img
                     src={comparison.tool_a_logo_url}
                     alt={`${comparison.tool_a_name} logo`}
-                    class="h-9 w-9 rounded-lg bg-slate-100 object-contain"
-                    loading="lazy"
+                    class="h-9 w-9 rounded-lg bg-slate-100 object-contain aspect-square"
+                    width="36"
+              height="36"
+              decoding="async"
+              loading="lazy"
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                   />
                   <div
@@ -282,8 +285,11 @@ const websiteSchema = {
                   <img
                     src={comparison.tool_b_logo_url}
                     alt={`${comparison.tool_b_name} logo`}
-                    class="h-9 w-9 rounded-lg bg-slate-100 object-contain"
-                    loading="lazy"
+                    class="h-9 w-9 rounded-lg bg-slate-100 object-contain aspect-square"
+                    width="36"
+              height="36"
+              decoding="async"
+              loading="lazy"
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                   />
                   <div
@@ -427,7 +433,11 @@ const websiteSchema = {
         results.classList.remove('hidden');
       }
 
-      input.addEventListener('input', () => render(input.value));
+      let debounceTimer = 0;
+      input.addEventListener('input', () => {
+        window.clearTimeout(debounceTimer);
+        debounceTimer = window.setTimeout(() => render(input.value), 120);
+      });
       input.addEventListener('focus', () => {
         if (input.value) render(input.value);
       });

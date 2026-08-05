@@ -194,17 +194,20 @@ const {
 
     document.addEventListener('click', function(e) {
       var target = e.target;
+      if (!target || !target.closest) return;
+
       var openBtn = target.closest('[data-modal-target]') || target.closest('.open-modal-btn');
       var closeBtn = target.closest('.close-modal-btn');
 
       if (openBtn) {
+        // Prefer explicit data attribute — avoid innerText (forces layout / hurts INP).
         var modalId = openBtn.getAttribute('data-modal-target');
         if (!modalId) {
-          var text = openBtn.innerText || '';
-          if (text.indexOf('Rippling') !== -1) modalId = 'lead-modal-rippling';
-          else if (text.indexOf('Plane') !== -1) modalId = 'lead-modal-plane';
-          else if (text.indexOf('Lever') !== -1) modalId = 'lead-modal-lever';
-          else if (text.indexOf('JazzHR') !== -1) modalId = 'lead-modal-jazzhr';
+          var label = (openBtn.getAttribute('aria-label') || openBtn.textContent || '').toLowerCase();
+          if (label.indexOf('rippling') !== -1) modalId = 'lead-modal-rippling';
+          else if (label.indexOf('plane') !== -1) modalId = 'lead-modal-plane';
+          else if (label.indexOf('lever') !== -1) modalId = 'lead-modal-lever';
+          else if (label.indexOf('jazzhr') !== -1) modalId = 'lead-modal-jazzhr';
         }
 
         if (modalId) {
@@ -220,6 +223,7 @@ const {
             document.body.style.overflow = 'hidden';
           }
         }
+        return;
       }
 
       if (closeBtn) {
@@ -228,13 +232,14 @@ const {
           activeModal.classList.add('hidden');
           document.body.style.overflow = '';
         }
+        return;
       }
 
-      if (target.classList.contains('modal-backdrop')) {
+      if (target.classList && target.classList.contains('modal-backdrop')) {
         target.classList.add('hidden');
         document.body.style.overflow = '';
       }
-    });
+    }, { passive: false });
 
     document.addEventListener('submit', async function(e) {
       var form = e.target;

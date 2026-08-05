@@ -233,8 +233,11 @@ const collectionSchema = {
                   <img
                     src={tool.logo}
                     alt={`${tool.name} logo`}
-                    class="h-10 w-10 rounded-lg bg-slate-100 object-contain"
-                    loading="lazy"
+                    class="h-10 w-10 rounded-lg bg-slate-100 object-contain aspect-square"
+                    width="40"
+              height="40"
+              decoding="async"
+              loading="lazy"
                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                   />
                 )}
@@ -352,15 +355,12 @@ const collectionSchema = {
       if (!tabButtons.length || !cards.length) return;
 
       function showCard(card: HTMLElement) {
-        card.classList.remove('hidden');
-        // Force a reflow so the removal of opacity-0 below still triggers a transition.
-        void card.offsetWidth;
-        card.classList.remove('opacity-0');
+        // Avoid forced reflow (offsetWidth) — class toggles alone are enough for INP.
+        card.classList.remove('hidden', 'opacity-0');
       }
 
       function hideCard(card: HTMLElement) {
-        card.classList.add('opacity-0');
-        window.setTimeout(() => card.classList.add('hidden'), 150);
+        card.classList.add('hidden', 'opacity-0');
       }
 
       function applyFilter(nicheId: string) {
@@ -389,7 +389,8 @@ const collectionSchema = {
             btn.classList.add(...(isActive ? ACTIVE_CLASSES : INACTIVE_CLASSES));
           }
 
-          applyFilter(nicheId);
+          // Defer DOM filter work to the next frame so the tab paint stays responsive (INP).
+          requestAnimationFrame(() => applyFilter(nicheId));
         });
       }
     }
