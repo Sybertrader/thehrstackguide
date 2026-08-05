@@ -12,6 +12,8 @@ export interface ToolProfile {
   rating?: string;
   review_count?: string;
   rating_source?: string;
+  starting_price?: string;
+  free_trial?: boolean;
   positioning: string;
   text_compliance: string;
   text_global_reach: string;
