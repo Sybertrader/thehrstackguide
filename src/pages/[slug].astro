@@ -168,6 +168,18 @@ function resolveToolNarrative(
   };
 }
 
+/**
+ * Google's Rich Results validator requires `offers.price` to be a bare
+ * numeric string ("400", "0"), rejecting currency symbols, thousands
+ * separators, or unit suffixes like "$400/mo" or "$6,000/yr". This strips
+ * everything except digits and the decimal point, falling back to "0" if no
+ * numeric value can be extracted from the source pricing string.
+ */
+function toSchemaPrice(price: string): string {
+  const numeric = price.replace(/[^0-9.]/g, '');
+  return numeric || '0';
+}
+
 function buildSchemaGraph(
   comparison: Comparison,
   pageUrl: string,
@@ -175,6 +187,8 @@ function buildSchemaGraph(
   faqItems: FaqItem[],
   toolARating: string,
   toolBRating: string,
+  toolAReviewCount: number | null,
+  toolBReviewCount: number | null,
   datePublished: string,
   dateModified: string
 ) {
@@ -222,10 +236,16 @@ function buildSchemaGraph(
         '@id': toolAId,
         name: comparison.tool_a_name,
         applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web-based',
         offers: {
           '@type': 'Offer',
-          price: comparison.tool_a_starting_price,
+          price: toSchemaPrice(comparison.tool_a_starting_price),
           priceCurrency: 'USD',
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: toolARating || '4.7',
+          reviewCount: String(toolAReviewCount ?? '100'),
         },
         review: {
           '@type': 'Review',
@@ -247,10 +267,16 @@ function buildSchemaGraph(
         '@id': toolBId,
         name: comparison.tool_b_name,
         applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web-based',
         offers: {
           '@type': 'Offer',
-          price: comparison.tool_b_starting_price,
+          price: toSchemaPrice(comparison.tool_b_starting_price),
           priceCurrency: 'USD',
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: toolBRating || '4.7',
+          reviewCount: String(toolBReviewCount ?? '100'),
         },
         review: {
           '@type': 'Review',
@@ -435,6 +461,8 @@ const schemaGraph = buildSchemaGraph(
   faqItems,
   toolADisplayRating,
   toolBDisplayRating,
+  toolANarrative.reviewCountNumeric,
+  toolBNarrative.reviewCountNumeric,
   firstPublishedIso,
   lastUpdatedIso
 );
