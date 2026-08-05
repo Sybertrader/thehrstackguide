@@ -1,34 +1,23 @@
 ---
 interface Props {
   brandName: string;
+  modalId?: string;
   formActionUrl?: string;
 }
 
 const { 
   brandName, 
+  modalId = `lead-modal-${brandName.toLowerCase().replace(/[^a-z0-9]/g, '')}`,
   formActionUrl = "https://formspree.io/f/YOUR_FORM_ID"
 } = Astro.props;
-
-// Unique ID per component instance to prevent duplicate DOM ID conflicts on comparison pages
-const uniqueId = Math.random().toString(36).substring(2, 7);
-const modalId = `modal-${brandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${uniqueId}`;
 ---
 
-<!-- Trigger Button -->
-<button
-  type="button"
-  onclick={`document.getElementById('${modalId}').showModal()`}
-  class="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer"
->
-  Request Intro & Pricing
-</button>
-
-<!-- Native HTML Dialog (Bypasses all Z-index and CSS stacking context limitations) -->
-<dialog
+<div
   id={modalId}
-  class="p-0 rounded-2xl shadow-2xl max-w-lg w-full border-0 bg-transparent backdrop:bg-slate-900/70 backdrop:backdrop-blur-sm m-auto"
+  class="modal-backdrop fixed inset-0 z-[9999] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
+  aria-hidden="true"
 >
-  <div class="relative w-full bg-white rounded-2xl overflow-hidden border border-slate-100 text-left my-auto">
+  <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 text-left my-auto z-[10000]">
     
     <!-- Header -->
     <div class="bg-slate-900 px-6 py-5 text-white flex justify-between items-center">
@@ -38,8 +27,7 @@ const modalId = `modal-${brandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${u
       </div>
       <button
         type="button"
-        onclick={`document.getElementById('${modalId}').close()`}
-        class="text-slate-400 hover:text-white text-2xl font-bold leading-none p-1 rounded-lg focus:outline-none cursor-pointer"
+        class="close-modal-btn text-slate-400 hover:text-white text-2xl font-bold leading-none p-1 rounded-lg focus:outline-none cursor-pointer"
         aria-label="Close modal"
       >
         &times;
@@ -186,82 +174,113 @@ const modalId = `modal-${brandName.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${u
         </p>
         <button
           type="button"
-          onclick={`document.getElementById('${modalId}').close()`}
-          class="mt-4 px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg text-sm transition cursor-pointer"
+          class="close-modal-btn mt-4 px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg text-sm transition cursor-pointer"
         >
           Close Window
         </button>
       </div>
     </div>
   </div>
-</dialog>
+</div>
 
 <script is:inline>
-  // Close modal when clicking outside form content on backdrop
-  document.addEventListener('click', function(e) {
-    if (e.target.tagName === 'DIALOG' && e.target.open) {
-      var rect = e.target.getBoundingClientRect();
-      var isInDialog = (rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
-        rect.left <= e.clientX && e.clientX <= rect.left + rect.width);
-      if (!isInDialog) {
-        e.target.close();
-      }
-    }
-  });
-
-  // Submit handler
-  document.addEventListener('submit', async function(e) {
-    var form = e.target;
-    if (!form || !form.id || form.id.indexOf('form-modal-') !== 0) return;
-
-    e.preventDefault();
+  (function initModalHandlers() {
+    if (window.__leadModalScriptInitialized) return;
+    window.__leadModalScriptInitialized = true;
 
     var blockedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com'];
-    var emailInput = form.querySelector('.work-email-input');
-    var emailError = form.querySelector('.email-error');
-    var submitBtn = form.querySelector('.submit-btn');
-    var btnText = form.querySelector('.btn-text');
-    var spinner = form.querySelector('.spinner');
-    var successMessage = form.closest('.p-6') ? form.closest('.p-6').querySelector('.success-message') : null;
 
-    if (emailInput) {
-      var emailValue = emailInput.value.toLowerCase().trim();
-      var domain = emailValue.split('@')[1];
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      var openBtn = target.closest('[data-modal-target]') || target.closest('.open-modal-btn');
+      var closeBtn = target.closest('.close-modal-btn');
 
-      if (blockedDomains.indexOf(domain) !== -1) {
-        if (emailError) emailError.classList.remove('hidden');
-        emailInput.classList.add('border-red-500');
-        return;
-      } else {
-        if (emailError) emailError.classList.add('hidden');
-        emailInput.classList.remove('border-red-500');
+      if (openBtn) {
+        var modalId = openBtn.getAttribute('data-modal-target');
+        if (!modalId) {
+          var text = openBtn.innerText || '';
+          if (text.indexOf('Rippling') !== -1) modalId = 'lead-modal-rippling';
+          else if (text.indexOf('Plane') !== -1) modalId = 'lead-modal-plane';
+          else if (text.indexOf('Lever') !== -1) modalId = 'lead-modal-lever';
+          else if (text.indexOf('JazzHR') !== -1) modalId = 'lead-modal-jazzhr';
+        }
+
+        if (modalId) {
+          var modal = document.getElementById(modalId);
+          if (modal) {
+            e.preventDefault();
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+          }
+        }
       }
-    }
 
-    if (submitBtn) submitBtn.disabled = true;
-    if (btnText) btnText.classList.add('hidden');
-    if (spinner) spinner.classList.remove('hidden');
-
-    try {
-      var formData = new FormData(form);
-      var response = await fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if (response.ok) {
-        form.classList.add('hidden');
-        if (successMessage) successMessage.classList.remove('hidden');
-      } else {
-        alert('There was a problem submitting your request. Please try again.');
+      if (closeBtn) {
+        var activeModal = closeBtn.closest('.modal-backdrop');
+        if (activeModal) {
+          activeModal.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
       }
-    } catch (err) {
-      alert('Submission error. Please check your connection and try again.');
-    } finally {
-      if (submitBtn) submitBtn.disabled = false;
-      if (btnText) btnText.classList.remove('hidden');
-      if (spinner) spinner.classList.add('hidden');
-    }
-  });
+
+      if (target.classList.contains('modal-backdrop')) {
+        target.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    });
+
+    document.addEventListener('submit', async function(e) {
+      var form = e.target;
+      if (!form || !form.id || form.id.indexOf('form-lead-modal-') !== 0) return;
+
+      e.preventDefault();
+
+      var emailInput = form.querySelector('.work-email-input');
+      var emailError = form.querySelector('.email-error');
+      var submitBtn = form.querySelector('.submit-btn');
+      var btnText = form.querySelector('.btn-text');
+      var spinner = form.querySelector('.spinner');
+      var successMessage = form.closest('.p-6') ? form.closest('.p-6').querySelector('.success-message') : null;
+
+      if (emailInput) {
+        var emailValue = emailInput.value.toLowerCase().trim();
+        var domain = emailValue.split('@')[1];
+
+        if (blockedDomains.indexOf(domain) !== -1) {
+          if (emailError) emailError.classList.remove('hidden');
+          emailInput.classList.add('border-red-500');
+          return;
+        } else {
+          if (emailError) emailError.classList.add('hidden');
+          emailInput.classList.remove('border-red-500');
+        }
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
+      if (btnText) btnText.classList.add('hidden');
+      if (spinner) spinner.classList.remove('hidden');
+
+      try {
+        var formData = new FormData(form);
+        var response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          form.classList.add('hidden');
+          if (successMessage) successMessage.classList.remove('hidden');
+        } else {
+          alert('There was a problem submitting your request. Please try again.');
+        }
+      } catch (err) {
+        alert('Submission error. Please check your connection and try again.');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnText) btnText.classList.remove('hidden');
+        if (spinner) spinner.classList.add('hidden');
+      }
+    });
+  })();
 </script>
