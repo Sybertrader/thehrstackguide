@@ -379,7 +379,7 @@ ATS_TOOLS = {
         "starting_price": "Custom quote",
         "pricing_model": "Custom quote (bundled with BambooHR HRIS)",
         "free_trial": True,
-        "affiliate_url": "https://www.bamboohr.com",
+        "affiliate_url": "https://www.bamboohr.com/?eid=fopydE",
         "key_features": ["Native BambooHR HRIS Sync", "Candidate-to-Employee Conversion", "Mobile Hiring Approvals", "Secure E-Signatures"],
         "pros": ["Zero manual data entry from candidate to employee record", "Single mobile app for HR admin and recruiting", "Simple, streamlined pipeline for small teams"],
         "cons": ["Only sold bundled with the BambooHR HRIS", "Fewer standalone ATS features than dedicated tools"],

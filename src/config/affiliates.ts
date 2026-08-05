@@ -6,6 +6,7 @@
  */
 export const affiliateLinks: Record<string, string> = {
   remote: 'https://remote.sjv.io/zzBbrG',
+  'bamboohr-ats': 'https://www.bamboohr.com/?eid=fopydE',
   // Placeholder structure for future approved partners:
   // deel: 'https://...',
   // rippling: 'https://...',
