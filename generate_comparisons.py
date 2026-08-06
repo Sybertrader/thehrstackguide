@@ -13,8 +13,10 @@ TOOLS = {
         "name": "Deel",
         "logo": "/deel.png",
         "rating": 4.8,
-        "starting_price": "$29/mo (EOR $599/mo)",
-        "pricing_model": "Per contractor / month ($29/mo; EOR $599/mo)",
+        "contractor_price": 49,
+        "eor_price": 599,
+        "starting_price": "$49/mo",
+        "pricing_model": "EOR starts at $599/mo",
         "free_trial": False,
         "affiliate_url": "https://www.deel.com",
         "key_features": ["150+ Country EOR", "Contractor Auto-Pay", "Equipment Shipping", "Background Checks"],
@@ -38,7 +40,7 @@ TOOLS = {
         "logo": "/rippling.jpeg",
         "rating": 4.8,
         "starting_price": "$8/user/mo",
-        "pricing_model": "From $8 per user / month (modular add-ons)",
+        "pricing_model": "Core platform from $8/user/mo; payroll and EOR are modular add-ons",
         "free_trial": False,
         "affiliate_url": "https://www.rippling.com",
         "key_features": ["Unified HR & IT", "US & Global Payroll", "Device Management", "App Provisioning"],
@@ -61,8 +63,10 @@ TOOLS = {
         "name": "Remote",
         "logo": "/remote.jpeg",
         "rating": 4.6,
-        "starting_price": "$29/mo (EOR $599/mo)",
-        "pricing_model": "Per contractor / month ($599/mo for EOR)",
+        "contractor_price": 29,
+        "eor_price": 599,
+        "starting_price": "$29/mo",
+        "pricing_model": "EOR starts at $599/mo",
         "free_trial": True,
         "affiliate_url": "https://remote.com",
         "key_features": ["100% Native Entities", "IP Protection", "Global Benefits", "Remote Relocation"],
@@ -85,13 +89,15 @@ TOOLS = {
         "name": "Oyster HR",
         "logo": "/Oyster.png",
         "rating": 4.5,
-        "starting_price": "$29/mo (EOR $499/mo)",
-        "pricing_model": "Per contractor / month ($499/mo for EOR)",
+        "contractor_price": 29,
+        "eor_price": 699,
+        "starting_price": "$29/mo",
+        "pricing_model": "EOR starts at $699/mo",
         "free_trial": True,
         "affiliate_url": "https://www.oysterhr.com",
         "key_features": ["180+ Country Reach", "Oyster Academy", "Global Employment Cost Calculator", "Equity Admin"],
         "pros": ["Clean admin UX for first-time international contractor onboarding", "Global Employment Cost Calculator for founder budgeting", "180+ country contractor and EOR reach for distributed creative teams"],
-        "cons": ["Relies on third-party local partners in select markets", "Slightly higher EOR base rate"],
+        "cons": ["Relies on third-party local partners in select markets", "Higher published EOR list price ($699/mo) than Deel/Remote annual rates"],
         "matrix": {
             "Native Legal Entities": False,
             "Contractor Auto-Pay": True,
@@ -110,7 +116,7 @@ TOOLS = {
         "logo": "/gusto.jpeg",
         "rating": 4.6,
         "starting_price": "$49/mo + $6/user",
-        "pricing_model": "$49/mo base + $6 per user / month",
+        "pricing_model": "US payroll Simple plan; no international EOR",
         "free_trial": True,
         "affiliate_url": "https://www.gusto.com",
         "key_features": ["US Native Payroll", "Benefits Administration", "International Contractor Pay", "Time Tracking"],
@@ -133,8 +139,10 @@ TOOLS = {
         "name": "Papaya Global",
         "logo": "https://unavatar.io/papayaglobal.com",
         "rating": 4.5,
-        "starting_price": "EOR $650/mo",
-        "pricing_model": "Custom / EOR from $650/mo",
+        "contractor_price": 5,
+        "eor_price": 499,
+        "starting_price": "$5/mo",
+        "pricing_model": "EOR starts at $499/mo",
         "free_trial": False,
         "affiliate_url": "https://papayaglobal.com",
         "key_features": ["Enterprise Payroll", "Workforce Intelligence", "Embedded Payments", "160+ Countries"],
@@ -157,8 +165,10 @@ TOOLS = {
         "name": "Multiplier",
         "logo": "/multiplier.jpeg",
         "rating": 4.7,
-        "starting_price": "EOR $400/mo",
-        "pricing_model": "EOR from $400/mo",
+        "contractor_price": 40,
+        "eor_price": 400,
+        "starting_price": "$40/mo",
+        "pricing_model": "EOR starts at $400/mo",
         "free_trial": False,
         "affiliate_url": "https://multipliertechnologiespteltd.pxf.io/B51kg9",
         "key_features": ["Self-Serve EOR", "Instant Employment Contracts", "Global Insurance", "Multi-Currency Payouts"],
@@ -181,12 +191,14 @@ TOOLS = {
         "name": "Plane",
         "logo": "/plane.jpeg",
         "rating": 4.6,
-        "starting_price": "$20/contractor/mo",
-        "pricing_model": "From $20/contractor / month",
+        "contractor_price": 39,
+        "eor_price": 499,
+        "starting_price": "$39/mo",
+        "pricing_model": "EOR starts at $499/mo",
         "free_trial": True,
         "affiliate_url": "https://plane.com",
         "key_features": ["Zero FX Markup", "Stock Option Grants", "Flat-Fee Pricing", "Direct Crypto/Fiat Pay"],
-        "pros": ["Transparent contractor pricing from $20/contractor/month with low FX markup on bank payouts", "Stock option grants for distributed tech teams", "Direct crypto and fiat payout options for global contractors"],
+        "pros": ["Transparent contractor pricing from $39/contractor/month with low FX markup on bank payouts", "Flat $499/mo EOR with free HRIS for startups", "Direct crypto and fiat payout options for global contractors"],
         "cons": ["Fewer automated localized HR add-ons", "Smaller legal footprint"],
         "matrix": {
             "Native Legal Entities": True,
@@ -280,8 +292,8 @@ ATS_TOOLS = {
         "name": "Workable",
         "logo": "https://unavatar.io/workable.com",
         "rating": 4.4,
-        "starting_price": "$149/mo",
-        "pricing_model": "Published monthly plans from $149/mo",
+        "starting_price": "$299/mo",
+        "pricing_model": "Standard plan from $299/mo (1–20 employees)",
         "free_trial": True,
         "affiliate_url": "https://www.workable.com",
         "key_features": ["One-Click Job Board Syndication", "AI Candidate Sourcing", "Background Check Integrations", "Basic HR Onboarding Tools"],
@@ -304,8 +316,8 @@ ATS_TOOLS = {
         "name": "Breezy HR",
         "logo": "https://unavatar.io/breezy.hr",
         "rating": 4.4,
-        "starting_price": "Free tier / $189/mo",
-        "pricing_model": "Free tier / paid plans from $189/mo",
+        "starting_price": "Free tier / $157/mo",
+        "pricing_model": "Free Bootstrap tier; paid Startup from about $157/mo",
         "free_trial": True,
         "affiliate_url": "https://www.breezy.hr",
         "key_features": ["Drag-and-Drop Pipelines", "Async Video Screening", "Self-Service Interview Scheduling", "Automated Candidate Messaging"],
@@ -352,8 +364,8 @@ ATS_TOOLS = {
         "name": "Recruitee",
         "logo": "/Recruitee.png",
         "rating": 4.5,
-        "starting_price": "$269/mo",
-        "pricing_model": "Tiered monthly plans (Startup tier up to 10 job slots)",
+        "starting_price": "$199/mo",
+        "pricing_model": "Launch plan from $199/mo (job-slot based, unlimited users)",
         "free_trial": True,
         "affiliate_url": "https://join.tellent.com/t5yy8cn4dn30",
         "key_features": ["Multi-Language Careers Sites", "Visual Pipeline Management", "European GDPR Data Residency", "Collaborative Evaluations"],
@@ -475,8 +487,8 @@ PM_TOOLS = {
         "name": "Lattice",
         "logo": "/lattice.jpeg",
         "rating": 4.7,
-        "starting_price": "$8/user/mo",
-        "pricing_model": "From $8/user/month across modular Performance suite",
+        "starting_price": "$10/user/mo",
+        "pricing_model": "Performance module from $10/user/mo (Goals from $8)",
         "free_trial": False,
         "affiliate_url": "https://lattice.com",
         "key_features": ["Performance Reviews", "OKRs", "Compensation Bands", "Talent Reviews"],
@@ -733,9 +745,22 @@ CATEGORY_DIFFERENTIATORS = {
 }
 
 
-def format_price_clause(tool_name, starting_price):
-    """Natural-language price clause; avoids 'starts at Custom quote'."""
-    if starting_price.strip().lower() == "custom quote":
+def format_price_clause(tool_name, tool):
+    """Natural-language price clause with singular contractor/EOR formatting."""
+    if isinstance(tool, dict):
+        contractor = tool.get("contractor_price")
+        eor = tool.get("eor_price")
+        if contractor is not None and eor is not None:
+            return f"{tool_name} starts at ${contractor}/mo; EOR starts at ${eor}/mo"
+        if eor is not None:
+            return f"{tool_name} EOR starts at ${eor}/mo"
+        if contractor is not None:
+            return f"{tool_name} starts at ${contractor}/mo"
+        starting_price = tool.get("starting_price", "Custom quote")
+    else:
+        starting_price = tool
+
+    if str(starting_price).strip().lower() == "custom quote":
         return f"{tool_name} is quote-based with no public starter price"
     return f"{tool_name} starts at {starting_price}"
 
@@ -794,8 +819,8 @@ def build_overall_fit_copy(winner, winner_key, tool_a, tool_b, key_a, key_b, nic
     verdict_summary = (
         f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
         f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
-        f"{winner['name']} is the recommended choice. {format_price_clause(tool_a['name'], tool_a['starting_price'])} "
-        f"while {format_price_clause(tool_b['name'], tool_b['starting_price'])}."
+        f"{winner['name']} is the recommended choice. {format_price_clause(tool_a['name'], tool_a)} "
+        f"while {format_price_clause(tool_b['name'], tool_b)}."
     )
     # Fix doubled "while X is quote-based" grammar when both custom — still fine.
     # When second clause repeats full sentence subject, normalize second clause to lowercase start after while.
@@ -897,8 +922,8 @@ def generate_eor_rows():
                     f"{BRAND_NAME} research team evaluated {EVALUATION_YEAR} feature sets and pricing models for "
                     f"{tool_a['name']} and {tool_b['name']} for {niche_info['audience']} Based on that analysis, "
                     f"{partner['name']} is the recommended choice for {winner_category}. "
-                    f"{format_price_clause(tool_a['name'], tool_a['starting_price'])} while "
-                    f"{format_price_clause(tool_b['name'], tool_b['starting_price'])}."
+                    f"{format_price_clause(tool_a['name'], tool_a)} while "
+                    f"{format_price_clause(tool_b['name'], tool_b)}."
                 )
                 winner_bullets = bullet_list
             else:

@@ -7,15 +7,19 @@
     "positioning": "The market leader for global workforce expansion, contractor hiring, and EOR compliance across 150+ countries.",
     "text_compliance": "Deel handles compliance in 150+ countries using a vast network of fully-owned local entities and in-house legal experts. They automate misclassification protection, localized contract generation, tax withholdings, and statutory benefits compliance, backing their contracts with misclassification insurance guarantees.",
     "text_global_reach": "Deel provides unmatched international coverage across 150+ countries with direct payroll and owned EOR entities in key tech and hiring hubs globally. They support multi-currency payouts, localized benefits administration, and fast local onboarding.",
-    "text_pricing_truth": "Contractor management starts at $29/month per contractor, while EOR hiring is $599/month per employee. Optional add-ons (e.g. Deel Shield, equipment shipping) and FX spreads on currency transfers can increase effective cost.",
+    "text_pricing_truth": "Contractor management starts at $49/month per contractor, while EOR hiring is $599/month per employee. Optional add-ons (e.g. Deel Shield, equipment shipping) and FX spreads on currency transfers can increase effective cost.",
     "choose_if": [
       "You need to hire full-time remote employees or contractors across 150+ countries rapidly.",
       "You want an EOR that owns its local legal entities rather than leasing third-party partners.",
       "You need built-in misclassification guarantees (Deel Shield) to protect against worker audits.",
       "You want an all-in-one platform for international payroll, background checks, and hardware shipping."
     ],
-    "starting_price": "$29/mo (EOR $599/mo)",
-    "free_trial": false
+    "starting_price": "$49/mo",
+    "free_trial": false,
+    "contractor_price": 49,
+    "eor_price": 599,
+    "countries": "150+",
+    "target_segment": "Global/Enterprise"
   },
   "gusto": {
     "category": "payroll-eor",
@@ -34,7 +38,9 @@
       "You want affordable entry-level pricing tailored for small startups and growing US businesses."
     ],
     "starting_price": "$49/mo + $6/user",
-    "free_trial": true
+    "free_trial": true,
+    "target_segment": "Startups 1–20",
+    "countries": "US + 120+ contractor corridors"
   },
   "multiplier": {
     "category": "payroll-eor",
@@ -45,18 +51,22 @@
     "positioning": "High-value, cost-effective global EOR optimized for rapidly scaling teams across Asia-Pacific and EMEA.",
     "text_compliance": "Multiplier manages compliance across 150+ countries with automated employment contracts built around local labor laws. They assume employer liability, ensuring statutory benefit contributions, severance policies, and localized tax withholdings meet strict jurisdictional standards.",
     "text_global_reach": "Multiplier has an exceptionally strong infrastructure footprint across the Asia-Pacific region and emerging markets, providing direct entity support in key tech hubs like India, Singapore, Vietnam, and the UAE alongside broader global coverage.",
-    "text_pricing_truth": "EOR services start at $400/month per employee, positioning Multiplier as one of the more aggressive mid-market EOR price points. Local benefit package add-ons and admin fees should be reviewed country-by-country.",
+    "text_pricing_truth": "Contractor management starts at $40/month per active contractor. EOR services start at $400/month per employee, positioning Multiplier as one of the more aggressive mid-market EOR price points. Local benefit package add-ons and admin fees should be reviewed country-by-country.",
     "choose_if": [
       "You are hiring heavily in APAC or EMEA markets and want competitive regional pricing.",
       "You need a full EOR solution starting under $500/month per employee.",
       "You want fast local contract generation with pre-vetted compliance templates.",
       "You require integrated health and statutory benefits administration across multiple countries."
     ],
-    "starting_price": "EOR $400/mo",
+    "starting_price": "$40/mo",
     "free_trial": false,
     "affiliate_url": "https://multipliertechnologiespteltd.pxf.io/B51kg9",
     "has_active_affiliate": true,
-    "is_partner": true
+    "is_partner": true,
+    "contractor_price": 40,
+    "eor_price": 400,
+    "countries": "150+",
+    "target_segment": "Scaleups 50–250"
   },
   "oyster": {
     "category": "payroll-eor",
@@ -66,15 +76,19 @@
     "positioning": "An intuitive, designer-friendly global employment platform built for mid-market remote companies prioritising team experience.",
     "text_compliance": "Oyster automates local employment agreements and statutory compliance in 180+ countries. They handle misclassification safeguards, localized IP assignments, and statutory benefit filings through a mix of owned infrastructure and local HR partners.",
     "text_global_reach": "Oyster supports hiring across 180+ countries, offering robust international onboarding tools, local currency payouts, and localized benefits administration tailored to distributed tech and creative teams.",
-    "text_pricing_truth": "Contractor management starts at $29/month, with EOR commonly listed around $499/month per employee (volume discounts may apply). Watch FX spreads and any required salary deposits when modeling total cost of ownership.",
+    "text_pricing_truth": "Contractor management starts at $29/month after a 30-day free trial, with EOR listed at $699/month per employee on the public pricing page (volume/annual seat discounts may apply). Watch FX spreads and any required salary deposits when modeling total cost of ownership.",
     "choose_if": [
       "You value an exceptionally clean, user-friendly UI for both admins and international hires.",
       "You want a free contractor management tier to test hires before converting them to EOR.",
       "Your company scales past 10+ employees where volume discounts significantly lower the $699 base rate.",
       "You require dedicated remote work tools, such as country-by-country salary calculators."
     ],
-    "starting_price": "$29/mo (EOR $499/mo)",
-    "free_trial": true
+    "starting_price": "$29/mo",
+    "free_trial": true,
+    "contractor_price": 29,
+    "eor_price": 699,
+    "countries": "180+",
+    "target_segment": "Scaleups 50–250"
   },
   "papaya": {
     "category": "payroll-eor",
@@ -84,15 +98,19 @@
     "positioning": "Enterprise-grade global workforce platform delivering deep payroll intelligence and consolidated multi-country financial analytics.",
     "text_compliance": "Papaya Global uses AI-driven compliance engine checks paired with local in-country experts across 160+ jurisdictions. They oversee mandatory tax filings, worker classification risks, and legal contract amendments for complex corporate structures.",
     "text_global_reach": "Operating in over 160 countries, Papaya specializes in unifying fragmented international payroll networks. They allow multinational enterprises to manage localized EOR workers, direct payroll entities, and global contractors from a single business intelligence console.",
-    "text_pricing_truth": "EOR pricing typically starts around $650/month per employee depending on jurisdiction and support level. Enterprise analytics and hybrid entity/EOR setups are quote-driven; expect add-on costs for complex benefit administration.",
+    "text_pricing_truth": "Contractor management starts from about $5/month per contractor. EOR pricing starts from $499/month per employee on Papaya’s 2026 public pricing (enterprise packages and country complexity can raise the all-in rate). Expect add-on costs for complex benefit administration and deposits.",
     "choose_if": [
       "Your finance department needs enterprise business intelligence and consolidated reporting across multiple foreign entities.",
       "You operate a hybrid model of owned foreign subsidiaries alongside EOR employees.",
       "You require white-glove corporate account management and custom legal review.",
       "You manage large enterprise workforces across 20+ countries simultaneously."
     ],
-    "starting_price": "EOR $650/mo",
-    "free_trial": false
+    "starting_price": "$5/mo",
+    "free_trial": false,
+    "contractor_price": 5,
+    "eor_price": 499,
+    "countries": "180+",
+    "target_segment": "Global/Enterprise"
   },
   "plane": {
     "category": "payroll-eor",
@@ -103,15 +121,19 @@
     "positioning": "A streamlined, startup-first payroll and EOR platform designed for tech companies seeking transparent, low-fee international hiring.",
     "text_compliance": "Plane (formerly Pilot) enforces compliant hiring across 100+ countries with standardized employment contracts, local tax withholding, and IP assignment protection. They streamline misclassification protection for hybrid remote engineering teams.",
     "text_global_reach": "Plane provides coverage across major technology hiring markets worldwide. It excels at helping US and European tech startups quickly deploy global contractors and full-time remote developers without administrative bloat.",
-    "text_pricing_truth": "Contractor management starts at $20/contractor/month with transparent flat fees. EOR pricing is quoted separately by market; Plane emphasizes low FX markup on direct bank payouts for tech-heavy contractor fleets.",
+    "text_pricing_truth": "Contractor management starts at $39/active contractor/month with transparent flat fees and a free HRIS. EOR pricing is $499/month per employee; Plane emphasizes low FX markup on direct bank payouts for tech-heavy contractor fleets.",
     "choose_if": [
       "You run an early-stage or venture-backed tech startup looking for low per-employee EOR overhead.",
       "You want transparent, mid-market FX rates without hidden bank transfer markups.",
       "You primarily hire software developers and tech contractors across Latin America and Eastern Europe.",
       "You prefer a lean, fast interface over bloated enterprise HR suites."
     ],
-    "starting_price": "$20/contractor/mo",
-    "free_trial": true
+    "starting_price": "$39/mo",
+    "free_trial": true,
+    "contractor_price": 39,
+    "eor_price": 499,
+    "countries": "100+ EOR / 240+ contractor",
+    "target_segment": "Startups 1–20"
   },
   "remote": {
     "category": "payroll-eor",
@@ -122,15 +144,19 @@
     "positioning": "The gold standard for global compliance purity, utilizing 100% owned legal entities to eliminate third-party EOR risks.",
     "text_compliance": "Unlike platforms relying on third-party agencies, Remote owns its legal entities in every supported market. This guarantees end-to-end legal compliance, direct IP protection, bulletproof misclassification defense, and zero third-party data risk.",
     "text_global_reach": "Remote operates owned infrastructure across 75+ core hiring markets while serving global contractor operations in 180+ countries. Their owned-entity model ensures direct control over employee contracts, local payroll, and government tax filings.",
-    "text_pricing_truth": "Contractor management starts at $29/month per worker, with EOR at $599/month per employee on typical annual commitments. IP protection and owned-entity compliance are included in the base EOR fee; confirm monthly vs annual billing before signing.",
+    "text_pricing_truth": "Contractor management starts at $29/month per worker, with EOR at $599/month per employee on typical annual commitments ($699 month-to-month). IP protection and owned-entity compliance are included in the base EOR fee.",
     "choose_if": [
       "Maximum IP security and compliance purity are non-negotiable for your board.",
       "You prefer working with a provider that owns its local legal entities rather than leasing third-party agencies.",
       "You hire in key remote hubs like Western Europe, Canada, Latin America, and APAC.",
       "You want transparent $599/month EOR pricing with no unexpected third-party markup fees."
     ],
-    "starting_price": "$29/mo (EOR $599/mo)",
-    "free_trial": true
+    "starting_price": "$29/mo",
+    "free_trial": true,
+    "contractor_price": 29,
+    "eor_price": 599,
+    "countries": "75+ EOR / 180+ contractor",
+    "target_segment": "Global/Enterprise"
   },
   "rippling": {
     "category": "payroll-eor",
@@ -141,7 +167,7 @@
     "positioning": "An all-in-one workforce operations system uniting HR, global payroll, IT device management, and app provisioning in one dashboard.",
     "text_compliance": "Rippling automates compliance across US domestic payroll and global workforce expansions. Its engine automatically enforces local overtime laws, tax registration, mandatory sexual harassment training, and international labor standards based on worker location.",
     "text_global_reach": "Rippling supports global hiring via direct payroll, local entity management, and integrated EOR services. It allows companies to manage US W-2 employees, international EOR staff, and worldwide contractors within a single unified HR cloud.",
-    "text_pricing_truth": "Rippling's core platform commonly starts around $8/user/month, with payroll, benefits, IT, and global EOR sold as modular add-ons. Real total cost depends on which modules you activate\u2014request an all-in quote for your headcount mix.",
+    "text_pricing_truth": "Rippling's core platform commonly starts around $8/user/month, with payroll, benefits, IT, and global EOR sold as modular add-ons. Real total cost depends on which modules you activate—request an all-in quote for your headcount mix.",
     "choose_if": [
       "You want to manage IT assets (laptops, software app permissions, Google Workspace) alongside HR and payroll.",
       "You have complex workflow automation needs (e.g., auto-triggering custom onboarding flows based on job role).",
@@ -149,7 +175,9 @@
       "You want a fully modular platform where you only pay for the specific HR and IT apps you activate."
     ],
     "starting_price": "$8/user/mo",
-    "free_trial": false
+    "free_trial": false,
+    "target_segment": "Scaleups 50–250",
+    "countries": "Global via modular payroll/EOR"
   },
   "ashby": {
     "category": "ats",
@@ -167,7 +195,8 @@
       "You want native AI features for candidate summaries, automated scheduling, and pipeline velocity tracking."
     ],
     "starting_price": "$400/mo",
-    "free_trial": false
+    "free_trial": false,
+    "target_segment": "Scaleups 50–250"
   },
   "greenhouse": {
     "category": "ats",
@@ -178,7 +207,7 @@
     "positioning": "The enterprise gold standard for structured hiring, auditable scorecard methodologies, and complex talent acquisition ecosystems.",
     "text_compliance": "Greenhouse enforces rigorous EEOC, GDPR, and CCPA compliance through structured interviewing rules, automated candidate consent workflows, and comprehensive DEI reporting tools designed for enterprise audits.",
     "text_global_reach": "Greenhouse connects with 400+ native integrations worldwide, supporting localized job board postings, multi-language application forms, and global background check providers like Checkr and Sterling.",
-    "text_pricing_truth": "Greenhouse uses custom annual contracts without a public sticker price. Mid-market and enterprise deals typically include implementation fees\u2014budget for a sales-led quote rather than self-serve monthly pricing.",
+    "text_pricing_truth": "Greenhouse uses custom annual contracts without a public sticker price. Mid-market and enterprise deals typically include implementation fees—budget for a sales-led quote rather than self-serve monthly pricing.",
     "choose_if": [
       "Your organization enforces strict, objective 'structured hiring' scorecards across all interview panels.",
       "You need an industry-leading integration ecosystem (400+ HRIS, assessment, and background check tools).",
@@ -186,7 +215,8 @@
       "You operate a mature talent team with dedicated recruiting operations support."
     ],
     "starting_price": "Custom quote",
-    "free_trial": false
+    "free_trial": false,
+    "target_segment": "Global/Enterprise"
   },
   "lever": {
     "category": "ats",
@@ -204,7 +234,8 @@
       "Your team wants built-in e-signature and fast interview feedback loops."
     ],
     "starting_price": "Custom quote",
-    "free_trial": false
+    "free_trial": false,
+    "target_segment": "Scaleups 50–250"
   },
   "workable": {
     "category": "ats",
@@ -214,15 +245,16 @@
     "positioning": "An intuitive, fast-deploying ATS featuring AI candidate sourcing, automated job board distribution, and flexible SMB pricing.",
     "text_compliance": "Workable automates GDPR candidate rights management, EEOC/CCPA compliance collection, and background check integrations across 100+ countries with built-in audit trails.",
     "text_global_reach": "Workable posts jobs to 200+ global job boards in a single click and offers built-in AI sourcing (AI Recruiter) that searches a database of 400+ million global candidate profiles.",
-    "text_pricing_truth": "Published plans start at $149/month for smaller teams, with higher tiers and add-ons for video interviewing, texting, and assessments. Free trial availability makes it easier to validate fit before annual commit.",
+    "text_pricing_truth": "Workable Standard starts at $299/month for teams of 1–20 employees (headcount-banded). Premier and Enterprise tiers and paid add-ons (texting, video, assessments) can raise total cost well above the Standard floor.",
     "choose_if": [
       "You want one-click job syndication across 200+ international and local job boards.",
       "You need built-in AI sourcing tools to uncover passive candidates without paying for separate CRM software.",
       "You prefer transparent, published monthly/annual pricing over multi-week enterprise sales calls.",
       "You want an all-in-one ATS with integrated background checks and basic HR onboarding tools."
     ],
-    "starting_price": "$149/mo",
-    "free_trial": true
+    "starting_price": "$299/mo",
+    "free_trial": true,
+    "target_segment": "Scaleups 50–250"
   },
   "breezy-hr": {
     "category": "ats",
@@ -239,8 +271,9 @@
       "You are an SMB looking for unlimited job postings and candidate tracking without steep contract minimums.",
       "You want a free tier to test the platform before committing to a monthly plan."
     ],
-    "starting_price": "Free tier / $189/mo",
-    "free_trial": true
+    "starting_price": "Free tier / $157/mo",
+    "free_trial": true,
+    "target_segment": "Startups 1–20"
   },
   "jazzhr": {
     "category": "ats",
@@ -258,7 +291,8 @@
       "You want simple, no-nonsense candidate tracking without complex enterprise software bloat."
     ],
     "starting_price": "$75/mo",
-    "free_trial": true
+    "free_trial": true,
+    "target_segment": "Startups 1–20"
   },
   "recruitee": {
     "category": "ats",
@@ -268,18 +302,19 @@
     "positioning": "A collaborative hiring platform featuring multi-language careers site builders, visual pipeline management, and strong European compliance infrastructure.",
     "text_compliance": "Recruitee provides enterprise-grade GDPR compliance automation, strict candidate consent timers, and localized data residency in European data centers.",
     "text_global_reach": "Recruitee excels for European and multi-national teams with multi-language careers page localization, localized job board syndication, and multi-currency tracking.",
-    "text_pricing_truth": "Pricing starts at $269/month on the Startup tier (job-slot based) with unlimited team members, scaling to custom enterprise quotes for high-volume hiring.",
+    "text_pricing_truth": "Pricing starts at $199/month on the Launch tier (job-slot based) with unlimited team members, scaling to Scale and custom enterprise quotes for high-volume hiring.",
     "choose_if": [
       "You operate or hire heavily in Europe and require strict GDPR data privacy compliance.",
       "You want a beautiful, custom-branded careers site builder that supports multiple languages.",
       "You value team-based collaborative hiring with easy evaluation notes and interview sharing.",
       "You want transparent pricing with unlimited user access across all departments."
     ],
-    "starting_price": "$269/mo",
+    "starting_price": "$199/mo",
     "free_trial": true,
     "affiliate_url": "https://join.tellent.com/t5yy8cn4dn30",
     "has_active_affiliate": true,
-    "is_partner": true
+    "is_partner": true,
+    "target_segment": "Startups 1–20"
   },
   "bamboohr-ats": {
     "name": "BambooHR",
@@ -301,7 +336,8 @@
     "starting_price": "Custom quote",
     "free_trial": true,
     "website": "https://www.bamboohr.com/?eid=fopydE",
-    "affiliate_url": "https://www.bamboohr.com/?eid=fopydE"
+    "affiliate_url": "https://www.bamboohr.com/?eid=fopydE",
+    "target_segment": "Scaleups 50–250"
   },
   "15five": {
     "category": "performance-management",
@@ -313,13 +349,14 @@
     "text_global_reach": "15Five supports distributed and international teams with Slack/Teams-native check-ins, async feedback workflows, and multi-timezone 1:1 agendas so remote managers can run consistent performance cadences.",
     "text_pricing_truth": "Published pricing starts at $4/user/month on Engage, with Perform and Total Platform tiers adding reviews, OKRs, and coaching. Seat-based annual contracts are typical; confirm AI and coaching add-ons in your quote.",
     "choose_if": [
-      "You want weekly check-ins and manager coaching\u2014not just annual review software.",
+      "You want weekly check-ins and manager coaching—not just annual review software.",
       "You need lightweight OKRs tied to continuous feedback without an enterprise sales cycle.",
       "You want transparent published pricing and a free trial before rolling out company-wide.",
       "Your managers need structured 1:1 agendas and coaching prompts baked into the workflow."
     ],
     "starting_price": "$4/user/mo",
-    "free_trial": true
+    "free_trial": true,
+    "target_segment": "Scaleups 50–250"
   },
   "performyard": {
     "category": "performance-management",
@@ -338,7 +375,8 @@
       "You need goals and 360 feedback without paying enterprise Lattice/Culture Amp premiums."
     ],
     "starting_price": "$5/user/mo",
-    "free_trial": true
+    "free_trial": true,
+    "target_segment": "Scaleups 50–250"
   },
   "leapsome": {
     "category": "performance-management",
@@ -349,7 +387,7 @@
     "positioning": "A modular people-enablement suite spanning performance reviews, OKRs, engagement, learning, and compensation for modern scaleups.",
     "text_compliance": "Leapsome emphasizes GDPR-ready data residency and consent controls suited to European and global employers, with structured review workflows, access permissions, and exportable audit history for performance and engagement data.",
     "text_global_reach": "Leapsome is especially strong for European and multi-national scaleups, supporting multi-language experiences, distributed team feedback, and integrations with Slack, Teams, and common HRIS platforms worldwide.",
-    "text_pricing_truth": "Modular pricing starts at $8/user/month per active module (Reviews, Goals, Engagement, Learning). Model your module mix carefully\u2014full-suite rollouts stack seat costs versus lighter single-module buys.",
+    "text_pricing_truth": "Modular pricing starts at $8/user/month per active module (Reviews, Goals, Engagement, Learning). Model your module mix carefully—full-suite rollouts stack seat costs versus lighter single-module buys.",
     "choose_if": [
       "You want one modular platform for reviews, learning paths, engagement, and goals.",
       "You operate in Europe or need strong GDPR and multi-language support.",
@@ -357,7 +395,8 @@
       "You want compensation calibration connected to performance without buying a separate comp tool."
     ],
     "starting_price": "$8/user/mo",
-    "free_trial": true
+    "free_trial": true,
+    "target_segment": "Scaleups 50–250"
   },
   "lattice": {
     "category": "performance-management",
@@ -368,15 +407,16 @@
     "positioning": "An enterprise-ready performance, engagement, and compensation platform built for People teams running calibrated talent and pay cycles.",
     "text_compliance": "Lattice supports enterprise access controls, talent-review confidentiality, compensation-band governance, and audit-friendly performance history designed for regulated and large-employer review processes.",
     "text_global_reach": "Lattice serves global and multi-entity employers with multi-language support, HRIS integrations, and workflows for distributed talent calibration across regions and business units.",
-    "text_pricing_truth": "Performance modules commonly start around $8/user/month, with Engagement, Grow, and Compensation sold as add-ons. Contracts are demo-led with no free trial\u2014model total seat cost across modules before comparing to lighter tools.",
+    "text_pricing_truth": "Performance modules commonly start around $10/user/month, with Goals & OKRs from $8/user/month and Engagement/Compensation sold as add-ons. Contracts are demo-led with a minimum annual spend—model total seat cost across modules before comparing to lighter tools.",
     "choose_if": [
       "You need compensation calibration tightly linked to performance and talent reviews.",
       "You run formal talent cycles with People partners and need mature analytics.",
       "You want OKRs, reviews, engagement, and career pathing in one premium suite.",
       "Your organization can support a demo-led enterprise sales and implementation process."
     ],
-    "starting_price": "$8/user/mo",
-    "free_trial": false
+    "starting_price": "$10/user/mo",
+    "free_trial": false,
+    "target_segment": "Scaleups 50–250"
   },
   "culture-amp": {
     "category": "performance-management",
@@ -394,7 +434,8 @@
       "You are comfortable with an enterprise sales motion for platform-wide rollout."
     ],
     "starting_price": "Custom quote",
-    "free_trial": false
+    "free_trial": false,
+    "target_segment": "Global/Enterprise"
   },
   "reflektive": {
     "category": "performance-management",
@@ -417,7 +458,8 @@
     "displayName": "PeopleFluent (formerly Reflektive)",
     "badge": "PeopleFluent (formerly Reflektive)",
     "website": "https://www.peoplefluent.com/",
-    "affiliate_url": "https://www.peoplefluent.com/"
+    "affiliate_url": "https://www.peoplefluent.com/",
+    "target_segment": "Scaleups 50–250"
   },
   "clearcompany": {
     "name": "ClearCo",
@@ -433,7 +475,7 @@
     "positioning": "ClearCo (formerly ClearCompany) is a mid-market talent suite that connects performance reviews and goals with recruiting and onboarding for consolidated HR stacks.",
     "text_compliance": "ClearCo (formerly ClearCompany) supports configurable review permissions, documented performance history, and talent-suite audit trails that connect hiring-to-performance records for mid-market compliance workflows.",
     "text_global_reach": "ClearCo (formerly ClearCompany) is strongest for US mid-market employers consolidating ATS, onboarding, and performance; global multi-language depth is more limited than Lattice, Leapsome, or Culture Amp.",
-    "text_pricing_truth": "ClearCo (formerly ClearCompany) performance is custom-quoted as part of the broader talent suite (often with ATS/onboarding). Standalone list pricing is uncommon\u2014request a bundle quote for mid-market consolidations.",
+    "text_pricing_truth": "ClearCo (formerly ClearCompany) performance is custom-quoted as part of the broader talent suite (often with ATS/onboarding). Standalone list pricing is uncommon—request a bundle quote for mid-market consolidations.",
     "choose_if": [
       "You want performance tied to the same suite as recruiting and onboarding.",
       "You are a mid-market team consolidating multiple HR point solutions.",
@@ -441,6 +483,7 @@
       "You prefer a lighter mid-market sales motion than Lattice or Culture Amp, without needing enterprise people-science depth."
     ],
     "starting_price": "Custom quote",
-    "free_trial": false
+    "free_trial": false,
+    "target_segment": "Scaleups 50–250"
   }
 }
