@@ -2,118 +2,196 @@
 import Layout from '../layouts/Layout.astro';
 
 const categories = [
-  { value: 'Global Payroll & EOR', label: 'Global Payroll & EOR' },
-  { value: 'Applicant Tracking Systems (ATS)', label: 'Applicant Tracking Systems (ATS)' },
-  { value: 'Performance Management', label: 'Performance Management' },
+  { value: 'payroll', label: 'Global Payroll & EOR' },
+  { value: 'ats', label: 'Applicant Tracking Systems (ATS)' },
+  { value: 'performance', label: 'Performance Management' },
 ];
 
 const headcounts = [
-  { value: '1–20 (Startup)', label: '1–20 employees (Startup)' },
-  { value: '50–250 (Scaleup)', label: '50–250 employees (Scaleup)' },
-  { value: '250+ (Enterprise / Global)', label: '250+ employees (Enterprise / Global)' },
+  { value: 'startup', label: '1–20 employees (Startup)' },
+  { value: 'scaleup', label: '50–250 employees (Scaleup)' },
+  { value: 'enterprise', label: '250+ employees (Enterprise / Global)' },
 ];
 
 const budgets = [
-  { value: 'Under $500/mo', label: 'Under $500 / month' },
-  { value: '$500–$2,000/mo', label: '$500–$2,000 / month' },
-  { value: '$2,000+/mo or flexible', label: '$2,000+ / month or flexible' },
+  { value: 'lean', label: 'Under $500 / month' },
+  { value: 'mid', label: '$500–$2,000 / month' },
+  { value: 'flexible', label: '$2,000+ / month or flexible' },
 ];
+
+const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
 ---
 
 <Layout
-  title="Get a Stack Recommendation — The HR Stack Guide"
-  description="Answer three quick questions about your category, headcount, and budget. We'll send an unbiased HR tech stack recommendation."
+  title="Get Our Recommendation — The HR Stack Guide"
+  description="Answer three quick questions about your category, headcount, and budget to get an instant unbiased HR tech stack recommendation."
 >
   <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-    <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold text-indigo-700">
-      Free concierge
+    <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold uppercase tracking-wide text-indigo-700">
+      Free Guidance
     </span>
     <h1 class="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-      Get your stack recommendation
+      Get our recommendation
     </h1>
     <p class="mt-4 text-lg leading-relaxed text-slate-600">
-      Answer 3 quick questions. We'll reply with an unbiased shortlist based on your headcount and budget—no vendor pressure.
+      Answer 3 quick questions and see an instant shortlist of the best comparison pages for your team—no email required.
     </p>
 
-    <form
-      id="recommendation-form"
-      class="mt-10 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
-      novalidate
-    >
-      <div>
-        <label for="category" class="block text-sm font-semibold text-slate-900">1. Which category are you evaluating?</label>
-        <select
-          id="category"
-          name="category"
-          required
-          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+    <div class="mt-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <form id="recommendation-form" class="space-y-6" novalidate>
+        <div>
+          <label for="category" class="block text-sm font-semibold text-slate-900">1. Which category are you evaluating?</label>
+          <select
+            id="category"
+            name="category"
+            required
+            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          >
+            <option value="" disabled selected={!categoryPrefill}>Select a category</option>
+            {categories.map((option) => (
+              <option value={option.value} selected={categoryPrefill === option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label for="headcount" class="block text-sm font-semibold text-slate-900">2. What's your team size?</label>
+          <select
+            id="headcount"
+            name="headcount"
+            required
+            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          >
+            <option value="" disabled selected>Select headcount</option>
+            {headcounts.map((option) => (
+              <option value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label for="budget" class="block text-sm font-semibold text-slate-900">3. What's your monthly software budget?</label>
+          <select
+            id="budget"
+            name="budget"
+            required
+            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          >
+            <option value="" disabled selected>Select budget range</option>
+            {budgets.map((option) => (
+              <option value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          class="inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
         >
-          <option value="" disabled selected>Select a category</option>
-          {categories.map((option) => (
-            <option value={option.value}>{option.label}</option>
-          ))}
-        </select>
-      </div>
+          Get Our Recommendation
+        </button>
+      </form>
 
-      <div>
-        <label for="headcount" class="block text-sm font-semibold text-slate-900">2. What's your team size?</label>
-        <select
-          id="headcount"
-          name="headcount"
-          required
-          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+      <div id="recommendation-results" class="hidden" aria-live="polite">
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Recommended Stack for Your Team</h2>
+        <p id="recommendation-blurb" class="mt-3 text-base leading-relaxed text-slate-600"></p>
+        <div id="recommendation-links" class="mt-6 flex flex-col gap-3"></div>
+        <button
+          type="button"
+          id="recommendation-reset"
+          class="mt-6 inline-flex items-center text-sm font-semibold text-indigo-600 transition hover:text-indigo-700"
         >
-          <option value="" disabled selected>Select headcount</option>
-          {headcounts.map((option) => (
-            <option value={option.value}>{option.label}</option>
-          ))}
-        </select>
+          ← Change answers
+        </button>
       </div>
-
-      <div>
-        <label for="budget" class="block text-sm font-semibold text-slate-900">3. What's your monthly software budget?</label>
-        <select
-          id="budget"
-          name="budget"
-          required
-          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-        >
-          <option value="" disabled selected>Select budget range</option>
-          {budgets.map((option) => (
-            <option value={option.value}>{option.label}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label for="email" class="block text-sm font-semibold text-slate-900">Where should we send the recommendation?</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          autocomplete="email"
-          placeholder="you@company.com"
-          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-        />
-      </div>
-
-      <button
-        type="submit"
-        class="inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-      >
-        Get Stack Recommendation
-      </button>
-      <p class="text-xs leading-relaxed text-slate-500">
-        Submitting opens your email client with a pre-filled message to dave@thehrstackguide.com. We only use your details to send the recommendation.
-      </p>
-    </form>
+    </div>
   </main>
 
   <script>
+    interface RecLink {
+      href: string;
+      label: string;
+    }
+
+    interface RecResult {
+      blurb: string;
+      links: RecLink[];
+    }
+
+    function buildRecommendation(category: string, headcount: string, budget: string): RecResult {
+      const leanBudget = budget === 'lean';
+      const startup = headcount === 'startup';
+      const scaleOrGlobal = headcount === 'scaleup' || headcount === 'enterprise';
+
+      if (category === 'ats') {
+        return {
+          blurb:
+            'Based on your hiring stack focus, these comparisons highlight the best balance of structured recruiting workflows and value for growing teams:',
+          links: [
+            { href: '/ashby-vs-greenhouse-for-startups/', label: 'Compare Ashby vs Greenhouse' },
+            { href: '/workable-vs-breezy-hr-for-startups/', label: 'Compare Workable vs Breezy HR' },
+          ],
+        };
+      }
+
+      if (category === 'performance') {
+        return {
+          blurb:
+            'Based on your performance-management focus, this comparison is the strongest starting point for reviews, OKRs, and manager cadence:',
+          links: [{ href: '/15five-vs-lattice-for-scaleups/', label: 'Compare 15Five vs Lattice' }],
+        };
+      }
+
+      // Payroll / EOR (default) — startups or lean budget first, then scale/global.
+      if (startup || leanBudget) {
+        return {
+          blurb:
+            'Based on your headcount and budget, these platforms provide the best balance of compliance and value for leaner teams:',
+          links: [
+            { href: '/rippling-vs-gusto-for-tech-startups/', label: 'Compare Rippling vs Gusto' },
+            { href: '/workable-vs-breezy-hr-for-startups/', label: 'Compare Workable vs Breezy HR' },
+          ],
+        };
+      }
+
+      if (scaleOrGlobal) {
+        return {
+          blurb:
+            'Based on your headcount and budget, these 2 platforms provide the best balance of compliance and value for multi-country and scaling teams:',
+          links: [
+            { href: '/deel-vs-remote-for-tech-startups/', label: 'Compare Deel vs Remote' },
+            { href: '/rippling-vs-gusto-for-scaleups/', label: 'Compare Rippling vs Gusto' },
+          ],
+        };
+      }
+
+      return {
+        blurb:
+          'Based on your answers, start with these high-intent comparisons for global payroll and workforce ops:',
+        links: [
+          { href: '/deel-vs-remote-for-tech-startups/', label: 'Compare Deel vs Remote' },
+          { href: '/rippling-vs-gusto-for-tech-startups/', label: 'Compare Rippling vs Gusto' },
+        ],
+      };
+    }
+
+    function escapeHtml(value: string): string {
+      return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
     function initRecommendationForm() {
       const form = document.getElementById('recommendation-form') as HTMLFormElement | null;
-      if (!form) return;
+      const results = document.getElementById('recommendation-results');
+      const blurb = document.getElementById('recommendation-blurb');
+      const links = document.getElementById('recommendation-links');
+      const reset = document.getElementById('recommendation-reset');
+      if (!form || !results || !blurb || !links || !reset) return;
 
       form.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -121,24 +199,27 @@ const budgets = [
         const category = String(data.get('category') || '').trim();
         const headcount = String(data.get('headcount') || '').trim();
         const budget = String(data.get('budget') || '').trim();
-        const email = String(data.get('email') || '').trim();
-        if (!category || !headcount || !budget || !email) return;
+        if (!category || !headcount || !budget) return;
 
-        const subject = encodeURIComponent(`Stack recommendation request — ${category}`);
-        const body = encodeURIComponent(
-          [
-            'Hi HR Stack Guide team,',
-            '',
-            'Please send an unbiased stack recommendation based on:',
-            `1) Category: ${category}`,
-            `2) Headcount: ${headcount}`,
-            `3) Budget: ${budget}`,
-            `Reply-to: ${email}`,
-            '',
-            'Thanks!',
-          ].join('\n')
-        );
-        window.location.href = `mailto:dave@thehrstackguide.com?subject=${subject}&body=${body}`;
+        const rec = buildRecommendation(category, headcount, budget);
+        blurb.textContent = rec.blurb;
+        links.innerHTML = rec.links
+          .map(
+            (link) =>
+              `<a href="${escapeHtml(link.href)}" class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">${escapeHtml(link.label)}</a>`
+          )
+          .join('');
+
+        form.classList.add('hidden');
+        results.classList.remove('hidden');
+        results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+
+      reset.addEventListener('click', () => {
+        results.classList.add('hidden');
+        form.classList.remove('hidden');
+        blurb.textContent = '';
+        links.innerHTML = '';
       });
     }
 
