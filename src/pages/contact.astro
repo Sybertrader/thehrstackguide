@@ -95,7 +95,7 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
       </form>
 
       <div id="recommendation-results" class="hidden" aria-live="polite">
-        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Recommended Stack for Your Team</h2>
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Your Shortlist is Ready</h2>
         <p id="recommendation-blurb" class="mt-3 text-base leading-relaxed text-slate-600"></p>
         <div
           id="recommendation-links"
@@ -124,6 +124,9 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
       links: RecLink[];
     }
 
+    const RESULT_BLURB =
+      'Based on your answers, these two guides cover the best options for your budget and headcount:';
+
     function buildRecommendation(category: string, headcount: string, budget: string): RecResult {
       const leanStartup = headcount === 'startup' && budget === 'lean';
       const startup = headcount === 'startup';
@@ -132,8 +135,7 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
       if (category === 'ats') {
         if (leanStartup) {
           return {
-            blurb:
-              'Based on your headcount and budget, these ATS platforms provide the best balance of hiring workflow and value for leaner teams:',
+            blurb: RESULT_BLURB,
             links: [
               { href: '/workable-vs-breezy-hr-for-startups/', label: 'Compare Workable vs Breezy HR' },
               { href: '/breezy-hr-vs-recruitee-for-startups/', label: 'Compare Recruitee vs Breezy HR' },
@@ -141,8 +143,7 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
           };
         }
         return {
-          blurb:
-            'Based on your hiring stack focus, these comparisons highlight structured recruiting workflows for scaling teams:',
+          blurb: RESULT_BLURB,
           links: [
             { href: '/ashby-vs-greenhouse-for-scaleups/', label: 'Compare Ashby vs Greenhouse' },
             { href: '/greenhouse-vs-lever-for-scaleups/', label: 'Compare Lever vs Greenhouse' },
@@ -154,8 +155,7 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
       if (category === 'performance') {
         if (startup) {
           return {
-            blurb:
-              'Based on your team size, these performance platforms provide the best balance of manager cadence and value for growing teams:',
+            blurb: RESULT_BLURB,
             links: [
               { href: '/15five-vs-performyard-for-startups/', label: 'Compare 15Five vs PerformYard' },
               { href: '/15five-vs-lattice-for-startups/', label: 'Compare 15Five vs Lattice' },
@@ -163,8 +163,7 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
           };
         }
         return {
-          blurb:
-            'Based on your team size, these comparisons are the strongest starting point for reviews, OKRs, and manager cadence at scale:',
+          blurb: RESULT_BLURB,
           links: [
             { href: '/15five-vs-lattice-for-scaleups/', label: 'Compare 15Five vs Lattice' },
             { href: '/leapsome-vs-lattice-for-scaleups/', label: 'Compare Leapsome vs Lattice' },
@@ -175,8 +174,7 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
       // B) Global Payroll & EOR (default)
       if (leanStartup) {
         return {
-          blurb:
-            'Based on your headcount and budget, these platforms provide the best balance of compliance and value for leaner teams:',
+          blurb: RESULT_BLURB,
           links: [
             { href: '/rippling-vs-gusto-for-tech-startups/', label: 'Compare Rippling vs Gusto' },
             { href: '/deel-vs-remote-for-tech-startups/', label: 'Compare Remote vs Deel' },
@@ -185,8 +183,7 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
       }
 
       return {
-        blurb:
-          'Based on your headcount and budget, these 2 platforms provide the best balance of compliance and value for multi-country and scaling teams:',
+        blurb: RESULT_BLURB,
         links: [
           { href: '/deel-vs-remote-for-scaleups/', label: 'Compare Deel vs Remote' },
           { href: '/deel-vs-rippling-for-scaleups/', label: 'Compare Rippling vs Deel' },
