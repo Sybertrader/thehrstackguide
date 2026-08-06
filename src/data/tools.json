@@ -405,8 +405,8 @@
   },
   "clearcompany": {
     "name": "ClearCo",
-    "displayName": "ClearCo (formerly ClearCompany)",
-    "badge": "(formerly ClearCompany)",
+    "displayName": "ClearCo",
+    "badge": "ClearCo",
     "logo": "/logos/ClearCo.jpg",
     "website": "https://www.clearcompany.com/",
     "affiliate_url": "https://www.clearcompany.com/",

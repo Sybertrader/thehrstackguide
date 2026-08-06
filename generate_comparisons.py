@@ -544,7 +544,7 @@ PM_TOOLS = {
         }
     },
     "clearcompany": {
-        "name": "ClearCo (formerly ClearCompany)",
+        "name": "ClearCo",
         "logo": "/logos/ClearCo.jpg",
         "rating": 4.5,
         "starting_price": "Custom quote",
