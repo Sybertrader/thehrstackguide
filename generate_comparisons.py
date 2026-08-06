@@ -35,7 +35,7 @@ TOOLS = {
     },
     "rippling": {
         "name": "Rippling",
-        "logo": "https://unavatar.io/rippling.com",
+        "logo": "/rippling.jpeg",
         "rating": 4.8,
         "starting_price": "$8/user/mo",
         "pricing_model": "From $8 per user / month (modular add-ons)",
@@ -59,7 +59,7 @@ TOOLS = {
     },
     "remote": {
         "name": "Remote",
-        "logo": "https://unavatar.io/remote.com",
+        "logo": "/remote.jpeg",
         "rating": 4.6,
         "starting_price": "$29/mo (EOR $599/mo)",
         "pricing_model": "Per contractor / month ($599/mo for EOR)",
@@ -107,7 +107,7 @@ TOOLS = {
     },
     "gusto": {
         "name": "Gusto",
-        "logo": "/Gusto.png",
+        "logo": "/gusto.jpeg",
         "rating": 4.6,
         "starting_price": "$49/mo + $6/user",
         "pricing_model": "$49/mo base + $6 per user / month",
@@ -155,7 +155,7 @@ TOOLS = {
     },
     "multiplier": {
         "name": "Multiplier",
-        "logo": "https://unavatar.io/usemultiplier.com",
+        "logo": "/multiplier.jpeg",
         "rating": 4.7,
         "starting_price": "EOR $400/mo",
         "pricing_model": "EOR from $400/mo",
@@ -179,7 +179,7 @@ TOOLS = {
     },
     "plane": {
         "name": "Plane",
-        "logo": "https://unavatar.io/plane.com",
+        "logo": "/plane.jpeg",
         "rating": 4.6,
         "starting_price": "$20/contractor/mo",
         "pricing_model": "From $20/contractor / month",
@@ -230,7 +230,7 @@ ATS_TOOLS = {
     },
     "greenhouse": {
         "name": "Greenhouse",
-        "logo": "https://unavatar.io/greenhouse.io",
+        "logo": "/Greenhouse.jpeg",
         "rating": 4.4,
         "starting_price": "Custom quote",
         "pricing_model": "Custom annual contract (quote-based)",
@@ -425,7 +425,7 @@ PM_TOOLS = {
     },
     "performyard": {
         "name": "PerformYard",
-        "logo": "https://unavatar.io/performyard.com",
+        "logo": "/PerformYard.jpeg",
         "rating": 4.7,
         "starting_price": "$5/user/mo",
         "pricing_model": "Per user / month with configurable review cycle modules",
@@ -449,7 +449,7 @@ PM_TOOLS = {
     },
     "leapsome": {
         "name": "Leapsome",
-        "logo": "https://unavatar.io/leapsome.com",
+        "logo": "/leapsome.jpeg",
         "rating": 4.8,
         "starting_price": "$8/user/mo",
         "pricing_model": "Modular per-user pricing (Reviews, Goals, Engagement, Learning)",
@@ -473,7 +473,7 @@ PM_TOOLS = {
     },
     "lattice": {
         "name": "Lattice",
-        "logo": "https://unavatar.io/lattice.com",
+        "logo": "/lattice.jpeg",
         "rating": 4.7,
         "starting_price": "$8/user/mo",
         "pricing_model": "From $8/user/month across modular Performance suite",
@@ -545,7 +545,7 @@ PM_TOOLS = {
     },
     "clearcompany": {
         "name": "ClearCo",
-        "logo": "/logos/ClearCo.jpg",
+        "logo": "/ClearCo.jpeg",
         "rating": 4.5,
         "starting_price": "Custom quote",
         "pricing_model": "Custom quote (talent suite bundle)",

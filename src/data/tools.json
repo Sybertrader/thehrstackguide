@@ -19,6 +19,7 @@
   },
   "gusto": {
     "category": "payroll-eor",
+    "logo": "/gusto.jpeg",
     "rating": "4.6",
     "review_count": "13,000",
     "rating_source": "G2 & Industry Benchmark",
@@ -37,6 +38,7 @@
   },
   "multiplier": {
     "category": "payroll-eor",
+    "logo": "/multiplier.jpeg",
     "rating": "4.7",
     "review_count": "800",
     "rating_source": "G2 & Industry Benchmark",
@@ -94,6 +96,7 @@
   },
   "plane": {
     "category": "payroll-eor",
+    "logo": "/plane.jpeg",
     "rating": "4.6",
     "review_count": "200",
     "rating_source": "G2 & Industry Benchmark",
@@ -112,6 +115,7 @@
   },
   "remote": {
     "category": "payroll-eor",
+    "logo": "/remote.jpeg",
     "rating": "4.6",
     "review_count": "2,500",
     "rating_source": "G2 & Industry Benchmark",
@@ -130,6 +134,7 @@
   },
   "rippling": {
     "category": "payroll-eor",
+    "logo": "/rippling.jpeg",
     "rating": "4.8",
     "review_count": "12,000",
     "rating_source": "G2 & Industry Benchmark",
@@ -166,6 +171,7 @@
   },
   "greenhouse": {
     "category": "ats",
+    "logo": "/Greenhouse.jpeg",
     "rating": "4.4",
     "review_count": "2,000",
     "rating_source": "G2 & Industry Benchmark",
@@ -316,6 +322,7 @@
   },
   "performyard": {
     "category": "performance-management",
+    "logo": "/PerformYard.jpeg",
     "rating": "4.7",
     "review_count": "1,200",
     "rating_source": "G2 & Industry Benchmark",
@@ -334,6 +341,7 @@
   },
   "leapsome": {
     "category": "performance-management",
+    "logo": "/leapsome.jpeg",
     "rating": "4.8",
     "review_count": "2,500",
     "rating_source": "G2 & Industry Benchmark",
@@ -352,6 +360,7 @@
   },
   "lattice": {
     "category": "performance-management",
+    "logo": "/lattice.jpeg",
     "rating": "4.7",
     "review_count": "4,000",
     "rating_source": "G2 & Industry Benchmark",
@@ -413,7 +422,7 @@
     "name": "ClearCo",
     "displayName": "ClearCo",
     "badge": "ClearCo",
-    "logo": "/logos/ClearCo.jpg",
+    "logo": "/ClearCo.jpeg",
     "website": "https://www.clearcompany.com/",
     "affiliate_url": "https://www.clearcompany.com/",
     "category": "performance-management",
