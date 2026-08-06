@@ -65,6 +65,24 @@ function logoBadgeColor(name: string): string {
   return colors[Math.abs(hash) % colors.length];
 }
 
+const howItWorksSteps = [
+  {
+    step: '1',
+    title: 'Filter by Stack',
+    description: 'Select Payroll, ATS, or Performance Management.',
+  },
+  {
+    step: '2',
+    title: 'Compare Real Data',
+    description: 'Evaluate verified pricing, hidden FX fees, and feature sets.',
+  },
+  {
+    step: '3',
+    title: 'Connect Direct',
+    description: 'Route directly to vetted sales teams with verified partner tracking.',
+  },
+];
+
 const eeatPillars = [
   {
     icon: 'M2.5 10a7.5 7.5 0 1 1 15 0 7.5 7.5 0 0 1-15 0Zm8.03-4.03a.75.75 0 0 0-1.06 0l-3.5 3.5a.75.75 0 0 0 1.06 1.06L9.25 8.31v5.44a.75.75 0 0 0 1.5 0V8.31l2.22 2.22a.75.75 0 0 0 1.06-1.06l-3.5-3.5Z',
@@ -84,6 +102,31 @@ const eeatPillars = [
     description:
       'We score platforms based on operational fit across specific growth stages—from pre-seed startups to multi-national scaleups.',
   },
+];
+
+const useCaseGuides = [
+  {
+    label: 'Best for Startups (1–20)',
+    description: 'Lean hiring and payroll picks for early teams.',
+    href: '/applicant-tracking-systems/',
+  },
+  {
+    label: 'Best for Scaleups (50–250)',
+    description: 'Reviews, OKRs, and people ops for growing orgs.',
+    href: '/performance-management/',
+  },
+  {
+    label: 'Best for Global / Multi-Country Teams',
+    description: 'EOR, compliance, and multi-country payroll guides.',
+    href: '/global-payroll-eor/',
+  },
+];
+
+const proofStats = [
+  { value: '390+', label: 'Head-to-Head Comparisons' },
+  { value: '23+', label: 'Vetted HR Platforms' },
+  { value: '100%', label: 'Independent Methodology' },
+  { value: '2026', label: 'Verified Pricing' },
 ];
 
 // Lightweight search index for the hero search bar: every tool's display
@@ -196,6 +239,18 @@ const websiteSchema = {
       </div>
     </section>
 
+    <!-- Stats Proof Bar -->
+    <section class="mt-10" aria-label="Site coverage statistics">
+      <div class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 sm:grid-cols-4">
+        {proofStats.map((stat) => (
+          <div class="bg-slate-50 px-4 py-5 text-center sm:px-6 sm:py-6">
+            <p class="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{stat.value}</p>
+            <p class="mt-1 text-xs font-medium leading-snug text-slate-600 sm:text-sm">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
     <!-- Category Grid -->
     <section class="mt-16" aria-label="Browse by category">
       <h2 class="mb-6 text-center text-2xl font-bold text-slate-900 sm:text-left">
@@ -219,6 +274,32 @@ const websiteSchema = {
             </p>
             <span class="mt-6 inline-flex items-center text-sm font-semibold text-indigo-600">
               View all comparisons
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1 h-4 w-4" aria-hidden="true">
+                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+              </svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Popular Use Cases & Buyer Guides -->
+    <section class="mt-16" aria-label="Popular use cases and buyer guides">
+      <h2 class="mb-6 text-center text-2xl font-bold text-slate-900 sm:text-left">
+        Popular Use Cases &amp; Buyer Guides
+      </h2>
+      <div class="grid gap-4 sm:grid-cols-3">
+        {useCaseGuides.map((guide) => (
+          <a
+            href={guide.href}
+            class="group flex flex-col rounded-2xl border border-slate-200 bg-white px-5 py-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <span class="inline-flex w-fit items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:border-indigo-200 group-hover:bg-indigo-50 group-hover:text-indigo-700">
+              {guide.label}
+            </span>
+            <p class="mt-3 text-sm leading-relaxed text-slate-600">{guide.description}</p>
+            <span class="mt-4 inline-flex items-center text-sm font-semibold text-indigo-600">
+              Browse guide
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1 h-4 w-4" aria-hidden="true">
                 <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
               </svg>
@@ -303,7 +384,28 @@ const websiteSchema = {
       </section>
     )}
 
-    <!-- How We Build Independent HR Tech Guides (E-E-A-T) -->
+    <!-- How The HR Stack Guide Works (user journey) -->
+    <section class="mt-16" aria-label="How The HR Stack Guide works">
+      <div class="text-center sm:text-left">
+        <h2 class="text-2xl font-bold text-slate-900">How The HR Stack Guide Works</h2>
+        <p class="mt-2 text-base text-slate-500">
+          Three quick steps from software selection to a direct vendor conversation.
+        </p>
+      </div>
+      <div class="mt-8 grid gap-6 sm:grid-cols-3">
+        {howItWorksSteps.map((item) => (
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-sm font-bold text-slate-800">
+              {item.step}
+            </span>
+            <h3 class="mt-5 text-lg font-bold text-slate-900">{item.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">{item.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Our Evaluation Methodology (E-E-A-T trust pillars) -->
     <section class="mt-16" aria-label="Our evaluation methodology">
       <div class="text-center sm:text-left">
         <h2 class="text-2xl font-bold text-slate-900">How We Build Independent HR Tech Guides</h2>
