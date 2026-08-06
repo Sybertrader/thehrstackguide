@@ -284,6 +284,7 @@
   "bamboohr-ats": {
     "name": "BambooHR",
     "category": "ats",
+    "logo": "/bamboohr.jpeg",
     "rating": "4.4",
     "review_count": "5,600",
     "rating_source": "G2 & Industry Benchmark",
