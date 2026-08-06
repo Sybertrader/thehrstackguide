@@ -51,7 +51,10 @@
       "You require integrated health and statutory benefits administration across multiple countries."
     ],
     "starting_price": "EOR $400/mo",
-    "free_trial": false
+    "free_trial": false,
+    "affiliate_url": "https://multipliertechnologiespteltd.pxf.io/B51kg9",
+    "has_active_affiliate": true,
+    "is_partner": true
   },
   "oyster": {
     "category": "payroll-eor",
@@ -267,7 +270,10 @@
       "You want transparent pricing with unlimited user access across all departments."
     ],
     "starting_price": "$269/mo",
-    "free_trial": true
+    "free_trial": true,
+    "affiliate_url": "https://join.tellent.com/t5yy8cn4dn30",
+    "has_active_affiliate": true,
+    "is_partner": true
   },
   "bamboohr-ats": {
     "name": "BambooHR",
