@@ -385,18 +385,23 @@
     "rating": "4.2",
     "review_count": "300",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A continuous-feedback and goals platform known for real-time recognition feeds and lightweight review cycles (now in the broader Workday ecosystem).",
-    "text_compliance": "Reflektive historically offered role-based review access and retained feedback history suitable for standard HR performance records; buyers should validate current Workday-era security and data-processing terms before renewal.",
-    "text_global_reach": "Reflektive's Slack-native feedback loops suit distributed US and tech teams; multi-region localization and modern global benchmarking trail Culture Amp and Leapsome.",
-    "text_pricing_truth": "Reflektive packaging is custom-quoted under current Workday-era ownership. Treat any legacy per-seat figures as directional and confirm active SKU availability before renewal or migration.",
+    "positioning": "A continuous-feedback and goals platform under the PeopleFluent talent suite, known for real-time recognition feeds, agile performance reviews, and lightweight review cycles.",
+    "text_compliance": "PeopleFluent provides role-based review access and retained feedback history suitable for standard HR performance records; buyers should validate current security, data-processing terms, and admin controls during procurement.",
+    "text_global_reach": "PeopleFluent's Slack-native feedback loops suit distributed US and global teams; multi-region localization and modern benchmarking depth trail Culture Amp and Leapsome.",
+    "text_pricing_truth": "PeopleFluent packaging is custom-quoted. Treat legacy Reflektive-era seat assumptions as directional and confirm active modules, implementation scope, and support tiers before renewal or migration.",
     "choose_if": [
-      "Your team already runs on legacy Reflektive continuous-feedback workflows.",
-      "You prioritize lightweight real-time recognition and Slack feedback over deep compensation tools.",
-      "You need basic goals and review cycles without a full Lattice-style suite.",
-      "You are evaluating migration paths within the Workday talent ecosystem."
+      "Your team runs legacy Reflektive workflows and wants continuity inside the PeopleFluent talent suite.",
+      "You prioritize lightweight real-time recognition and Slack feedback over deep compensation tooling.",
+      "You need basic goals and agile review cycles without a full Lattice-style suite.",
+      "You are evaluating migration or consolidation paths in the PeopleFluent ecosystem."
     ],
     "starting_price": "Custom quote",
-    "free_trial": false
+    "free_trial": false,
+    "name": "PeopleFluent",
+    "displayName": "PeopleFluent (formerly Reflektive)",
+    "badge": "PeopleFluent (formerly Reflektive)",
+    "website": "https://www.peoplefluent.com/",
+    "affiliate_url": "https://www.peoplefluent.com/"
   },
   "clearcompany": {
     "category": "performance-management",

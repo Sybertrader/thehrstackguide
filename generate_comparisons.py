@@ -520,16 +520,16 @@ PM_TOOLS = {
         }
     },
     "reflektive": {
-        "name": "Reflektive",
-        "logo": "https://unavatar.io/reflektive.com",
+        "name": "PeopleFluent",
+        "logo": "https://unavatar.io/peoplefluent.com",
         "rating": 4.2,
         "starting_price": "Custom quote",
         "pricing_model": "Custom quote (Workday-era packaging)",
         "free_trial": False,
-        "affiliate_url": "https://www.reflektive.com",
+        "affiliate_url": "https://www.peoplefluent.com/",
         "key_features": ["Real-Time Feedback", "Goals", "Review Cycles", "Recognition Feed"],
-        "pros": ["Lightweight continuous feedback and recognition UX", "Familiar for teams already on legacy Reflektive workflows", "Solid Slack-native feedback loops"],
-        "cons": ["Product roadmap uncertainty after Workday acquisition", "Fewer modern AI and compensation modules than Lattice/Leapsome"],
+        "pros": ["Lightweight continuous feedback and recognition UX", "Familiar for teams transitioning from legacy Reflektive workflows", "Solid Slack-native feedback loops"],
+        "cons": ["Smaller modern market footprint versus category leaders", "Fewer modern AI and compensation modules than Lattice/Leapsome"],
         "matrix": {
             "OKRs & Goal Cascading": True,
             "Continuous Feedback": True,
