@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import ConciergeLeadBox from '../../components/ConciergeLeadBox.astro';
 import { loadComparisons } from '../../lib/comparisons';
 import type { Comparison } from '../../lib/comparisons';
 import { getToolsByCategory } from '../../lib/tools';
@@ -342,6 +343,8 @@ const collectionSchema = {
         No comparisons found for this use case yet.
       </p>
     </section>
+
+    <ConciergeLeadBox categoryName="Performance Management" theme="sky" ctaHref="/contact/" />
   </main>
 
   <script>

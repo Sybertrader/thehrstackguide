@@ -1,0 +1,149 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const categories = [
+  { value: 'Global Payroll & EOR', label: 'Global Payroll & EOR' },
+  { value: 'Applicant Tracking Systems (ATS)', label: 'Applicant Tracking Systems (ATS)' },
+  { value: 'Performance Management', label: 'Performance Management' },
+];
+
+const headcounts = [
+  { value: '1–20 (Startup)', label: '1–20 employees (Startup)' },
+  { value: '50–250 (Scaleup)', label: '50–250 employees (Scaleup)' },
+  { value: '250+ (Enterprise / Global)', label: '250+ employees (Enterprise / Global)' },
+];
+
+const budgets = [
+  { value: 'Under $500/mo', label: 'Under $500 / month' },
+  { value: '$500–$2,000/mo', label: '$500–$2,000 / month' },
+  { value: '$2,000+/mo or flexible', label: '$2,000+ / month or flexible' },
+];
+---
+
+<Layout
+  title="Get a Stack Recommendation — The HR Stack Guide"
+  description="Answer three quick questions about your category, headcount, and budget. We'll send an unbiased HR tech stack recommendation."
+>
+  <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+    <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold text-indigo-700">
+      Free concierge
+    </span>
+    <h1 class="mt-5 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+      Get your stack recommendation
+    </h1>
+    <p class="mt-4 text-lg leading-relaxed text-slate-600">
+      Answer 3 quick questions. We'll reply with an unbiased shortlist based on your headcount and budget—no vendor pressure.
+    </p>
+
+    <form
+      id="recommendation-form"
+      class="mt-10 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+      novalidate
+    >
+      <div>
+        <label for="category" class="block text-sm font-semibold text-slate-900">1. Which category are you evaluating?</label>
+        <select
+          id="category"
+          name="category"
+          required
+          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+        >
+          <option value="" disabled selected>Select a category</option>
+          {categories.map((option) => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label for="headcount" class="block text-sm font-semibold text-slate-900">2. What's your team size?</label>
+        <select
+          id="headcount"
+          name="headcount"
+          required
+          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+        >
+          <option value="" disabled selected>Select headcount</option>
+          {headcounts.map((option) => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label for="budget" class="block text-sm font-semibold text-slate-900">3. What's your monthly software budget?</label>
+        <select
+          id="budget"
+          name="budget"
+          required
+          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+        >
+          <option value="" disabled selected>Select budget range</option>
+          {budgets.map((option) => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-semibold text-slate-900">Where should we send the recommendation?</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder="you@company.com"
+          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+      >
+        Get Stack Recommendation
+      </button>
+      <p class="text-xs leading-relaxed text-slate-500">
+        Submitting opens your email client with a pre-filled message to dave@thehrstackguide.com. We only use your details to send the recommendation.
+      </p>
+    </form>
+  </main>
+
+  <script>
+    function initRecommendationForm() {
+      const form = document.getElementById('recommendation-form') as HTMLFormElement | null;
+      if (!form) return;
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        const category = String(data.get('category') || '').trim();
+        const headcount = String(data.get('headcount') || '').trim();
+        const budget = String(data.get('budget') || '').trim();
+        const email = String(data.get('email') || '').trim();
+        if (!category || !headcount || !budget || !email) return;
+
+        const subject = encodeURIComponent(`Stack recommendation request — ${category}`);
+        const body = encodeURIComponent(
+          [
+            'Hi HR Stack Guide team,',
+            '',
+            'Please send an unbiased stack recommendation based on:',
+            `1) Category: ${category}`,
+            `2) Headcount: ${headcount}`,
+            `3) Budget: ${budget}`,
+            `Reply-to: ${email}`,
+            '',
+            'Thanks!',
+          ].join('\n')
+        );
+        window.location.href = `mailto:dave@thehrstackguide.com?subject=${subject}&body=${body}`;
+      });
+    }
+
+    if (typeof document !== 'undefined') {
+      initRecommendationForm();
+    }
+  </script>
+</Layout>
