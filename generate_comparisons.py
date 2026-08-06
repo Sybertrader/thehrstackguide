@@ -544,8 +544,8 @@ PM_TOOLS = {
         }
     },
     "clearcompany": {
-        "name": "ClearCompany",
-        "logo": "https://unavatar.io/clearcompany.com",
+        "name": "ClearCo",
+        "logo": "/logos/clearcompany.png",
         "rating": 4.5,
         "starting_price": "Custom quote",
         "pricing_model": "Custom quote (talent suite bundle)",
@@ -553,7 +553,7 @@ PM_TOOLS = {
         "affiliate_url": "https://www.clearcompany.com",
         "key_features": ["Performance Reviews", "Goal Alignment", "Talent Suite Bundle", "Onboarding Handoff"],
         "pros": ["Performance reviews connected to the same suite as ATS and onboarding", "Configurable review workflows without heavy IT", "Talent data handoff from hiring into ongoing performance cycles"],
-        "cons": ["Performance depth trails dedicated PM specialists", "Best value only when buying the broader ClearCompany suite"],
+        "cons": ["Performance depth trails dedicated PM specialists", "Best value only when buying the broader ClearCo suite"],
         "matrix": {
             "OKRs & Goal Cascading": True,
             "Continuous Feedback": True,
