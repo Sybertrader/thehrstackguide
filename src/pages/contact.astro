@@ -125,58 +125,71 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
     }
 
     function buildRecommendation(category: string, headcount: string, budget: string): RecResult {
-      const leanBudget = budget === 'lean';
+      const leanStartup = headcount === 'startup' && budget === 'lean';
       const startup = headcount === 'startup';
-      const scaleOrGlobal = headcount === 'scaleup' || headcount === 'enterprise';
 
+      // A) Applicant Tracking Systems
       if (category === 'ats') {
+        if (leanStartup) {
+          return {
+            blurb:
+              'Based on your headcount and budget, these ATS platforms provide the best balance of hiring workflow and value for leaner teams:',
+            links: [
+              { href: '/workable-vs-breezy-hr-for-startups/', label: 'Compare Workable vs Breezy HR' },
+              { href: '/breezy-hr-vs-recruitee-for-startups/', label: 'Compare Recruitee vs Breezy HR' },
+            ],
+          };
+        }
         return {
           blurb:
-            'Based on your hiring stack focus, these comparisons highlight the best balance of structured recruiting workflows and value for growing teams:',
+            'Based on your hiring stack focus, these comparisons highlight structured recruiting workflows for scaling teams:',
           links: [
-            { href: '/ashby-vs-greenhouse-for-startups/', label: 'Compare Ashby vs Greenhouse' },
-            { href: '/workable-vs-breezy-hr-for-startups/', label: 'Compare Workable vs Breezy HR' },
+            { href: '/ashby-vs-greenhouse-for-scaleups/', label: 'Compare Ashby vs Greenhouse' },
+            { href: '/greenhouse-vs-lever-for-scaleups/', label: 'Compare Lever vs Greenhouse' },
           ],
         };
       }
 
+      // C) Performance Management
       if (category === 'performance') {
+        if (startup) {
+          return {
+            blurb:
+              'Based on your team size, these performance platforms provide the best balance of manager cadence and value for growing teams:',
+            links: [
+              { href: '/15five-vs-performyard-for-startups/', label: 'Compare 15Five vs PerformYard' },
+              { href: '/15five-vs-lattice-for-startups/', label: 'Compare 15Five vs Lattice' },
+            ],
+          };
+        }
         return {
           blurb:
-            'Based on your performance-management focus, this comparison is the strongest starting point for reviews, OKRs, and manager cadence:',
-          links: [{ href: '/15five-vs-lattice-for-scaleups/', label: 'Compare 15Five vs Lattice' }],
+            'Based on your team size, these comparisons are the strongest starting point for reviews, OKRs, and manager cadence at scale:',
+          links: [
+            { href: '/15five-vs-lattice-for-scaleups/', label: 'Compare 15Five vs Lattice' },
+            { href: '/leapsome-vs-lattice-for-scaleups/', label: 'Compare Leapsome vs Lattice' },
+          ],
         };
       }
 
-      // Payroll / EOR (default) — startups or lean budget first, then scale/global.
-      if (startup || leanBudget) {
+      // B) Global Payroll & EOR (default)
+      if (leanStartup) {
         return {
           blurb:
             'Based on your headcount and budget, these platforms provide the best balance of compliance and value for leaner teams:',
           links: [
             { href: '/rippling-vs-gusto-for-tech-startups/', label: 'Compare Rippling vs Gusto' },
-            { href: '/workable-vs-breezy-hr-for-startups/', label: 'Compare Workable vs Breezy HR' },
-          ],
-        };
-      }
-
-      if (scaleOrGlobal) {
-        return {
-          blurb:
-            'Based on your headcount and budget, these 2 platforms provide the best balance of compliance and value for multi-country and scaling teams:',
-          links: [
-            { href: '/deel-vs-remote-for-tech-startups/', label: 'Compare Deel vs Remote' },
-            { href: '/rippling-vs-gusto-for-scaleups/', label: 'Compare Rippling vs Gusto' },
+            { href: '/deel-vs-remote-for-tech-startups/', label: 'Compare Remote vs Deel' },
           ],
         };
       }
 
       return {
         blurb:
-          'Based on your answers, start with these high-intent comparisons for global payroll and workforce ops:',
+          'Based on your headcount and budget, these 2 platforms provide the best balance of compliance and value for multi-country and scaling teams:',
         links: [
-          { href: '/deel-vs-remote-for-tech-startups/', label: 'Compare Deel vs Remote' },
-          { href: '/rippling-vs-gusto-for-tech-startups/', label: 'Compare Rippling vs Gusto' },
+          { href: '/deel-vs-remote-for-scaleups/', label: 'Compare Deel vs Remote' },
+          { href: '/deel-vs-rippling-for-scaleups/', label: 'Compare Rippling vs Deel' },
         ],
       };
     }
