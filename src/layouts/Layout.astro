@@ -9,6 +9,14 @@ export interface Props {
 }
 
 const { title, description } = Astro.props;
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'The HR Stack Guide',
+  url: 'https://www.thehrstackguide.com',
+  logo: 'https://www.thehrstackguide.com/icon-512.png',
+};
 ---
 
 <html lang="en">
@@ -20,6 +28,12 @@ const { title, description } = Astro.props;
     <meta name="impact-site-verification" value="1aa2107c-f3e1-41fa-8768-64aa28e9c6af" />
     <meta name="impact-site-verification" value="be412a71-a7c9-4751-8de1-34f2e4701f89" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/icon-48.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Non-blocking Inter load; display=swap already in the stylesheet URL. -->
@@ -46,6 +60,7 @@ const { title, description } = Astro.props;
     <meta property="og:image:type" content="image/png" />
     <meta name="twitter:image" content="https://thehrstackguide.com/sg-logo.png" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
     <slot name="head" />
 
     <!-- Microsoft Clarity: idle/deferred so it never competes with first interactions (INP). -->
