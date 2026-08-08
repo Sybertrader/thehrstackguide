@@ -10,6 +10,8 @@ export interface Props {
 
 const { title, description } = Astro.props;
 
+const canonicalURL = new URL(Astro.url.pathname, 'https://www.thehrstackguide.com').href;
+
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -55,6 +57,8 @@ const organizationSchema = {
     </noscript>
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content="https://thehrstackguide.com/sg-logo.png" />
     <meta property="og:image:type" content="image/png" />
     <meta name="twitter:image" content="https://thehrstackguide.com/sg-logo.png" />
