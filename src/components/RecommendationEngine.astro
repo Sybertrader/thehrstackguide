@@ -1,0 +1,275 @@
+---
+interface Props {
+  headline?: string;
+  description?: string;
+  headingLevel?: 'h1' | 'h2';
+  showEyebrow?: boolean;
+  categoryPrefill?: string;
+  class?: string;
+}
+
+const {
+  headline = 'Unsure which HR software fits your team?',
+  description = 'Skip hours of demo calls. Answer 3 quick questions and get an instant recommendation based on your category, headcount, and budget.',
+  headingLevel = 'h2',
+  showEyebrow = true,
+  categoryPrefill = '',
+  class: className = '',
+} = Astro.props;
+
+const categories = [
+  { value: 'payroll', label: 'Global Payroll & EOR' },
+  { value: 'ats', label: 'Applicant Tracking Systems (ATS)' },
+  { value: 'performance', label: 'Performance Management' },
+];
+
+const headcounts = [
+  { value: 'startup', label: '1–20 employees (Startup)' },
+  { value: 'scaleup', label: '50–250 employees (Scaleup)' },
+  { value: 'enterprise', label: '250+ employees (Enterprise / Global)' },
+];
+
+const budgets = [
+  { value: 'lean', label: 'Under $500 / month' },
+  { value: 'mid', label: '$500–$2,000 / month' },
+  { value: 'flexible', label: '$2,000+ / month or flexible' },
+];
+
+const HeadingTag = headingLevel;
+---
+
+<section class:list={['recommendation-engine', className]} aria-label="Get our recommendation" data-recommendation-engine>
+  {showEyebrow && (
+    <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold uppercase tracking-wide text-indigo-700">
+      Free Guidance
+    </span>
+  )}
+  <HeadingTag
+    class:list={[
+      'font-bold tracking-tight text-slate-900',
+      showEyebrow ? 'mt-5' : '',
+      headingLevel === 'h1' ? 'text-3xl sm:text-4xl' : 'text-2xl sm:text-3xl',
+    ]}
+  >
+    {headline}
+  </HeadingTag>
+  <p class="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg">
+    {description}
+  </p>
+
+  <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+    <form class="recommendation-form space-y-6" novalidate>
+      <div>
+        <label class="block text-sm font-semibold text-slate-900">
+          1. Which category are you evaluating?
+          <select
+            name="category"
+            required
+            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          >
+            <option value="" disabled selected={!categoryPrefill}>Select a category</option>
+            {categories.map((option) => (
+              <option value={option.value} selected={categoryPrefill === option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-900">
+          2. What's your team size?
+          <select
+            name="headcount"
+            required
+            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          >
+            <option value="" disabled selected>Select headcount</option>
+            {headcounts.map((option) => (
+              <option value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold text-slate-900">
+          3. What's your monthly software budget?
+          <select
+            name="budget"
+            required
+            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
+          >
+            <option value="" disabled selected>Select budget range</option>
+            {budgets.map((option) => (
+              <option value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <button
+        type="submit"
+        class="inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+      >
+        Get Our Recommendation
+      </button>
+    </form>
+
+    <div class="recommendation-results hidden" aria-live="polite">
+      <h3 class="text-2xl font-bold tracking-tight text-slate-900">Your Shortlist is Ready</h3>
+      <p class="recommendation-blurb mt-3 text-base leading-relaxed text-slate-600"></p>
+      <div
+        class="recommendation-links mt-6 flex flex-col gap-3 sm:gap-3.5"
+        style="--accent-color: #4f46e5;"
+      ></div>
+      <button
+        type="button"
+        class="recommendation-reset mt-6 inline-flex items-center text-sm font-semibold text-indigo-600 transition hover:text-indigo-700"
+      >
+        ← Change answers
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+  interface RecLink {
+    href: string;
+    label: string;
+  }
+
+  interface RecResult {
+    blurb: string;
+    links: RecLink[];
+  }
+
+  const RESULT_BLURB =
+    'Based on your answers, these two guides cover the best options for your budget and headcount:';
+
+  function buildRecommendation(category: string, headcount: string, budget: string): RecResult {
+    const leanStartup = headcount === 'startup' && budget === 'lean';
+    const startup = headcount === 'startup';
+
+    if (category === 'ats') {
+      if (leanStartup) {
+        return {
+          blurb: RESULT_BLURB,
+          links: [
+            { href: '/workable-vs-breezy-hr-for-startups/', label: 'Compare Workable vs Breezy HR' },
+            { href: '/breezy-hr-vs-recruitee-for-startups/', label: 'Compare Recruitee vs Breezy HR' },
+          ],
+        };
+      }
+      return {
+        blurb: RESULT_BLURB,
+        links: [
+          { href: '/ashby-vs-greenhouse-for-scaleups/', label: 'Compare Ashby vs Greenhouse' },
+          { href: '/greenhouse-vs-lever-for-scaleups/', label: 'Compare Lever vs Greenhouse' },
+        ],
+      };
+    }
+
+    if (category === 'performance') {
+      if (startup) {
+        return {
+          blurb: RESULT_BLURB,
+          links: [
+            { href: '/15five-vs-performyard-for-startups/', label: 'Compare 15Five vs PerformYard' },
+            { href: '/15five-vs-lattice-for-startups/', label: 'Compare 15Five vs Lattice' },
+          ],
+        };
+      }
+      return {
+        blurb: RESULT_BLURB,
+        links: [
+          { href: '/15five-vs-lattice-for-scaleups/', label: 'Compare 15Five vs Lattice' },
+          { href: '/leapsome-vs-lattice-for-scaleups/', label: 'Compare Leapsome vs Lattice' },
+        ],
+      };
+    }
+
+    if (leanStartup) {
+      return {
+        blurb: RESULT_BLURB,
+        links: [
+          { href: '/rippling-vs-gusto-for-tech-startups/', label: 'Compare Rippling vs Gusto' },
+          { href: '/deel-vs-remote-for-tech-startups/', label: 'Compare Remote vs Deel' },
+        ],
+      };
+    }
+
+    return {
+      blurb: RESULT_BLURB,
+      links: [
+        { href: '/deel-vs-remote-for-scaleups/', label: 'Compare Deel vs Remote' },
+        { href: '/deel-vs-rippling-for-scaleups/', label: 'Compare Rippling vs Deel' },
+      ],
+    };
+  }
+
+  function escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function initRecommendationEngine(root: Element) {
+    const form = root.querySelector('.recommendation-form') as HTMLFormElement | null;
+    const results = root.querySelector('.recommendation-results');
+    const blurb = root.querySelector('.recommendation-blurb');
+    const links = root.querySelector('.recommendation-links');
+    const reset = root.querySelector('.recommendation-reset');
+    if (!form || !results || !blurb || !links || !reset) return;
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const category = String(data.get('category') || '').trim();
+      const headcount = String(data.get('headcount') || '').trim();
+      const budget = String(data.get('budget') || '').trim();
+      if (!category || !headcount || !budget) return;
+
+      const rec = buildRecommendation(category, headcount, budget);
+      blurb.textContent = rec.blurb;
+
+      const primaryClasses =
+        'inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto';
+      const secondaryClasses =
+        'inline-flex w-full items-center justify-center rounded-xl border-[1.5px] border-[var(--accent-color)] bg-white px-5 py-3.5 text-sm font-semibold text-[var(--accent-color)] transition hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto';
+
+      links.innerHTML = rec.links
+        .map((link, index) => {
+          const classes = index === 0 ? primaryClasses : secondaryClasses;
+          return `<a href="${escapeHtml(link.href)}" class="${classes}">${escapeHtml(`${link.label} →`)}</a>`;
+        })
+        .join('');
+
+      form.classList.add('hidden');
+      results.classList.remove('hidden');
+      results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    reset.addEventListener('click', () => {
+      results.classList.add('hidden');
+      form.classList.remove('hidden');
+      blurb.textContent = '';
+      links.innerHTML = '';
+    });
+  }
+
+  function initAll() {
+    document.querySelectorAll('[data-recommendation-engine]').forEach((root) => {
+      if ((root as HTMLElement).dataset.initialized === 'true') return;
+      (root as HTMLElement).dataset.initialized = 'true';
+      initRecommendationEngine(root);
+    });
+  }
+
+  if (typeof document !== 'undefined') {
+    initAll();
+  }
+</script>
