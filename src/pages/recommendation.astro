@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RecommendationEngine from '../components/RecommendationEngine.astro';
+
+const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
+---
+
+<Layout
+  title="Get Our Recommendation — The HR Stack Guide"
+  description="Answer three quick questions about your category, headcount, and budget to get an instant unbiased HR tech stack recommendation."
+>
+  <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+    <RecommendationEngine
+      headingLevel="h1"
+      headline="Get our recommendation"
+      description="Answer 3 quick questions and see an instant shortlist of the best comparison pages for your team—no email required."
+      categoryPrefill={categoryPrefill}
+    />
+  </main>
+</Layout>

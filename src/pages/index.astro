@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import RecommendationEngine from '../components/RecommendationEngine.astro';
+import RecommendationTeaser from '../components/RecommendationTeaser.astro';
 import { loadComparisons } from '../lib/comparisons';
 import { loadToolProfiles } from '../lib/tools';
 
@@ -266,12 +266,7 @@ const websiteSchema = {
       </div>
     </section>
 
-    <RecommendationEngine
-      class="mt-16"
-      headingLevel="h2"
-      headline="Unsure which HR software fits your team?"
-      description="Skip hours of demo calls. Answer 3 quick questions and get an instant recommendation based on your category, headcount, and budget."
-    />
+    <RecommendationTeaser ctaHref="/recommendation/" />
 
     <!-- Popular Use Cases & Buyer Guides -->
     <section class="mt-16" aria-label="Popular use cases and buyer guides">
