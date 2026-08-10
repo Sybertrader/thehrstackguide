@@ -1,0 +1,215 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const lastUpdated = 'August 10, 2026';
+const pageUrl = 'https://www.thehrstackguide.com/how-to-build-an-hr-tech-stack/';
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'How to Build an HR Tech Stack in 2026 (Without Overpaying)',
+  description:
+    'A comprehensive guide to building a modern HR software stack. Learn how to choose ATS, Payroll, and Performance tools based on your headcount and budget.',
+  dateModified: '2026-08-10',
+  author: {
+    '@type': 'Organization',
+    name: 'The HR Stack Guide',
+    url: 'https://www.thehrstackguide.com',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'The HR Stack Guide',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://www.thehrstackguide.com/icon-512.png',
+    },
+  },
+  mainEntityOfPage: pageUrl,
+  url: pageUrl,
+};
+
+const stages = [
+  {
+    title: 'Stage 1: 1–20 Employees',
+    subtitle: 'Lean & Scrappy',
+    body: 'Prioritize compliance and basic payroll accuracy over flashy dashboards. A clean payroll/EOR foundation, shared hiring docs, and lightweight performance check-ins beat a bloated HRIS you will never fully configure. Buy tools your team can adopt in a week—not a quarter.',
+  },
+  {
+    title: 'Stage 2: 20–100 Employees',
+    subtitle: 'The Automation Stage',
+    body: 'This is when spreadsheets start breaking. An ATS becomes critical for structured hiring, and a performance platform replaces ad-hoc annual reviews. Focus on workflow automation, manager visibility, and clean handoffs from offer letter to onboarding—without stacking five overlapping products.',
+  },
+  {
+    title: 'Stage 3: 100+ Employees',
+    subtitle: 'The Integration Stage',
+    body: 'At this scale, the stack wins or loses on integrations. An HRIS (or a tightly connected suite), reliable API syncing, role-based permissions, and audit-ready reporting matter more than any single feature demo. Consolidate systems of record and treat every new tool as a data-flow decision.',
+  },
+];
+
+const pillars = [
+  {
+    title: '1. Recruitment & ATS',
+    body: 'Structured hiring is how you stop losing great candidates in email threads. A modern applicant tracking system centralizes pipelines, scorecards, and interview loops so hiring managers share one source of truth—and time-to-hire stops drifting toward 47 days.',
+    href: '/applicant-tracking-systems/',
+    linkLabel: 'Browse ATS comparisons',
+  },
+  {
+    title: '2. Global Payroll & EOR',
+    body: 'Payroll and compliance are non-negotiable. Whether you are paying contractors in three countries or employees through an Employer of Record, the wrong platform creates tax risk, late payments, and months of cleanup. Get the money layer right before you optimize engagement widgets.',
+    href: '/global-payroll-eor/',
+    linkLabel: 'Browse Payroll & EOR comparisons',
+  },
+  {
+    title: '3. Performance Management',
+    body: 'The annual review is dead weight for most growing teams. Continuous feedback, clear goals, and manager cadence keep performance conversations useful—and give leadership signal before attrition shows up in exit interviews.',
+    href: '/performance-management/',
+    linkLabel: 'Browse Performance comparisons',
+  },
+];
+
+const traps = [
+  {
+    title: '1. Integration Hell',
+    body: 'Tools that cannot talk to each other create shadow spreadsheets and double entry. Before you buy, map the critical syncs—ATS to HRIS, payroll to finance, performance to employee records—and reject vendors that treat integrations as a “phase 2” promise.',
+  },
+  {
+    title: '2. Year 2 Price Creep',
+    body: 'The sticker price on the sales deck is rarely the cost you pay at scale. Model seat growth, add-on modules, implementation fees, and renewal uplifts. A cheap year-one deal that doubles in year two is not a bargain.',
+  },
+  {
+    title: '3. Adoption Failure',
+    body: 'Buying software is not the same as rolling it out. Managers need training, templates, and accountability—not a Slack announcement and a login link. Budget time for change management or expect shelfware.',
+  },
+  {
+    title: '4. Security Blindspots',
+    body: 'HR systems hold the most sensitive data in the company. SOC 2, GDPR readiness, SSO/SCIM, and clear data-processing terms are deal-breakers—not nice-to-haves. If security answers are vague, walk away.',
+  },
+  {
+    title: '5. Tool Fatigue',
+    body: 'Every extra login taxes attention. Consolidate ruthlessly: one system of record per job (hiring, pay, performance) beats seven half-used dashboards. If a tool does not change a weekly workflow, it does not belong in the stack.',
+  },
+];
+---
+
+<Layout
+  title="How to Build an HR Tech Stack in 2026 (Without Overpaying)"
+  description="A comprehensive guide to building a modern HR software stack. Learn how to choose ATS, Payroll, and Performance tools based on your headcount and budget."
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+
+  <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <header class="mb-10">
+      <nav aria-label="Breadcrumb">
+        <ol class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+          <li><a href="/" class="transition hover:text-indigo-600">Home</a></li>
+          <li aria-hidden="true" class="text-slate-300">&gt;</li>
+          <li class="font-medium text-indigo-600" aria-current="page">How to Build an HR Tech Stack</li>
+        </ol>
+      </nav>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        How to Build an HR Tech Stack in 2026 (Without Overpaying)
+      </h1>
+      <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
+    </header>
+
+    <article class="space-y-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 lg:p-10">
+      <section aria-labelledby="intro-heading">
+        <h2 id="intro-heading" class="sr-only">Introduction</h2>
+        <p class="text-lg leading-relaxed text-slate-700">
+          Roughly <strong class="font-semibold text-slate-900">40% of HR software sits completely unused</strong> six months after buying it.
+          Most HR leaders are drowning in 7 logins and 5 dashboards, yet hiring still takes 47 days.
+        </p>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          The problem is rarely a missing feature. It is a stack built for a company you are not yet—or worse, a stack assembled from whichever vendor demoed last.
+          Stop solving for “modern” and start solving for “effective.” Here is how to build an HR tech stack that scales with your headcount and budget—without overpaying for shelfware.
+        </p>
+      </section>
+
+      <section aria-labelledby="headcount-framework">
+        <h2 id="headcount-framework" class="text-2xl font-bold tracking-tight text-slate-900">
+          Build For Your Stage, Not Your Ambition
+        </h2>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          An enterprise HRIS is a mistake for a 15-person team. You will pay for complexity you cannot staff, then blame the tool when nobody uses it.
+          Match the stack to the problems you have <em>this quarter</em>—and leave room to upgrade when process, not vanity, demands it.
+        </p>
+        <div class="mt-8 space-y-6">
+          {stages.map((stage) => (
+            <div class="border-l-4 border-indigo-500 pl-5">
+              <h3 class="text-lg font-semibold text-slate-900">{stage.title}</h3>
+              <p class="mt-1 text-sm font-medium uppercase tracking-wide text-indigo-600">{stage.subtitle}</p>
+              <p class="mt-2 text-base leading-relaxed text-slate-600">{stage.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="three-pillars">
+        <h2 id="three-pillars" class="text-2xl font-bold tracking-tight text-slate-900">
+          The 3 Pillars of a Modern HR Stack
+        </h2>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          Most growing companies only need three systems of record before they need a sprawling suite.
+          Nail these pillars first; everything else is optional until the workflow is real.
+        </p>
+        <div class="mt-8 space-y-8">
+          {pillars.map((pillar) => (
+            <div>
+              <h3 class="text-lg font-semibold text-slate-900">{pillar.title}</h3>
+              <p class="mt-2 text-base leading-relaxed text-slate-600">{pillar.body}</p>
+              <a
+                href={pillar.href}
+                class="mt-3 inline-flex items-center text-sm font-semibold text-indigo-600 transition hover:text-indigo-700"
+              >
+                {pillar.linkLabel}
+                <span aria-hidden="true" class="ml-1">→</span>
+              </a>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="hidden-traps">
+        <h2 id="hidden-traps" class="text-2xl font-bold tracking-tight text-slate-900">
+          The 5 Hidden Traps No Vendor Warns You About
+        </h2>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          Sales decks skip the failure modes. Budget for these five traps before you sign—or you will pay for them in renewals, workarounds, and frustrated managers.
+        </p>
+        <ol class="mt-8 space-y-6">
+          {traps.map((trap) => (
+            <li>
+              <h3 class="text-lg font-semibold text-slate-900">{trap.title}</h3>
+              <p class="mt-2 text-base leading-relaxed text-slate-600">{trap.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section aria-labelledby="audit-cta">
+        <h2 id="audit-cta" class="text-2xl font-bold tracking-tight text-slate-900">
+          Ready to Audit Your Stack?
+        </h2>
+        <p class="mt-4 text-base leading-relaxed text-slate-600">
+          If you are unsure which ATS, payroll, or performance platform fits your stage, skip another week of vendor demos.
+          Answer three quick questions and get a shortlist matched to your category, headcount, and budget—so you buy what you will actually use.
+        </p>
+        <div class="relative mt-8 overflow-hidden rounded-2xl border border-indigo-200 bg-indigo-50/70 p-6 sm:p-8">
+          <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-indigo-500 to-violet-600" aria-hidden="true"></div>
+          <span class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-indigo-700">
+            Free Guidance
+          </span>
+          <p class="mt-4 text-base leading-relaxed text-slate-700">
+            Get an instant recommendation based on your headcount and budget—no email required.
+          </p>
+          <a
+            href="/recommendation/"
+            class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Get Our Recommendation ↗
+          </a>
+        </div>
+      </section>
+    </article>
+  </main>
+</Layout>
