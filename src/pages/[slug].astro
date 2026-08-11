@@ -26,7 +26,7 @@ function resolveOutboundHref(toolId: string, fallbackUrl: string): string {
  * five near-identical `<VendorCTA>` calls per tool across the template.
  * Remote and every other standard brand are completely untouched.
  */
-const MANUAL_LEAD_BRANDS = ['plane', 'rippling', 'lever', 'jazzhr'];
+const MANUAL_LEAD_BRANDS = ['plane', 'rippling', 'lever', 'jazzhr', 'culture-amp'];
 function isManualLeadBrand(toolId: string): boolean {
   return MANUAL_LEAD_BRANDS.includes(toolId.toLowerCase().trim());
 }
