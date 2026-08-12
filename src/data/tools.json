@@ -367,15 +367,16 @@
     "positioning": "A configurable mid-market performance platform focused on flexible review cycles, goals, and 360 feedback without heavyweight implementation.",
     "text_compliance": "PerformYard provides configurable review templates, role-based permissions, and retained review history suitable for HR audit trails, with standard SOC 2 and GDPR-oriented data practices for employee performance records.",
     "text_global_reach": "PerformYard works well for US and mid-market multi-location employers that need consistent review cycles across departments, with Slack integrations for feedback reminders rather than deep multi-language localization.",
-    "text_pricing_truth": "Plans typically start at $5/user/month depending on modules and review-cycle complexity. Implementation is lighter than enterprise suites; advanced compensation/engagement options may be quoted separately.",
+    "text_pricing_truth": "Plans typically start at $5/user/month depending on modules and review-cycle complexity. There is no published free trial—buyers should expect a demo-led sales motion. Implementation is lighter than enterprise suites; advanced compensation options may be quoted separately.",
     "choose_if": [
       "You need highly configurable review templates without a six-month implementation project.",
+      "You want 1:1 meeting tools, engagement surveys, career pathing, and AI performance insights without an enterprise Lattice/Culture Amp premium.",
       "You are a mid-market HR team replacing spreadsheets and Google Docs reviews.",
-      "You want strong customer support for admins running custom performance cycles.",
-      "You need goals and 360 feedback without paying enterprise Lattice/Culture Amp premiums."
+      "You want strong customer support for admins running custom performance cycles."
     ],
     "starting_price": "$5/user/mo",
     "free_trial": false,
+    "hasFreeTrial": false,
     "isManualLead": true,
     "partner_landing_url": "https://www.performyard.com",
     "target_segment": "Scaleups 50–250"

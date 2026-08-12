@@ -443,9 +443,22 @@ PM_TOOLS = {
         "pricing_model": "Per user / month with configurable review cycle modules",
         "free_trial": False,
         "affiliate_url": "https://www.performyard.com",
-        "key_features": ["Configurable Review Cycles", "Goal Tracking", "360 Feedback", "Performance Dashboards"],
-        "pros": ["Highly configurable review templates without heavy implementation", "Configurable review cycles from $5/user/mo without enterprise implementation overhead", "Strong customer support for HR admins"],
-        "cons": ["Fewer AI-driven insights than Lattice or Leapsome", "Engagement survey suite is lighter than dedicated culture platforms"],
+        "key_features": [
+            "Configurable Review Cycles",
+            "1:1 Meeting Tools",
+            "Engagement Surveys",
+            "Career Pathing",
+            "AI Performance Insights",
+        ],
+        "pros": [
+            "Highly configurable review templates without heavy implementation",
+            "1:1 agendas, engagement surveys, career pathing, and AI insights in one mid-market suite",
+            "Strong customer support for HR admins running custom performance cycles",
+        ],
+        "cons": [
+            "Engagement survey depth still trails dedicated culture platforms like Culture Amp",
+            "Compensation and talent-calibration depth trails Lattice for large enterprise programs",
+        ],
         "matrix": {
             "OKRs & Goal Cascading": True,
             "Continuous Feedback": True,
@@ -456,8 +469,8 @@ PM_TOOLS = {
             "Career Pathing": True,
             "AI Performance Insights": True,
             "Slack/Teams Integration": True,
-            "Free Trial Available": False
-        }
+            "Free Trial Available": False,
+        },
     },
     "leapsome": {
         "name": "Leapsome",
