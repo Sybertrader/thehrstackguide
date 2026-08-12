@@ -26,7 +26,7 @@ function resolveOutboundHref(toolId: string, fallbackUrl: string): string {
  * five near-identical `<VendorCTA>` calls per tool across the template.
  * Remote and every other standard brand are completely untouched.
  */
-const MANUAL_LEAD_BRANDS = ['plane', 'rippling', 'lever', 'jazzhr', 'culture-amp'];
+const MANUAL_LEAD_BRANDS = ['plane', 'rippling', 'lever', 'jazzhr', 'culture-amp', 'performyard'];
 function isManualLeadBrand(toolId: string): boolean {
   return MANUAL_LEAD_BRANDS.includes(toolId.toLowerCase().trim());
 }
@@ -562,10 +562,20 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         modalId is passed explicitly so it always matches the button attribute.
       -->
       {toolAIsManualLead && (
-        <ManualLeadModal brandName={comparison.tool_a_name} modalId={toolAModalId} />
+        <ManualLeadModal
+          brandName={comparison.tool_a_name}
+          vendorId={comparison.tool_a_id}
+          modalId={toolAModalId}
+          partnerLandingUrl={getToolProfile(comparison.tool_a_id)?.partner_landing_url ?? ''}
+        />
       )}
       {toolBIsManualLead && (
-        <ManualLeadModal brandName={comparison.tool_b_name} modalId={toolBModalId} />
+        <ManualLeadModal
+          brandName={comparison.tool_b_name}
+          vendorId={comparison.tool_b_id}
+          modalId={toolBModalId}
+          partnerLandingUrl={getToolProfile(comparison.tool_b_id)?.partner_landing_url ?? ''}
+        />
       )}
 
       <!-- Hero Section -->

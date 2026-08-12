@@ -441,7 +441,7 @@ PM_TOOLS = {
         "rating": 4.7,
         "starting_price": "$5/user/mo",
         "pricing_model": "Per user / month with configurable review cycle modules",
-        "free_trial": True,
+        "free_trial": False,
         "affiliate_url": "https://www.performyard.com",
         "key_features": ["Configurable Review Cycles", "Goal Tracking", "360 Feedback", "Performance Dashboards"],
         "pros": ["Highly configurable review templates without heavy implementation", "Configurable review cycles from $5/user/mo without enterprise implementation overhead", "Strong customer support for HR admins"],
@@ -450,13 +450,13 @@ PM_TOOLS = {
             "OKRs & Goal Cascading": True,
             "Continuous Feedback": True,
             "360 Degree Reviews": True,
-            "1:1 Meeting Tools": False,
-            "Engagement Surveys": False,
+            "1:1 Meeting Tools": True,
+            "Engagement Surveys": True,
             "Compensation Calibration": True,
-            "Career Pathing": False,
-            "AI Performance Insights": False,
+            "Career Pathing": True,
+            "AI Performance Insights": True,
             "Slack/Teams Integration": True,
-            "Free Trial Available": True
+            "Free Trial Available": False
         }
     },
     "leapsome": {

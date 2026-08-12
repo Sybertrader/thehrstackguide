@@ -375,7 +375,9 @@
       "You need goals and 360 feedback without paying enterprise Lattice/Culture Amp premiums."
     ],
     "starting_price": "$5/user/mo",
-    "free_trial": true,
+    "free_trial": false,
+    "isManualLead": true,
+    "partner_landing_url": "https://www.performyard.com",
     "target_segment": "Scaleups 50–250"
   },
   "leapsome": {

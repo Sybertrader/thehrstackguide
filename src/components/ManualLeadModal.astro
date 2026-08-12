@@ -1,22 +1,32 @@
 ---
 interface Props {
   brandName: string;
+  vendorId?: string;
   modalId?: string;
+  partnerLandingUrl?: string;
+  /** @deprecated Prefer posting through /api/leads which records email server-side. */
   formActionUrl?: string;
 }
 
-const { 
-  brandName, 
+const {
+  brandName,
+  vendorId = '',
   // Must match [slug].astro manualLeadModalId() — spaces become hyphens.
   modalId = `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`,
-  formActionUrl = "https://api.web3forms.com/submit"
+  partnerLandingUrl = '',
+  formActionUrl = '/api/leads',
 } = Astro.props;
+
+const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-');
 ---
 
 <div
   id={modalId}
   class="modal-backdrop fixed inset-0 z-[9999] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
   aria-hidden="true"
+  data-vendor-id={resolvedVendorId}
+  data-brand-name={brandName}
+  data-partner-landing-url={partnerLandingUrl}
 >
   <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 text-left my-auto z-[10000]">
     
@@ -38,9 +48,10 @@ const {
     <!-- Form Container -->
     <div class="p-6">
       <form id={`form-${modalId}`} action={formActionUrl} method="POST" class="space-y-4">
-        <input type="hidden" name="access_key" value="9e3cce58-b062-4436-9834-24ba34373412" />
+        <input type="hidden" name="vendorId" value={resolvedVendorId} />
+        <input type="hidden" name="brandName" value={brandName} />
         <input type="hidden" name="target_software" value={brandName} />
-        <input type="hidden" name="subject" value={`New Referral Inquiry: ${brandName} via The HR Stack Guide`} />
+        <input type="hidden" name="partnerLandingUrl" value={partnerLandingUrl} />
 
         <!-- First & Last Name -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -108,7 +119,7 @@ const {
           </div>
         </div>
 
-        <!-- Company Size & Phone -->
+        <!-- Company Size & Region -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label for={`size-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Employee Count *</label>
@@ -127,15 +138,34 @@ const {
             </select>
           </div>
           <div>
-            <label for={`phone-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone Number</label>
-            <input
-              type="tel"
-              id={`phone-${modalId}`}
-              name="phone"
-              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
-              placeholder="+1 (555) 000-0000"
-            />
+            <label for={`region-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Region *</label>
+            <select
+              id={`region-${modalId}`}
+              name="region"
+              required
+              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none bg-white transition"
+            >
+              <option value="">Select region...</option>
+              <option value="North America">North America</option>
+              <option value="Europe">Europe</option>
+              <option value="APAC">APAC</option>
+              <option value="LATAM">LATAM</option>
+              <option value="Middle East / Africa">Middle East / Africa</option>
+              <option value="Global / Multi-region">Global / Multi-region</option>
+            </select>
           </div>
+        </div>
+
+        <!-- Phone -->
+        <div>
+          <label for={`phone-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone Number</label>
+          <input
+            type="tel"
+            id={`phone-${modalId}`}
+            name="phone"
+            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
+            placeholder="+1 (555) 000-0000"
+          />
         </div>
 
         <!-- Requirements Notes -->
@@ -209,6 +239,7 @@ const {
           else if (label.indexOf('lever') !== -1) modalId = 'lead-modal-lever';
           else if (label.indexOf('jazzhr') !== -1) modalId = 'lead-modal-jazzhr';
           else if (label.indexOf('culture amp') !== -1) modalId = 'lead-modal-culture-amp';
+          else if (label.indexOf('performyard') !== -1) modalId = 'lead-modal-performyard';
         }
 
         if (modalId) {
@@ -254,6 +285,7 @@ const {
       var btnText = form.querySelector('.btn-text');
       var spinner = form.querySelector('.spinner');
       var successMessage = form.closest('.p-6') ? form.closest('.p-6').querySelector('.success-message') : null;
+      var backdrop = form.closest('.modal-backdrop');
 
       if (emailInput) {
         var emailValue = emailInput.value.toLowerCase().trim();
@@ -275,13 +307,46 @@ const {
 
       try {
         var formData = new FormData(form);
-        var response = await fetch(form.action, {
+        var firstName = String(formData.get('first_name') || '').trim();
+        var lastName = String(formData.get('last_name') || '').trim();
+        var payload = {
+          vendorId: String(formData.get('vendorId') || (backdrop && backdrop.getAttribute('data-vendor-id')) || '').trim(),
+          brandName: String(formData.get('brandName') || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
+          firstName: firstName,
+          lastName: lastName,
+          fullName: (firstName + ' ' + lastName).trim(),
+          workEmail: String(formData.get('work_email') || '').trim(),
+          companyName: String(formData.get('company_name') || '').trim(),
+          jobTitle: String(formData.get('job_title') || '').trim(),
+          headcount: String(formData.get('company_size') || '').trim(),
+          region: String(formData.get('region') || '').trim(),
+          phone: String(formData.get('phone') || '').trim(),
+          needs: String(formData.get('notes') || '').trim(),
+          partnerLandingUrl:
+            String(formData.get('partnerLandingUrl') || (backdrop && backdrop.getAttribute('data-partner-landing-url')) || '').trim() ||
+            null,
+          source: 'The HR Stack Guide',
+        };
+
+        var response = await fetch(form.action || '/api/leads', {
           method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
+          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
         });
 
+        var result = null;
+        try {
+          result = await response.json();
+        } catch (_) {
+          result = null;
+        }
+
         if (response.ok) {
+          var redirectUrl = result && result.redirectUrl ? String(result.redirectUrl) : '';
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+            return;
+          }
           form.classList.add('hidden');
           if (successMessage) successMessage.classList.remove('hidden');
         } else {

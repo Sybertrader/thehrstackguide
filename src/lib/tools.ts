@@ -14,6 +14,8 @@ export interface ToolProfile {
   rating_source?: string;
   starting_price?: string;
   free_trial?: boolean;
+  isManualLead?: boolean;
+  partner_landing_url?: string;
   positioning: string;
   text_compliance: string;
   text_global_reach: string;
