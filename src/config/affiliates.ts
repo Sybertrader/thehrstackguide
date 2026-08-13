@@ -9,6 +9,8 @@ export const affiliateLinks: Record<string, string> = {
   'bamboohr-ats': 'https://www.bamboohr.com/?eid=fopydE',
   multiplier: 'https://multipliertechnologiespteltd.pxf.io/B51kg9',
   recruitee: 'https://join.tellent.com/t5yy8cn4dn30',
+  lattice:
+    'https://lattice.com/demo?utm_source=The-HR-Stack-Guide&utm_medium=partner&utm_campaign=referral',
   // Placeholder structure for future approved partners:
   // deel: 'https://...',
   // rippling: 'https://...',

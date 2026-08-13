@@ -503,7 +503,7 @@ PM_TOOLS = {
         "starting_price": "$10/user/mo",
         "pricing_model": "Performance module from $10/user/mo (Goals from $8)",
         "free_trial": False,
-        "affiliate_url": "https://lattice.com",
+        "affiliate_url": "https://lattice.com/demo?utm_source=The-HR-Stack-Guide&utm_medium=partner&utm_campaign=referral",
         "key_features": ["Performance Reviews", "OKRs", "Compensation Bands", "Talent Reviews"],
         "pros": ["Deep compensation calibration tied to performance data", "Mature OKR and talent review workflows", "Strong analytics for People leaders"],
         "cons": ["Module add-ons (Engagement, Grow, Compensation) can push total seat cost well above the $8 Performance base.", "No self-serve free trial; requires a sales demo"],

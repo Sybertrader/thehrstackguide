@@ -419,6 +419,9 @@
     ],
     "starting_price": "$10/user/mo",
     "free_trial": false,
+    "affiliate_url": "https://lattice.com/demo?utm_source=The-HR-Stack-Guide&utm_medium=partner&utm_campaign=referral",
+    "has_active_affiliate": true,
+    "website": "https://lattice.com/demo?utm_source=The-HR-Stack-Guide&utm_medium=partner&utm_campaign=referral",
     "target_segment": "Scaleups 50–250"
   },
   "culture-amp": {
