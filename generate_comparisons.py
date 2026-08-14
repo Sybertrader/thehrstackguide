@@ -314,7 +314,7 @@ ATS_TOOLS = {
     },
     "breezy-hr": {
         "name": "Breezy HR",
-        "logo": "/breezy-hr-logo.png",
+        "logo": "/breezy-logo.png",
         "rating": 4.4,
         "starting_price": "Free tier / $157/mo",
         "pricing_model": "Free Bootstrap tier; paid Startup from about $157/mo",
