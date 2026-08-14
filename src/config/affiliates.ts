@@ -11,6 +11,7 @@ export const affiliateLinks: Record<string, string> = {
   recruitee: 'https://join.tellent.com/t5yy8cn4dn30',
   lattice:
     'https://lattice.com/demo?utm_source=The-HR-Stack-Guide&utm_medium=partner&utm_campaign=referral',
+  'breezy-hr': 'https://breezyhr.partnerlinks.io/ahid34bxoa2w',
   // Placeholder structure for future approved partners:
   // deel: 'https://...',
   // rippling: 'https://...',

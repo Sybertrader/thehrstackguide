@@ -258,6 +258,7 @@
   },
   "breezy-hr": {
     "category": "ats",
+    "logo": "/breezy-hr-logo.png",
     "rating": "4.4",
     "review_count": "700",
     "rating_source": "G2 & Industry Benchmark",
@@ -273,6 +274,9 @@
     ],
     "starting_price": "Free tier / $157/mo",
     "free_trial": true,
+    "affiliate_url": "https://breezyhr.partnerlinks.io/ahid34bxoa2w",
+    "has_active_affiliate": true,
+    "website": "https://breezyhr.partnerlinks.io/ahid34bxoa2w",
     "target_segment": "Startups 1–20"
   },
   "jazzhr": {
