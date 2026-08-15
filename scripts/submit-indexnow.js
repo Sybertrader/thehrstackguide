@@ -12,7 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.join(__dirname, '..');
 
 const host = 'thehrstackguide.com';
-const key = 'aa146a79ee0b4427b4e828d4908d6c7d';
+const key = '51f7bb598c8d4b77a96fcba4cf952b3d';
 const keyLocation = `https://${host}/${key}.txt`;
 
 // Static routes that aren't generated from comparisons.csv.
