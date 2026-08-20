@@ -16,5 +16,5 @@ export const affiliateLinks: Record<string, string> = {
   // deel: 'https://...',
   // rippling: 'https://...',
   ashby: 'https://sales.ashbyhq.com/e3t/Ctc/ZS+23284/cBJBm04/JkM2-6qcW6N1vHY6lZ3mkW283TQP4fr7wyW6M3Npt32m2fCW5HY42F91hdSKW5t0fHG2XX5S7W4gJwNw67R7sPW3kvMT-8GspMgW7RW_g99b9mgSW2jPPkR2x_DsCW47RXnR2Qhl9vW8gwvkK3gmcb6N4LMlMCzNtcBW4GM8F-5pTrnVW7yr-bK1fNmC_W6JQbzv4jP30lW7dL6Ss7zBrFfW2nYrwS3y06xKVFgGhB3Ww2jMW1QVyyh28-rRcVH2fYl3CF-NrW8Np9nf1dQk1JW5Sdw8f3M2SbbW6ZPHxr7LhjWKf9cgtZv04',
-  Gusto: 'https://get.gusto.com/79drghc7zcm7'
+  gusto: 'https://get.gusto.com/79drghc7zcm7',
 };
