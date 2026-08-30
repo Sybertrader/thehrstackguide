@@ -16,10 +16,14 @@ export interface Comparison {
   target_audience: string;
   tool_a_id: string;
   tool_a_name: string;
+  /** Sub-niche positioning tag, e.g. "Best for US SMBs (1–50)". */
+  tool_a_badge: string;
   tool_a_logo_url: string;
   tool_a_rating: string;
   tool_a_starting_price: string;
   tool_a_pricing_model: string;
+  /** Fine print behind the headline price: add-ons, FX spreads, module gating. */
+  tool_a_pricing_nuance: string;
   tool_a_free_trial: string;
   tool_a_affiliate_url: string;
   tool_a_key_features: string;
@@ -27,10 +31,12 @@ export interface Comparison {
   tool_a_cons: string;
   tool_b_id: string;
   tool_b_name: string;
+  tool_b_badge: string;
   tool_b_logo_url: string;
   tool_b_rating: string;
   tool_b_starting_price: string;
   tool_b_pricing_model: string;
+  tool_b_pricing_nuance: string;
   tool_b_free_trial: string;
   tool_b_affiliate_url: string;
   tool_b_key_features: string;
@@ -42,6 +48,8 @@ export interface Comparison {
   winner_bullets: string;
   winner_reason: string;
   verdict_summary: string;
+  /** Two-sentence editorial takeaway rendered as the "The HR Stack Take" blockquote. */
+  hr_stack_take: string;
   feature_matrix_json: string;
   meta_title: string;
   meta_description: string;

@@ -19,38 +19,30 @@ const categoryComparisons = allComparisons.filter(
   (comparison) => toolIds.has(comparison.tool_a_id) && toolIds.has(comparison.tool_b_id)
 );
 
-// Look up display name + logo from the comparisons data source itself (the
-// richer tool_a_name/tool_a_logo_url fields aren't duplicated in tools.json),
-// so the tool roster below can show a name and logo for every tool profile.
+// Look up display name, logo, and the high-signal "best fit" badge from the
+// comparisons data source itself (those richer fields aren't duplicated in
+// tools.json). Reading the badge from here rather than a map maintained on this
+// page means a vendor's sub-niche tag is authored once, in
+// generate_comparisons.py, and reads identically on the roster below and on
+// every comparison page it appears in.
 const nameById = new Map<string, string>();
 const logoById = new Map<string, string>();
+const badgeById = new Map<string, string>();
 for (const comparison of allComparisons) {
   nameById.set(comparison.tool_a_id, comparison.tool_a_name);
   nameById.set(comparison.tool_b_id, comparison.tool_b_name);
   logoById.set(comparison.tool_a_id, comparison.tool_a_logo_url);
   logoById.set(comparison.tool_b_id, comparison.tool_b_logo_url);
+  badgeById.set(comparison.tool_a_id, comparison.tool_a_badge);
+  badgeById.set(comparison.tool_b_id, comparison.tool_b_badge);
 }
-
-// High-signal "best fit" summary for each platform, shown as a badge above
-// the tool name in the roster grid so readers can triage at a glance before
-// reading the full positioning copy.
-const bestForById: Record<string, string> = {
-  ashby: 'Best for All-in-One Recruiting Analytics',
-  greenhouse: 'Best for Enterprise Structured Hiring',
-  lever: 'Best for Outbound CRM & Candidate Nurture',
-  workable: 'Best for Built-in AI Candidate Sourcing',
-  'breezy-hr': 'Best for Visual Drag-and-Drop Pipelines',
-  jazzhr: 'Best for Budget SMB Unlimited Posting',
-  recruitee: 'Best for EU GDPR Data Residency & Employer Brand',
-  'bamboohr-ats': 'Best for BambooHR Ecosystem Integration',
-};
 
 const toolRoster = toolProfiles
   .map((profile) => ({
     ...profile,
     name: nameById.get(profile.id) ?? profile.id,
     logo: logoById.get(profile.id) ?? null,
-    bestFor: bestForById[profile.id] ?? null,
+    bestFor: badgeById.get(profile.id) ?? null,
   }))
   .sort((a, b) => parseFloat(b.rating ?? '0') - parseFloat(a.rating ?? '0'));
 

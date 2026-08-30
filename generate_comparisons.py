@@ -628,6 +628,186 @@ PM_TOOLS = {
     },
 }
 
+# Editorial layer applied to every vendor in all three registries above:
+#
+#   badge          - the sub-niche positioning tag rendered as a pill beside the
+#                    vendor name in comparison table headers and on the category
+#                    hub rosters. This is the single source of truth for that
+#                    string, so a vendor's badge reads identically everywhere.
+#   pricing_nuance - the fine print behind the headline price (add-ons, FX
+#                    spreads, per-module gating). This is the detail generic
+#                    comparison sites omit, so it is the most citable field here.
+#   take_fit       - lowercase clause naming the buying condition where this
+#                    vendor wins, used after "If ..." in The HR Stack Take.
+#   take_edge      - lowercase clause naming the vendor's core differentiator,
+#                    used as the payoff to that sentence.
+#
+# Kept as one block rather than inlined into each tool dict so all 24 vendors
+# are reviewable side by side, which is what keeps the badges mutually distinct
+# and the pricing nuances specific rather than interchangeable filler.
+VENDOR_EDITORIAL = {
+    # --- Global Payroll & EOR ---
+    "deel": {
+        "badge": "Best for Global Scale & Owned Entities",
+        "pricing_nuance": "The $49/contractor and $599/employee headline rates exclude the add-ons most global teams end up buying: Deel Shield misclassification cover, equipment procurement and shipping, and background checks are each billed separately. FX conversion spreads on payouts sit on top of the platform fee, so model your actual payout corridors rather than the sticker price.",
+        "take_fit": "you are hiring full-time employees in several countries at once and want one vendor to own entities, contracts, and equipment",
+        "take_edge": "its 150+ country owned-entity network and 24-hour onboarding remove the entity-setup bottleneck entirely",
+    },
+    "rippling": {
+        "badge": "Best for Multi-State Scaling",
+        "pricing_nuance": "The advertised $8/user/month buys the core workforce platform only. Payroll, benefits administration, device management, and global EOR are separately priced modules, so a realistic all-in quote for a team running payroll plus IT typically lands at several multiples of the base rate. Ask for module-level line items before comparing it against a bundled EOR price.",
+        "take_fit": "you want HR, payroll, and IT device provisioning running off one employee record",
+        "take_edge": "its workflow automation spans onboarding, app access, and hardware provisioning in a single system",
+    },
+    "remote": {
+        "badge": "Best for Direct IP Protection & Owned Entities",
+        "pricing_nuance": "EOR is $599/month per employee on an annual commitment but $699 month-to-month, so the headline figure assumes you prepay for a year. IP protection and owned-entity compliance are included rather than upsold, and Remote does not add an FX markup on payouts, which can make the effective cost lower than a cheaper-looking competitor once currency conversion is counted.",
+        "take_fit": "your board treats IP ownership and compliance purity as non-negotiable",
+        "take_edge": "it owns 100% of its local entities and folds IP assignment plus zero-markup FX into the base fee",
+    },
+    "oyster": {
+        "badge": "Best for Mid-Market UX & Remote Perks",
+        "pricing_nuance": "The $699/month EOR list price is the highest published rate in this category, and also the most negotiable: volume and annual commitments routinely pull it below list for teams above roughly ten employees. Contractor management is $29/month after a 30-day trial, and some markets are served through local partners rather than owned entities, which can introduce deposit requirements.",
+        "take_fit": "you are a mid-market remote team where admin and employee experience drive adoption",
+        "take_edge": "its onboarding UX and employment cost calculator make first-time international hiring legible to non-specialists",
+    },
+    "gusto": {
+        "badge": "Best for US SMBs (1\u201350)",
+        "pricing_nuance": "The $49/month base plus $6/user rate covers US payroll and filings, but benefits administration, HR support, and time tracking sit on higher tiers. International contractor payments are billed per transfer on top of the subscription, and the FX conversion applied to those transfers is where the real cost of paying overseas contractors through Gusto accumulates.",
+        "take_fit": "your workforce is US-based and you want payroll, tax filings, and benefits to run themselves",
+        "take_edge": "automated federal, state, and local filings come standard with the cleanest admin experience for lean teams",
+    },
+    "papaya": {
+        "badge": "Best for Enterprise Consolidated Payroll BI",
+        "pricing_nuance": "Contractor management from $5/month looks category-leading, but Papaya is packaged for enterprise buyers: EOR starts at $499/month per employee and real quotes carry implementation fees, platform minimums, and country-complexity surcharges. Benefit administration and salary deposits in higher-risk jurisdictions are quoted separately.",
+        "take_fit": "your finance team needs consolidated payroll reporting across owned entities and EOR workers in 20+ countries",
+        "take_edge": "its workforce intelligence layer and ERP-grade controls are built for exactly that reporting problem",
+    },
+    "multiplier": {
+        "badge": "Best for APAC & Regional Cost Value",
+        "pricing_nuance": "At $400/month per EOR employee, Multiplier undercuts most owned-entity competitors, but statutory benefit packages and country-specific admin fees are quoted per market rather than bundled. Ask for a country-by-country breakdown of your specific hiring markets, since the gap between the base rate and the all-in cost varies more here than with flat-fee providers.",
+        "take_fit": "you are hiring concentrated headcount across APAC or EMEA and price per seat is the deciding factor",
+        "take_edge": "it delivers instant localized contracts at one of the lowest published EOR rates in the category",
+    },
+    "plane": {
+        "badge": "Best for Tech Startups & Low FX Fees",
+        "pricing_nuance": "Flat $39/contractor and $499/month EOR with a free HRIS keeps the base predictable, and low FX markup on direct bank payouts is a genuine differentiator for contractor-heavy teams. The trade-off is scope: localized benefits and statutory add-ons are thinner than larger providers, so complex markets may need a second vendor alongside it.",
+        "take_fit": "you are a venture-backed startup paying developers abroad and want flat, low-overhead fees",
+        "take_edge": "transparent flat pricing plus minimal FX markup keeps the true cost per contractor closest to the sticker price",
+    },
+    "payoneer-workforce-management": {
+        "badge": "Best for Cross-Border Contractor Payouts",
+        "pricing_nuance": "There is no subscription at all: contractor receiving and management accounts are $0/month and Payoneer monetizes the transfer instead. Cross-border payout fees typically run 0%\u20131% depending on method, with wallet transfers at the low end and card or wire withdrawals at the high end, so the FX conversion spread on your specific currency corridors is the number to model.",
+        "take_fit": "you are paying contractors across many currencies and do not need an employer of record",
+        "take_edge": "it runs batch payouts from multi-currency wallets into 190+ countries at a zero monthly base fee",
+    },
+    # --- Applicant Tracking Systems ---
+    "ashby": {
+        "badge": "Best for All-in-One Recruiting Analytics",
+        "pricing_nuance": "Flat-tier pricing from $400/month up to 100 employees means unlimited seats with no per-recruiter charge, which usually beats seat-based rivals once your interview panel grows. The catch is the step change: pricing rescales as headcount crosses tier boundaries, and there is no free trial, so budget for a paid pilot.",
+        "take_fit": "you want funnel analytics and a sourcing CRM inside the ATS rather than bolted on afterwards",
+        "take_edge": "its reporting depth and unlimited-seat flat tiers reward teams that actually instrument their hiring funnel",
+    },
+    "greenhouse": {
+        "badge": "Best for Enterprise Structured Hiring",
+        "pricing_nuance": "Greenhouse is quote-only on annual contracts, and the published tiers gate significant capability: advanced reporting, CRM, and parts of the compliance suite sit above the entry plan. Expect per-seat licensing plus an implementation fee, and confirm which of the 400+ integrations require a higher tier before you sign.",
+        "take_fit": "you need auditable, structured hiring backed by a deep integration ecosystem",
+        "take_edge": "its scorecard methodology and DEI reporting are the category benchmark for defensible hiring decisions",
+    },
+    "lever": {
+        "badge": "Best for Outbound CRM & Candidate Nurture",
+        "pricing_nuance": "Pricing is quote-based and typically seat-licensed on an annual contract, so cost scales with how many hiring managers you onboard. Nurture campaigns and advanced analytics are packaged into higher tiers, which means the outbound sourcing strength that makes Lever attractive is often not in the entry-level quote.",
+        "take_fit": "your hiring depends on outbound sourcing and re-engaging candidates you already know",
+        "take_edge": "its ATS and candidate CRM are genuinely unified, so nurture campaigns run off the same pipeline data",
+    },
+    "workable": {
+        "badge": "Best for Built-in AI Candidate Sourcing",
+        "pricing_nuance": "Published pricing from $299/month is refreshingly transparent, but it is banded by headcount and the Standard plan caps active jobs. Video interviewing, candidate texting, and assessments are paid add-ons, so the AI sourcing database is the value driver at the base rate rather than the full toolkit.",
+        "take_fit": "you want to post widely and source proactively without sitting through a sales call",
+        "take_edge": "one-click syndication to 200+ job boards plus a 400M-profile sourcing database ships in the base product",
+    },
+    "breezy-hr": {
+        "badge": "Best for Visual Drag-and-Drop Pipelines",
+        "pricing_nuance": "The free Bootstrap tier is genuinely usable for a single open role, making Breezy the cheapest way to trial a real pipeline. Paid plans from about $157/month are priced by active job pool rather than per user, so cost tracks how many roles you run concurrently instead of how large your team is.",
+        "take_fit": "you are a small team that wants a visual pipeline live this week with no procurement cycle",
+        "take_edge": "a free tier, Trello-style pipelines, and built-in async video screening get real hiring running without setup overhead",
+    },
+    "jazzhr": {
+        "badge": "Best for Budget SMB Unlimited Posting",
+        "pricing_nuance": "From $75/month with unlimited user seats, JazzHR has the lowest true cost of entry in this comparison set, but plans are tiered by number of open jobs. Compliance reporting and several integrations require the higher tiers, and coverage is oriented to US and North American hiring.",
+        "take_fit": "you are cost-constrained and want every interviewer in the system without paying per seat",
+        "take_edge": "unlimited free seats at $75/month removes the usual trade-off between budget and panel participation",
+    },
+    "recruitee": {
+        "badge": "Best for EU GDPR Data Residency & Employer Brand",
+        "pricing_nuance": "The $199/month Launch plan is job-slot based with unlimited users, so cost scales with concurrent openings rather than headcount. Careers-site customization and multi-language pages are core rather than add-ons, though advanced automation sits on higher tiers and North American integrations are thinner than US-first rivals.",
+        "take_fit": "you hire across European markets and need GDPR data residency alongside localized careers pages",
+        "take_edge": "EU data residency and multi-language employer branding are native here rather than retrofitted",
+    },
+    "bamboohr-ats": {
+        "badge": "Best for BambooHR Ecosystem Integration",
+        "pricing_nuance": "The ATS is not sold standalone: it is quoted as a module on top of a BambooHR HRIS subscription, so the real comparison is that bundle price against a dedicated ATS plus integration work. The bundling is the entire point for existing BambooHR customers and the disqualifier for everyone else.",
+        "take_fit": "you already run BambooHR as your HRIS and want hiring to live in the same system",
+        "take_edge": "candidate-to-employee conversion needs no re-entry because the candidate and the employee are one record",
+    },
+    # --- Performance Management ---
+    "15five": {
+        "badge": "Best for Manager Coaching & Weekly Check-ins",
+        "pricing_nuance": "From $4/user/month, 15Five is priced per module: Engage, Perform, and Total Platform are separate tiers, so the $4 entry rate rarely covers reviews and engagement together. Manager coaching content is an additional line item, which matters because coaching is the main reason teams pick it.",
+        "take_fit": "your real bottleneck is manager capability and you want a weekly check-in habit to stick",
+        "take_edge": "its check-in cadence and coaching layer change manager behaviour rather than just recording reviews",
+    },
+    "performyard": {
+        "badge": "Best for Configurable Mid-Market Reviews",
+        "pricing_nuance": "At $5/user/month, PerformYard sits at the low end of this category while including 1:1s, engagement surveys, career pathing, and AI insights that rivals sell as separate modules. There is no self-serve trial, so evaluation runs through a guided demo, and review-cycle configuration is where implementation time is actually spent.",
+        "take_fit": "you need genuinely custom review cycles without an enterprise implementation project",
+        "take_edge": "its template flexibility and bundled feature set at $5/user undercut modular competitors on all-in cost",
+    },
+    "leapsome": {
+        "badge": "Best for Modular Reviews + Learning Suite",
+        "pricing_nuance": "The $8/user/month entry rate is per module. Reviews, Goals, Engagement, and Learning are priced separately, so full-suite buyers should expect the effective per-seat cost to stack well above the headline figure. Request a bundled quote rather than adding modules onto a base price.",
+        "take_fit": "you want performance, engagement, and learning in one system with a strong EU data posture",
+        "take_edge": "it is the broadest modular suite here, and its learning paths connect directly to review outcomes",
+    },
+    "lattice": {
+        "badge": "Best for Compensation & Talent Calibration",
+        "pricing_nuance": "Performance starts at $10/user/month and Goals at $8, but Engagement, Grow, and Compensation are add-on modules that can push the real per-seat cost to several times the entry rate. There is no self-serve trial, so a sales demo is the only evaluation path.",
+        "take_fit": "you run calibrated performance and compensation cycles that have to withstand scrutiny",
+        "take_edge": "compensation banding tied directly to performance data is the most mature implementation in this set",
+    },
+    "culture-amp": {
+        "badge": "Best for Engagement Science & Benchmarks",
+        "pricing_nuance": "Quote-only, bundled as Engage, Perform, and Develop, and priced for enterprise procurement. Engagement is the flagship and performance is the secondary module, so buying Culture Amp primarily for reviews usually means paying for survey science you will not fully use.",
+        "take_fit": "engagement measurement and people-science benchmarks are the actual reason you are buying",
+        "take_edge": "its survey methodology and benchmark dataset are the strongest evidence base in the category",
+    },
+    "reflektive": {
+        "badge": "Best for Lightweight Continuous Feedback (PeopleFluent)",
+        "pricing_nuance": "Quote-only under legacy Workday-era packaging, so pricing is negotiated rather than published and contract terms vary widely. The feature set is narrower than modern rivals, which makes benchmarking any quote against cheaper per-seat tools essential before renewal.",
+        "take_fit": "you want Slack-native recognition and continuous feedback without a full performance suite",
+        "take_edge": "its feedback and recognition loops are light enough that adoption does not need a rollout programme",
+    },
+    "clearcompany": {
+        "badge": "Best for Talent Suite + Performance Bundle (ClearCo)",
+        "pricing_nuance": "Performance is quoted as part of the wider ClearCo talent suite, so the economics only work if you are also buying ATS and onboarding. Bought standalone, its performance depth does not justify the suite price against dedicated specialists.",
+        "take_fit": "you are consolidating ATS, onboarding, and performance under a single vendor",
+        "take_edge": "hiring data flows into performance cycles with no integration project because it is all one suite",
+    },
+}
+
+
+def attach_vendor_editorial():
+    """Merge VENDOR_EDITORIAL into every tool record across all three category
+    registries. Missing metadata raises KeyError on import rather than silently
+    generating 425 pages with blank badges and empty pricing callouts."""
+    for registry in (TOOLS, ATS_TOOLS, PM_TOOLS):
+        for tool_id, tool in registry.items():
+            tool.update(VENDOR_EDITORIAL[tool_id])
+
+
+attach_vendor_editorial()
+
+
 # "Global partner platforms" - the vendors our site is built around (Global EOR,
 # international contractor management, and SMB usability). When one of these is
 # compared against a general-purpose HR platform like Rippling, the verdict is
@@ -883,6 +1063,33 @@ def build_overall_fit_copy(winner, winner_key, tool_a, tool_b, key_a, key_b, nic
     return winner_category, winner_label, winner_reason, verdict_summary, []
 
 
+def build_hr_stack_take(winner, runner_up, winner_category, niche_info):
+    """Two-sentence executive takeaway rendered as a blockquote above the
+    comparison table. Sentence one states the condition under which the winner
+    is the right call plus its core differentiator; sentence two does the same
+    for the runner-up, so the reader gets a decision rule rather than a ranking.
+
+    When a row was decided by PARTNER_FOCUS (a specialist beating the
+    general-purpose HRIS on a specific use case), the take names that use case
+    explicitly instead of claiming a generic overall win."""
+    if winner_category and winner_category != "Overall Fit":
+        opening = (
+            f"If {winner['take_fit']}, {winner['name']} is the stronger call on "
+            f"{winner_category} for {niche_info['name']}: {winner['take_edge']}."
+        )
+    else:
+        opening = (
+            f"If {winner['take_fit']}, {winner['name']} is the stronger call for "
+            f"{niche_info['name']}: {winner['take_edge']}."
+        )
+
+    counterpoint = (
+        f"If instead {runner_up['take_fit']}, {runner_up['name']} is the better "
+        f"shortlist candidate: {runner_up['take_edge']}."
+    )
+    return f"{opening} {counterpoint}"
+
+
 def build_row(tool_a, tool_b, key_a, key_b, niche_id, niche_info, winner_key, winner_category, winner_label, winner_bullets, winner_reason, verdict_summary):
     """Assembles one comparisons.csv row dict from two resolved tool records
     and an already-decided verdict, shared by both the Global Payroll & EOR
@@ -892,6 +1099,9 @@ def build_row(tool_a, tool_b, key_a, key_b, niche_id, niche_info, winner_key, wi
         val_b = tool_b["matrix"].get(feature, False)
         feature_matrix[feature] = {"a": val_a, "b": val_b}
 
+    winner_tool = tool_a if winner_key == key_a else tool_b
+    runner_up_tool = tool_b if winner_key == key_a else tool_a
+
     return {
         "slug": f"{key_a}-vs-{key_b}-for-{niche_id}",
         "niche_id": niche_id,
@@ -900,10 +1110,12 @@ def build_row(tool_a, tool_b, key_a, key_b, niche_id, niche_info, winner_key, wi
         "target_audience": niche_info["audience"],
         "tool_a_id": key_a,
         "tool_a_name": tool_a["name"],
+        "tool_a_badge": tool_a["badge"],
         "tool_a_logo_url": tool_a["logo"],
         "tool_a_rating": tool_a["rating"],
         "tool_a_starting_price": tool_a["starting_price"],
         "tool_a_pricing_model": tool_a["pricing_model"],
+        "tool_a_pricing_nuance": tool_a["pricing_nuance"],
         "tool_a_free_trial": str(tool_a["free_trial"]).lower(),
         "tool_a_affiliate_url": tool_a["affiliate_url"],
         "tool_a_key_features": "|".join(tool_a["key_features"]),
@@ -911,10 +1123,12 @@ def build_row(tool_a, tool_b, key_a, key_b, niche_id, niche_info, winner_key, wi
         "tool_a_cons": "|".join(tool_a["cons"]),
         "tool_b_id": key_b,
         "tool_b_name": tool_b["name"],
+        "tool_b_badge": tool_b["badge"],
         "tool_b_logo_url": tool_b["logo"],
         "tool_b_rating": tool_b["rating"],
         "tool_b_starting_price": tool_b["starting_price"],
         "tool_b_pricing_model": tool_b["pricing_model"],
+        "tool_b_pricing_nuance": tool_b["pricing_nuance"],
         "tool_b_free_trial": str(tool_b["free_trial"]).lower(),
         "tool_b_affiliate_url": tool_b["affiliate_url"],
         "tool_b_key_features": "|".join(tool_b["key_features"]),
@@ -926,6 +1140,7 @@ def build_row(tool_a, tool_b, key_a, key_b, niche_id, niche_info, winner_key, wi
         "winner_bullets": "|".join(winner_bullets),
         "winner_reason": winner_reason,
         "verdict_summary": verdict_summary,
+        "hr_stack_take": build_hr_stack_take(winner_tool, runner_up_tool, winner_category, niche_info),
         "feature_matrix_json": json.dumps(feature_matrix),
         "meta_title": f"{tool_a['name']} vs {tool_b['name']} for {niche_info['name']} (2026 Comparison)",
         "meta_description": f"Detailed comparison of {tool_a['name']} vs {tool_b['name']} for {niche_info['name']}."
