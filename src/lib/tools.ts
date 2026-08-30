@@ -9,6 +9,7 @@ import path from 'node:path';
  */
 export interface ToolProfile {
   category?: string;
+  logo?: string;
   rating?: string;
   review_count?: string;
   rating_source?: string;
@@ -17,6 +18,13 @@ export interface ToolProfile {
   hasFreeTrial?: boolean;
   isManualLead?: boolean;
   partner_landing_url?: string;
+  affiliate_url?: string;
+  has_active_affiliate?: boolean;
+  is_partner?: boolean;
+  contractor_price?: number;
+  eor_price?: number;
+  countries?: string;
+  target_segment?: string;
   positioning: string;
   text_compliance: string;
   text_global_reach: string;

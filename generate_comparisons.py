@@ -32,6 +32,7 @@ TOOLS = {
             "Global Tax Filings": True,
             "Background Checks": True,
             "Native US Payroll": True,
+            "Multi-Currency Wallets": True,
             "Free Trial Available": False
         }
     },
@@ -56,6 +57,7 @@ TOOLS = {
             "Global Tax Filings": True,
             "Background Checks": True,
             "Native US Payroll": True,
+            "Multi-Currency Wallets": False,
             "Free Trial Available": False
         }
     },
@@ -82,6 +84,7 @@ TOOLS = {
             "Global Tax Filings": True,
             "Background Checks": True,
             "Native US Payroll": False,
+            "Multi-Currency Wallets": False,
             "Free Trial Available": True
         }
     },
@@ -108,6 +111,7 @@ TOOLS = {
             "Global Tax Filings": True,
             "Background Checks": True,
             "Native US Payroll": False,
+            "Multi-Currency Wallets": False,
             "Free Trial Available": True
         }
     },
@@ -132,6 +136,7 @@ TOOLS = {
             "Global Tax Filings": True,
             "Background Checks": False,
             "Native US Payroll": True,
+            "Multi-Currency Wallets": False,
             "Free Trial Available": True
         }
     },
@@ -158,6 +163,7 @@ TOOLS = {
             "Global Tax Filings": True,
             "Background Checks": True,
             "Native US Payroll": True,
+            "Multi-Currency Wallets": False,
             "Free Trial Available": False
         }
     },
@@ -184,6 +190,7 @@ TOOLS = {
             "Global Tax Filings": True,
             "Background Checks": False,
             "Native US Payroll": False,
+            "Multi-Currency Wallets": False,
             "Free Trial Available": False
         }
     },
@@ -210,6 +217,33 @@ TOOLS = {
             "Global Tax Filings": False,
             "Background Checks": False,
             "Native US Payroll": False,
+            "Multi-Currency Wallets": False,
+            "Free Trial Available": True
+        }
+    },
+    "payoneer-workforce-management": {
+        "name": "Payoneer Workforce Management",
+        "logo": "/payoneer-logo.png",
+        "rating": 4.5,
+        "contractor_price": 0,
+        "starting_price": "$0/mo",
+        "pricing_model": "$0/mo base for contractor accounts; 0%-1% cross-border payout fees",
+        "free_trial": True,
+        "affiliate_url": "https://payoneer557.partnerlinks.io/c9q0eynun43w",
+        "key_features": ["190+ Country Batch Payouts", "Multi-Currency Wallets", "Zero-Fee Contractor Receiving", "W-8BEN/W-9 Collection"],
+        "pros": ["Multi-currency wallets with batch payouts across 190+ countries", "Zero-fee receiving options for contractors plus local bank transfer, Payoneer card, and wire payout methods", "$0/mo base fee with automated contractor onboarding, tax form collection, and invoice management"],
+        "cons": ["No EOR or owned legal entities, so it cannot employ full-time international staff on your behalf", "No statutory payroll filings or localized benefits administration, so it complements rather than replaces an EOR"],
+        "matrix": {
+            "Native Legal Entities": False,
+            "Contractor Auto-Pay": True,
+            "IT Device Shipping": False,
+            "Localized Health Benefits": False,
+            "Equity & Stock Admin": False,
+            "Zero FX Rate Markup": False,
+            "Global Tax Filings": False,
+            "Background Checks": False,
+            "Native US Payroll": False,
+            "Multi-Currency Wallets": True,
             "Free Trial Available": True
         }
     },
@@ -600,7 +634,7 @@ PM_TOOLS = {
 # framed around the specific use case our audience cares about rather than a
 # single blanket "better overall" claim, while the underlying star ratings above
 # stay untouched and reflect the same consistent criteria for every vendor.
-PARTNER_IDS = {"deel", "oyster", "remote", "gusto"}
+PARTNER_IDS = {"deel", "oyster", "remote", "gusto", "payoneer-workforce-management"}
 
 PARTNER_FOCUS = {
     "deel": {
@@ -633,6 +667,14 @@ PARTNER_FOCUS = {
             "Best-in-class US payroll experience purpose-built for small teams, without added IT device-management overhead",
             "Automated state-by-state tax filings come standard, reducing the compliance workload for lean SMB teams",
             "Simple, transparent per-employee pricing starting lower than a base-fee-plus-per-user model",
+        ],
+    },
+    "payoneer-workforce-management": {
+        "category": "Cross-Border Contractor Payouts",
+        "bullets": [
+            "Multi-currency wallets with batch payout capabilities across 190+ countries, rather than routing every international contractor payment through a domestic-first payroll rail",
+            "Zero-fee receiving options for contractors plus flexible payout methods (local bank transfer, Payoneer card, wire) keep worker-side costs down on every transfer",
+            "Automated contractor onboarding with W-8BEN/W-9 tax form collection and invoice management built directly into the payout workflow",
         ],
     },
 }

@@ -112,6 +112,31 @@
     "countries": "180+",
     "target_segment": "Global/Enterprise"
   },
+  "payoneer-workforce-management": {
+    "category": "payroll-eor",
+    "logo": "/payoneer-logo.png",
+    "rating": "4.5",
+    "review_count": "2,000",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "A cross-border contractor payout and workforce management layer built on Payoneer's multi-currency wallet network across 190+ countries.",
+    "text_compliance": "Payoneer Workforce Management automates the contractor-side paperwork most payout tools leave manual: onboarding flows, W-8BEN and W-9 tax form collection, and invoice approval trails are handled in-platform so you keep audit-ready records for every international contractor. It is a contractor management and payments layer rather than an Employer of Record, so it does not assume employer liability, file statutory payroll taxes, or administer localized benefits on your behalf.",
+    "text_global_reach": "Payoneer moves money into 190+ countries from multi-currency wallets, with batch payouts so finance teams can settle an entire contractor roster in one run. Contractors choose how they get paid, via local bank transfer in their own currency, the Payoneer card, or wire, and can hold balances in multiple currencies instead of converting on every invoice.",
+    "text_pricing_truth": "There is no subscription: contractor receiving and management accounts are $0/month, and Payoneer earns on the transfer instead. Cross-border payout fees typically land between 0% and 1% depending on the payout method and corridor, with contractor-to-contractor and wallet transfers at the low end and card or wire withdrawals at the high end. Model your actual currency corridors, since the FX conversion spread, not the headline fee, is where the real cost sits.",
+    "choose_if": [
+      "Your global workforce is contractors and freelancers rather than full-time international employees needing an EOR.",
+      "You pay 5\u2013250 people across many countries and want batch payouts from one multi-currency wallet instead of per-country bank rails.",
+      "You want contractors to receive funds fee-free in their local currency and pick their own payout method.",
+      "You need automated onboarding, W-8BEN/W-9 collection, and invoice management without paying a per-contractor monthly platform fee."
+    ],
+    "starting_price": "$0/mo",
+    "free_trial": true,
+    "affiliate_url": "https://payoneer557.partnerlinks.io/c9q0eynun43w",
+    "has_active_affiliate": true,
+    "is_partner": true,
+    "contractor_price": 0,
+    "countries": "190+",
+    "target_segment": "5\u2013250 global contractors & remote teams"
+  },
   "plane": {
     "category": "payroll-eor",
     "logo": "/plane.jpeg",

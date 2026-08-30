@@ -43,6 +43,7 @@ const bestForById: Record<string, string> = {
   remote: 'Best for Direct IP Protection & Owned Entities',
   oyster: 'Best for Mid-Market UX & Remote Perks',
   papaya: 'Best for Enterprise Consolidated Payroll BI',
+  'payoneer-workforce-management': 'Best for Cross-Border Contractor Payouts',
 };
 
 const toolRoster = toolProfiles
@@ -96,10 +97,16 @@ const tabs: TabDef[] = tabOrder
   .filter((group): group is NicheGroup => Boolean(group))
   .map((group) => ({ id: group.nicheId, label: tabLabelOverrides[group.nicheId] ?? group.nicheName }));
 
-// No "All Use Cases" tab: only one niche's 28 comparisons are ever visible at
+// No "All Use Cases" tab: only one niche's comparisons are ever visible at
 // once (server-rendered this way too, not just after JS runs), so neither
-// users nor crawlers see all 140 links as a single wall of text.
+// users nor crawlers see every comparison as a single wall of text.
 const defaultTabId = tabs[0]?.id ?? null;
+
+// Every niche holds the same number of pairings (one per tool combination),
+// so the first group's size is the "comparisons per use case" count shown in
+// the directory intro — derived rather than hardcoded so it stays correct as
+// vendors are added to this category.
+const comparisonsPerNiche = nicheGroups[0]?.comparisons.length ?? 0;
 
 const buyerGuide = [
   {
@@ -291,7 +298,7 @@ const collectionSchema = {
     <section aria-label="Comparison directory">
       <h2 class="mb-2 text-2xl font-bold text-slate-900">Browse All Comparisons</h2>
       <p class="mb-6 max-w-3xl text-sm text-slate-500">
-        {categoryComparisons.length} head-to-head comparisons across {nicheGroups.length} audience-specific use cases. Filter by team type to jump straight to the 28 comparisons built for your situation.
+        {categoryComparisons.length} head-to-head comparisons across {nicheGroups.length} audience-specific use cases. Filter by team type to jump straight to the {comparisonsPerNiche} comparisons built for your situation.
       </p>
 
       <div class="mb-8 flex flex-wrap gap-2" role="tablist" aria-label="Filter comparisons by use case">
