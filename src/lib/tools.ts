@@ -7,6 +7,30 @@ import path from 'node:path';
  * rather than duplicated per-comparison, since this content describes the
  * tool itself (not a specific A-vs-B pairing).
  */
+/**
+ * One vendor's take on a single enterprise analysis topic (IP assignment, tax
+ * withholding, statutory benefits, fee structure). Rendered as a short summary
+ * plus scannable bullets in the enterprise deep-dive on comparison pages.
+ */
+export interface EnterpriseAnalysis {
+  summary: string;
+  bullets: string[];
+}
+
+/**
+ * Enterprise-tier analysis topics. Only populated for Employer of Record and
+ * Global Payroll vendors — these questions (cross-border IP transfer, 13th
+ * month salary, severance liability, EOR deposits) have no meaningful answer
+ * for an ATS or performance management tool, so those profiles omit the key
+ * entirely and the comparison template hides the section.
+ */
+export interface EnterpriseAnalysisSet {
+  ip_assignment?: EnterpriseAnalysis;
+  tax_withholding?: EnterpriseAnalysis;
+  statutory_benefits?: EnterpriseAnalysis;
+  fee_structure?: EnterpriseAnalysis;
+}
+
 export interface ToolProfile {
   category?: string;
   logo?: string;
@@ -30,6 +54,7 @@ export interface ToolProfile {
   text_global_reach: string;
   text_pricing_truth: string;
   choose_if: string[];
+  enterprise_analysis?: EnterpriseAnalysisSet;
 }
 
 let cache: Record<string, ToolProfile> | null = null;

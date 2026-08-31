@@ -19,7 +19,45 @@
     "contractor_price": 49,
     "eor_price": 599,
     "countries": "150+",
-    "target_segment": "Global/Enterprise"
+    "target_segment": "Global/Enterprise",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Deel's owned-entity network means the employment contract that assigns IP is issued by a Deel entity in the worker's own country and then assigned onward to your company. Because the chain runs inside a single corporate group rather than through a partner agency, there is one fewer counterparty sitting between your business and the work product.",
+        "bullets": [
+          "Local employment agreements carry country-specific invention assignment clauses drafted by Deel's in-house legal team rather than one global template.",
+          "Civil-law jurisdictions across continental Europe, Japan, and China limit blanket assignment of future inventions, so enforceability depends on local statute rather than contract wording. Ask which of your markets require a separate inventor compensation mechanism.",
+          "Contractor agreements handle IP on a different legal footing than EOR employment agreements. Confirm which vehicle each hire sits under before assuming uniform protection.",
+          "Deel Shield misclassification cover is indirectly an IP control: a contractor later reclassified as an employee can weaken the original assignment."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "As the legal employer, Deel calculates and remits employer-side contributions, employee income tax withholding, and social security in each market it operates, filing under its own local registrations rather than yours.",
+        "bullets": [
+          "Employer contributions are quoted on top of gross salary and vary widely by country, so budget well above the $599/month platform fee in high-contribution markets.",
+          "Statutory 13th-month pay in Brazil, Mexico, Portugal, and the Philippines, and 14th-month pay in Italy, is accrued into monthly employment cost rather than landing as a year-end surprise.",
+          "Income tax is withheld at local rates and filed on the local calendar, so finance sees one consolidated invoice instead of managing per-country filings.",
+          "Contractor payments carry no withholding at all. Tax responsibility sits with the contractor, which is exactly the exposure Deel Shield is sold to cover."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Deel administers the statutory minimum package in each country, covering pension or provident fund, state health insurance, and mandatory leave, with supplemental plans available where local market norms demand more than the legal floor.",
+        "bullets": [
+          "Mandatory PTO floors differ sharply: 30 calendar days in Brazil, 20 days plus public holidays across most of the EU, and no federal minimum in the US. Deel enforces the local floor rather than your global policy.",
+          "Severance and notice periods follow local statute, and as legal employer Deel calculates the entitlement and runs the termination process.",
+          "Unlawful termination liability sits with the Deel entity rather than your company, which is the core reason an SMB uses an EOR instead of registering a foreign branch.",
+          "Supplemental benefits such as private health cover and equity administration are priced separately. Confirm what is bundled in your quote."
+        ]
+      },
+      "fee_structure": {
+        "summary": "The $599/month per employee EOR rate and $49/month per contractor rate are platform fees only. Real total cost of ownership adds employer taxes, FX spread, and per-product add-ons on top.",
+        "bullets": [
+          "FX conversion spread applies on every payout corridor and never appears in the headline rate. Model your actual currencies rather than a USD equivalent.",
+          "Deel Shield, equipment procurement and shipping, and background checks are each billed as separate line items.",
+          "Some markets require a security deposit or payroll prefunding, commonly framed as a month of salary. Treat this as a working-capital commitment rather than a fee.",
+          "Get offboarding and contract-termination terms in writing, since notice-period payroll continues to bill throughout the wind-down."
+        ]
+      }
+    }
   },
   "gusto": {
     "category": "payroll-eor",
@@ -40,7 +78,45 @@
     "starting_price": "$49/mo + $6/user",
     "free_trial": true,
     "target_segment": "Startups 1–20",
-    "countries": "US + 120+ contractor corridors"
+    "countries": "US + 120+ contractor corridors",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Gusto is a US domestic payroll and HR platform rather than a global Employer of Record. It does not become the employing entity abroad, so it provides no cross-border IP assignment mechanism.",
+        "bullets": [
+          "For US W-2 employees, IP assignment lives in your own employment agreements. Gusto is the payroll system, not the employer.",
+          "International contractor payments to 120+ countries carry no EOR-grade assignment. The contract is directly between you and the contractor.",
+          "Teams hiring full-time staff abroad need a separate EOR or third-party integration running alongside Gusto.",
+          "If protecting R&D output across borders is the priority, this is the wrong layer of the stack for that specific job."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Gusto's strength is depth in US payroll tax rather than breadth across jurisdictions, with automated federal, state, and local filings including 940/941 forms, W-2s, and 1099s.",
+        "bullets": [
+          "Automated filings cover all 50 states, including state-specific overtime rules and workers' compensation requirements.",
+          "There is no employer-side withholding for international contractors. That responsibility sits with the contractor in their own jurisdiction.",
+          "13th-month salary has no US equivalent and does not apply to Gusto's domestic model.",
+          "International payments carry separate per-transfer costs, so confirm FX conversion fees on your specific corridors."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Gusto administers US statutory and voluntary benefits including ACA reporting, workers' compensation, and 401(k), but does not administer foreign statutory benefits anywhere.",
+        "bullets": [
+          "ACA reporting and workers' compensation are handled natively for US teams.",
+          "US employment is largely at-will with no federal statutory PTO or severance minimum, a fundamentally different model from EU or LATAM markets.",
+          "Gusto provides no unlawful-termination liability shield abroad, because it never becomes the employer.",
+          "Companies with even a handful of foreign full-time hires typically run Gusto alongside an EOR rather than instead of one."
+        ]
+      },
+      "fee_structure": {
+        "summary": "Published Simple-plan pricing starts at $49/month plus $6 per user per month, a per-seat SaaS model rather than the per-employee EOR model its global competitors use.",
+        "bullets": [
+          "Higher tiers add benefits administration and broader HR features. The base plan is payroll-centric.",
+          "There is no per-employee EOR fee because there is no EOR service to price.",
+          "International contractor payments carry per-transfer costs and FX conversion fees on top of the subscription.",
+          "Comparing $6/user against a $599/employee EOR rate is not like-for-like. The two products solve different problems."
+        ]
+      }
+    }
   },
   "multiplier": {
     "category": "payroll-eor",
@@ -66,7 +142,45 @@
     "contractor_price": 40,
     "eor_price": 400,
     "countries": "150+",
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Multiplier assumes employer liability and generates employment contracts built around local labor law across 150+ countries, with particular entity depth across Asia-Pacific.",
+        "bullets": [
+          "Employment agreements are localized per jurisdiction rather than templated globally, which is what makes an invention assignment clause enforceable in the first place.",
+          "Direct entity support in India, Singapore, Vietnam, and the UAE means the IP chain in those markets avoids a partner intermediary.",
+          "APAC jurisdictions differ meaningfully on employee invention compensation, so specific legal review is worthwhile if your R&D headcount sits there.",
+          "Confirm the entity model for markets outside Multiplier's core APAC and EMEA strength."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Multiplier assumes employer liability for statutory benefit contributions, severance policy, and localized tax withholding as part of the EOR service rather than as add-ons.",
+        "bullets": [
+          "Employer contributions and employee withholding are calculated to local standards across 150+ countries.",
+          "13th-month salary requirements in markets like Brazil, Italy, and the Philippines form part of statutory employment cost.",
+          "Provident fund and social insurance schemes in Multiplier's strongest markets, such as India EPF and Singapore CPF, are administered directly.",
+          "Country-by-country administration fees should be reviewed, per Multiplier's own pricing guidance."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Multiplier takes on employer liability for statutory benefits and severance, positioned as an aggressive mid-market price point for teams scaling across APAC and EMEA.",
+        "bullets": [
+          "Statutory benefit contributions and severance policies are managed to local jurisdictional standards.",
+          "Mandatory PTO floors and public holiday calendars follow the hiring country rather than your HQ policy.",
+          "As legal employer, Multiplier carries unlawful termination exposure, which is the key liability shield for a scaling SMB.",
+          "Local benefit package add-ons are priced per country. Review these before assuming the $400 rate is all-in."
+        ]
+      },
+      "fee_structure": {
+        "summary": "At $400/month per employee, Multiplier is one of the more aggressive mid-market EOR price points, which makes the add-on lines proportionally more significant to total cost.",
+        "bullets": [
+          "The $400 EOR rate undercuts Deel and Remote at $599 and Oyster at $699, but employer taxes still sit on top of all of them.",
+          "Local benefit package add-ons and per-country admin fees are Multiplier's own flagged variable costs.",
+          "Contractor management is priced separately at $40/month per active contractor.",
+          "Verify FX handling and any deposit requirement for your payout corridors, since a low platform fee can be quietly offset by conversion spread."
+        ]
+      }
+    }
   },
   "oyster": {
     "category": "payroll-eor",
@@ -88,7 +202,45 @@
     "contractor_price": 29,
     "eor_price": 699,
     "countries": "180+",
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Oyster automates localized IP assignment as part of its employment agreements, delivered through a mix of owned infrastructure and local HR partners across 180+ countries.",
+        "bullets": [
+          "Assignment clauses are localized per country rather than applied as a single global template.",
+          "Because coverage blends owned entities and local partners, the assignment chain differs by market. Ask Oyster which model applies to your hiring countries.",
+          "Misclassification safeguards reinforce the assignment, since a contractor reclassified as an employee can undermine the original IP transfer.",
+          "The platform is oriented toward distributed design and engineering teams, which is where the strength of a clean IP chain matters most."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Oyster handles statutory benefit filings and localized tax withholding across its 180+ country footprint, paying workers in their local currency by default.",
+        "bullets": [
+          "Employer contributions and employee withholding are calculated at local rates and filed on the local schedule.",
+          "13th-month obligations in markets such as Brazil, Italy, and the Philippines are treated as part of statutory employment cost.",
+          "Local currency payout shifts FX exposure onto the platform's conversion rate rather than onto the employee.",
+          "Given the mixed owned and partner model, confirm which entity carries the filing obligation in each of your markets."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Oyster administers localized benefits tailored to distributed teams, with statutory filings handled through owned infrastructure or local HR partners depending on the market.",
+        "bullets": [
+          "Statutory health cover, pension, and mandatory leave follow each country's legal floor.",
+          "Notice periods and severance are enforced to local statute, with Oyster as the employing party in EOR markets.",
+          "Termination liability shielding is the core EOR benefit for an SMB hiring its first employee in a new country.",
+          "Benefits depth can differ between owned-entity and partner markets, so verify coverage for your specific countries."
+        ]
+      },
+      "fee_structure": {
+        "summary": "Oyster publishes $699/month per employee for EOR and $29/month for contractors after a 30-day trial, and its own guidance points to FX spreads and salary deposits as the lines that move total cost.",
+        "bullets": [
+          "At $699 the published EOR rate sits above Deel and Remote's $599 annual-commitment pricing, though volume and annual discounts may apply.",
+          "FX spread on local-currency payouts is a real cost that never appears in the per-employee rate.",
+          "Required salary deposits are a working-capital commitment rather than a fee. Model the cash impact separately.",
+          "The 30-day free trial applies to contractor management, not to EOR hiring."
+        ]
+      }
+    }
   },
   "papaya": {
     "category": "payroll-eor",
@@ -110,7 +262,45 @@
     "contractor_price": 5,
     "eor_price": 499,
     "countries": "180+",
-    "target_segment": "Global/Enterprise"
+    "target_segment": "Global/Enterprise",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Papaya serves multinationals running a hybrid of owned foreign subsidiaries alongside EOR workers, so IP assignment depends on which employment vehicle each worker sits under. That distinction matters more here than with single-model providers.",
+        "bullets": [
+          "Workers hired through your own subsidiary assign IP directly to that entity, while EOR workers assign through Papaya's in-country arrangement.",
+          "Coverage across 160+ jurisdictions uses a mix of owned infrastructure and local partners. Ask which model applies in each market you hire in.",
+          "Where a local partner is the employing entity, the IP chain includes a sub-licensing step. Request the specific assignment wording for those markets.",
+          "Legal contract amendments are handled by Papaya's in-country experts, which is the practical route to strengthening a weak assignment clause."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Payroll intelligence is Papaya's core product. It consolidates localized withholding, employer contributions, and statutory filings across many countries into a single reporting console built for enterprise finance teams.",
+        "bullets": [
+          "The differentiator is consolidated multi-country payroll reporting rather than the mechanics of withholding, which every EOR performs.",
+          "Mandatory 13th and 14th month payments are handled as part of localized payroll in the markets that require them.",
+          "The BI layer is what lets a CFO compare employer tax burden across countries side by side, which is usually the real reason enterprises choose this over a cheaper EOR.",
+          "Complex or unusual jurisdictions may route through local partners, so confirm who carries filing responsibility per market."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Papaya administers statutory benefits across its jurisdiction network and explicitly flags complex benefit administration as an area that carries add-on cost, which is worth scoping during the quote rather than after signature.",
+        "bullets": [
+          "Statutory health, pension, and leave entitlements are administered locally across 160+ jurisdictions.",
+          "Papaya's own pricing guidance calls out add-on costs for complex benefit administration.",
+          "Severance and notice-period enforcement follow local statute, with legal amendments handled by in-country experts.",
+          "For enterprises operating in 20+ countries, consolidated benefit reporting is often worth more than a per-employee rate difference."
+        ]
+      },
+      "fee_structure": {
+        "summary": "Papaya's $499/month per employee EOR starting rate is among the lower published enterprise figures, but its own pricing notes point to deposits and add-ons as the places where the all-in number actually moves.",
+        "bullets": [
+          "The $499 figure is a starting point. Enterprise packages and country complexity raise the effective rate.",
+          "Papaya's guidance explicitly calls out security deposits, commonly framed as one to two months of salary held upfront.",
+          "Complex benefit administration is an add-on rather than bundled into the base rate.",
+          "Contractor management from roughly $5/month per contractor is a completely different price model. Do not blend the two when building a TCO comparison."
+        ]
+      }
+    }
   },
   "payoneer-workforce-management": {
     "category": "payroll-eor",
@@ -124,7 +314,7 @@
     "text_pricing_truth": "There is no subscription: contractor receiving and management accounts are $0/month, and Payoneer earns on the transfer instead. Cross-border payout fees typically land between 0% and 1% depending on the payout method and corridor, with contractor-to-contractor and wallet transfers at the low end and card or wire withdrawals at the high end. Model your actual currency corridors, since the FX conversion spread, not the headline fee, is where the real cost sits.",
     "choose_if": [
       "Your global workforce is contractors and freelancers rather than full-time international employees needing an EOR.",
-      "You pay 5\u2013250 people across many countries and want batch payouts from one multi-currency wallet instead of per-country bank rails.",
+      "You pay 5–250 people across many countries and want batch payouts from one multi-currency wallet instead of per-country bank rails.",
       "You want contractors to receive funds fee-free in their local currency and pick their own payout method.",
       "You need automated onboarding, W-8BEN/W-9 collection, and invoice management without paying a per-contractor monthly platform fee."
     ],
@@ -135,7 +325,45 @@
     "is_partner": true,
     "contractor_price": 0,
     "countries": "190+",
-    "target_segment": "5\u2013250 global contractors & remote teams"
+    "target_segment": "5–250 global contractors & remote teams",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Payoneer Workforce Management is a contractor payout and management layer rather than an Employer of Record. It never becomes the employer, so it provides no employer-side IP assignment at all.",
+        "bullets": [
+          "IP assignment sits entirely in the contractor agreement between you and the worker.",
+          "Contractors retain more independence than employees by definition, which makes blanket assignment of future inventions harder to enforce in many jurisdictions.",
+          "Teams whose core R&D is produced by international contractors carry real IP risk here that an EOR would otherwise absorb.",
+          "Onboarding flows and audit-ready records help evidence the relationship, but they are not a substitute for an employment-grade assignment."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Payoneer automates contractor tax paperwork such as W-8BEN and W-9 collection and invoice approval trails, but does not withhold or file statutory payroll taxes, because it is not the employer.",
+        "bullets": [
+          "W-8BEN and W-9 collection is handled in-platform, keeping US reporting obligations auditable.",
+          "No employer contributions, social security, or income tax withholding are performed. The contractor is responsible in their own jurisdiction.",
+          "13th-month salary and comparable statutory payroll obligations do not apply to contractor relationships.",
+          "This is the trade-off that makes the model cheap: you retain the compliance responsibility an EOR would take on."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "No statutory benefits are administered. Because Payoneer does not assume employer liability, health cover, pension, PTO, and severance all remain outside its scope entirely.",
+        "bullets": [
+          "Contractors are not entitled to statutory benefits, which is precisely why misclassification is the central risk of this model.",
+          "There is no severance calculation, notice-period enforcement, or unlawful termination shield.",
+          "A contractor reclassified as an employee by a local authority creates retroactive liability that lands on your company, not on Payoneer.",
+          "If you are engaging people who work full-time hours under your direction, an EOR is the correct instrument rather than a payout layer."
+        ]
+      },
+      "fee_structure": {
+        "summary": "There is no subscription. Contractor accounts are $0/month and Payoneer earns on the transfer instead, which moves the entire cost question onto FX spread and payout method.",
+        "bullets": [
+          "Cross-border payout fees typically land between 0% and 1% depending on payout method and corridor.",
+          "Wallet-to-wallet transfers sit at the low end, while card and wire withdrawals sit at the high end.",
+          "The FX conversion spread rather than the headline fee is where the real cost sits, so model your actual currency corridors.",
+          "Against a $499 to $699 per-employee EOR rate this looks dramatically cheaper, but it buys a different service with the compliance risk retained by you."
+        ]
+      }
+    }
   },
   "plane": {
     "category": "payroll-eor",
@@ -158,7 +386,45 @@
     "contractor_price": 39,
     "eor_price": 499,
     "countries": "100+ EOR / 240+ contractor",
-    "target_segment": "Startups 1–20"
+    "target_segment": "Startups 1–20",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Plane enforces IP assignment protection as part of its standardized employment contracts across 100+ EOR countries, aimed squarely at US and European tech startups deploying remote engineering teams.",
+        "bullets": [
+          "Standardized employment contracts carry local tax withholding and IP assignment together rather than treating assignment as a separate legal workstream.",
+          "The startup-first design means contracts are templated for speed, so review the assignment wording if you are hiring senior R&D staff in a civil-law jurisdiction.",
+          "EOR coverage spans 100+ countries against 240+ contractor countries. Contractors fall outside employment-grade assignment, so check which vehicle applies.",
+          "Misclassification protection for hybrid remote engineering teams indirectly supports the IP chain, since reclassification can unsettle the original transfer."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Plane handles local tax withholding as part of compliant hiring across its EOR footprint, with a deliberately lightweight administrative model built for smaller technical teams.",
+        "bullets": [
+          "Local tax withholding and statutory contributions are built into the standardized employment contract rather than configured per hire.",
+          "13th-month obligations in the markets that mandate them form part of statutory employment cost on EOR hires.",
+          "Contractor payouts at $39/month per active contractor carry no withholding, leaving tax responsibility with the contractor.",
+          "The free bundled HRIS keeps worker records in one place, which matters when you need to evidence filings during an audit."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Plane administers statutory entitlements on EOR hires across 100+ countries, though its product focus is administrative simplicity for smaller teams rather than the depth of benefit configuration enterprises expect.",
+        "bullets": [
+          "Statutory health cover, pension, and mandatory leave follow each hiring country's legal floor.",
+          "Severance and notice periods are enforced to local statute, with Plane as legal employer on EOR hires.",
+          "Unlawful termination liability sits with Plane's local arrangement rather than your company, which is the point of using an EOR at startup scale.",
+          "Supplemental benefit depth is thinner than enterprise-oriented platforms. Verify what is available if you are competing for senior talent locally."
+        ]
+      },
+      "fee_structure": {
+        "summary": "Plane prices EOR at $499/month per employee and contractors at $39/month with transparent flat fees, and makes low FX markup on direct bank payouts an explicit selling point rather than a hidden line.",
+        "bullets": [
+          "The $499 EOR rate undercuts Deel and Remote at $599 and Oyster at $699, with a free HRIS bundled rather than upsold.",
+          "Low FX markup on direct bank payouts is a stated differentiator, which matters most for contractor-heavy engineering fleets.",
+          "Employer taxes and statutory contributions still sit on top of the platform fee, as with every EOR.",
+          "Confirm deposit, prefunding, and offboarding terms in writing, since transparent monthly pricing does not by itself tell you the working-capital requirement."
+        ]
+      }
+    }
   },
   "remote": {
     "category": "payroll-eor",
@@ -181,7 +447,45 @@
     "contractor_price": 29,
     "eor_price": 599,
     "countries": "75+ EOR / 180+ contractor",
-    "target_segment": "Global/Enterprise"
+    "target_segment": "Global/Enterprise",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Remote's central claim is compliance purity: it owns its legal entities in every EOR market, so IP assigns from the worker to a Remote-owned entity and then to you, with no third-party partner agency ever holding the work product.",
+        "bullets": [
+          "IP transfer is included in the base EOR fee rather than sold as a paid add-on.",
+          "The owned-entity model removes the sub-licensing chain you inherit with partner-network EORs, where a local agency is the counterparty on the employment agreement.",
+          "This matters most for R&D and software teams where the entire asset being created is code, patents, or design work.",
+          "Coverage is 75+ owned EOR markets against 180+ contractor countries. Outside the EOR footprint the hire is a contractor, and the same protection does not apply."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Remote registers as the employer in each owned-entity market and runs localized payroll directly, filing employer contributions, employee income tax, and social security under its own registrations rather than passing them through an intermediary.",
+        "bullets": [
+          "Filings go to the tax authority from Remote itself rather than via a partner, which shortens the correction loop when something is filed wrong.",
+          "13th and 14th month obligations in Brazil, Italy, Greece, and the Philippines are accrued monthly so the payment is already funded when it falls due.",
+          "Employer contribution rates are surfaced per country before you hire, which is what makes cross-country offer comparisons meaningful.",
+          "Contractor payouts at $29/month carry no withholding. That is a separate product with a materially different risk profile."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Remote administers the statutory package in each owned market and is explicit that benefits are locally defined rather than globally standardized, which is the honest position for any EOR.",
+        "bullets": [
+          "Statutory health cover, pension, and mandatory leave follow the local floor across the 75+ owned EOR markets.",
+          "Notice periods and severance are enforced to local statute, with Remote executing the termination and absorbing the procedural risk.",
+          "Unlawful termination exposure sits with Remote's local entity, shielding a small company from foreign labor court proceedings.",
+          "Supplemental benefit availability varies by market, so verify what is actually on offer in your specific hiring countries."
+        ]
+      },
+      "fee_structure": {
+        "summary": "Remote positions transparent flat pricing as a differentiator: $599/month per employee on an annual commitment or $699 month-to-month, with IP protection and owned-entity compliance included rather than upsold.",
+        "bullets": [
+          "The $100 per employee per month gap between annual and month-to-month terms is the single biggest lever on Remote's headline cost.",
+          "With no partner agency in the chain, there is no third-party markup layered onto the underlying local employment cost.",
+          "Employer taxes and statutory contributions still sit on top. The flat rate covers Remote's service, not the cost of employment itself.",
+          "Confirm deposit and prefunding requirements for your markets, since these vary and are a cash-flow consideration rather than a line-item fee."
+        ]
+      }
+    }
   },
   "rippling": {
     "category": "payroll-eor",
@@ -202,7 +506,45 @@
     "starting_price": "$8/user/mo",
     "free_trial": false,
     "target_segment": "Scaleups 50–250",
-    "countries": "Global via modular payroll/EOR"
+    "countries": "Global via modular payroll/EOR",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Rippling offers EOR as one module inside a broader workforce operations suite, so IP assignment coverage depends on whether a given worker sits on Rippling's EOR, on your own entity's payroll, or on a contractor agreement.",
+        "bullets": [
+          "For workers on Rippling EOR, the localized employment agreement carries the IP assignment.",
+          "For US W-2 staff or workers on your own foreign entity, assignment runs through your contracts. Rippling is the system of record, not the employer.",
+          "The unified platform makes it easy to hold all three worker types at once, which also means the IP chain is not uniform across your roster.",
+          "Audit which employment vehicle each international hire sits under before assuming consistent protection."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Rippling's compliance engine enforces tax registration and local labor rules based on worker location, spanning US domestic payroll and international EOR within a single system.",
+        "bullets": [
+          "Automated tax registration and local overtime enforcement adjust to each worker's jurisdiction.",
+          "US multi-state payroll is a particular strength, with automatic registration as employees relocate between states.",
+          "International withholding depends on whether the worker is on Rippling EOR or on your own foreign entity.",
+          "13th-month obligations apply only to EOR workers in the markets that mandate them."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Statutory benefit administration follows the module you buy. Rippling EOR carries the employer obligations, while global payroll running on your own entity leaves those obligations with you.",
+        "bullets": [
+          "Rippling EOR workers receive the local statutory package with Rippling's entity as legal employer.",
+          "Workers on your own foreign entity remain your legal responsibility. Rippling administers the process but does not assume the liability.",
+          "Mandatory training compliance such as state harassment training is automated for US teams.",
+          "Confirm which markets Rippling covers directly versus through a partner before relying on the liability shield."
+        ]
+      },
+      "fee_structure": {
+        "summary": "The commonly cited $8/user/month buys the core workforce platform only. Payroll, benefits, IT device management, and global EOR are separately priced modules on top.",
+        "bullets": [
+          "A realistic all-in quote for a team running payroll plus IT typically lands at several multiples of the base rate.",
+          "Ask for module-level line items before comparing Rippling against a bundled EOR price.",
+          "EOR pricing is quoted separately and is not included in the per-user platform figure.",
+          "Device management and app provisioning are genuine cost offsets if they replace separate IT tooling, so count that on the other side of the ledger."
+        ]
+      }
+    }
   },
   "ashby": {
     "category": "ats",

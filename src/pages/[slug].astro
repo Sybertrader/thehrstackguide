@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { getToolProfile } from '../lib/tools';
+import type { EnterpriseAnalysis } from '../lib/tools';
 import { affiliateLinks } from '../config/affiliates';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 
@@ -352,6 +353,68 @@ const toolBNarrative = resolveToolNarrative(
   toolBPros,
   comparison.tool_b_rating
 );
+
+/**
+ * Enterprise-tier analysis blocks rendered beneath the feature deep dive.
+ *
+ * These four topics only have a meaningful answer for Employer of Record and
+ * Global Payroll vendors, so `enterprise_analysis` is populated exclusively on
+ * `payroll-eor` profiles in tools.json. ATS and performance management
+ * comparisons resolve to zero columns and the whole block is skipped, which is
+ * why the gating lives in the data rather than in a niche allowlist here.
+ */
+const ENTERPRISE_SECTION_META = [
+  {
+    key: 'ip_assignment',
+    title: 'Intellectual Property & Work Product Assignment',
+    intro:
+      'How work product created abroad actually transfers to your company, and whether the assignment runs through a directly owned local entity or an intermediary sub-licensing chain.',
+  },
+  {
+    key: 'tax_withholding',
+    title: 'Localized Tax Withholding & Statutory Payroll',
+    intro:
+      'Employer tax contributions, social security deductions, and income tax withholding handled on your behalf, including mandatory 13th and 14th month salary in markets such as Brazil, Italy, and the Philippines.',
+  },
+  {
+    key: 'statutory_benefits',
+    title: 'Statutory Benefits & Local Labor Law Compliance',
+    intro:
+      'Statutory health insurance, pension contributions, and mandatory paid time off across tier-1 markets, plus severance, notice period enforcement, and who carries unlawful termination liability.',
+  },
+  {
+    key: 'fee_structure',
+    title: 'Fine-Print EOR Fee Structures & Hidden Costs',
+    intro:
+      'What reaches the invoice beyond the headline per-employee-per-month rate: FX conversion spread, security deposit requirements, offboarding fees, and per-country add-ons.',
+  },
+] as const;
+
+interface EnterpriseColumn {
+  name: string;
+  summary: string;
+  bullets: string[];
+}
+
+interface EnterpriseSection {
+  title: string;
+  intro: string;
+  columns: EnterpriseColumn[];
+}
+
+const toolAProfile = getToolProfile(comparison.tool_a_id);
+const toolBProfile = getToolProfile(comparison.tool_b_id);
+
+const enterpriseSections: EnterpriseSection[] = ENTERPRISE_SECTION_META.map((meta) => {
+  const columns = [
+    { name: comparison.tool_a_name, entry: toolAProfile?.enterprise_analysis?.[meta.key] },
+    { name: comparison.tool_b_name, entry: toolBProfile?.enterprise_analysis?.[meta.key] },
+  ]
+    .filter((column): column is { name: string; entry: EnterpriseAnalysis } => Boolean(column.entry))
+    .map(({ name, entry }) => ({ name, summary: entry.summary, bullets: entry.bullets }));
+
+  return { title: meta.title, intro: meta.intro, columns };
+}).filter((section) => section.columns.length > 0);
 
 const richSnippetSchema = [
   {
@@ -1270,6 +1333,41 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
           </article>
         </div>
       </section>
+
+      <!-- SECTION 3B: Enterprise Compliance & Financial Analysis (EOR/Global Payroll only) -->
+      {enterpriseSections.length > 0 && (
+        <section class="mb-12" aria-label="Enterprise compliance and financial analysis">
+          <h2 class="mb-2 text-2xl font-bold text-slate-900">Enterprise Compliance &amp; Financial Analysis</h2>
+          <p class="mb-6 max-w-3xl text-sm text-slate-500">
+            The four questions that decide an EOR contract once legal and procurement get involved: who owns the work product, who files the payroll taxes, who carries the termination liability, and what the invoice actually looks like.
+          </p>
+
+          <div class="space-y-6">
+            {enterpriseSections.map((section) => (
+              <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                <h3 class="text-lg font-bold text-slate-900">{section.title}</h3>
+                <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">{section.intro}</p>
+                <div class:list={['mt-5 grid gap-6', section.columns.length > 1 && 'sm:grid-cols-2']}>
+                  {section.columns.map((column) => (
+                    <div class="rounded-xl bg-slate-50 p-5">
+                      <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{column.name}</h4>
+                      <p class="mt-2 text-sm leading-relaxed text-slate-700">{column.summary}</p>
+                      <ul class="mt-4 space-y-2.5">
+                        {column.bullets.map((bullet) => (
+                          <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+                            <span aria-hidden="true" class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400"></span>
+                            <span>{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <!-- SECTION 4: Decision Checklist -->
       <section class="mb-12" aria-label="Buyer decision checklist">
