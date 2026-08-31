@@ -1,5 +1,6 @@
 ---
 import { affiliateLinks } from '../../config/affiliates';
+import { outboundRel } from '../../lib/links';
 
 export function getStaticPaths() {
   return Object.keys(affiliateLinks).map((slug) => ({
@@ -15,6 +16,13 @@ const { targetUrl } = Astro.props;
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!--
+    These are thin meta-refresh redirectors to partner sites, not content.
+    Keep them out of the index so they never compete with real comparison
+    pages or absorb link equity. Also excluded from the sitemap in
+    astro.config.mjs and disallowed in public/robots.txt.
+  -->
+  <meta name="robots" content="noindex, nofollow" />
   <meta http-equiv="refresh" content={`0;url=${targetUrl}`} />
   <title>Redirecting...</title>
   <script is:inline define:vars={{ targetUrl }}>
@@ -26,7 +34,7 @@ const { targetUrl } = Astro.props;
     <p class="text-lg font-medium mb-2">Redirecting to partner site...</p>
     <p class="text-sm text-slate-500">
       If you are not redirected automatically, 
-      <a href={targetUrl} rel="sponsored nofollow noopener noreferrer" target="_blank" class="text-blue-600 underline hover:text-blue-800">click here</a>.
+      <a href={targetUrl} rel={outboundRel(targetUrl)} target="_blank" class="text-blue-600 underline hover:text-blue-800">click here</a>.
     </p>
   </div>
 </body>

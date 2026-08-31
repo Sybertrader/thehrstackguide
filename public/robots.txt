@@ -1,16 +1,21 @@
 User-agent: *
 Allow: /
+Disallow: /go/
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /go/
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /go/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /go/
 
 User-agent: Claude-SearchBot
 Allow: /
+Disallow: /go/
 
 Sitemap: https://www.thehrstackguide.com/sitemap-index.xml
