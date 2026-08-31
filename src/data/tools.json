@@ -437,7 +437,7 @@
     "rating_source": "G2 & Industry Benchmark",
     "positioning": "The gold standard for global compliance purity, utilizing 100% owned legal entities to eliminate third-party EOR risks.",
     "text_compliance": "Unlike platforms relying on third-party agencies, Remote owns its legal entities in every supported market. This guarantees end-to-end legal compliance, direct IP protection, bulletproof misclassification defense, and zero third-party data risk.",
-    "text_global_reach": "Remote operates owned infrastructure across 75+ core hiring markets while serving global contractor operations in 180+ countries. Their owned-entity model ensures direct control over employee contracts, local payroll, and government tax filings.",
+    "text_global_reach": "Remote operates owned-entity EOR infrastructure across 100+ countries while serving global contractor management and payouts in 180+ countries. Their owned-entity model ensures direct control over employee contracts, local payroll, and government tax filings.",
     "text_pricing_truth": "Contractor management starts at $29/month per worker, with EOR at $599/month per employee on typical annual commitments ($699 month-to-month). IP protection and owned-entity compliance are included in the base EOR fee.",
     "choose_if": [
       "Maximum IP security and compliance purity are non-negotiable for your board.",
@@ -449,7 +449,7 @@
     "free_trial": true,
     "contractor_price": 29,
     "eor_price": 599,
-    "countries": "75+ EOR / 180+ contractor",
+    "countries": "100+ EOR / 180+ contractor",
     "target_segment": "Global/Enterprise",
     "enterprise_analysis": {
       "ip_assignment": {
@@ -458,7 +458,7 @@
           "IP transfer is included in the base EOR fee rather than sold as a paid add-on.",
           "The owned-entity model removes the sub-licensing chain you inherit with partner-network EORs, where a local agency is the counterparty on the employment agreement.",
           "This matters most for R&D and software teams where the entire asset being created is code, patents, or design work.",
-          "Coverage is 75+ owned EOR markets against 180+ contractor countries. Outside the EOR footprint the hire is a contractor, and the same protection does not apply."
+          "Coverage is 100+ owned EOR markets against 180+ contractor countries. Outside the EOR footprint the hire is a contractor, and the same protection does not apply."
         ]
       },
       "tax_withholding": {
@@ -473,7 +473,7 @@
       "statutory_benefits": {
         "summary": "Remote administers the statutory package in each owned market and is explicit that benefits are locally defined rather than globally standardized, which is the honest position for any EOR.",
         "bullets": [
-          "Statutory health cover, pension, and mandatory leave follow the local floor across the 75+ owned EOR markets.",
+          "Statutory health cover, pension, and mandatory leave follow the local floor across the 100+ owned EOR markets.",
           "Notice periods and severance are enforced to local statute, with Remote executing the termination and absorbing the procedural risk.",
           "Unlawful termination exposure sits with Remote's local entity, shielding a small company from foreign labor court proceedings.",
           "Supplemental benefit availability varies by market, so verify what is actually on offer in your specific hiring countries."
