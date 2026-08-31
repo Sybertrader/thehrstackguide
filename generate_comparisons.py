@@ -18,7 +18,7 @@ TOOLS = {
         "starting_price": "$49/mo",
         "pricing_model": "EOR starts at $599/mo",
         "free_trial": False,
-        "affiliate_url": "https://www.deel.com",
+        "affiliate_url": "https://get.deel.com/pf144xw8k2o1",
         "key_features": ["150+ Country EOR", "Contractor Auto-Pay", "Equipment Shipping", "Background Checks"],
         "pros": ["Fast 24-hr onboarding", "Comprehensive localized tax compliance", "Flexible payout options"],
         "cons": ["EOR pricing can be steep for small teams", "Dense multi-product admin (EOR + payroll + equipment) takes longer to operationalize than SMB payroll tools"],
