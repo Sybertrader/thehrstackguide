@@ -447,6 +447,16 @@ const richSnippetSchema = [
     },
   }));
 
+/**
+ * Every tool pairing is published once per audience segment, so the segment has
+ * to appear in the H1 or all variants of a pairing share one heading and compete
+ * with each other. This uses `niche_name` rather than `niche_id` because it is
+ * the per-row label `meta_title` already uses, including sub-niche splits like
+ * "Mid-Market Scaleups" vs "Scaleups", so the heading and the title tag always
+ * name the same audience.
+ */
+const pageHeading = `${comparison.tool_a_name} vs ${comparison.tool_b_name} for ${comparison.niche_name}: Detailed Comparison for 2026`;
+
 const winnerName =
   comparison.winner_id === comparison.tool_a_id
     ? comparison.tool_a_name
@@ -742,7 +752,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         </div>
 
         <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-          {comparison.tool_a_name} vs {comparison.tool_b_name}: Detailed Comparison for 2026
+          {pageHeading}
         </h1>
 
         <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
