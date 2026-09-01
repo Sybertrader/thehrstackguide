@@ -20,15 +20,15 @@ function resolveOutboundHref(toolId: string, fallbackUrl: string): string {
 }
 
 /**
- * Brands without an approved affiliate link yet get routed to a manual lead
- * capture form (see src/components/ManualLeadModal.astro + VendorCTA.astro)
- * instead of an outbound link. This mirrors VendorCTA.astro's exact routing
- * rule so every CTA on a comparison page (hero, cards, feature table,
- * decision checklist, final verdict) stays consistent without duplicating
- * five near-identical `<VendorCTA>` calls per tool across the template.
- * Remote and every other standard brand are completely untouched.
+ * The four vendors whose CTAs open the lead capture modal (see
+ * src/components/ManualLeadModal.astro) instead of linking out. Must stay in
+ * sync with EMAIL_SEND_VENDORS in that component. Applying the rule here keeps
+ * every CTA on a comparison page (hero, cards, feature table, decision
+ * checklist, final verdict) consistent without duplicating five near-identical
+ * `<VendorCTA>` calls per tool across the template. Every other brand — including
+ * ones with no affiliate link yet — links straight to its vendor URL.
  */
-const MANUAL_LEAD_BRANDS = ['plane', 'rippling', 'lever', 'jazzhr', 'culture-amp', 'performyard'];
+const MANUAL_LEAD_BRANDS = ['lever', 'jazzhr', 'culture-amp', 'performyard'];
 function isManualLeadBrand(toolId: string): boolean {
   return MANUAL_LEAD_BRANDS.includes(toolId.toLowerCase().trim());
 }

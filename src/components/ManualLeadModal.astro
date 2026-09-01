@@ -19,15 +19,12 @@ const {
 
 const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-');
 
-// Needs the PUBLIC_ prefix to survive into the browser bundle. Web3Forms access
-// keys are meant for browser-side posting, so this is readable in page source.
-const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY || '';
-
-if (!WEB3FORMS_KEY) {
-  console.warn(
-    `[ManualLeadModal] PUBLIC_WEB3FORMS_KEY is not set — ${brandName} lead emails will be rejected by Web3Forms.`,
-  );
-}
+// Needs the PUBLIC_ prefix to survive into the browser bundle. Falls back to the
+// same key api/leads.js uses so a deploy without the env var still collects
+// leads. Web3Forms access keys are meant for browser-side posting, so this is
+// readable in page source either way.
+const WEB3FORMS_KEY =
+  import.meta.env.PUBLIC_WEB3FORMS_KEY || '9e3cce58-b062-4436-9834-24ba34373412';
 ---
 
 <div
@@ -303,9 +300,7 @@ if (!WEB3FORMS_KEY) {
         var modalId = openBtn.getAttribute('data-modal-target');
         if (!modalId) {
           var label = (openBtn.getAttribute('aria-label') || openBtn.textContent || '').toLowerCase();
-          if (label.indexOf('rippling') !== -1) modalId = 'lead-modal-rippling';
-          else if (label.indexOf('plane') !== -1) modalId = 'lead-modal-plane';
-          else if (label.indexOf('lever') !== -1) modalId = 'lead-modal-lever';
+          if (label.indexOf('lever') !== -1) modalId = 'lead-modal-lever';
           else if (label.indexOf('jazzhr') !== -1) modalId = 'lead-modal-jazzhr';
           else if (label.indexOf('culture amp') !== -1) modalId = 'lead-modal-culture-amp';
           else if (label.indexOf('performyard') !== -1) modalId = 'lead-modal-performyard';
