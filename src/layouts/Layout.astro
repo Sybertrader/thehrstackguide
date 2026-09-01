@@ -11,7 +11,18 @@ export interface Props {
 
 const { title, description } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, 'https://www.thehrstackguide.com').href;
+/**
+ * Self-referential canonical on every page that uses this layout (comparison
+ * slugs, category hubs, legal pages, homepage). Built from the request path
+ * against the www origin so it stays absolute, query/hash-free, and always
+ * trailing-slash — matching sitemap loc URLs and `trailingSlash: 'always'`.
+ * `/go/*` affiliate redirects do not use this layout and stay noindex.
+ */
+const SITE_ORIGIN = 'https://www.thehrstackguide.com';
+const canonicalPath = Astro.url.pathname.endsWith('/')
+  ? Astro.url.pathname
+  : `${Astro.url.pathname}/`;
+const canonicalURL = new URL(canonicalPath, SITE_ORIGIN).href;
 
 const organizationSchema = {
   '@context': 'https://schema.org',

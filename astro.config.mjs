@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://www.thehrstackguide.com',
+  trailingSlash: 'always',
   vite: {
     plugins: [tailwindcss()],
   },
@@ -12,5 +13,13 @@ export default defineConfig({
   // `/go/*` routes are thin meta-refresh redirectors to affiliate partners,
   // so they are kept out of the sitemap alongside the noindex tag in
   // src/pages/go/[slug].astro and the Disallow rule in public/robots.txt.
-  integrations: [sitemap({ filter: (page) => !/\/go\/[^/]+\/?$/.test(page) })],
+  integrations: [
+    sitemap({
+      filter: (page) => !/\/go\/[^/]+\/?$/.test(page),
+      serialize(item) {
+        item.lastmod = new Date().toISOString();
+        return item;
+      },
+    }),
+  ],
 });
