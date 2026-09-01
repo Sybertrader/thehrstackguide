@@ -18,6 +18,11 @@ const {
 } = Astro.props;
 
 const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-');
+
+// Same key api/leads.js falls back to. Web3Forms access keys are designed for
+// browser-side posting, so this is readable in the page source.
+const web3formsKey =
+  import.meta.env.WEB3FORMS_ACCESS_KEY || '9e3cce58-b062-4436-9834-24ba34373412';
 ---
 
 <div
@@ -27,6 +32,7 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
   data-vendor-id={resolvedVendorId}
   data-brand-name={brandName}
   data-partner-landing-url={partnerLandingUrl}
+  data-web3forms-key={web3formsKey}
 >
   <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 text-left my-auto z-[10000]">
     
@@ -200,15 +206,15 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
         <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
           ✓
         </div>
-        <h4 class="text-xl font-bold text-slate-900">Request Received!</h4>
+        <h4 class="text-xl font-bold text-slate-900">Thank you!</h4>
         <p class="text-sm text-slate-600 max-w-xs mx-auto">
-          Thank you. Our team is coordinating with {brandName} and will introduce your rep shortly.
+          Your request has been received. A representative will reach out to you shortly.
         </p>
         <button
           type="button"
           class="close-modal-btn mt-4 px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-lg text-sm transition cursor-pointer"
         >
-          Close Window
+          Close
         </button>
       </div>
     </div>
@@ -224,6 +230,25 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
 
     var PERFORMYARD_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/17923801/46vtmid/';
     var PERFORMYARD_REDIRECT_URL = 'https://www.performyard.com/';
+
+    // The only vendors whose modal submissions this script handles. Anything
+    // else keeps the original /api/leads behaviour.
+    var EMAIL_SEND_VENDORS = ['lever', 'jazzhr', 'culture-amp', 'performyard'];
+    var WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+
+    /**
+     * Web3Forms supports browser-side posting, so this is a normal CORS fetch
+     * the caller can await. Pass keepalive when a redirect follows immediately,
+     * otherwise the navigation cancels the request.
+     */
+    function sendWeb3FormsEmail(payload, keepalive) {
+      return fetch(WEB3FORMS_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+        keepalive: Boolean(keepalive),
+      });
+    }
 
     /**
      * Fire-and-forget POST that must never block the redirect or surface an
@@ -346,13 +371,14 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
       var firstName = String(formData.get('first_name') || '').trim();
       var lastName = String(formData.get('last_name') || '').trim();
       var vendorId = String(formData.get('vendorId') || (backdrop && backdrop.getAttribute('data-vendor-id')) || '').trim();
+      var vendor = vendorId.toLowerCase();
 
-      // PerformYard leads go straight from the browser to Shane's Zapier catch
-      // hook, then hand the visitor off to PerformYard. Scoped to this vendor
-      // so the other manual-lead brands sharing this component keep posting to
-      // /api/leads.
-      if (vendorId.toLowerCase() === 'performyard') {
-        dispatchInBackground(PERFORMYARD_ZAPIER_WEBHOOK, {
+      if (EMAIL_SEND_VENDORS.indexOf(vendor) !== -1) {
+        var brandName = String(formData.get('brandName') || (backdrop && backdrop.getAttribute('data-brand-name')) || vendor).trim();
+        var emailPayload = {
+          access_key: (backdrop && backdrop.getAttribute('data-web3forms-key')) || '',
+          subject: 'New ' + brandName + ' lead from The HR Stack Guide',
+          from_name: 'The HR Stack Guide',
           firstName: firstName,
           lastName: lastName,
           email: String(formData.get('work_email') || '').trim(),
@@ -362,11 +388,51 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
           region: String(formData.get('region') || '').trim(),
           phone: String(formData.get('phone') || '').trim(),
           requirements: String(formData.get('notes') || '').trim(),
-          source: 'thehrstackguide.com',
-          timestamp: new Date().toISOString(),
-        });
+          vendor: vendor,
+        };
 
-        window.location.href = PERFORMYARD_REDIRECT_URL;
+        // PerformYard leads go straight from the browser to Shane's Zapier catch
+        // hook, then hand the visitor off to PerformYard.
+        if (vendor === 'performyard') {
+          dispatchInBackground(PERFORMYARD_ZAPIER_WEBHOOK, {
+            firstName: firstName,
+            lastName: lastName,
+            email: String(formData.get('work_email') || '').trim(),
+            company: String(formData.get('company_name') || '').trim(),
+            jobTitle: String(formData.get('job_title') || '').trim(),
+            employeeCount: String(formData.get('company_size') || '').trim(),
+            region: String(formData.get('region') || '').trim(),
+            phone: String(formData.get('phone') || '').trim(),
+            requirements: String(formData.get('notes') || '').trim(),
+            source: 'thehrstackguide.com',
+            timestamp: new Date().toISOString(),
+          });
+
+          sendWeb3FormsEmail(emailPayload, true).catch(function (err) {
+            console.error('Web3Forms notification failed', err);
+          });
+
+          window.location.href = PERFORMYARD_REDIRECT_URL;
+          return;
+        }
+
+        // lever / jazzhr / culture-amp: email only, no webhook and no redirect.
+        try {
+          var emailResponse = await sendWeb3FormsEmail(emailPayload, false);
+          if (!emailResponse.ok) {
+            console.error('Web3Forms notification rejected', emailResponse.status);
+          }
+        } catch (err) {
+          // Deliberately swallowed: a delivery problem must not block the
+          // visitor. Failures surface in the console and in Web3Forms.
+          console.error('Web3Forms notification failed', err);
+        }
+
+        form.classList.add('hidden');
+        if (successMessage) successMessage.classList.remove('hidden');
+        if (submitBtn) submitBtn.disabled = false;
+        if (btnText) btnText.classList.remove('hidden');
+        if (spinner) spinner.classList.add('hidden');
         return;
       }
 
@@ -412,10 +478,10 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
           form.classList.add('hidden');
           if (successMessage) successMessage.classList.remove('hidden');
         } else {
-          alert('There was a problem submitting your request. Please try again.');
+          console.error('Lead submission rejected', response.status);
         }
       } catch (err) {
-        alert('Submission error. Please check your connection and try again.');
+        console.error('Lead submission failed', err);
       } finally {
         if (submitBtn) submitBtn.disabled = false;
         if (btnText) btnText.classList.remove('hidden');
