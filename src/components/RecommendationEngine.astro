@@ -10,7 +10,7 @@ interface Props {
 
 const {
   headline = 'Unsure which HR software fits your team?',
-  description = 'Skip hours of demo calls. Answer 5 quick questions and get an instant recommendation based on your category, headcount, budget, workforce location, and top priority.',
+  description = 'Answer 4 quick questions and see an instant recommendation tailored to your team.',
   headingLevel = 'h2',
   showEyebrow = true,
   categoryPrefill = '',
@@ -18,15 +18,26 @@ const {
 } = Astro.props;
 
 const categories = [
-  { value: 'payroll', label: 'Global Payroll & EOR' },
-  { value: 'ats', label: 'Applicant Tracking Systems (ATS)' },
   { value: 'performance', label: 'Performance Management' },
+  { value: 'global_eor', label: 'Global Payroll & EOR' },
+  { value: 'ats', label: 'Applicant Tracking Systems (ATS)' },
 ];
 
-const headcounts = [
-  { value: 'startup', label: '1–20 employees (Startup)' },
-  { value: 'scaleup', label: '50–250 employees (Scaleup)' },
-  { value: 'enterprise', label: '250+ employees (Enterprise / Global)' },
+// The Global Payroll & EOR hub links to /recommendation/?category=payroll, so
+// keep that older value pointing at the category it was always meant to select.
+const LEGACY_CATEGORY_VALUES: Record<string, string> = { payroll: 'global_eor' };
+const resolvedPrefill = LEGACY_CATEGORY_VALUES[categoryPrefill] ?? categoryPrefill;
+
+// Values double as the persona segment of our comparison slugs, e.g.
+// /15five-vs-performyard-for-remote-teams/.
+const companyTypes = [
+  { value: 'startups', label: 'Tech Startup' },
+  { value: 'scaleups', label: 'Scaleup (50-250 employees)' },
+  { value: 'enterprise', label: 'Enterprise' },
+  { value: 'remote-teams', label: 'Remote / Distributed Team' },
+  { value: 'agencies', label: 'Agency / Professional Services' },
+  { value: 'people-ops', label: 'People Ops Leader' },
+  { value: 'web3-crypto', label: 'Web3 / Crypto' },
 ];
 
 const budgets = [
@@ -41,12 +52,9 @@ const locations = [
   { value: 'hybrid', label: 'Hybrid (US + International)' },
 ];
 
-const priorities = [
-  { value: 'performance', label: 'Performance Management & Reviews' },
-  { value: 'global_eor', label: 'Global Hiring & EOR' },
-  { value: 'payroll', label: 'Automated US Payroll' },
-  { value: 'onboarding', label: 'Fast Onboarding & HRIS' },
-];
+const SELECT_CLASSES =
+  'mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100';
+const LABEL_CLASSES = 'block text-sm font-semibold text-slate-900';
 
 const HeadingTag = headingLevel;
 ---
@@ -73,84 +81,50 @@ const HeadingTag = headingLevel;
   <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
     <form class="recommendation-form space-y-6" novalidate>
       <div>
-        <label class="block text-sm font-semibold text-slate-900">
+        <label class={LABEL_CLASSES} for="category-select">
           1. Which category are you evaluating?
-          <select
-            name="category"
-            required
-            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-          >
-            <option value="" disabled selected={!categoryPrefill}>Select a category</option>
-            {categories.map((option) => (
-              <option value={option.value} selected={categoryPrefill === option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
         </label>
+        <select id="category-select" name="category" required class={SELECT_CLASSES}>
+          <option value="" disabled selected={!resolvedPrefill}>Select a category</option>
+          {categories.map((option) => (
+            <option value={option.value} selected={resolvedPrefill === option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>
-        <label class="block text-sm font-semibold text-slate-900">
-          2. What's your team size?
-          <select
-            name="headcount"
-            required
-            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-          >
-            <option value="" disabled selected>Select headcount</option>
-            {headcounts.map((option) => (
-              <option value={option.value}>{option.label}</option>
-            ))}
-          </select>
+        <label class={LABEL_CLASSES} for="company-type-select">
+          2. What best describes your company?
         </label>
-      </div>
-
-      <div>
-        <label class="block text-sm font-semibold text-slate-900">
-          3. What's your monthly software budget?
-          <select
-            name="budget"
-            required
-            class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-          >
-            <option value="" disabled selected>Select budget range</option>
-            {budgets.map((option) => (
-              <option value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </label>
-      </div>
-
-      <div>
-        <label class="block text-sm font-semibold text-slate-900" for="location-select">
-          4. Where is your workforce located?
-        </label>
-        <select
-          id="location-select"
-          name="location"
-          required
-          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-        >
-          <option value="" disabled selected>Select workforce location</option>
-          {locations.map((option) => (
+        <select id="company-type-select" name="companyType" required class={SELECT_CLASSES}>
+          <option value="" disabled selected>Select company type</option>
+          {companyTypes.map((option) => (
             <option value={option.value}>{option.label}</option>
           ))}
         </select>
       </div>
 
       <div>
-        <label class="block text-sm font-semibold text-slate-900" for="priority-select">
-          5. What is your primary priority?
+        <label class={LABEL_CLASSES} for="budget-select">
+          3. What's your monthly software budget?
         </label>
-        <select
-          id="priority-select"
-          name="priority"
-          required
-          class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100"
-        >
-          <option value="" disabled selected>Select your priority</option>
-          {priorities.map((option) => (
+        <select id="budget-select" name="budget" required class={SELECT_CLASSES}>
+          <option value="" disabled selected>Select budget range</option>
+          {budgets.map((option) => (
+            <option value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label class={LABEL_CLASSES} for="location-select">
+          4. Where is your workforce located?
+        </label>
+        <select id="location-select" name="location" required class={SELECT_CLASSES}>
+          <option value="" disabled selected>Select workforce location</option>
+          {locations.map((option) => (
             <option value={option.value}>{option.label}</option>
           ))}
         </select>
@@ -168,53 +142,54 @@ const HeadingTag = headingLevel;
 
 <script>
   /**
-   * `trailingSlash: 'always'` is enforced site-wide (astro.config.mjs), so
-   * every path needs its slash or the host will redirect on the way out.
+   * Destinations are assembled from the persona values in Question 2 to match
+   * the comparison slugs, so every persona list below is limited to the
+   * personas that pair actually has a page for. Anything unpublished falls back
+   * to the category hub rather than a mismatched persona's page.
+   * `trailingSlash: 'always'` is enforced site-wide, hence the closing slashes.
    */
-  const ROUTES = {
+  const HUBS = {
     performance: '/performance-management/',
-    global: '/global-payroll-eor/',
-    usSmbPayroll: '/rippling-vs-gusto-for-tech-startups/',
-    enterpriseHris: '/performance-management/',
-    fallback: '/global-payroll-eor/',
+    ats: '/applicant-tracking-systems/',
+    globalEor: '/global-payroll-eor/',
   };
 
-  /**
-   * Question 2 offers startup/scaleup/enterprise; the raw employee bands are
-   * accepted too so these rules survive a future rewording of that question.
-   * Between them the two lists cover every option, so no headcount can fall
-   * through to the generic fallback.
-   */
-  const SMALL_TEAM_SIZES = ['1-10', '11-50', 'startup'];
-  const MID_ENTERPRISE_TEAM_SIZES = ['51-200', '201-500', '500+', 'scaleup', 'enterprise'];
+  const PERFORMANCE_PERSONAS = ['startups', 'scaleups', 'enterprise', 'remote-teams', 'people-ops'];
+  const ATS_PERSONAS = ['startups', 'scaleups', 'enterprise', 'remote-teams', 'agencies'];
 
-  function resolveTargetUrl(
-    teamSize: string,
-    location: string,
-    priority: string,
-  ): string {
-    // Rule 1 — performance override.
-    if (priority === 'performance') {
-      return ROUTES.performance;
+  // The payroll pair words its startup persona differently from the rest.
+  const EOR_PERSONA_SLUGS: Record<string, string> = {
+    startups: 'tech-startups',
+    scaleups: 'scaleups',
+    agencies: 'agencies',
+    'web3-crypto': 'web3-crypto',
+  };
+
+  function resolveTargetUrl(category: string, companyType: string, location: string): string {
+    if (category === 'performance') {
+      return PERFORMANCE_PERSONAS.includes(companyType)
+        ? `/15five-vs-performyard-for-${companyType}/`
+        : HUBS.performance;
     }
 
-    // Rule 2 — global override.
-    if (location === 'global_remote' || location === 'hybrid' || priority === 'global_eor') {
-      return ROUTES.global;
+    if (category === 'ats') {
+      return ATS_PERSONAS.includes(companyType)
+        ? `/ashby-vs-greenhouse-for-${companyType}/`
+        : HUBS.ats;
     }
 
-    // Rules 3 and 4 — US-only visitors split on headcount: small teams get the
-    // SMB payroll comparison, everyone larger gets the HRIS route.
-    if (location === 'us_only') {
-      if (SMALL_TEAM_SIZES.indexOf(teamSize) !== -1) {
-        return ROUTES.usSmbPayroll;
+    if (category === 'global_eor') {
+      const persona = EOR_PERSONA_SLUGS[companyType];
+      if (!persona) return HUBS.globalEor;
+
+      // US-only startups get the domestic payroll pair instead of an EOR one.
+      if (location === 'us_only' && persona === 'tech-startups') {
+        return '/rippling-vs-gusto-for-tech-startups/';
       }
-      if (MID_ENTERPRISE_TEAM_SIZES.indexOf(teamSize) !== -1) {
-        return ROUTES.enterpriseHris;
-      }
+      return `/deel-vs-gusto-for-${persona}/`;
     }
 
-    return ROUTES.fallback;
+    return HUBS.globalEor;
   }
 
   const INVALID_CLASSES = ['border-red-500', 'ring-2', 'ring-red-100'];
@@ -226,9 +201,27 @@ const HeadingTag = headingLevel;
     INVALID_CLASSES.forEach((className) => select.classList.toggle(className, !isValid));
   }
 
+  // Mirrors the server-side map in the frontmatter. The server path only runs
+  // under SSR, so on this static build the prefill happens here.
+  const LEGACY_CATEGORY_VALUES: Record<string, string> = { payroll: 'global_eor' };
+
+  function applyCategoryPrefill(form: HTMLFormElement) {
+    const select = form.querySelector('select[name="category"]') as HTMLSelectElement | null;
+    if (!select) return;
+
+    const requested = new URLSearchParams(window.location.search).get('category');
+    if (!requested) return;
+
+    const value = LEGACY_CATEGORY_VALUES[requested] || requested;
+    const isKnown = Array.from(select.options).some((option) => option.value === value);
+    if (isKnown) select.value = value;
+  }
+
   function initRecommendationEngine(root: Element) {
     const form = root.querySelector('.recommendation-form') as HTMLFormElement | null;
     if (!form) return;
+
+    applyCategoryPrefill(form);
 
     const selects = Array.from(form.querySelectorAll('select')) as HTMLSelectElement[];
 
@@ -259,11 +252,11 @@ const HeadingTag = headingLevel;
       // Read through FormData rather than the ids, so a page rendering two
       // instances of this component still reads the submitted form's answers.
       const data = new FormData(form);
-      const teamSize = String(data.get('headcount') || '').trim();
+      const category = String(data.get('category') || '').trim();
+      const companyType = String(data.get('companyType') || '').trim();
       const location = String(data.get('location') || '').trim();
-      const priority = String(data.get('priority') || '').trim();
 
-      window.location.href = resolveTargetUrl(teamSize, location, priority);
+      window.location.href = resolveTargetUrl(category, companyType, location);
     });
   }
 
@@ -276,6 +269,12 @@ const HeadingTag = headingLevel;
   }
 
   if (typeof document !== 'undefined') {
-    initAll();
+    // Module scripts normally run before DOMContentLoaded, but guard anyway so
+    // the prefill can never miss the form.
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAll);
+    } else {
+      initAll();
+    }
   }
 </script>
