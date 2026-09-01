@@ -19,10 +19,15 @@ const {
 
 const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-');
 
-// Same key api/leads.js falls back to. Web3Forms access keys are designed for
-// browser-side posting, so this is readable in the page source.
-const web3formsKey =
-  import.meta.env.WEB3FORMS_ACCESS_KEY || '9e3cce58-b062-4436-9834-24ba34373412';
+// Needs the PUBLIC_ prefix to survive into the browser bundle. Web3Forms access
+// keys are meant for browser-side posting, so this is readable in page source.
+const WEB3FORMS_KEY = import.meta.env.PUBLIC_WEB3FORMS_KEY || '';
+
+if (!WEB3FORMS_KEY) {
+  console.warn(
+    `[ManualLeadModal] PUBLIC_WEB3FORMS_KEY is not set — ${brandName} lead emails will be rejected by Web3Forms.`,
+  );
+}
 ---
 
 <div
@@ -32,7 +37,6 @@ const web3formsKey =
   data-vendor-id={resolvedVendorId}
   data-brand-name={brandName}
   data-partner-landing-url={partnerLandingUrl}
-  data-web3forms-key={web3formsKey}
 >
   <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 text-left my-auto z-[10000]">
     
@@ -53,7 +57,13 @@ const web3formsKey =
 
     <!-- Form Container -->
     <div class="p-6">
-      <form id={`form-${modalId}`} action={formActionUrl} method="POST" class="space-y-4">
+      <form
+        id={`form-${modalId}`}
+        action={formActionUrl}
+        method="POST"
+        class="space-y-4"
+        data-access-key={WEB3FORMS_KEY}
+      >
         <input type="hidden" name="vendorId" value={resolvedVendorId} />
         <input type="hidden" name="brandName" value={brandName} />
         <input type="hidden" name="target_software" value={brandName} />
@@ -374,15 +384,20 @@ const web3formsKey =
       var vendor = vendorId.toLowerCase();
 
       if (EMAIL_SEND_VENDORS.indexOf(vendor) !== -1) {
-        var brandName = String(formData.get('brandName') || (backdrop && backdrop.getAttribute('data-brand-name')) || vendor).trim();
+        var accessKey = form.dataset.accessKey || '';
+        if (!accessKey) {
+          console.error('Web3Forms access key missing — set PUBLIC_WEB3FORMS_KEY. Lead will not be emailed.');
+        }
+
+        var company = String(formData.get('company_name') || '').trim();
         var emailPayload = {
-          access_key: (backdrop && backdrop.getAttribute('data-web3forms-key')) || '',
-          subject: 'New ' + brandName + ' lead from The HR Stack Guide',
+          access_key: accessKey,
+          subject: 'New Lead: ' + vendor.toUpperCase() + ' - ' + company,
           from_name: 'The HR Stack Guide',
           firstName: firstName,
           lastName: lastName,
           email: String(formData.get('work_email') || '').trim(),
-          company: String(formData.get('company_name') || '').trim(),
+          company: company,
           jobTitle: String(formData.get('job_title') || '').trim(),
           employeeCount: String(formData.get('company_size') || '').trim(),
           region: String(formData.get('region') || '').trim(),
