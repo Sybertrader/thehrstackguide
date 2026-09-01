@@ -35,9 +35,10 @@ const companyTypes = [
   { value: 'scaleups', label: 'Scaleup (50-250 employees)' },
   { value: 'enterprise', label: 'Enterprise' },
   { value: 'remote-teams', label: 'Remote / Distributed Team' },
-  { value: 'agencies', label: 'Agency / Professional Services' },
   { value: 'people-ops', label: 'People Ops Leader' },
+  { value: 'agencies', label: 'Agency / Professional Services' },
   { value: 'web3-crypto', label: 'Web3 / Crypto' },
+  { value: 'other', label: 'Other / General' },
 ];
 
 const budgets = [
@@ -79,7 +80,7 @@ const HeadingTag = headingLevel;
   </p>
 
   <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-    <form class="recommendation-form space-y-6" novalidate>
+    <form id="wizard-form" class="recommendation-form space-y-6" novalidate>
       <div>
         <label class={LABEL_CLASSES} for="category-select">
           1. Which category are you evaluating?
@@ -178,7 +179,8 @@ const HeadingTag = headingLevel;
         : HUBS.ats;
     }
 
-    if (category === 'global_eor') {
+    // `payroll` is the legacy value still used by inbound ?category= links.
+    if (category === 'global_eor' || category === 'payroll') {
       const persona = EOR_PERSONA_SLUGS[companyType];
       if (!persona) return HUBS.globalEor;
 
@@ -256,7 +258,9 @@ const HeadingTag = headingLevel;
       const companyType = String(data.get('companyType') || '').trim();
       const location = String(data.get('location') || '').trim();
 
-      window.location.href = resolveTargetUrl(category, companyType, location);
+      const targetUrl = resolveTargetUrl(category, companyType, location);
+      console.log('Wizard routing submission to:', targetUrl);
+      window.location.href = targetUrl;
     });
   }
 
