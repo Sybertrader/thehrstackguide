@@ -222,6 +222,40 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
 
     var blockedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com'];
 
+    var PERFORMYARD_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/17923801/46vtmid/';
+    var PERFORMYARD_REDIRECT_URL = 'https://www.performyard.com/';
+
+    /**
+     * Fire-and-forget POST that must never block the redirect or surface an
+     * error to the visitor. sendBeacon keeps the request alive across the
+     * navigation; the fetch fallback uses no-cors + keepalive for the same
+     * reason. Neither path can be inspected for success, so callers must not
+     * treat a return value as delivery confirmation.
+     */
+    function dispatchInBackground(url, payload) {
+      var body = JSON.stringify(payload);
+
+      try {
+        if (navigator.sendBeacon) {
+          var blob = new Blob([body], { type: 'application/json' });
+          if (navigator.sendBeacon(url, blob)) return;
+        }
+      } catch (_) {
+        // Fall through to fetch below.
+      }
+
+      try {
+        fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          keepalive: true,
+          body: body,
+        }).catch(function () {});
+      } catch (_) {
+        // Nothing left to try — never interrupt the handoff.
+      }
+    }
+
     document.addEventListener('click', function(e) {
       var target = e.target;
       if (!target || !target.closest) return;
@@ -305,12 +339,40 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
       if (btnText) btnText.classList.add('hidden');
       if (spinner) spinner.classList.remove('hidden');
 
+      // Read through FormData scoped to the submitted form: comparison pages
+      // render two modal instances, so a document-wide id lookup could pick up
+      // the other vendor's fields.
+      var formData = new FormData(form);
+      var firstName = String(formData.get('first_name') || '').trim();
+      var lastName = String(formData.get('last_name') || '').trim();
+      var vendorId = String(formData.get('vendorId') || (backdrop && backdrop.getAttribute('data-vendor-id')) || '').trim();
+
+      // PerformYard leads go straight from the browser to Shane's Zapier catch
+      // hook, then hand the visitor off to PerformYard. Scoped to this vendor
+      // so the other manual-lead brands sharing this component keep posting to
+      // /api/leads.
+      if (vendorId.toLowerCase() === 'performyard') {
+        dispatchInBackground(PERFORMYARD_ZAPIER_WEBHOOK, {
+          firstName: firstName,
+          lastName: lastName,
+          email: String(formData.get('work_email') || '').trim(),
+          company: String(formData.get('company_name') || '').trim(),
+          jobTitle: String(formData.get('job_title') || '').trim(),
+          employeeCount: String(formData.get('company_size') || '').trim(),
+          region: String(formData.get('region') || '').trim(),
+          phone: String(formData.get('phone') || '').trim(),
+          requirements: String(formData.get('notes') || '').trim(),
+          source: 'thehrstackguide.com',
+          timestamp: new Date().toISOString(),
+        });
+
+        window.location.href = PERFORMYARD_REDIRECT_URL;
+        return;
+      }
+
       try {
-        var formData = new FormData(form);
-        var firstName = String(formData.get('first_name') || '').trim();
-        var lastName = String(formData.get('last_name') || '').trim();
         var payload = {
-          vendorId: String(formData.get('vendorId') || (backdrop && backdrop.getAttribute('data-vendor-id')) || '').trim(),
+          vendorId: vendorId,
           brandName: String(formData.get('brandName') || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
           firstName: firstName,
           lastName: lastName,
