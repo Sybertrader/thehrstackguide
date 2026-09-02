@@ -56,15 +56,29 @@ const organizationSchema = {
       any added later — without each page wiring up its own handler. The
       parallel `.js-affiliate-cta` listener in src/pages/[slug].astro reports
       to Vercel Analytics, so the two are separate destinations, not duplicates.
+
+      Vendor and placement come from the `data-track-*` attributes that
+      src/pages/[slug].astro already sets, read via `closest()` so a wrapper
+      element can carry them instead of the anchor. The fallbacks cover future
+      CTAs added without those attributes: the slug in `/go/{slug}` matches the
+      key in src/config/affiliates.ts, so vendor attribution survives either way.
     -->
     <script is:inline>
       document.addEventListener('click', function (e) {
         const link = e.target.closest('a[href^="/go/"]');
         if (link && typeof gtag === 'function') {
+          const vendorSource = link.closest('[data-track-vendor]');
+          const locationSource = link.closest('[data-track-location]');
+          const vendor =
+            (vendorSource && vendorSource.getAttribute('data-track-vendor')) ||
+            link.getAttribute('href').replace('/go/', '');
+          const location =
+            (locationSource && locationSource.getAttribute('data-track-location')) || 'body_link';
+
           gtag('event', 'affiliate_click', {
-            event_category: 'affiliate',
-            event_label: link.getAttribute('href'),
-            transport_type: 'beacon',
+            vendor_name: vendor,
+            cta_location: location,
+            link_url: link.getAttribute('href'),
           });
         }
       });
