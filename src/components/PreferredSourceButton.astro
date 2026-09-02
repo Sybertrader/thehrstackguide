@@ -1,0 +1,35 @@
+---
+/**
+ * Google Preferred Sources button. The publisher.js library (loaded once in
+ * Layout.astro) finds every `[google-add-preferred-source-btn]` node and
+ * renders Google's official, localized control. Theme and alignment are the
+ * only knobs we own; the button itself is Google's asset.
+ */
+interface Props {
+  theme?: 'light' | 'dark';
+  align?: 'center' | 'left' | 'right';
+}
+
+const { theme = 'light', align = 'center' } = Astro.props;
+---
+
+<div class={`preferred-source-wrapper align-${align}`}>
+  <div google-add-preferred-source-btn data-theme={theme}></div>
+</div>
+
+<style>
+  .preferred-source-wrapper {
+    display: flex;
+    margin: 1.5rem 0;
+    padding: 0.25rem 0;
+  }
+  .align-center {
+    justify-content: center;
+  }
+  .align-left {
+    justify-content: flex-start;
+  }
+  .align-right {
+    justify-content: flex-end;
+  }
+</style>

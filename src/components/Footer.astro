@@ -1,4 +1,6 @@
 ---
+import PreferredSourceButton from './PreferredSourceButton.astro';
+
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
   month: 'long',
   year: 'numeric',
@@ -58,6 +60,7 @@ const legalLinks = [
           </svg>
           Verified B2B Software Operations Analysts ({currentMonthYear} Edition)
         </span>
+        <PreferredSourceButton theme="light" align="left" />
       </div>
 
       <!-- Col 2: Global Payroll & EOR -->
