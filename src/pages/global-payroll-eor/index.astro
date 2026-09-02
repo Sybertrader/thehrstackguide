@@ -5,6 +5,11 @@ import { loadComparisons } from '../../lib/comparisons';
 import type { Comparison } from '../../lib/comparisons';
 import { getToolsByCategory } from '../../lib/tools';
 
+const currentMonthYear = new Date().toLocaleDateString('en-US', {
+  month: 'long',
+  year: 'numeric',
+}); // Produces "September 2026"
+
 const CATEGORY = 'payroll-eor';
 
 const allComparisons = loadComparisons();
@@ -184,8 +189,8 @@ const collectionSchema = {
 ---
 
 <Layout
-  title="Best Global Payroll & EOR Tools (2026) | The HR Stack Guide"
-  description="Independent 2026 global payroll and EOR software comparisons. Compare Deel, Rippling, Remote, Gusto, and more on real pricing, fees, and compliance."
+  title={`Best Global Payroll & EOR Tools (${currentMonthYear}) | The HR Stack Guide`}
+  description={`Independent ${currentMonthYear} global payroll and EOR software comparisons. Compare Deel, Rippling, Remote, Gusto, and more on real pricing, fees, and compliance.`}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
 
@@ -208,13 +213,13 @@ const collectionSchema = {
         Global Payroll &amp; EOR Software Comparisons
       </h1>
       <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
-        Independent, data-driven comparisons of the platforms modern companies use to hire, pay, and stay compliant with employees and contractors across 150+ countries. Every rating, price, and compliance claim below is sourced from our 2026 evaluation.
+        Independent, data-driven comparisons of the platforms modern companies use to hire, pay, and stay compliant with employees and contractors across 150+ countries. Every rating, price, and compliance claim below is sourced from our {currentMonthYear} evaluation.
       </p>
     </header>
 
     <!-- Tool Roster -->
     <section class="mb-16" aria-label="Global Payroll & EOR tool roster">
-      <h2 class="mb-6 text-2xl font-bold text-slate-900">The 2026 Platform Roster</h2>
+      <h2 class="mb-6 text-2xl font-bold text-slate-900">The {currentMonthYear} Platform Roster</h2>
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {toolRoster.map((tool) => (
           <article class="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
@@ -268,7 +273,7 @@ const collectionSchema = {
 
     <!-- Category Buyer's Guide -->
     <section class="mb-16" aria-label="How to evaluate Global Payroll & EOR platforms">
-      <h2 class="mb-2 text-2xl font-bold text-slate-900">How to Evaluate Global Payroll &amp; EOR Platforms in 2026</h2>
+      <h2 class="mb-2 text-2xl font-bold text-slate-900">How to Evaluate Global Payroll &amp; EOR Platforms in {currentMonthYear}</h2>
       <p class="mb-8 max-w-3xl text-base leading-relaxed text-slate-600">
         Every EOR and global payroll vendor claims "full compliance" and "transparent pricing." Here's what actually separates them once you get past the marketing page.
       </p>

@@ -78,6 +78,11 @@ const lastUpdatedLabel = new Date(lastUpdatedIso).toLocaleDateString('en-US', {
   timeZone: 'UTC',
 });
 
+const currentMonthYear = new Date().toLocaleDateString('en-US', {
+  month: 'long',
+  year: 'numeric',
+}); // Produces "September 2026"
+
 function parsePipeList(value: string): string[] {
   if (!value?.trim()) return [];
   return value.split('|').map((item) => item.trim()).filter(Boolean);
@@ -210,7 +215,8 @@ function buildSchemaGraph(
   toolAReviewCount: number | null,
   toolBReviewCount: number | null,
   datePublished: string,
-  dateModified: string
+  dateModified: string,
+  pageTitle: string
 ) {
   const pageId = `${pageUrl}#webpage`;
   const faqId = `${pageUrl}#faq`;
@@ -239,7 +245,7 @@ function buildSchemaGraph(
         '@type': 'ItemPage',
         '@id': pageId,
         url: pageUrl,
-        name: comparison.meta_title,
+        name: pageTitle,
         description: comparison.meta_description,
         datePublished,
         dateModified,
@@ -455,7 +461,8 @@ const richSnippetSchema = [
  * "Mid-Market Scaleups" vs "Scaleups", so the heading and the title tag always
  * name the same audience.
  */
-const pageHeading = `${comparison.tool_a_name} vs ${comparison.tool_b_name} for ${comparison.niche_name}: Detailed Comparison for 2026`;
+const pageTitle = `${comparison.tool_a_name} vs ${comparison.tool_b_name} for ${comparison.niche_name} (${currentMonthYear} Comparison)`;
+const pageHeading = `${comparison.tool_a_name} vs ${comparison.tool_b_name} for ${comparison.niche_name}: Detailed Comparison for ${currentMonthYear}`;
 
 const winnerName =
   comparison.winner_id === comparison.tool_a_id
@@ -583,7 +590,8 @@ const schemaGraph = buildSchemaGraph(
   toolANarrative.reviewCountNumeric,
   toolBNarrative.reviewCountNumeric,
   firstPublishedIso,
-  lastUpdatedIso
+  lastUpdatedIso,
+  pageTitle
 );
 
 const winnerPros = toolAIsWinner ? toolAPros : toolBPros;
@@ -642,7 +650,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
 );
 ---
 
-<Layout title={comparison.meta_title} description={comparison.meta_description}>
+<Layout title={pageTitle} description={comparison.meta_description}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
   {richSnippetSchema.length > 0 && (
     <script slot="head" type="application/ld+json" set:html={JSON.stringify(richSnippetSchema)} />
@@ -695,7 +703,7 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
 
         <div class="mt-4 flex flex-wrap items-center gap-3">
           <span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-700">
-            2026 Verified
+            {currentMonthYear} Verified
           </span>
           <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-500" title="Reflects when the underlying comparison data was last revised">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 text-slate-400" aria-hidden="true">

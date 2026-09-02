@@ -4,6 +4,12 @@ import RecommendationTeaser from '../components/RecommendationTeaser.astro';
 import { loadComparisons } from '../lib/comparisons';
 import { loadToolProfiles } from '../lib/tools';
 
+const currentMonthYear = new Date().toLocaleDateString('en-US', {
+  month: 'long',
+  year: 'numeric',
+}); // Produces "September 2026"
+const currentYear = String(new Date().getFullYear());
+
 const comparisons = loadComparisons();
 const bySlug = new Map(comparisons.map((c) => [c.slug, c]));
 
@@ -109,7 +115,7 @@ const proofStats = [
   { value: '440+', label: 'Head-to-Head Comparisons' },
   { value: '24+', label: 'Vetted HR Platforms' },
   { value: '100%', label: 'Independent Methodology' },
-  { value: '2026', label: 'Verified Pricing' },
+  { value: currentYear, label: 'Verified Pricing' },
 ];
 
 // Lightweight search index for the hero search bar: every tool's display
@@ -165,7 +171,7 @@ const websiteSchema = {
 
 <Layout
   title="The HR Stack Guide | Compare HR Software & Tools"
-  description="Independent, data-driven comparisons of the leading global payroll, EOR, applicant tracking system (ATS), and performance management platforms for 2026."
+  description={`Independent, data-driven comparisons of the leading global payroll, EOR, applicant tracking system (ATS), and performance management platforms for ${currentMonthYear}.`}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
@@ -173,10 +179,10 @@ const websiteSchema = {
     <!-- Hero Section -->
     <section class="mx-auto max-w-3xl text-center">
       <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold text-indigo-700">
-        2026 Edition
+        {currentMonthYear} Edition
       </span>
       <h1 class="mt-5 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-        The Independent Buyer's Guide for the Modern HR Tech Stack in 2026
+        The Independent Buyer's Guide for the Modern HR Tech Stack in {currentMonthYear}
       </h1>
       <p class="mt-4 text-lg leading-relaxed text-slate-600">
         Unbiased, side-by-side comparisons of the global payroll, Employer of Record (EOR), applicant tracking system (ATS), and performance management platforms that power modern people teams, backed by real pricing, feature matrices, and buyer checklists.
@@ -374,7 +380,7 @@ const websiteSchema = {
       <div class="text-center sm:text-left">
         <h2 class="text-2xl font-bold text-slate-900">How We Build Independent HR Tech Guides</h2>
         <p class="mt-2 text-base text-slate-500">
-          Our independent criteria for testing pricing, global compliance, and feature fit in 2026.
+          Our independent criteria for testing pricing, global compliance, and feature fit in {currentMonthYear}.
         </p>
       </div>
       <div class="mt-8 grid gap-6 sm:grid-cols-3">
