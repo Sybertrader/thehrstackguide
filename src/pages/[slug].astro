@@ -1,14 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished, getRelatedComparisons } from '../lib/comparisons';
-import type { Comparison, FeatureMatrixEntry, RelatedComparisonCard } from '../lib/comparisons';
+import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
+import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { getToolProfile } from '../lib/tools';
 import type { EnterpriseAnalysis } from '../lib/tools';
 import { affiliateLinks } from '../config/affiliates';
 import { outboundRel } from '../lib/links';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
-import RelatedComparisons from '../components/RelatedComparisons.astro';
 
 /**
  * Routes outbound CTAs through our own `/go/{slug}` redirect for any tool
@@ -47,19 +46,29 @@ export function getStaticPaths() {
   const lastUpdatedIso = getComparisonsLastUpdated().toISOString();
   const firstPublishedIso = getComparisonsFirstPublished().toISOString();
 
+  function relatedScore(candidate: Comparison, current: Comparison): number {
+    let score = 0;
+    if (candidate.tool_a_id === current.tool_a_id || candidate.tool_a_id === current.tool_b_id) score += 1;
+    if (candidate.tool_b_id === current.tool_a_id || candidate.tool_b_id === current.tool_b_id) score += 1;
+    return score;
+  }
+
   return comparisons.map((comparison) => {
-    const relatedComparisons = getRelatedComparisons(comparisons, comparison);
+    const related = comparisons
+      .filter((candidate) => candidate.niche_id === comparison.niche_id && candidate.slug !== comparison.slug)
+      .sort((a, b) => relatedScore(b, comparison) - relatedScore(a, comparison))
+      .slice(0, 3);
 
     return {
       params: { slug: comparison.slug },
-      props: { comparison, relatedComparisons, lastUpdatedIso, firstPublishedIso },
+      props: { comparison, related, lastUpdatedIso, firstPublishedIso },
     };
   });
 }
 
-const { comparison, relatedComparisons, lastUpdatedIso, firstPublishedIso } = Astro.props as {
+const { comparison, related, lastUpdatedIso, firstPublishedIso } = Astro.props as {
   comparison: Comparison;
-  relatedComparisons: RelatedComparisonCard[];
+  related: Comparison[];
   lastUpdatedIso: string;
   firstPublishedIso: string;
 };
@@ -1604,7 +1613,35 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         </div>
       </section>
 
-      <RelatedComparisons related={relatedComparisons} />
+      <!-- Related Comparisons -->
+      {related.length > 0 && (
+        <section class="mt-16" aria-label={`Related comparisons for ${comparison.niche_name}`}>
+          <h2 class="mb-6 text-2xl font-bold text-slate-900">
+            Related Comparisons for {comparison.niche_name}
+          </h2>
+          <div class="grid gap-6 sm:grid-cols-3">
+            {related.map((item) => (
+              <a
+                href={`/${item.slug}`}
+                class="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"
+              >
+                <span class="text-xs font-semibold uppercase tracking-wide text-indigo-600">
+                  {item.niche_name}
+                </span>
+                <h3 class="mt-2 text-lg font-semibold text-slate-900 transition group-hover:text-indigo-600">
+                  {item.tool_a_name} vs {item.tool_b_name}
+                </h3>
+                <span class="mt-4 inline-flex items-center text-sm font-semibold text-indigo-600">
+                  View comparison
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1 h-4 w-4" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
 
     <script>
