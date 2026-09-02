@@ -20,8 +20,24 @@ const { theme = 'light', align = 'center' } = Astro.props;
 <style>
   .preferred-source-wrapper {
     display: flex;
-    margin: 1.5rem 0;
-    padding: 0.25rem 0;
+    align-items: flex-start;
+    overflow: visible;
+    height: auto;
+    max-height: none;
+    min-width: 17rem;
+    margin: 1rem 0 0;
+    padding: 0.25rem 0 0.75rem;
+  }
+  /* Google absolutely positions an iframe with inset:0 inside this host.
+     Their default min-height is 60px. A narrow grid column squashes the
+     pill and shears off the bottom border, so keep the host at least as
+     wide as the official button and never clip overflow. */
+  .preferred-source-wrapper > :global(div[google-add-preferred-source-btn]) {
+    flex-shrink: 0;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    min-width: 17rem;
   }
   .align-center {
     justify-content: center;
