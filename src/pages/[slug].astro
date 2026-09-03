@@ -8,6 +8,7 @@ import { affiliateLinks } from '../config/affiliates';
 import { outboundRel } from '../lib/links';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
+import DataVerificationBadge from '../components/DataVerificationBadge.astro';
 
 /**
  * Routes outbound CTAs through our own `/go/{slug}` redirect for any tool
@@ -761,6 +762,8 @@ const schemaGraph = buildSchemaGraph(
           <a href="/affiliate-disclosure" class="text-slate-500 underline underline-offset-2 hover:text-indigo-600">Read full disclosure</a>.
         </p>
       </header>
+
+      <DataVerificationBadge quarter={currentQuarter} />
 
       <!-- The HR Stack Take: executive takeaway above the comparison tables -->
       {comparison.hr_stack_take && (
