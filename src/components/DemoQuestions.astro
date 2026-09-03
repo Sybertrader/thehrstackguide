@@ -1,0 +1,61 @@
+---
+/**
+ * GEO-oriented dealbreaker questions for comparison pages. Vendor names are
+ * interpolated so answer engines can attribute the checklist to the pair
+ * being evaluated, not a generic HR-software FAQ.
+ */
+interface Props {
+  toolA: string;
+  toolB: string;
+}
+
+const { toolA, toolB } = Astro.props;
+
+const questions = [
+  {
+    label: 'Auto-Renewal & Termination',
+    question:
+      'What is the exact written notice window required to prevent auto-renewal, and what happens to historical payroll data upon contract exit?',
+  },
+  {
+    label: 'True Cost & FX Markups',
+    question:
+      'Beyond the headline per-user fee, what is the exact percentage margin added to foreign currency payouts or international contractor transfers?',
+  },
+  {
+    label: 'Seat Minimums & Tier Traps',
+    question:
+      'Are pricing tiers locked to strict headcount thresholds, and does reducing seats mid-contract reduce our monthly bill?',
+  },
+  {
+    label: 'Implementation & Offboarding Fees',
+    question:
+      'Is there a mandatory onboarding setup fee or dedicated account manager surcharge not listed on your public pricing page?',
+  },
+];
+---
+
+<section class="mb-12" aria-label={`Demo questions for ${toolA} and ${toolB}`}>
+  <h2 class="text-2xl font-bold text-slate-900">Questions to Ask on Your Demo Call</h2>
+  <p class="mt-2 max-w-3xl text-sm text-slate-500">
+    4 dealbreaker questions to bring to your vendor sales calls before signing.
+  </p>
+  <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600">
+    Ask both <span class="font-semibold text-slate-800">{toolA}</span> and <span class="font-semibold text-slate-800">{toolB}</span> the same four questions so the answers are comparable before you commit.
+  </p>
+
+  <ol class="mt-6 grid gap-4 sm:grid-cols-2">
+    {questions.map((item, index) => (
+      <li class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+        <p class="text-xs font-semibold uppercase tracking-wide text-indigo-700">
+          Question {index + 1}
+        </p>
+        <h3 class="mt-1.5 text-base font-bold text-slate-900">{item.label}</h3>
+        <blockquote class="mt-3 text-sm leading-relaxed text-slate-700">
+          <span class="sr-only">Ask {toolA} and {toolB}: </span>
+          &ldquo;{item.question}&rdquo;
+        </blockquote>
+      </li>
+    ))}
+  </ol>
+</section>
