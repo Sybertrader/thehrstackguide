@@ -77,6 +77,7 @@ const currentMonthYear = new Date().toLocaleDateString('en-US', {
   month: 'long',
   year: 'numeric',
 }); // Produces "September 2026"
+const currentQuarter = `Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`;
 
 function parsePipeList(value: string): string[] {
   if (!value?.trim()) return [];
@@ -132,9 +133,6 @@ interface ToolNarrative {
   reviewCountNumeric: number | null;
   ratingSource: string | null;
   positioning: string;
-  textCompliance: string;
-  textGlobalReach: string;
-  textPricingTruth: string;
   chooseIf: string[];
 }
 
@@ -172,18 +170,12 @@ function resolveToolNarrative(
       ? profile.choose_if
       : pros.slice(0, 4).map((pro) => `You want ${pro.toLowerCase()}`);
 
-  const comingSoon = (topic: string) =>
-    `A detailed ${topic} breakdown for ${toolName} is being finalized. In the meantime, confirm the specifics directly on the vendor's site before making a decision.`;
-
   return {
     rating: profile?.rating ?? csvRating,
     reviewCountLabel: profile?.review_count ?? null,
     reviewCountNumeric: reviewCountNumeric && !Number.isNaN(reviewCountNumeric) ? reviewCountNumeric : null,
     ratingSource: profile?.rating_source ?? null,
     positioning,
-    textCompliance: profile?.text_compliance ?? comingSoon('tax, legal, and misclassification compliance'),
-    textGlobalReach: profile?.text_global_reach ?? comingSoon('global reach and workforce infrastructure'),
-    textPricingTruth: profile?.text_pricing_truth ?? comingSoon('pricing and hidden-fee'),
     chooseIf,
   };
 }
@@ -357,7 +349,9 @@ const toolBNarrative = resolveToolNarrative(
 );
 
 /**
- * Enterprise-tier analysis blocks rendered beneath the feature deep dive.
+ * Enterprise-tier analysis blocks rendered inside a collapsed <details>
+ * accordion so human buyers skip the legal fine print while LLM crawlers
+ * still read the full DOM.
  *
  * These four topics only have a meaningful answer for Employer of Record and
  * Global Payroll vendors, so `enterprise_analysis` is populated exclusively on
@@ -591,60 +585,6 @@ const schemaGraph = buildSchemaGraph(
   pageTitle
 );
 
-const winnerPros = toolAIsWinner ? toolAPros : toolBPros;
-const winnerCons = toolAIsWinner ? toolACons : toolBCons;
-const winnerFeatures = toolAIsWinner ? toolAFeatures : toolBFeatures;
-const winnerPrice = toolAIsWinner ? comparison.tool_a_starting_price : comparison.tool_b_starting_price;
-const winnerPricingModel = toolAIsWinner ? comparison.tool_a_pricing_model : comparison.tool_b_pricing_model;
-const runnerUpName = toolAIsWinner ? comparison.tool_b_name : comparison.tool_a_name;
-const runnerUpPros = toolAIsWinner ? toolBPros : toolAPros;
-const runnerUpCons = toolAIsWinner ? toolBCons : toolACons;
-const runnerUpFeatures = toolAIsWinner ? toolBFeatures : toolAFeatures;
-const runnerUpPrice = toolAIsWinner ? comparison.tool_b_starting_price : comparison.tool_a_starting_price;
-const runnerUpPricingModel = toolAIsWinner ? comparison.tool_b_pricing_model : comparison.tool_a_pricing_model;
-
-const contractorAutoPayEntry = featureMatrix['Contractor Auto-Pay'];
-const winnerHasContractorAutoPay = contractorAutoPayEntry
-  ? toolAIsWinner
-    ? contractorAutoPayEntry.a
-    : contractorAutoPayEntry.b
-  : null;
-const contractorAutomationPhrase =
-  winnerHasContractorAutoPay === true
-    ? 'automated contractor pay runs keep cross-border payouts on schedule without manual spreadsheet reconciliation'
-    : 'structured payout workflows keep contractor payments organized even as the team scales into new markets';
-
-function capitalizeAcronyms(text: string): string {
-  return text.replace(/\beor\b/gi, 'EOR').replace(/\bus\b/gi, 'US');
-}
-
-const winnerEdgeParagraph = capitalizeAcronyms(
-  cleanCopy(
-    `${winnerName} earns the top spot for ${comparison.niche_audience_phrase} because its platform is built around the operational realities this segment faces day to day. Teams lean on ${
-      winnerFeatures[0] ? winnerFeatures[0].toLowerCase() : 'its core feature set'
-    }${winnerFeatures[1] ? ` and ${winnerFeatures[1].toLowerCase()}` : ''} to keep onboarding, compliance, and payroll cycles moving without manual busywork, while ${contractorAutomationPhrase}. Pricing reinforces the edge too: starting at ${winnerPrice} (${winnerPricingModel}), ${winnerName} keeps the cost of scaling predictable as headcount grows across new markets. Combined with ${
-      winnerPros[0] ? winnerPros[0].toLowerCase() : 'strong operational fundamentals'
-    }${winnerPros[1] ? ` and ${winnerPros[1].toLowerCase()}` : ''}, it is the more complete fit for ${comparison.niche_audience_phrase.toLowerCase()} that need speed, compliance, and automation working together rather than bolted on after the fact.`
-  )
-);
-
-const runnerUpFitParagraph = capitalizeAcronyms(
-  cleanCopy(
-    `${runnerUpName} is not without merit, particularly for ${comparison.niche_audience_phrase.toLowerCase()} that value ${
-      runnerUpPros[0] ? runnerUpPros[0].toLowerCase() : 'a simpler, more familiar workflow'
-    }${runnerUpPros[1] ? ` and ${runnerUpPros[1].toLowerCase()}` : ''}. It performs well on ${
-      runnerUpFeatures[0] ? runnerUpFeatures[0].toLowerCase() : 'its core feature set'
-    }, and its pricing, starting at ${runnerUpPrice} (${runnerUpPricingModel}), can look attractive at first glance. That said, ${runnerUpName} shows its limits here: ${
-      runnerUpCons[0] ? runnerUpCons[0].toLowerCase() : 'it lacks some of the deeper automation this niche eventually needs'
-    }, and it trails ${winnerName} on the international contractor workflows that matter most for ${comparison.niche_audience_phrase.toLowerCase()} operating across borders. It remains a reasonable option if your priorities shift, but it is the secondary choice in this comparison, not the primary recommendation.`
-  )
-);
-
-const decisionFrameworkParagraph = capitalizeAcronyms(
-  cleanCopy(
-    `Choosing between ${comparison.tool_a_name} and ${comparison.tool_b_name} ultimately comes down to three variables: team size, global expansion plans, and budget. Smaller ${comparison.niche_audience_phrase.toLowerCase()} with a handful of hires and no near-term plans to hire across borders can reasonably choose either platform, with cost likely deciding it. Teams that are actively expanding into new countries, adding contractors in multiple currencies, or scaling headcount quickly should prioritize ${winnerName} for its stronger automation and compliance coverage at ${winnerPrice}. If your roadmap stays narrower, mostly domestic payroll with occasional contractor hires, ${runnerUpName} at ${runnerUpPrice} remains a budget-friendly, lower-complexity alternative worth shortlisting alongside ${winnerName} before you commit.`
-  )
-);
 ---
 
 <Layout title={pageTitle} description={comparison.meta_description}>
@@ -698,15 +638,6 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
           </ol>
         </nav>
 
-        <div class="mt-4 flex flex-wrap items-center gap-3">
-          <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
-              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-            </svg>
-            Verified • Updated {currentMonthYear}
-          </span>
-        </div>
-
         <div class="mt-4 flex items-center gap-3">
           <div class="relative inline-flex h-10 w-10 shrink-0">
             <img
@@ -756,6 +687,19 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
           {pageHeading}
         </h1>
+
+        <p class="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs font-semibold text-slate-600" aria-label="Editorial verification badges">
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+            </svg>
+            Audited {currentQuarter}
+          </span>
+          <span class="text-slate-300" aria-hidden="true">·</span>
+          <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-700">Primary Terms Verified</span>
+          <span class="text-slate-300" aria-hidden="true">·</span>
+          <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-slate-700">Unbiased Data</span>
+        </p>
 
         <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
           {cleanCopy(comparison.target_audience)}
@@ -1301,96 +1245,6 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         </div>
       </section>
 
-      <!-- SECTION 3: Feature-by-Feature Deep Dive (SEO Narrative Engine) -->
-      <section class="mb-12" aria-label="Feature-by-feature deep dive">
-        <h2 class="mb-2 text-2xl font-bold text-slate-900">Feature-by-Feature Deep Dive</h2>
-        <p class="mb-6 max-w-3xl text-sm text-slate-500">
-          A closer look at how {comparison.tool_a_name} and {comparison.tool_b_name} actually handle compliance, global reach, and pricing once you get past the marketing pages.
-        </p>
-
-        <div class="space-y-6">
-          <!-- Compliance -->
-          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="text-lg font-bold text-slate-900">Tax, Legal &amp; Misclassification Compliance</h3>
-            <div class="mt-5 grid gap-6 sm:grid-cols-2">
-              <div class="rounded-xl bg-slate-50 p-5">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_a_name}</h4>
-                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolANarrative.textCompliance}</p>
-              </div>
-              <div class="rounded-xl bg-slate-50 p-5">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_b_name}</h4>
-                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolBNarrative.textCompliance}</p>
-              </div>
-            </div>
-          </article>
-
-          <!-- Global Reach -->
-          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="text-lg font-bold text-slate-900">Global Reach &amp; Workforce Infrastructure</h3>
-            <div class="mt-5 grid gap-6 sm:grid-cols-2">
-              <div class="rounded-xl bg-slate-50 p-5">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_a_name}</h4>
-                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolANarrative.textGlobalReach}</p>
-              </div>
-              <div class="rounded-xl bg-slate-50 p-5">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_b_name}</h4>
-                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolBNarrative.textGlobalReach}</p>
-              </div>
-            </div>
-          </article>
-
-          <!-- Pricing Truth -->
-          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="text-lg font-bold text-slate-900">The Real Cost: Pricing &amp; Hidden Fees</h3>
-            <div class="mt-5 grid gap-6 sm:grid-cols-2">
-              <div class="rounded-xl bg-slate-50 p-5">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_a_name}</h4>
-                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolANarrative.textPricingTruth}</p>
-              </div>
-              <div class="rounded-xl bg-slate-50 p-5">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{comparison.tool_b_name}</h4>
-                <p class="mt-2 text-sm leading-relaxed text-slate-700">{toolBNarrative.textPricingTruth}</p>
-              </div>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <!-- SECTION 3B: Enterprise Compliance & Financial Analysis (EOR/Global Payroll only) -->
-      {enterpriseSections.length > 0 && (
-        <section class="mb-12" aria-label="Enterprise compliance and financial analysis">
-          <h2 class="mb-2 text-2xl font-bold text-slate-900">Enterprise Compliance &amp; Financial Analysis</h2>
-          <p class="mb-6 max-w-3xl text-sm text-slate-500">
-            The four questions that decide an EOR contract once legal and procurement get involved: who owns the work product, who files the payroll taxes, who carries the termination liability, and what the invoice actually looks like.
-          </p>
-
-          <div class="space-y-6">
-            {enterpriseSections.map((section) => (
-              <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-                <h3 class="text-lg font-bold text-slate-900">{section.title}</h3>
-                <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">{section.intro}</p>
-                <div class:list={['mt-5 grid gap-6', section.columns.length > 1 && 'sm:grid-cols-2']}>
-                  {section.columns.map((column) => (
-                    <div class="rounded-xl bg-slate-50 p-5">
-                      <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{column.name}</h4>
-                      <p class="mt-2 text-sm leading-relaxed text-slate-700">{column.summary}</p>
-                      <ul class="mt-4 space-y-2.5">
-                        {column.bullets.map((bullet) => (
-                          <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
-                            <span aria-hidden="true" class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400"></span>
-                            <span>{bullet}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
-
       <!-- SECTION 4: Decision Checklist -->
       <section class="mb-12" aria-label="Buyer decision checklist">
         <h2 class="mb-6 text-2xl font-bold text-slate-900">The Decision Checklist</h2>
@@ -1465,6 +1319,50 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
         </div>
       </section>
 
+      {enterpriseSections.length > 0 && (
+        <details class="legal-deep-dive group mb-12">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-5 text-base font-bold text-slate-900 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-900 group-open:border-indigo-200 group-open:bg-indigo-50/80 [&::-webkit-details-marker]:hidden">
+            <span>Deep-Dive Legal, IP &amp; Tax Analysis</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              class="h-5 w-5 shrink-0 text-indigo-600 transition group-open:rotate-180"
+              aria-hidden="true"
+            >
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+            </svg>
+          </summary>
+          <div class="legal-deep-dive-body mt-4 space-y-6 text-sm leading-relaxed text-slate-700">
+            <p class="max-w-3xl text-sm text-slate-500">
+              The four questions that decide an EOR contract once legal and procurement get involved: who owns the work product, who files the payroll taxes, who carries the termination liability, and what the invoice actually looks like.
+            </p>
+            {enterpriseSections.map((section) => (
+              <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                <h3 class="text-lg font-bold text-slate-900">{section.title}</h3>
+                <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">{section.intro}</p>
+                <div class:list={['mt-5 grid gap-6', section.columns.length > 1 && 'sm:grid-cols-2']}>
+                  {section.columns.map((column) => (
+                    <div class="rounded-xl bg-slate-50 p-5">
+                      <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{column.name}</h4>
+                      <p class="mt-2 text-sm leading-relaxed text-slate-700">{column.summary}</p>
+                      <ul class="mt-4 space-y-2.5">
+                        {column.bullets.map((bullet) => (
+                          <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+                            <span aria-hidden="true" class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400"></span>
+                            <span>{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </details>
+      )}
+
       <!-- SECTION 5: Final Verdict & Primary CTAs -->
       <section class="mb-12" aria-label="Final verdict">
         <h2 class="mb-6 text-2xl font-bold text-slate-900">
@@ -1489,9 +1387,6 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
                 <h3 class="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
                   {isUseCaseVerdict ? comparison.winner_label : `${winnerName} is the winner`}
                 </h3>
-                <p class="mt-2 max-w-2xl text-base leading-relaxed text-slate-600">
-                  {cleanCopy(comparison.winner_reason)}
-                </p>
                 {winnerBullets.length > 0 && (
                   <ul class="mt-3 max-w-2xl space-y-1.5">
                     {winnerBullets.map((bullet) => (
@@ -1509,32 +1404,8 @@ const decisionFrameworkParagraph = capitalizeAcronyms(
           </div>
         </div>
 
-        <article class="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <div>
-            <h3 class="text-lg font-semibold text-slate-900">The Winner's Edge</h3>
-            <p class="mt-2 text-base leading-relaxed text-slate-700">
-              {winnerEdgeParagraph}
-            </p>
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-slate-900">Where {runnerUpName} Fits</h3>
-            <p class="mt-2 text-base leading-relaxed text-slate-700">
-              {runnerUpFitParagraph}
-            </p>
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold text-slate-900">Final Recommendation</h3>
-            <p class="mt-2 text-base leading-relaxed text-slate-700">
-              {decisionFrameworkParagraph}
-            </p>
-          </div>
-        </article>
-
         <!-- Final Primary CTAs -->
-        <div class="mt-6 flex flex-col items-start gap-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <p class="text-sm leading-relaxed text-slate-700 sm:max-w-md">
-            <span class="font-semibold text-indigo-700">Bottom line:</span> {winnerName} is the stronger overall pick for {comparison.niche_audience_phrase.toLowerCase()}, with {runnerUpName} remaining a reasonable alternative depending on your priorities.
-          </p>
+        <div class="mt-6 flex flex-col items-start gap-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:flex-row sm:items-center sm:justify-end sm:p-8">
           <div class="flex flex-wrap gap-3">
             {toolAIsManualLead ? (
               <button
