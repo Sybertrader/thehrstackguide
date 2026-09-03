@@ -12,3 +12,22 @@
 img.aspect-square {
   aspect-ratio: 1 / 1;
 }
+
+/*
+ * Comparison-page legal accordion: native <details>/<summary> with no JS.
+ * Hide the UA disclosure triangle so the summary reads as a padded card.
+ * Closed by default for human readers; inner copy stays in the DOM for crawlers.
+ */
+details.legal-deep-dive > summary {
+  list-style: none;
+}
+details.legal-deep-dive > summary::-webkit-details-marker {
+  display: none;
+}
+details.legal-deep-dive[open] > summary {
+  border-color: var(--color-indigo-200);
+  background-color: var(--color-indigo-50);
+}
+details.legal-deep-dive .legal-deep-dive-body {
+  font-family: var(--font-sans);
+}
