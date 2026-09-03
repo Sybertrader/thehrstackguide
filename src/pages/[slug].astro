@@ -102,6 +102,7 @@ function parseBool(value: string): boolean {
 
 function cleanCopy(text: string): string {
   return text
+    .replace(/\bFiat \$/g, 'Flat $')
     .replace(/\.\s*,/g, ',')
     .replace(/\s{2,}/g, ' ')
     .trim();
