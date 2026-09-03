@@ -18,6 +18,9 @@ export default defineConfig({
       filter: (page) => !/\/go\/[^/]+\/?$/.test(page),
       serialize(item) {
         item.lastmod = new Date().toISOString();
+        if (item.url && !item.url.endsWith('/') && !/\.[a-z0-9]+$/i.test(item.url)) {
+          item.url = `${item.url}/`;
+        }
         return item;
       },
     }),

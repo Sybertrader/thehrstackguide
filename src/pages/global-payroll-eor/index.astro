@@ -325,7 +325,7 @@ const collectionSchema = {
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="eor-comparison-grid">
         {categoryComparisons.map((comparison) => (
           <a
-            href={`/${comparison.slug}`}
+            href={`/${comparison.slug}/`}
             data-niche={comparison.niche_id}
             class:list={[
               'comparison-card group flex flex-col gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md',
