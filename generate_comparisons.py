@@ -638,7 +638,7 @@ PM_TOOLS = {
 #                    spreads, per-module gating). This is the detail generic
 #                    comparison sites omit, so it is the most citable field here.
 #   take_fit       - lowercase clause naming the buying condition where this
-#                    vendor wins, used after "If ..." in The HR Stack Take.
+#                    vendor wins, used after "If ..." in The HR Stack Guide Take.
 #   take_edge      - lowercase clause naming the vendor's core differentiator,
 #                    used as the payoff to that sentence.
 #
@@ -882,27 +882,27 @@ def natural_audience_phrase(niche_name, trailing_word="teams"):
 NICHES = {
     "tech-startups": {
         "name": "Tech Startups",
-        "audience": "Seed to Series B fast-growing technology companies hiring remote engineers worldwide.",
+        "audience": "High-growth technology startups and distributed teams scaling global payroll, compliance, and remote operations.",
         "focus_feature": "IP ownership, fast onboarding, and equity option distribution."
     },
     "agencies": {
         "name": "Design & Marketing Agencies",
-        "audience": "Client-service agencies managing variable monthly international contractor pools.",
+        "audience": "Lean businesses and growing teams looking for automated domestic payroll, benefits administration, and simple HR operations.",
         "focus_feature": "Flexible monthly contractor invoicing, fast payouts, and zero overhead."
     },
     "web3-crypto": {
         "name": "Web3 & Crypto Teams",
-        "audience": "Decentralized teams requiring flexible global contractor payouts in fiat or stablecoins.",
+        "audience": "Distributed companies managing cross-border contractors, international EOR employees, and foreign currency payouts.",
         "focus_feature": "Multi-currency support, flexible contractor contracts, and minimal bureaucracy."
     },
     "us-latam": {
         "name": "US Companies Hiring in LATAM",
-        "audience": "US-based enterprises sourcing nearshore software talent in Mexico, Colombia, and Brazil.",
+        "audience": "Distributed companies managing cross-border contractors, international EOR employees, and foreign currency payouts.",
         "focus_feature": "Localized LATAM compliance, health benefits, and same-time-zone payroll processing."
     },
     "scaleups": {
         "name": "Mid-Market Scaleups",
-        "audience": "Established 100+ employee companies transitioning from local payroll to global workforce management.",
+        "audience": "Fast-scaling companies expanding headcount across multiple regions while streamlining core HR workflows.",
         "focus_feature": "Custom HRIS integrations, IT device provisioning, and enterprise compliance reporting."
     }
 }
@@ -917,27 +917,27 @@ NICHES = {
 ATS_NICHES = {
     "startups": {
         "name": "Startups",
-        "audience": "Early-stage startups building their first structured hiring process without a dedicated recruiting team.",
+        "audience": "High-growth technology startups and distributed teams scaling global payroll, compliance, and remote operations.",
         "focus_feature": "fast setup, transparent pricing, and flexible seat-based collaboration."
     },
     "scaleups": {
         "name": "Scaleups",
-        "audience": "Fast-growing 50-500 employee companies scaling recruiting operations and interview consistency.",
+        "audience": "Fast-scaling companies expanding headcount across multiple regions while streamlining core HR workflows.",
         "focus_feature": "structured scorecards, recruiting analytics, and predictable flat-tier pricing."
     },
     "enterprise": {
         "name": "Enterprise",
-        "audience": "Large organizations running high-volume hiring with dedicated recruiting operations and compliance requirements.",
+        "audience": "Global enterprise organizations requiring multi-entity payroll, custom HRIS integrations, and strict compliance security.",
         "focus_feature": "rigorous compliance reporting, deep integrations, and enterprise-grade structured hiring."
     },
     "agencies": {
         "name": "Staffing & Recruiting Agencies",
-        "audience": "Agencies managing multiple concurrent client requisitions and high candidate throughput.",
+        "audience": "Lean businesses and growing teams looking for automated domestic payroll, benefits administration, and simple HR operations.",
         "focus_feature": "high-volume sourcing, candidate CRM tooling, and multi-client pipeline visibility."
     },
     "remote-teams": {
         "name": "Remote-First Teams",
-        "audience": "Distributed companies hiring across time zones and countries with fully remote interview loops.",
+        "audience": "Distributed companies managing cross-border contractors, international EOR employees, and foreign currency payouts.",
         "focus_feature": "multi-time-zone scheduling, multi-language support, and asynchronous collaboration tools."
     }
 }
@@ -948,27 +948,27 @@ ATS_NICHES = {
 PM_NICHES = {
     "startups": {
         "name": "Startups",
-        "audience": "Early-stage startups replacing ad-hoc feedback with their first lightweight review and goal cadence.",
+        "audience": "High-growth technology startups and distributed teams scaling global payroll, compliance, and remote operations.",
         "focus_feature": "fast setup, transparent per-seat pricing, and simple continuous feedback loops."
     },
     "scaleups": {
         "name": "Scaleups",
-        "audience": "Fast-growing 50-500 employee companies standardizing OKRs, reviews, and manager 1:1s across teams.",
+        "audience": "Fast-scaling companies expanding headcount across multiple regions while streamlining core HR workflows.",
         "focus_feature": "OKR cascading, structured review cycles, and manager coaching workflows."
     },
     "enterprise": {
         "name": "Enterprise",
-        "audience": "Large organizations running calibrated talent reviews, compensation cycles, and audit-ready performance records.",
+        "audience": "Global enterprise organizations requiring multi-entity payroll, custom HRIS integrations, and strict compliance security.",
         "focus_feature": "compensation calibration, talent reviews, and enterprise analytics."
     },
     "remote-teams": {
         "name": "Remote-First Teams",
-        "audience": "Distributed companies needing async feedback, Slack/Teams integrations, and timezone-friendly 1:1 tooling.",
+        "audience": "Distributed companies managing cross-border contractors, international EOR employees, and foreign currency payouts.",
         "focus_feature": "async continuous feedback, Slack/Teams integrations, and remote-friendly 1:1 agendas."
     },
     "people-ops": {
         "name": "People Ops Teams",
-        "audience": "People Ops and HRBP teams running company-wide engagement, development, and performance programs.",
+        "audience": "Fast-scaling companies expanding headcount across multiple regions while streamlining core HR workflows.",
         "focus_feature": "engagement surveys, career pathing, and people-science benchmarks."
     }
 }
@@ -1064,10 +1064,11 @@ def build_overall_fit_copy(winner, winner_key, tool_a, tool_b, key_a, key_b, nic
 
 
 def build_hr_stack_take(winner, runner_up, winner_category, niche_info):
-    """Two-sentence executive takeaway rendered as a blockquote above the
-    comparison table. Sentence one states the condition under which the winner
-    is the right call plus its core differentiator; sentence two does the same
-    for the runner-up, so the reader gets a decision rule rather than a ranking.
+    """Two-sentence executive takeaway rendered as The HR Stack Guide Take
+    blockquote above the comparison table. Sentence one states the condition
+    under which the winner is the right call plus its core differentiator;
+    sentence two does the same for the runner-up, so the reader gets a
+    decision rule rather than a ranking.
 
     When a row was decided by PARTNER_FOCUS (a specialist beating the
     general-purpose HRIS on a specific use case), the take names that use case

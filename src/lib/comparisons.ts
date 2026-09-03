@@ -48,7 +48,7 @@ export interface Comparison {
   winner_bullets: string;
   winner_reason: string;
   verdict_summary: string;
-  /** Two-sentence editorial takeaway rendered as the "The HR Stack Take" blockquote. */
+  /** Two-sentence editorial takeaway rendered as the "The HR Stack Guide Take" blockquote. */
   hr_stack_take: string;
   feature_matrix_json: string;
   meta_title: string;

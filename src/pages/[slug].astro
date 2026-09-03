@@ -9,6 +9,7 @@ import { outboundRel } from '../lib/links';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
 import DataVerificationBadge from '../components/DataVerificationBadge.astro';
+import { resolveScenarioSubtitle } from '../data/scenarios';
 
 /**
  * Routes outbound CTAs through our own `/go/{slug}` redirect for any tool
@@ -690,7 +691,7 @@ const schemaGraph = buildSchemaGraph(
         </h1>
 
         <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
-          {cleanCopy(comparison.target_audience)}
+          {resolveScenarioSubtitle(comparison.niche_id, comparison.niche_name, comparison.target_audience)}
         </p>
 
         <!--
@@ -705,10 +706,10 @@ const schemaGraph = buildSchemaGraph(
 
       <DataVerificationBadge quarter={currentQuarter} />
 
-      <!-- The HR Stack Take: executive takeaway above the comparison tables -->
+      <!-- The HR Stack Guide Take: executive takeaway above the comparison tables -->
       {comparison.hr_stack_take && (
         <blockquote class="my-6 rounded-r-lg border-l-4 border-indigo-600 bg-slate-50 p-4 font-medium text-slate-800">
-          <p class="text-xs font-bold uppercase tracking-wide text-indigo-700">The HR Stack Take</p>
+          <p class="text-xs font-bold uppercase tracking-wide text-indigo-700">The HR Stack Guide Take</p>
           <p class="mt-2 text-base leading-relaxed">{cleanCopy(comparison.hr_stack_take)}</p>
         </blockquote>
       )}
