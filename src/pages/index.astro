@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import RecommendationTeaser from '../components/RecommendationTeaser.astro';
-import BrowseByVendor from '../components/BrowseByVendor.astro';
 import { loadComparisons } from '../lib/comparisons';
 import { comparisonHubSlug } from '../lib/comparison-routes';
 import { loadToolProfiles } from '../lib/tools';
@@ -141,33 +140,6 @@ const searchTools = Object.entries(toolProfiles).map(([id, profile]) => ({
   name: nameById.get(id) ?? id,
   href: (profile.category && hubHrefByCategory[profile.category]) || '/',
 }));
-
-const BROWSE_VENDOR_IDS = [
-  'deel',
-  'rippling',
-  'gusto',
-  'remote',
-  'ashby',
-  'greenhouse',
-  'lever',
-  'workable',
-  '15five',
-  'lattice',
-  'leapsome',
-] as const;
-
-const browseVendors = BROWSE_VENDOR_IDS.flatMap((id) => {
-  const profile = toolProfiles[id];
-  const hub = profile?.category ? hubHrefByCategory[profile.category] : undefined;
-  if (!hub) return [];
-  return [
-    {
-      id,
-      name: nameById.get(id) ?? id,
-      href: `${hub}?vendor=${encodeURIComponent(id)}#browse-comparisons`,
-    },
-  ];
-});
 
 const searchComparisons = (() => {
   const seen = new Set<string>();
@@ -414,8 +386,6 @@ const websiteSchema = {
         </div>
       </section>
     )}
-
-    <BrowseByVendor vendors={browseVendors} />
 
     <!-- Our Evaluation Methodology (E-E-A-T trust pillars) -->
     <section class="mt-16" aria-label="Our evaluation methodology">
