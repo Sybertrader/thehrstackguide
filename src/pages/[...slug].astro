@@ -28,7 +28,7 @@ import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
 import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
 import ComparisonFaq from '../components/ComparisonFaq.astro';
-import { resolveChildHeroSubtitle } from '../data/scenarios';
+import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildPersonaEvaluation,
   buildPersonaFaqItems,
@@ -602,7 +602,7 @@ const pageDescription = isHub
   ? `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for technology buyers, startups, and scaleups. Feature matrix, pricing nuance, and specialized use-case evaluations.`
   : `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for ${modifierLabel}. Tailored capability breakdown, workflow evaluation, and pricing nuance.`;
 const heroSubtitle = isHub
-  ? `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for general technology buyers, startups, and scaleups evaluating HR stack software.`
+  ? resolveHubHeroSubtitle(hubFamily, comparison.tool_a_name, comparison.tool_b_name)
   : resolveChildHeroSubtitle(
       hubFamily,
       comparison.niche_id,

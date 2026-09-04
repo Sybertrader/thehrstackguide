@@ -88,10 +88,26 @@ export function resolveScenarioSubtitle(
   return fallback?.trim() || BUYER_GROUP_SUBTITLES.scaleups;
 }
 
-type ChildHeroVertical = 'ats' | 'payroll' | 'pm';
+type HeroVertical = 'ats' | 'payroll' | 'pm';
+
+/** Master-hub hero: category noun phrase interpolated into the subhead template. */
+export const HUB_CATEGORY_LABELS: Record<HeroVertical, string> = {
+  ats: 'applicant tracking systems and recruiting software',
+  payroll: 'global payroll and Employer of Record (EOR) platforms',
+  pm: 'performance management and review software',
+};
+
+export function resolveHubHeroSubtitle(
+  family: HeroVertical | null | undefined,
+  toolAName: string,
+  toolBName: string
+): string {
+  const categoryLabel = (family && HUB_CATEGORY_LABELS[family]) || 'HR software';
+  return `Independent comparison of ${toolAName} and ${toolBName} for teams evaluating ${categoryLabel}.`;
+}
 
 /** Child-page hero subheads: one description per vertical × persona. */
-export const CHILD_HERO_SUBTITLES: Record<ChildHeroVertical, Record<string, string>> = {
+export const CHILD_HERO_SUBTITLES: Record<HeroVertical, Record<string, string>> = {
   ats: {
     startups:
       'Early-stage startups building structured candidate pipelines and scaling headcount without complex HR overhead.',
@@ -139,7 +155,7 @@ function publicPersonaId(nicheId: string): string {
  * Falls back to the inclusive buyer-group subtitle if a pair is unmapped.
  */
 export function resolveChildHeroSubtitle(
-  family: ChildHeroVertical | null | undefined,
+  family: HeroVertical | null | undefined,
   nicheId: string,
   nicheName: string,
   fallback?: string
