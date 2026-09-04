@@ -84,6 +84,10 @@ export interface PerformanceMgmtPersonaData {
   enterpriseFeatures: PerformanceMgmtFeatures;
 }
 
+/**
+ * Sub-niche persona packs. There is no `for-tech-startups` key: startup
+ * buyer-group specs live on `startupFeatures` inside each category object.
+ */
 export interface PersonaData {
   globalPayroll?: GlobalPayrollPersonaData;
   ats?: AtsPersonaData;

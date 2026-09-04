@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { parse } from 'csv-parse/sync';
+import { personaDataForComparison } from '../data/personaData';
 import { isComparisonRouteSlug } from './comparison-routes';
 import type { Comparison } from '../types/comparison';
 
@@ -23,7 +24,22 @@ export function loadComparisons(): Comparison[] {
   const csvPath = path.join(process.cwd(), 'comparisons.csv');
   const content = fs.readFileSync(csvPath, 'utf-8');
   const rows = parse(content, { columns: true, skip_empty_lines: true }) as Comparison[];
-  return rows.filter((row) => isComparisonRouteSlug(row.slug));
+  return rows
+    .filter((row) => isComparisonRouteSlug(row.slug))
+    .map((row) => {
+      const personaData = personaDataForComparison(
+        row.tool_a_id,
+        row.tool_b_id,
+        row.tool_a_name,
+        row.tool_b_name
+      );
+      if (!personaData) {
+        throw new Error(
+          `Missing personaData pack for ${row.tool_a_id} vs ${row.tool_b_id} (${row.slug})`
+        );
+      }
+      return { ...row, personaData };
+    });
 }
 
 /**

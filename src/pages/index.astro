@@ -455,6 +455,7 @@ const websiteSchema = {
       }
 
       function render(query: string) {
+        if (!results) return;
         const { tools, comparisons } = findMatches(query);
 
         if (!tools.length && !comparisons.length) {
@@ -497,7 +498,7 @@ const websiteSchema = {
       });
       document.addEventListener('click', (event) => {
         if (!form.contains(event.target as Node)) {
-          results.classList.add('hidden');
+          results?.classList.add('hidden');
         }
       });
 
