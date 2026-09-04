@@ -28,19 +28,33 @@ const categories = [
 const LEGACY_CATEGORY_VALUES: Record<string, string> = { payroll: 'global_eor' };
 const resolvedPrefill = LEGACY_CATEGORY_VALUES[categoryPrefill] ?? categoryPrefill;
 
-// Values double as the persona segment of our comparison slugs, e.g.
-// /15five-vs-performyard-for-remote-teams/.
-const companyTypes = [
-  { value: 'startups', label: 'Tech Startup' },
-  { value: 'scaleups', label: 'Scaleup (50-250 employees)' },
-  { value: 'enterprise', label: 'Enterprise' },
-  { value: 'remote-teams', label: 'Remote / Distributed Team' },
-  { value: 'us-latam', label: 'US & LATAM / Nearshore Team' },
-  { value: 'people-ops', label: 'People Ops Leader' },
-  { value: 'agencies', label: 'Agency / Professional Services' },
-  { value: 'web3-crypto', label: 'Web3 / Crypto' },
-  { value: 'other', label: 'Other / General' },
-];
+// Labels for every persona token the wizard can emit. Question 2 only
+// shows the subset that the selected category actually publishes.
+const companyTypeCatalog: Record<string, string> = {
+  startups: 'Tech Startup',
+  scaleups: 'Scaleup (50-250 employees)',
+  enterprise: 'Enterprise',
+  agencies: 'Agency / Professional Services',
+  'remote-teams': 'Remote / Distributed Team',
+  'us-latam': 'US & LATAM / Nearshore Team',
+  'people-ops': 'People Ops Leader',
+  'web3-crypto': 'Web3 & Crypto',
+};
+
+const personasByCategory: Record<string, string[]> = {
+  ats: ['startups', 'scaleups', 'enterprise', 'agencies', 'remote-teams'],
+  global_eor: ['startups', 'scaleups', 'agencies', 'us-latam', 'web3-crypto'],
+  performance: ['startups', 'scaleups', 'enterprise', 'people-ops', 'remote-teams'],
+};
+
+function companyTypeOptionsFor(category: string): { value: string; label: string }[] {
+  return (personasByCategory[category] ?? []).map((value) => ({
+    value,
+    label: companyTypeCatalog[value] ?? value,
+  }));
+}
+
+const initialCompanyTypes = companyTypeOptionsFor(resolvedPrefill);
 
 const budgets = [
   { value: 'lean', label: 'Under $500 / month' },
@@ -55,13 +69,19 @@ const locations = [
 ];
 
 const SELECT_CLASSES =
-  'mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100';
+  'mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500';
 const LABEL_CLASSES = 'block text-sm font-semibold text-slate-900';
 
 const HeadingTag = headingLevel;
 ---
 
-<section class:list={['recommendation-engine', className]} aria-label="Get our recommendation" data-recommendation-engine>
+<section
+  class:list={['recommendation-engine', className]}
+  aria-label="Get our recommendation"
+  data-recommendation-engine
+  data-company-type-catalog={JSON.stringify(companyTypeCatalog)}
+  data-personas-by-category={JSON.stringify(personasByCategory)}
+>
   {showEyebrow && (
     <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold uppercase tracking-wide text-indigo-700">
       Free Guidance
@@ -100,9 +120,15 @@ const HeadingTag = headingLevel;
         <label class={LABEL_CLASSES} for="company-type-select">
           2. What best describes your company?
         </label>
-        <select id="company-type-select" name="companyType" required class={SELECT_CLASSES}>
+        <select
+          id="company-type-select"
+          name="companyType"
+          required
+          disabled={!resolvedPrefill}
+          class={SELECT_CLASSES}
+        >
           <option value="" disabled selected>Select company type</option>
-          {companyTypes.map((option) => (
+          {initialCompanyTypes.map((option) => (
             <option value={option.value}>{option.label}</option>
           ))}
         </select>
@@ -229,17 +255,86 @@ const HeadingTag = headingLevel;
     if (isKnown) select.value = value;
   }
 
+  function parseJsonData<T>(root: HTMLElement, key: string, fallback: T): T {
+    try {
+      const raw = root.dataset[key];
+      return raw ? (JSON.parse(raw) as T) : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function personasForCategory(
+    category: string,
+    byCategory: Record<string, string[]>,
+  ): string[] | null {
+    const key = LEGACY_CATEGORY_VALUES[category] ?? category;
+    const allowed = byCategory[key];
+    return allowed?.length ? allowed : null;
+  }
+
+  function syncCompanyTypeOptions(
+    root: HTMLElement,
+    categorySelect: HTMLSelectElement,
+    companyTypeSelect: HTMLSelectElement,
+  ) {
+    const catalog = parseJsonData<Record<string, string>>(root, 'companyTypeCatalog', {});
+    const byCategory = parseJsonData<Record<string, string[]>>(root, 'personasByCategory', {});
+    const allowed = personasForCategory(categorySelect.value, byCategory);
+    const previous = companyTypeSelect.value;
+
+    const placeholder = document.createElement('option');
+    placeholder.value = '';
+    placeholder.disabled = true;
+    placeholder.textContent = 'Select company type';
+    companyTypeSelect.replaceChildren(placeholder);
+
+    if (!allowed) {
+      companyTypeSelect.disabled = true;
+      companyTypeSelect.selectedIndex = 0;
+      markValidity(companyTypeSelect, true);
+      return;
+    }
+
+    companyTypeSelect.disabled = false;
+    for (const value of allowed) {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = catalog[value] ?? value;
+      companyTypeSelect.append(option);
+    }
+
+    if (previous && allowed.includes(previous)) {
+      companyTypeSelect.value = previous;
+    } else {
+      companyTypeSelect.selectedIndex = 0;
+    }
+
+    // A category switch that empties Q2 is a reset, not a failed submit.
+    markValidity(companyTypeSelect, true);
+  }
+
   function initRecommendationEngine(root: Element) {
     const form = root.querySelector('.recommendation-form') as HTMLFormElement | null;
     if (!form) return;
 
+    const categorySelect = form.querySelector('select[name="category"]') as HTMLSelectElement | null;
+    const companyTypeSelect = form.querySelector(
+      'select[name="companyType"]',
+    ) as HTMLSelectElement | null;
+    if (!categorySelect || !companyTypeSelect) return;
+
     applyCategoryPrefill(form);
+    syncCompanyTypeOptions(root as HTMLElement, categorySelect, companyTypeSelect);
 
     const selects = Array.from(form.querySelectorAll('select')) as HTMLSelectElement[];
 
     // Clear the highlight as soon as the visitor answers the question.
     selects.forEach((select) => {
       select.addEventListener('change', () => {
+        if (select === categorySelect) {
+          syncCompanyTypeOptions(root as HTMLElement, categorySelect, companyTypeSelect);
+        }
         if (select.value) markValidity(select, true);
       });
     });
