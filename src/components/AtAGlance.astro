@@ -147,27 +147,22 @@ function parseBool(value: string): boolean {
       </ul>
     )}
 
-    {toolAIsManualLead ? (
-      <button
-        type="button"
-        data-modal-target={toolAModalId}
-        class="open-modal-btn mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-      >
-        Request Intro &amp; Pricing
-      </button>
-    ) : (
       <VendorButton
         href={toolAAffiliateHref}
+        modalId={toolAIsManualLead ? toolAModalId : undefined}
         vendorName={comparison.tool_a_name}
         location="comparison_card"
         class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Try {comparison.tool_a_name}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
-          <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-        </svg>
+        {
+          !toolAIsManualLead && (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
+              <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+            </svg>
+          )
+        }
       </VendorButton>
-    )}
   </article>
 
   <article
@@ -257,26 +252,21 @@ function parseBool(value: string): boolean {
       </ul>
     )}
 
-    {toolBIsManualLead ? (
-      <button
-        type="button"
-        data-modal-target={toolBModalId}
-        class="open-modal-btn mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-      >
-        Request Intro &amp; Pricing
-      </button>
-    ) : (
       <VendorButton
         href={toolBAffiliateHref}
+        modalId={toolBIsManualLead ? toolBModalId : undefined}
         vendorName={comparison.tool_b_name}
         location="comparison_card"
         class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Try {comparison.tool_b_name}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
-          <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-        </svg>
+        {
+          !toolBIsManualLead && (
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
+              <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+            </svg>
+          )
+        }
       </VendorButton>
-    )}
   </article>
 </section>

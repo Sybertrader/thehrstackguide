@@ -63,6 +63,11 @@ export function isManualLeadBrand(toolId: string): boolean {
   return (MANUAL_LEAD_BRANDS as readonly string[]).includes(toolId.toLowerCase().trim());
 }
 
+/** Must match ManualLeadModal default `modalId` (spaces become hyphens). */
+export function manualLeadModalId(brandName: string): string {
+  return `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`;
+}
+
 export function normalizeVendorDomain(value: string): string {
   return value
     .trim()
@@ -128,4 +133,9 @@ export function resolveVendorOutboundHref(toolId: string, csvFallbackUrl = ''): 
 /** Inline `onclick` body matching the unified GA4 `vendor_outbound_click` event. */
 export function vendorOutboundOnclick(vendorName: string): string {
   return `if(typeof gtag==='function'){gtag('event','vendor_outbound_click',{'vendor_name':${JSON.stringify(vendorName)},'page_location':window.location.pathname});}`;
+}
+
+/** Inline `onclick` for lead-capture CTAs that open the intro modal. */
+export function vendorLeadModalOnclick(vendorName: string): string {
+  return `if(typeof gtag==='function'){gtag('event','vendor_lead_modal_open',{'vendor_name':${JSON.stringify(vendorName)},'page_location':window.location.pathname});}`;
 }

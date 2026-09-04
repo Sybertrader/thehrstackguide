@@ -1,25 +1,44 @@
 ---
-import { VENDOR_OUTBOUND_REL, vendorOutboundOnclick } from '../lib/outbound';
+import { VENDOR_OUTBOUND_REL, vendorLeadModalOnclick, vendorOutboundOnclick } from '../lib/outbound';
 
 interface Props {
-  href: string;
   vendorName: string;
   location?: string;
   class?: string;
+  /** Outbound affiliate / UTM href. Ignored when `modalId` is set. */
+  href?: string;
+  /** When set, the CTA opens the lead-capture modal instead of leaving the site. */
+  modalId?: string;
 }
 
-const { href, vendorName, location = 'body_link', class: className = '' } = Astro.props;
+const { href = '', vendorName, location = 'body_link', class: className = '', modalId = '' } = Astro.props;
+const opensModal = Boolean(modalId);
 ---
 
-<a
-  href={href}
-  target="_blank"
-  rel={VENDOR_OUTBOUND_REL}
-  class:list={['js-affiliate-cta', className]}
-  data-track-vendor={vendorName}
-  data-track-location={location}
-  data-vendor-outbound
-  onclick={vendorOutboundOnclick(vendorName)}
->
-  <slot>Try {vendorName}</slot>
-</a>
+{
+  opensModal ? (
+    <button
+      type="button"
+      data-modal-target={modalId}
+      class:list={['open-modal-btn', className]}
+      data-track-vendor={vendorName}
+      data-track-location={location}
+      onclick={vendorLeadModalOnclick(vendorName)}
+    >
+      <slot>Try {vendorName}</slot>
+    </button>
+  ) : (
+    <a
+      href={href}
+      target="_blank"
+      rel={VENDOR_OUTBOUND_REL}
+      class:list={['js-affiliate-cta', className]}
+      data-track-vendor={vendorName}
+      data-track-location={location}
+      data-vendor-outbound
+      onclick={vendorOutboundOnclick(vendorName)}
+    >
+      <slot>Try {vendorName}</slot>
+    </a>
+  )
+}

@@ -14,7 +14,7 @@ import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { isComparisonRouteSlug, comparisonHubSlug, isLegacyTechStartupsSlug } from '../lib/comparison-routes';
 import { getToolProfile } from '../lib/tools';
 import type { EnterpriseAnalysis } from '../lib/tools';
-import { isManualLeadBrand, resolveVendorOutboundHref } from '../lib/outbound';
+import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref } from '../lib/outbound';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
 import DataVerificationBadge from '../components/DataVerificationBadge.astro';
@@ -49,9 +49,6 @@ import {
  * component. Applying the rule here keeps every CTA on a comparison page
  * (cards, feature table, decision checklist, final verdict) consistent.
  */
-function manualLeadModalId(brandName: string): string {
-  return `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`;
-}
 
 interface ComparisonPageProps {
   comparison: Comparison;
@@ -1016,44 +1013,26 @@ const relatedHref = (item: Comparison) =>
                   <tr class="border-t border-slate-200 bg-slate-50">
                     <td class="px-6 py-4 text-sm font-medium text-slate-500">Ready to get started?</td>
                     <td class="px-6 py-4">
-                      {toolAIsManualLead ? (
-                        <button
-                          type="button"
-                          data-modal-target={toolAModalId}
-                          class="open-modal-btn inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-                        >
-                          Request Intro &amp; Pricing
-                        </button>
-                      ) : (
-                        <VendorButton
-                          href={toolAAffiliateHref}
-                          vendorName={comparison.tool_a_name}
-                          location="feature_table"
-                          class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-                        >
-                          Try {comparison.tool_a_name} ↗
-                        </VendorButton>
-                      )}
+                      <VendorButton
+                        href={toolAAffiliateHref}
+                        modalId={toolAIsManualLead ? toolAModalId : undefined}
+                        vendorName={comparison.tool_a_name}
+                        location="feature_table"
+                        class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                      >
+                        Try {comparison.tool_a_name}{toolAIsManualLead ? '' : ' ↗'}
+                      </VendorButton>
                     </td>
                     <td class="px-6 py-4">
-                      {toolBIsManualLead ? (
-                        <button
-                          type="button"
-                          data-modal-target={toolBModalId}
-                          class="open-modal-btn inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-                        >
-                          Request Intro &amp; Pricing
-                        </button>
-                      ) : (
-                        <VendorButton
-                          href={toolBAffiliateHref}
-                          vendorName={comparison.tool_b_name}
-                          location="feature_table"
-                          class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
-                        >
-                          Try {comparison.tool_b_name} ↗
-                        </VendorButton>
-                      )}
+                      <VendorButton
+                        href={toolBAffiliateHref}
+                        modalId={toolBIsManualLead ? toolBModalId : undefined}
+                        vendorName={comparison.tool_b_name}
+                        location="feature_table"
+                        class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                      >
+                        Try {comparison.tool_b_name}{toolBIsManualLead ? '' : ' ↗'}
+                      </VendorButton>
                     </td>
                   </tr>
                 </tfoot>
@@ -1195,24 +1174,15 @@ const relatedHref = (item: Comparison) =>
                 </li>
               ))}
             </ul>
-            {toolAIsManualLead ? (
-              <button
-                type="button"
-                data-modal-target={toolAModalId}
-                class="open-modal-btn mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-              >
-                Request Intro &amp; Pricing
-              </button>
-            ) : (
-              <VendorButton
-                href={toolAAffiliateHref}
-                vendorName={comparison.tool_a_name}
-                location="decision_checklist"
-                class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-              >
-                Try {comparison.tool_a_name}
-              </VendorButton>
-            )}
+            <VendorButton
+              href={toolAAffiliateHref}
+              modalId={toolAIsManualLead ? toolAModalId : undefined}
+              vendorName={comparison.tool_a_name}
+              location="decision_checklist"
+              class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+            >
+              Try {comparison.tool_a_name}
+            </VendorButton>
           </div>
 
           <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
@@ -1227,24 +1197,15 @@ const relatedHref = (item: Comparison) =>
                 </li>
               ))}
             </ul>
-            {toolBIsManualLead ? (
-              <button
-                type="button"
-                data-modal-target={toolBModalId}
-                class="open-modal-btn mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-              >
-                Request Intro &amp; Pricing
-              </button>
-            ) : (
-              <VendorButton
-                href={toolBAffiliateHref}
-                vendorName={comparison.tool_b_name}
-                location="decision_checklist"
-                class="mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-              >
-                Try {comparison.tool_b_name}
-              </VendorButton>
-            )}
+            <VendorButton
+              href={toolBAffiliateHref}
+              modalId={toolBIsManualLead ? toolBModalId : undefined}
+              vendorName={comparison.tool_b_name}
+              location="decision_checklist"
+              class="mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+            >
+              Try {comparison.tool_b_name}
+            </VendorButton>
           </div>
         </div>
       </section>
@@ -1298,42 +1259,24 @@ const relatedHref = (item: Comparison) =>
         <!-- Final Primary CTAs -->
         <div class="mt-6 flex flex-col items-start gap-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:flex-row sm:items-center sm:justify-end sm:p-8">
           <div class="flex flex-wrap gap-3">
-            {toolAIsManualLead ? (
-              <button
-                type="button"
-                data-modal-target={toolAModalId}
-                class="open-modal-btn inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-              >
-                Request Intro &amp; Pricing for {comparison.tool_a_name}
-              </button>
-            ) : (
-              <VendorButton
-                href={toolAAffiliateHref}
-                vendorName={comparison.tool_a_name}
-                location="final_verdict"
-                class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-              >
-                Try {comparison.tool_a_name}
-              </VendorButton>
-            )}
-            {toolBIsManualLead ? (
-              <button
-                type="button"
-                data-modal-target={toolBModalId}
-                class="open-modal-btn inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-              >
-                Request Intro &amp; Pricing for {comparison.tool_b_name}
-              </button>
-            ) : (
-              <VendorButton
-                href={toolBAffiliateHref}
-                vendorName={comparison.tool_b_name}
-                location="final_verdict"
-                class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-              >
-                Try {comparison.tool_b_name}
-              </VendorButton>
-            )}
+            <VendorButton
+              href={toolAAffiliateHref}
+              modalId={toolAIsManualLead ? toolAModalId : undefined}
+              vendorName={comparison.tool_a_name}
+              location="final_verdict"
+              class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+            >
+              Try {comparison.tool_a_name}
+            </VendorButton>
+            <VendorButton
+              href={toolBAffiliateHref}
+              modalId={toolBIsManualLead ? toolBModalId : undefined}
+              vendorName={comparison.tool_b_name}
+              location="final_verdict"
+              class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+            >
+              Try {comparison.tool_b_name}
+            </VendorButton>
           </div>
         </div>
       </section>
@@ -1346,42 +1289,24 @@ const relatedHref = (item: Comparison) =>
               Ready to act on this {modifierLabel} evaluation of {pairName}?
             </p>
             <div class="flex flex-wrap gap-3">
-              {toolAIsManualLead ? (
-                <button
-                  type="button"
-                  data-modal-target={toolAModalId}
-                  class="open-modal-btn inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-                >
-                  Request Intro &amp; Pricing for {comparison.tool_a_name}
-                </button>
-              ) : (
-                <VendorButton
-                  href={toolAAffiliateHref}
-                  vendorName={comparison.tool_a_name}
-                  location="persona_next_step"
-                  class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-                >
-                  Try {comparison.tool_a_name}
-                </VendorButton>
-              )}
-              {toolBIsManualLead ? (
-                <button
-                  type="button"
-                  data-modal-target={toolBModalId}
-                  class="open-modal-btn inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-                >
-                  Request Intro &amp; Pricing for {comparison.tool_b_name}
-                </button>
-              ) : (
-                <VendorButton
-                  href={toolBAffiliateHref}
-                  vendorName={comparison.tool_b_name}
-                  location="persona_next_step"
-                  class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-                >
-                  Try {comparison.tool_b_name}
-                </VendorButton>
-              )}
+              <VendorButton
+                href={toolAAffiliateHref}
+                modalId={toolAIsManualLead ? toolAModalId : undefined}
+                vendorName={comparison.tool_a_name}
+                location="persona_next_step"
+                class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+              >
+                Try {comparison.tool_a_name}
+              </VendorButton>
+              <VendorButton
+                href={toolBAffiliateHref}
+                modalId={toolBIsManualLead ? toolBModalId : undefined}
+                vendorName={comparison.tool_b_name}
+                location="persona_next_step"
+                class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+              >
+                Try {comparison.tool_b_name}
+              </VendorButton>
             </div>
           </div>
         </section>
