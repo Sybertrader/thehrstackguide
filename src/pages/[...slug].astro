@@ -1375,9 +1375,8 @@ const relatedHref = (item: Comparison) =>
                             </svg>
                           </span>
                           <span>
-                            <strong class="font-semibold text-slate-900">{point.label}.</strong>
-                            {' '}
-                            {point.spec}
+                            <strong class="font-semibold text-slate-900">{point.label.replace(/[.,;:]+$/, '')}.</strong>
+                            {point.spec ? ` ${point.spec}` : ''}
                           </span>
                         </li>
                       ))}
@@ -1403,9 +1402,8 @@ const relatedHref = (item: Comparison) =>
                             </svg>
                           </span>
                           <span>
-                            <strong class="font-semibold text-slate-900">{point.label}.</strong>
-                            {' '}
-                            {point.spec}
+                            <strong class="font-semibold text-slate-900">{point.label.replace(/[.,;:]+$/, '')}.</strong>
+                            {point.spec ? ` ${point.spec}` : ''}
                           </span>
                         </li>
                       ))}

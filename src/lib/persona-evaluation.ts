@@ -142,6 +142,92 @@ export function startupAliasForPair(rows: Comparison[]): Comparison | null {
   };
 }
 
+const ATS_BUYER_ITEMS: Record<string, string[]> = {
+  startups: [
+    'Confirm structured scorecards can run without a dedicated recruiting-ops hire.',
+    'Price year-one cost at hiring volume—seats versus a flat fee—including job-board and background-check add-ons.',
+    'Test self-scheduling across the time zones you actually interview in.',
+    'Skip enterprise EEO/OFCCP packaging unless you will become a federal contractor this year.',
+  ],
+  scaleups: [
+    'Require interview kits that stay auditable as the hiring team grows past a handful of recruiters.',
+    'Confirm CRM or silver-medalist nurture so you are not re-sourcing the same closed roles.',
+    'Quote HRIS, background-check, and assessment integrations in the contract, not as a later marketplace surprise.',
+    'Model recruiter-seat math at twice current hiring volume before you sign an annual term.',
+  ],
+  agencies: [
+    'Confirm client portals and multi-account pipelines, not a single in-house requisition list.',
+    'Keep submissions auditable per client for retainer and placement reporting.',
+    'Check whether the sourcing CRM can run outbound without buying a second tool.',
+    'Model cost at peak req load (surge hiring), not last month’s average openings.',
+  ],
+  enterprise: [
+    'Require OFCCP/EEO reporting and structured-hiring methodology in the RFP, not a slide-deck promise.',
+    'Ask for SSO/SCIM and a named implementation owner before procurement signs.',
+    'Audit the integration catalog against your HRIS and background-check stack.',
+    'Prioritize interview-kit enforcement over unlimited-seat marketing if legal will review the file.',
+  ],
+  'remote-teams': [
+    'Require multi-time-zone self-scheduling without a shared office calendar.',
+    'Confirm async video or take-home workflows for interviewers who never overlap.',
+    'Check career-site language support if you hire outside one country.',
+    'Run a full interview loop with no overlapping working hours before you buy.',
+  ],
+};
+
+const PM_BUYER_ITEMS: Record<string, string[]> = {
+  startups: [
+    'Confirm weekly check-ins and 1:1s can run without a People Ops specialist.',
+    'Price seats at 12-month headcount, including any extra review or goals modules.',
+    'Skip compensation-calibration SKUs until you actually run a merit cycle.',
+    'Check Slack or Teams so feedback does not live behind a second login.',
+  ],
+  scaleups: [
+    'Require OKRs and reviews in one system before you add a third survey tool.',
+    'Test calibration with real manager data, not a sandbox demo dataset.',
+    'Quote compensation modules as a line item so Finance sees the all-in number.',
+    'Confirm HRIS and SSO sync so reviews are not keyed off a shadow org chart.',
+  ],
+  'people-ops': [
+    'Score whether engagement, talent calibration, and people analytics live in one HRBP console.',
+    'Refuse a stack that forces a CSV export into a second dashboard every review cycle.',
+    'Confirm manager 1:1s and reviews can be templated without buying extra admin seats.',
+    'Check SSO and HRIS sync so People Ops is not maintaining a shadow org chart.',
+  ],
+  'remote-teams': [
+    'Require async check-ins and reviews that work across time zones without hallway context.',
+    'Reject tools that assume one office language or one shared working day.',
+    'Confirm Slack/Teams nudges reach managers who are not in the HRIS all day.',
+    'Test a full review cycle with no overlapping working hours before you buy.',
+  ],
+  agencies: [
+    'Confirm reviews can run across billable teams without assuming a single in-house org chart.',
+    'Keep cycle completion auditable per client or studio, not only company-wide.',
+    'Check whether 1:1s and feedback work for mixed employee and contractor benches.',
+    'Model seat cost at peak bench size, not last month’s average roster.',
+  ],
+  enterprise: [
+    'Require SAML 2.0 SSO and compensation calibration that survives legal review.',
+    'Ask for engagement-science or works-council evidence, not a self-serve SMB PDF.',
+    'Run a talent-calibration tabletop with HRBPs before you rip out the incumbent.',
+    'Get a named implementation SLA into the MSA before kickoff.',
+  ],
+};
+
+function comparisonFamily(toolAId: string, toolBId: string): 'payroll' | 'ats' | 'pm' | null {
+  if (globalPayrollPersonaByToolId[toolAId] && globalPayrollPersonaByToolId[toolBId]) return 'payroll';
+  if (atsPersonaByToolId[toolAId] && atsPersonaByToolId[toolBId]) return 'ats';
+  if (performancePersonaByToolId[toolAId] && performancePersonaByToolId[toolBId]) return 'pm';
+  return null;
+}
+
+function buyerItemsFor(comparison: Comparison): string[] {
+  const family = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
+  const table =
+    family === 'ats' ? ATS_BUYER_ITEMS : family === 'pm' ? PM_BUYER_ITEMS : BUYER_WORKFLOW_ITEMS;
+  return (table[comparison.niche_id] ?? table.scaleups ?? BUYER_WORKFLOW_ITEMS.scaleups ?? []).slice(0, 4);
+}
+
 function packAndLabels(toolAId: string, toolBId: string): {
   packA: Record<string, Record<string, FeatureSpec>>;
   packB: Record<string, Record<string, FeatureSpec>>;
@@ -210,40 +296,58 @@ function clipSpec(spec: string, maxWords = 24): string {
 
 const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
   'tech-startups': [
-    'Prioritize speed: stand up payroll or hiring without a specialist admin.',
-    'Revisit entity ownership, compliance reporting, and seat math once headcount clears the first twenty people.',
+    'Confirm you can run first international hires without hiring a specialist payroll or HR admin.',
+    'Price the first 12 months including EOR, contractor seats, and any IT or device modules—not just the headline rate.',
+    'Check the real onboarding SLA in the countries you will hire, not the homepage coverage map.',
+    'Decide now whether you need owned-entity employment for IP and contracts, or whether a partner-network EOR is acceptable.',
   ],
   startups: [
-    'Prioritize speed: stand up the process without a specialist admin.',
-    'Revisit compliance reporting and seat math once hiring volume or review cycles actually exist.',
+    'Confirm you can stand up payroll or hiring without a dedicated People Ops hire in the first 90 days.',
+    'Model year-one cost at your planned headcount, including add-on modules you will actually turn on.',
+    'Verify onboarding time in your first two countries before you sign a multi-year term.',
+    'Write IP assignment and contractor-vs-employee classification into the offer process, not as a cleanup project later.',
   ],
   scaleups: [
-    'Treat this as an operating-system replacement: consolidate multi-country or multi-team processes onto one vendor.',
-    'Instrument reporting so People and Finance are not reconciling spreadsheets at month end.',
+    'List every country and worker type (W-2, EOR, contractor) you will run over the next 18 months.',
+    'Require one system of record for People and Finance so month-end is not a spreadsheet merge.',
+    'Quote payroll, SSO, reporting, and workflow automation as a package—not à la carte surprises after kickoff.',
+    'Pilot onboarding and approvals with one team before you rip out the incumbent stack.',
   ],
   agencies: [
-    'Optimize for client-facing throughput: batch contractor or candidate movement across accounts.',
-    'Keep submissions or payouts auditable, and avoid tools that assume a single in-house headcount plan.',
+    'Confirm the vendor can batch contractors and employees across client accounts, not a single in-house headcount plan.',
+    'Keep payouts, submissions, and billable time auditable per client for invoice reconciliation.',
+    'Check whether client-device and app access can sit on the same worker record as payroll.',
+    'Model cost at peak bench size (holiday and campaign spikes), not last month’s average roster.',
   ],
   'us-latam': [
-    'Lock the Brazil/Mexico employment vehicle (owned entity versus partner) before you run offers.',
-    'Accrue 13th-month and social charges into the offer, then onboard only after FX and IP assignment are in the contract.',
+    'Lock Brazil and Mexico as owned-entity versus partner EOR before you issue offers.',
+    'Accrue 13th-month pay, social charges, and statutory vacation into the fully loaded offer.',
+    'Confirm FX treatment on BRL/MXN payroll so take-home matches the number in the signed contract.',
+    'Put local IP assignment in the employment agreement before day-one onboarding starts.',
   ],
   'web3-crypto': [
-    'Confirm whether USDC or crypto payouts are native before you model treasury plus employment.',
-    'Keep token compensation off the payroll rail unless the vendor actually supports it, and model fiat FX on the rest of the bench.',
+    'Confirm native USDC or crypto payouts—do not assume a fiat HRIS can run treasury rails.',
+    'Keep token compensation off the payroll file unless the vendor actually supports it.',
+    'Model fiat FX on the rest of the bench (USD/USDC contractors versus locally employed staff).',
+    'Check contractor misclassification cover if you mix token grants with 1099 or W-8BEN workers.',
   ],
   enterprise: [
-    'Run this as procurement: require SAML 2.0 SSO and audit-ready EEO or works-council evidence.',
-    'Demand compensation or structured-hiring calibration that survives legal review—not a self-serve SMB checkout.',
+    'Require SAML 2.0 SSO and SCIM in the security questionnaire before procurement starts.',
+    'Ask for audit-ready EEO or works-council evidence, not a self-serve SMB PDF.',
+    'Run compensation or structured-hiring calibration with legal in the room, not only HR.',
+    'Get a named implementation SLA and data-processing addendum into the MSA before kickoff.',
   ],
   'remote-teams': [
-    'Require async-first workflows: multi-time-zone scheduling or Slack/Teams check-ins must work without hallway context.',
-    'Reject vendors that assume one office language or one shared calendar.',
+    'Require async scheduling or Slack/Teams check-ins that work across time zones without hallway context.',
+    'Reject tools that assume one office language, one calendar, or one shared working day.',
+    'Confirm contractor and employee workflows for distributed contributors in the same system.',
+    'Test a full hiring or review cycle with no overlapping working hours before you buy.',
   ],
   'people-ops': [
-    'Score the HRBP console: engagement science, talent calibration, and people analytics should land in one place.',
-    'Avoid a stack that forces business partners to export CSV into a second dashboard.',
+    'Score whether engagement, talent calibration, and people analytics live in one HRBP console.',
+    'Refuse a stack that forces a CSV export into a second dashboard every review cycle.',
+    'Confirm manager 1:1s and reviews can be templated without buying extra admin seats.',
+    'Check SSO and HRIS sync so People Ops is not maintaining a shadow org chart.',
   ],
 };
 
@@ -262,57 +366,174 @@ export interface PersonaEvaluationContent {
   buyerConsiderations: string[];
 }
 
-function fitSentence(comparison: Comparison, modifierLabel: string): string {
-  const winnerName =
-    comparison.winner_id === comparison.tool_a_id
-      ? comparison.tool_a_name
-      : comparison.winner_id === comparison.tool_b_id
-        ? comparison.tool_b_name
-        : comparison.winner_id;
-  const reason = comparison.winner_reason.replace(/\s+/g, ' ').trim();
-  const ended = reason.endsWith('.') ? reason : `${reason}.`;
-  return `${winnerName} is the recommended lean for ${modifierLabel}. ${ended}`;
+function pipeList(value: string | undefined): string[] {
+  if (!value?.trim()) return [];
+  return value.split('|').map((item) => item.trim()).filter(Boolean);
 }
 
-function winPoint(row: PersonaMatrixRow, side: 'a' | 'b'): PersonaWinPoint {
-  return { label: row.label, spec: clipSpec(row[side].spec, 22) };
+function winnerNameOf(comparison: Comparison): string {
+  if (comparison.winner_id === comparison.tool_a_id) return comparison.tool_a_name;
+  if (comparison.winner_id === comparison.tool_b_id) return comparison.tool_b_name;
+  return comparison.winner_id;
 }
 
-function fillWinColumn(
-  exclusive: PersonaWinPoint[],
-  fallbackRows: PersonaMatrixRow[],
-  side: 'a' | 'b',
-  max = 5
-): PersonaWinPoint[] {
-  const points = exclusive.slice(0, max);
-  if (points.length >= 3) return points;
-
-  for (const row of fallbackRows) {
-    if (points.length >= max) break;
-    if (!row[side].supported) continue;
-    if (points.some((point) => point.label === row.label)) continue;
-    points.push(winPoint(row, side));
-  }
-
-  return points;
+function isOwnedEntityPositive(clause: string): boolean {
+  return /\bnot a (partner|third-party)\b/i.test(clause);
 }
 
-function whereTheyWin(rows: PersonaMatrixRow[]): {
-  a: PersonaWinPoint[];
-  b: PersonaWinPoint[];
+function isCaveatClause(clause: string): boolean {
+  if (isOwnedEntityPositive(clause)) return false;
+  const text = clause.toLowerCase();
+  return (
+    /\b(is not|are not|was not|were not|does not|do not|cannot|unfit|out of scope|out of band|there is no|no published)\b/.test(
+      text
+    ) ||
+    /\b(separately priced|not bundled|paid module|paid add-on|headline seat|modules you actually buy|country-dependent|high minimums|later add-on|billed separately|extra seat)\b/.test(
+      text
+    ) ||
+    /\b(trails?|secondary to|depend(?:s)? on the|follow the eor|not the \$|not the core|not comparable|not owned-entity)\b/.test(
+      text
+    ) ||
+    /\bless (?:than|“|")/.test(text)
+  );
+}
+
+/** Keep only affirmative clauses so fee disclosures and gaps never land in a Wins card. */
+function positiveSpecText(spec: string): string | null {
+  const withoutFeeParens = spec.replace(/\([^)]*(?:cost|fee|priced|add-on|seat)[^)]*\)/gi, '');
+  const clauses = withoutFeeParens
+    .split(/[;.]/)
+    .map((clause) => clause.trim())
+    .filter(Boolean);
+  const kept = clauses.filter((clause) => !isCaveatClause(clause));
+  if (kept.length === 0) return null;
+  const joined = kept
+    .map((clause, index) =>
+      index === 0 ? clause : `${clause.charAt(0).toUpperCase()}${clause.slice(1)}`
+    )
+    .join('. ');
+  return clipSpec(joined, 22);
+}
+
+function alreadyCovered(points: PersonaWinPoint[], candidate: string): boolean {
+  const haystack = points.map((point) => `${point.label} ${point.spec}`.toLowerCase()).join(' ');
+  const tokens = candidate
+    .toLowerCase()
+    .split(/\W+/)
+    .filter((token) => token.length > 4);
+  if (tokens.length === 0) return haystack.includes(candidate.toLowerCase());
+  const hits = tokens.filter((token) => haystack.includes(token)).length;
+  return hits >= Math.min(3, tokens.length);
+}
+
+function matrixWinsForSide(rows: PersonaMatrixRow[], side: 'a' | 'b'): {
+  exclusive: PersonaWinPoint[];
+  shared: PersonaWinPoint[];
 } {
-  const exclusiveA: PersonaWinPoint[] = [];
-  const exclusiveB: PersonaWinPoint[] = [];
+  const exclusive: PersonaWinPoint[] = [];
+  const shared: PersonaWinPoint[] = [];
+  const otherSide = side === 'a' ? 'b' : 'a';
 
   for (const row of rows) {
-    if (row.a.supported && !row.b.supported) exclusiveA.push(winPoint(row, 'a'));
-    else if (row.b.supported && !row.a.supported) exclusiveB.push(winPoint(row, 'b'));
+    if (!row[side].supported) continue;
+    const spec = positiveSpecText(row[side].spec);
+    if (!spec) continue;
+    const point = { label: row.label, spec };
+    if (row[otherSide].supported) shared.push(point);
+    else exclusive.push(point);
   }
 
+  return { exclusive, shared };
+}
+
+function supplementWins(
+  points: PersonaWinPoint[],
+  pros: string[],
+  shared: PersonaWinPoint[],
+  max = 4
+): PersonaWinPoint[] {
+  const next = [...points];
+
+  for (const pro of pros) {
+    if (next.length >= max) break;
+    if (isCaveatClause(pro)) continue;
+    if (alreadyCovered(next, pro)) continue;
+    next.push({ label: pro.replace(/[.,;:]+$/, ''), spec: '' });
+  }
+
+  for (const point of shared) {
+    if (next.length >= max) break;
+    if (alreadyCovered(next, `${point.label} ${point.spec}`)) continue;
+    next.push(point);
+  }
+
+  return next.slice(0, max);
+}
+
+function whereTheyWin(
+  comparison: Comparison,
+  rows: PersonaMatrixRow[]
+): { a: PersonaWinPoint[]; b: PersonaWinPoint[] } {
+  const aMatrix = matrixWinsForSide(rows, 'a');
+  const bMatrix = matrixWinsForSide(rows, 'b');
+
   return {
-    a: fillWinColumn(exclusiveA, rows, 'a'),
-    b: fillWinColumn(exclusiveB, rows, 'b'),
+    a: supplementWins(aMatrix.exclusive, pipeList(comparison.tool_a_pros), aMatrix.shared),
+    b: supplementWins(bMatrix.exclusive, pipeList(comparison.tool_b_pros), bMatrix.shared),
   };
+}
+
+function asSupportSentence(fragment: string): string {
+  const trimmed = fragment.replace(/[.,;:]+$/, '').trim();
+  if (!trimmed) return '';
+  if (/^(it|its|this)\b/i.test(trimmed)) return clipSpec(trimmed, 26);
+  if (/^\d/.test(trimmed)) return clipSpec(`It wins with a ${trimmed}`, 26);
+  return clipSpec(`It wins with ${trimmed.charAt(0).toLowerCase()}${trimmed.slice(1)}`, 26);
+}
+
+function punchySupport(comparison: Comparison): string {
+  const bullets = pipeList(comparison.winner_bullets);
+  if (bullets[0]) return asSupportSentence(bullets[0]);
+
+  const afterColon = comparison.winner_reason.split(/:\s+/).slice(1).join(': ');
+  if (afterColon && !/\bsuperior score\b/i.test(afterColon)) {
+    return asSupportSentence(afterColon.split(';')[0]);
+  }
+
+  if (comparison.winner_category && comparison.winner_category.toLowerCase() !== 'overall fit') {
+    return `It leads on ${comparison.winner_category}.`;
+  }
+  return 'It is the stronger overall fit for this workflow.';
+}
+
+function contrastNeed(comparison: Comparison): { name: string; need: string } | null {
+  const winnerIsA = comparison.winner_id === comparison.tool_a_id;
+  const name = winnerIsA ? comparison.tool_b_name : comparison.tool_a_name;
+  const badge = winnerIsA ? comparison.tool_b_badge : comparison.tool_a_badge;
+  const pro = pipeList(winnerIsA ? comparison.tool_b_pros : comparison.tool_a_pros)[0];
+  const need = (badge.replace(/^Best for\s+/i, '').trim() || pro || '').replace(/\s*\([^)]*\)\s*$/, '');
+  if (!need) return null;
+  return { name, need };
+}
+
+function needPhrase(need: string): string {
+  if (/^(US|UK|EU|EEO|IP|IT|HR|SSO|HRIS|ATS|EOR)\b/.test(need)) return need;
+  return need.toLowerCase();
+}
+
+function buildBottomLine(comparison: Comparison, modifierLabel: string): string {
+  const winner = winnerNameOf(comparison);
+  const lead = `${winner} is the top-recommended platform for ${modifierLabel}.`;
+  const support = punchySupport(comparison);
+  const other = contrastNeed(comparison);
+  const contrast = other
+    ? `${other.name} is the stronger alternative when you need ${needPhrase(other.need)}.`
+    : '';
+
+  return [lead, support, contrast]
+    .map((part) => part.replace(/\s{2,}/g, ' ').trim())
+    .filter(Boolean)
+    .join(' ');
 }
 
 /**
@@ -326,26 +547,17 @@ export function buildPersonaEvaluation(
   if (rows.length === 0) return null;
 
   const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
-  const a = comparison.tool_a_name;
-  const b = comparison.tool_b_name;
-  const wins = whereTheyWin(rows);
-  const workflowItems = BUYER_WORKFLOW_ITEMS[comparison.niche_id] ?? BUYER_WORKFLOW_ITEMS.scaleups;
+  const wins = whereTheyWin(comparison, rows);
+  const workflowItems = buyerItemsFor(comparison);
 
   return {
     modifierLabel,
-    toolAName: a,
-    toolBName: b,
-    bottomLine: `${a} versus ${b} for ${modifierLabel} is a workflow decision, not a brand-preference exercise. ${fitSentence(comparison, modifierLabel)}`.replace(
-      /\s{2,}/g,
-      ' '
-    ),
+    toolAName: comparison.tool_a_name,
+    toolBName: comparison.tool_b_name,
+    bottomLine: buildBottomLine(comparison, modifierLabel),
     whereAWins: wins.a,
     whereBWins: wins.b,
-    buyerConsiderations: [
-      ...workflowItems,
-      `Treat the persona matrix on this page as the source of record for ${modifierLabel}, not the generic ${a} vs ${b} hub.`,
-      'Confirm current country lists, add-on SKUs, and SSO packaging on a live demo before you sign.',
-    ],
+    buyerConsiderations: workflowItems.slice(0, 4),
   };
 }
 
@@ -379,7 +591,7 @@ export function buildPersonaFaqItems(
   return [
     {
       question: `Is ${a} or ${b} better for ${modifierLabel}?`,
-      answer: `${winnerName} is the recommended lean for ${modifierLabel}. ${comparison.winner_reason}`.replace(/\s{2,}/g, ' '),
+      answer: `${winnerName} is the top-recommended platform for ${modifierLabel}. ${comparison.winner_reason}`.replace(/\s{2,}/g, ' '),
     },
     {
       question: capabilityQ,
