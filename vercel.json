@@ -3,14 +3,14 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/:hub(.*)-for-tech-startups/",
-      "destination": "/:hub/",
-      "statusCode": 301
+      "source": "/:slug*-for-tech-startups",
+      "destination": "/:slug*/",
+      "permanent": true
     },
     {
-      "source": "/:hub(.*)-for-tech-startups",
-      "destination": "/:hub/",
-      "statusCode": 301
+      "source": "/:slug*-for-tech-startups/",
+      "destination": "/:slug*/",
+      "permanent": true
     }
   ]
 }
