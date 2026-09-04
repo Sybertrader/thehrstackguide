@@ -42,6 +42,9 @@ export interface ToolProfile {
   hasFreeTrial?: boolean;
   isManualLead?: boolean;
   partner_landing_url?: string;
+  /** First-party marketing host, e.g. `plane.com`. Used for UTM fallbacks. */
+  domain?: string;
+  website?: string;
   affiliate_url?: string;
   has_active_affiliate?: boolean;
   is_partner?: boolean;

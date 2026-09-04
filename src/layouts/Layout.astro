@@ -69,36 +69,31 @@ const organizationSchema = {
     </script>
 
     <!--
-      Affiliate click tracking for GA4. Delegated from `document` so it covers
-      every `/go/` CTA on the site — including ones rendered by components and
-      any added later — without each page wiring up its own handler. The
-      parallel `.js-affiliate-cta` listener in src/pages/[...slug].astro reports
-      to Vercel Analytics, so the two are separate destinations, not duplicates.
+      Vendor outbound click tracking for GA4. Delegated from `document` so it
+      covers `/go/` redirects and any `.js-affiliate-cta` that is missing an
+      inline handler. CTAs that already fire `vendor_outbound_click` inline
+      are skipped so events are not double-counted.
 
-      Vendor and placement come from the `data-track-*` attributes that
-      src/pages/[...slug].astro already sets, read via `closest()` so a wrapper
-      element can carry them instead of the anchor. The fallbacks cover future
-      CTAs added without those attributes: the slug in `/go/{slug}` matches the
-      key in src/config/affiliates.ts, so vendor attribution survives either way.
+      Vendor comes from `data-track-vendor` when present; otherwise the slug
+      in `/go/{slug}` matches the key in src/config/affiliates.ts.
     -->
     <script is:inline>
       document.addEventListener('click', function (e) {
-        const link = e.target.closest('a[href^="/go/"]');
-        if (link && typeof gtag === 'function') {
-          const vendorSource = link.closest('[data-track-vendor]');
-          const locationSource = link.closest('[data-track-location]');
-          const vendor =
-            (vendorSource && vendorSource.getAttribute('data-track-vendor')) ||
-            link.getAttribute('href').replace('/go/', '');
-          const location =
-            (locationSource && locationSource.getAttribute('data-track-location')) || 'body_link';
+        const link = e.target.closest('a.js-affiliate-cta, a[href^="/go/"], a[data-vendor-outbound]');
+        if (!link || typeof gtag !== 'function') return;
 
-          gtag('event', 'affiliate_click', {
-            vendor_name: vendor,
-            cta_location: location,
-            link_url: link.getAttribute('href'),
-          });
-        }
+        const handler = link.getAttribute('onclick') || '';
+        if (handler.indexOf('vendor_outbound_click') !== -1) return;
+
+        const vendorSource = link.closest('[data-track-vendor]');
+        const vendor =
+          (vendorSource && vendorSource.getAttribute('data-track-vendor')) ||
+          (link.getAttribute('href') || '').replace(/^\/go\//, '').replace(/\/$/, '');
+
+        gtag('event', 'vendor_outbound_click', {
+          vendor_name: vendor,
+          page_location: window.location.pathname,
+        });
       });
     </script>
 

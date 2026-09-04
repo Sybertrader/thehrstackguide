@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import ConciergeLeadBox from '../../components/ConciergeLeadBox.astro';
 import CategoryComparisonBrowser from '../../components/CategoryComparisonBrowser.astro';
+import VendorButton from '../../components/VendorButton.astro';
 import { loadComparisons } from '../../lib/comparisons';
+import { isManualLeadBrand, resolveVendorOutboundHref } from '../../lib/outbound';
 import { getToolsByCategory } from '../../lib/tools';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
@@ -212,7 +214,17 @@ const collectionSchema = {
                 )}
               </div>
             </div>
-            <p class="mt-4 text-sm leading-relaxed text-slate-600">{tool.positioning}</p>
+            <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">{tool.positioning}</p>
+            {!isManualLeadBrand(tool.id) && (
+              <VendorButton
+                href={resolveVendorOutboundHref(tool.id)}
+                vendorName={tool.name}
+                location="hub_roster"
+                class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+              >
+                Try {tool.name}
+              </VendorButton>
+            )}
           </article>
         ))}
       </div>

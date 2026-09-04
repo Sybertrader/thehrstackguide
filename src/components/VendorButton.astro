@@ -1,0 +1,25 @@
+---
+import { VENDOR_OUTBOUND_REL, vendorOutboundOnclick } from '../lib/outbound';
+
+interface Props {
+  href: string;
+  vendorName: string;
+  location?: string;
+  class?: string;
+}
+
+const { href, vendorName, location = 'body_link', class: className = '' } = Astro.props;
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel={VENDOR_OUTBOUND_REL}
+  class:list={['js-affiliate-cta', className]}
+  data-track-vendor={vendorName}
+  data-track-location={location}
+  data-vendor-outbound
+  onclick={vendorOutboundOnclick(vendorName)}
+>
+  <slot>Try {vendorName}</slot>
+</a>

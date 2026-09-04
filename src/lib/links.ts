@@ -5,7 +5,7 @@
  *
  * Vendor CTAs point either straight at a partner's URL or at our own
  * `/go/{id}` redirect (see src/config/affiliates.ts and src/pages/go/[slug].astro).
- * Both are monetized links, so both keep `sponsored nofollow` even though one
+ * Both are monetized links, so both keep `noopener sponsored` even though one
  * of them wears an internal path. Cloaking an affiliate link behind our own
  * domain does not change what it is, and `/go/` pages are thin meta-refresh
  * redirectors that would absorb link equity and dead-end it at a partner.
@@ -30,7 +30,7 @@ export function isInternalHref(href: string): boolean {
   return SITE_HOST_PATTERN.test(value);
 }
 
-/** True for our internal affiliate redirect routes, which stay nofollowed. */
+/** True for our internal affiliate redirect routes, which stay sponsored. */
 export function isAffiliateRedirect(href: string): boolean {
   return href.trim().startsWith(AFFILIATE_REDIRECT_PREFIX);
 }
@@ -39,9 +39,11 @@ export function isAffiliateRedirect(href: string): boolean {
  * Returns the `rel` for a vendor CTA, or `undefined` when the link is an
  * ordinary internal route that should pass link equity.
  */
+export const VENDOR_OUTBOUND_REL = 'noopener sponsored';
+
 export function outboundRel(href: string): string | undefined {
   if (isAffiliateRedirect(href) || !isInternalHref(href)) {
-    return 'noopener noreferrer sponsored nofollow';
+    return VENDOR_OUTBOUND_REL;
   }
   return undefined;
 }

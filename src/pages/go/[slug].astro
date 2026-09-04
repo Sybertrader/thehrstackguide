@@ -1,6 +1,6 @@
 ---
 import { affiliateLinks } from '../../config/affiliates';
-import { outboundRel } from '../../lib/links';
+import { VENDOR_OUTBOUND_REL, vendorOutboundOnclick } from '../../lib/outbound';
 
 export function getStaticPaths() {
   return Object.keys(affiliateLinks).map((slug) => ({
@@ -9,6 +9,7 @@ export function getStaticPaths() {
   }));
 }
 
+const { slug } = Astro.params;
 const { targetUrl } = Astro.props;
 ---
 
@@ -34,7 +35,7 @@ const { targetUrl } = Astro.props;
     <p class="text-lg font-medium mb-2">Redirecting to partner site...</p>
     <p class="text-sm text-slate-500">
       If you are not redirected automatically, 
-      <a href={targetUrl} rel={outboundRel(targetUrl)} target="_blank" class="text-blue-600 underline hover:text-blue-800">click here</a>.
+      <a href={targetUrl} rel={VENDOR_OUTBOUND_REL} target="_blank" onclick={vendorOutboundOnclick(slug ?? '')} class="text-blue-600 underline hover:text-blue-800">click here</a>.
     </p>
   </div>
 </body>

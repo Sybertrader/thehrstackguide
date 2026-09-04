@@ -4,6 +4,7 @@
  * Shared by hub (`isChildRoute === false`) and child modifier pages.
  */
 import type { Comparison } from '../types/comparison';
+import VendorButton from './VendorButton.astro';
 
 interface RatingDisplay {
   rating: string;
@@ -28,8 +29,6 @@ interface Props {
   toolBModalId: string;
   toolAAffiliateHref: string;
   toolBAffiliateHref: string;
-  toolARel: string | undefined;
-  toolBRel: string | undefined;
 }
 
 const {
@@ -49,8 +48,6 @@ const {
   toolBModalId,
   toolAAffiliateHref,
   toolBAffiliateHref,
-  toolARel,
-  toolBRel,
 } = Astro.props;
 
 function parseBool(value: string): boolean {
@@ -159,19 +156,17 @@ function parseBool(value: string): boolean {
         Request Intro &amp; Pricing
       </button>
     ) : (
-      <a
+      <VendorButton
         href={toolAAffiliateHref}
-        class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        target="_blank"
-        rel={toolARel}
-        data-track-vendor={comparison.tool_a_name}
-        data-track-location="comparison_card"
+        vendorName={comparison.tool_a_name}
+        location="comparison_card"
+        class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Try {comparison.tool_a_name}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
           <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
         </svg>
-      </a>
+      </VendorButton>
     )}
   </article>
 
@@ -271,19 +266,17 @@ function parseBool(value: string): boolean {
         Request Intro &amp; Pricing
       </button>
     ) : (
-      <a
+      <VendorButton
         href={toolBAffiliateHref}
-        class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        target="_blank"
-        rel={toolBRel}
-        data-track-vendor={comparison.tool_b_name}
-        data-track-location="comparison_card"
+        vendorName={comparison.tool_b_name}
+        location="comparison_card"
+        class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Try {comparison.tool_b_name}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
           <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
         </svg>
-      </a>
+      </VendorButton>
     )}
   </article>
 </section>
