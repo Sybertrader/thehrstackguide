@@ -29,7 +29,7 @@ export const MODIFIER_TITLE_SUFFIX: Record<string, string> = {
   'us-latam': 'US & LATAM Teams',
   'web3-crypto': 'Web3 & Crypto Teams',
   enterprise: 'Enterprise Teams',
-  'remote-teams': 'Remote-First Teams',
+  'remote-teams': 'Remote Teams',
   'people-ops': 'People Ops Teams',
 };
 
@@ -106,10 +106,16 @@ export function variantsForPair(rows: Comparison[]): ComparisonVariantLink[] {
   for (const row of rows) {
     if (row.niche_id === 'tech-startups' || row.slug.endsWith('-for-tech-startups')) continue;
     const titleSuffix = row.niche_id === 'startups' ? 'Startups' : modifierTitleSuffix(row.niche_id, row.niche_name);
+    const nicheName =
+      row.niche_id === 'remote-teams' || row.niche_name === 'Remote-First Teams'
+        ? 'Remote Teams'
+        : row.niche_name === 'Tech Startups'
+          ? 'Startups'
+          : row.niche_name;
     links.push({
       slug: row.slug,
       nicheId: row.niche_id,
-      nicheName: row.niche_name === 'Tech Startups' ? 'Startups' : row.niche_name,
+      nicheName,
       href: `/${row.slug}/`,
       titleSuffix,
     });
@@ -215,7 +221,9 @@ const PM_BUYER_ITEMS: Record<string, string[]> = {
   ],
 };
 
-function comparisonFamily(toolAId: string, toolBId: string): 'payroll' | 'ats' | 'pm' | null {
+export type ComparisonFamily = 'payroll' | 'ats' | 'pm';
+
+export function comparisonFamily(toolAId: string, toolBId: string): ComparisonFamily | null {
   if (globalPayrollPersonaByToolId[toolAId] && globalPayrollPersonaByToolId[toolBId]) return 'payroll';
   if (atsPersonaByToolId[toolAId] && atsPersonaByToolId[toolBId]) return 'ats';
   if (performancePersonaByToolId[toolAId] && performancePersonaByToolId[toolBId]) return 'pm';

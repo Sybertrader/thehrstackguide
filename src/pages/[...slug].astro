@@ -33,6 +33,7 @@ import {
   buildPersonaEvaluation,
   buildPersonaFaqItems,
   buildWorkflowBottlenecks,
+  comparisonFamily,
   modifierTitleSuffix,
   personaRowsForComparison,
   pickHubComparison,
@@ -195,6 +196,7 @@ export function getStaticPaths() {
 const { comparison, related, lastUpdatedIso, firstPublishedIso, isHub, hubSlug, variants } =
   Astro.props as ComparisonPageProps;
 const isChildRoute = !isHub;
+const hubFamily = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
 
 const currentQuarter = `Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`;
 
@@ -711,6 +713,24 @@ const pricingFaqAnswer = cleanCopy(
   `${comparison.tool_a_name} starts at ${comparison.tool_a_starting_price}; ${comparison.tool_a_pricing_model}. ${comparison.tool_b_name} starts at ${comparison.tool_b_starting_price}; ${comparison.tool_b_pricing_model}.${priceDiffSentence}${pricingNuanceClause}`
 );
 
+const hubFaq3 =
+  hubFamily === 'ats'
+    ? {
+        question: 'Do these ATS platforms integrate with job boards and HRIS tools?',
+        answer:
+          'Yes, both platforms support multi-board job posting syndication and two-way worker record syncing with major HRIS platforms like BambooHR, Rippling, and Gusto.',
+      }
+    : hubFamily === 'pm'
+      ? {
+          question: 'Do these performance tools integrate with core HRIS systems?',
+          answer:
+            'Yes, both platforms sync employee organization charts directly with core HRIS platforms to automate review cycle participant rosters.',
+        }
+      : {
+          question: `Does ${comparison.tool_a_name} or ${comparison.tool_b_name} handle international contractor payments?`,
+          answer: contractorPaymentAnswer(comparison, featureMatrix),
+        };
+
 const hubFaqItems: FaqItem[] = [
   {
     question: `Is ${comparison.tool_a_name} or ${comparison.tool_b_name} better for technology buyers, startups, and scaleups?`,
@@ -720,10 +740,7 @@ const hubFaqItems: FaqItem[] = [
     question: `What is the starting price difference between ${comparison.tool_a_name} and ${comparison.tool_b_name}?`,
     answer: pricingFaqAnswer,
   },
-  {
-    question: `Does ${comparison.tool_a_name} or ${comparison.tool_b_name} handle international contractor payments?`,
-    answer: contractorPaymentAnswer(comparison, featureMatrix),
-  },
+  hubFaq3,
 ];
 
 const faqItems: FaqItem[] = isHub
@@ -933,12 +950,17 @@ const relatedHref = (item: Comparison) =>
         <VerdictCallout take={cleanCopy(comparison.hr_stack_take)} />
       )}
 
-      {isHub && variants.length > 0 && (
-        <SpecializedEvaluationsGrid variants={variants} />
+      {isHub && (
+        <WhoThisCovers
+          toolAName={comparison.tool_a_name}
+          toolBName={comparison.tool_b_name}
+          family={hubFamily}
+          variants={variants}
+        />
       )}
 
-      {isHub && (
-        <WhoThisCovers toolAName={comparison.tool_a_name} toolBName={comparison.tool_b_name} />
+      {isHub && variants.length > 0 && (
+        <SpecializedEvaluationsGrid variants={variants} />
       )}
 
       {isHub && (
@@ -1289,7 +1311,7 @@ const relatedHref = (item: Comparison) =>
         </div>
       </section>
 
-      <DemoQuestions toolA={comparison.tool_a_name} toolB={comparison.tool_b_name} />
+      <DemoQuestions toolA={comparison.tool_a_name} toolB={comparison.tool_b_name} family={hubFamily} />
       </>
       )}
 

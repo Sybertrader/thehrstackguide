@@ -7,9 +7,29 @@
 interface Props {
   toolA: string;
   toolB: string;
+  family?: 'payroll' | 'ats' | 'pm' | null;
 }
 
-const { toolA, toolB } = Astro.props;
+const { toolA, toolB, family = 'payroll' } = Astro.props;
+
+const questionTwo =
+  family === 'ats'
+    ? {
+        label: 'Recruiter Seat Licensing & Sourcing Add-ons',
+        question:
+          'Are candidate CRM sourcing tools, automated nurture campaigns, and unlimited reviewer seats included in the base plan, or billed per recruiter license?',
+      }
+    : family === 'pm'
+      ? {
+          label: 'Module Tier Traps & Coaching Add-ons',
+          question:
+            'Are 1:1 meeting tools, manager coaching prompts, and engagement surveys included in the base per-user fee, or sold as separate add-on modules?',
+        }
+      : {
+          label: 'True Cost & FX Markups',
+          question:
+            'Beyond the headline per-user fee, what is the exact percentage margin added to foreign currency payouts or international contractor transfers?',
+        };
 
 const questions = [
   {
@@ -17,11 +37,7 @@ const questions = [
     question:
       'What is the exact written notice window required to prevent auto-renewal, and what happens to historical payroll data upon contract exit?',
   },
-  {
-    label: 'True Cost & FX Markups',
-    question:
-      'Beyond the headline per-user fee, what is the exact percentage margin added to foreign currency payouts or international contractor transfers?',
-  },
+  questionTwo,
   {
     label: 'Seat Minimums & Tier Traps',
     question:
