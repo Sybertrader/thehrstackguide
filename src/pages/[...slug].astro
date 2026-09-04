@@ -11,7 +11,7 @@
 import Layout from '../layouts/Layout.astro';
 import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
-import { isComparisonRouteSlug, comparisonHubSlug } from '../lib/comparison-routes';
+import { isComparisonRouteSlug, comparisonHubSlug, isLegacyTechStartupsSlug } from '../lib/comparison-routes';
 import { getToolProfile } from '../lib/tools';
 import type { EnterpriseAnalysis } from '../lib/tools';
 import { affiliateLinks } from '../config/affiliates';
@@ -121,8 +121,11 @@ export function getStaticPaths() {
   // `src/pages/go/[slug].astro` / Vercel `api/*` already outrank this
   // rest-parameter route. Still skip any CSV slug that is not a 1-on-1
   // `brand-vs-brand` comparison so the catch-all cannot steal those paths.
+  // Legacy `-for-tech-startups` CSV slugs 301 to the master hub via vercel.json.
+  // Active startup children are the `for-startups` alias paths below.
   const childPaths = comparisons
     .filter((comparison) => isComparisonRouteSlug(comparison.slug))
+    .filter((comparison) => !isLegacyTechStartupsSlug(comparison.slug))
     .map((comparison) => {
       const hubSlug = comparisonHubSlug(comparison.tool_a_id, comparison.tool_b_id);
       const variants = variantsForPair(pairGroups.get(hubSlug) ?? [comparison]);

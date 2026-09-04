@@ -1,3 +1,16 @@
 {
-  "trailingSlash": true
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/:hub(.*)-for-tech-startups/",
+      "destination": "/:hub/",
+      "statusCode": 301
+    },
+    {
+      "source": "/:hub(.*)-for-tech-startups",
+      "destination": "/:hub/",
+      "statusCode": 301
+    }
+  ]
 }

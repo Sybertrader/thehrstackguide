@@ -88,3 +88,8 @@ export function parseComparisonSlug(slug: string): { hubSlug: string; modifier: 
 export function comparisonHubSlug(toolAId: string, toolBId: string): string {
   return `${toolAId}-vs-${toolBId}`;
 }
+
+/** True for pruned payroll slugs that 301 to the pair's master hub. */
+export function isLegacyTechStartupsSlug(slug: string): boolean {
+  return slug.endsWith('-for-tech-startups');
+}

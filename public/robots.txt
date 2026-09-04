@@ -2,25 +2,35 @@ User-agent: *
 Allow: /
 Disallow: /go/
 Disallow: /thank-you/
+Disallow: /contact/
+Disallow: /api/
 
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /go/
 Disallow: /thank-you/
+Disallow: /contact/
+Disallow: /api/
 
 User-agent: ChatGPT-User
 Allow: /
 Disallow: /go/
 Disallow: /thank-you/
+Disallow: /contact/
+Disallow: /api/
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /go/
 Disallow: /thank-you/
+Disallow: /contact/
+Disallow: /api/
 
 User-agent: Claude-SearchBot
 Allow: /
 Disallow: /go/
 Disallow: /thank-you/
+Disallow: /contact/
+Disallow: /api/
 
 Sitemap: https://www.thehrstackguide.com/sitemap-index.xml
