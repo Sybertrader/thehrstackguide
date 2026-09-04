@@ -228,6 +228,129 @@ function buyerItemsFor(comparison: Comparison): string[] {
   return (table[comparison.niche_id] ?? table.scaleups ?? BUYER_WORKFLOW_ITEMS.scaleups ?? []).slice(0, 4);
 }
 
+export interface WorkflowBottleneck {
+  title: string;
+  body: string;
+}
+
+const PAYROLL_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
+  startups: [
+    { title: 'No specialist admin', body: '{PERSONA} cannot hire a payroll lead in month one. If {A} or {B} needs a dedicated operator to stand up the first contractor or EOR hire, the stack fails before headcount exists.' },
+    { title: 'Year-one add-on math', body: 'Headline seats hide EOR, contractor, and device modules. {PERSONA} should quote the first 12 months on {A} and {B} at planned headcount, not the published starter rate.' },
+    { title: 'IP on the first offer', body: 'The first international contract is where invention assignment gets skipped. {PERSONA} needs local-entity IP language from {A} or {B} before day-one onboarding, not as a cleanup project.' },
+  ],
+  'tech-startups': [
+    { title: 'Speed vs entity ownership', body: '{PERSONA} will trade a 24-hour EOR go-live against owned-entity purity. Confirm whether {A} or {B} actually employs in-country or routes through a partner before the first engineer is hired.' },
+    { title: 'Coverage-map fiction', body: 'Homepage country lists are not SLAs. {PERSONA} should check onboarding time in the two countries they will hire next on {A} and {B}.' },
+    { title: 'Equity and contractor mix', body: 'Early teams mix 1099, EOR, and option grants. If {A} or {B} cannot keep those worker types on one record, finance will reconcile them in a spreadsheet.' },
+  ],
+  scaleups: [
+    { title: 'Multi-entity month-end', body: '{PERSONA} breaks when People and Finance close books from two vendors. {A} vs {B} is an operating-system choice: one system of record, or another quarter of spreadsheet merges.' },
+    { title: 'Worker-type sprawl', body: 'List every W-2, EOR, and contractor country for the next 18 months. If {A} or {B} cannot hold that mix, the implementation will stall in legal.' },
+    { title: 'Package vs à la carte', body: 'SSO, reporting, and workflow automation quoted after kickoff destroy the business case. {PERSONA} should force {A} and {B} to package those line items now.' },
+  ],
+  agencies: [
+    { title: 'Seat minimums on one company', body: '{PERSONA} does not have a single in-house headcount plan. If {A} or {B} prices seats as one employer, peak bench cost (campaign spikes) will not match the contract.' },
+    { title: 'Client-level payout audit', body: 'Batch contractor payouts must stay auditable per client for invoice reconciliation. {A} and {B} fail this workflow if submissions and payouts cannot be tagged to an account.' },
+    { title: 'Device and payroll on one record', body: 'Agencies provision client laptops and app access beside payroll. {PERSONA} should confirm {A} or {B} can sit IT identity on the same worker record as the payout.' },
+  ],
+  'us-latam': [
+    { title: 'Brazil/Mexico employment vehicle', body: '{PERSONA} must lock owned-entity vs partner EOR in Brazil and Mexico before offers go out. {A} and {B} are not interchangeable once 13th-month and FGTS/social charges hit the fully loaded number.' },
+    { title: 'Contractor tax withholding', body: 'US companies paying LATAM contractors skip withholding until an audit. Confirm how {A} vs {B} handles 1099/W-8BEN, local invoices, and misclassification cover for this corridor.' },
+    { title: 'FX on take-home pay', body: 'BRL and MXN payroll that does not match the signed offer is a resignation event. Model FX on {A} and {B} before {PERSONA} sends the contract.' },
+  ],
+  'web3-crypto': [
+    { title: 'USDC is not a fiat HRIS feature', body: '{PERSONA} should confirm native USDC or crypto payouts on {A} and {B}. A fiat wallet with an off-platform treasury rail is not payroll.' },
+    { title: 'Token comp off the payroll file', body: 'Keep token grants off {A} or {B} unless the vendor actually supports them. Mixing tokens into 1099/W-8BEN without a rail creates a tax file {PERSONA} cannot defend.' },
+    { title: 'Fiat FX on the rest of the bench', body: 'Not every contributor is paid in USDC. Model fiat corridors on {A} vs {B} for locally employed staff beside the crypto bench.' },
+  ],
+  enterprise: [
+    { title: 'SSO before the demo', body: '{PERSONA} should require SAML 2.0 and SCIM in the security questionnaire for {A} and {B} before procurement books time.' },
+    { title: 'Works-council evidence', body: 'Self-serve SMB PDFs fail legal review. Ask {A} and {B} for audit-ready EEO or works-council evidence, not a marketing one-pager.' },
+    { title: 'Named implementation SLA', body: 'Enterprise EOR fails in the MSA gap. Get a named implementation owner and DPA into the {A} vs {B} contract before kickoff.' },
+  ],
+};
+
+const ATS_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
+  startups: [
+    { title: 'Scorecards without recruiting ops', body: '{PERSONA} will not hire a recruiting-ops lead. If {A} or {B} cannot run structured scorecards self-serve, interview quality collapses after the first five roles.' },
+    { title: 'Seat vs flat-fee surprise', body: 'Price year-one hiring volume on {A} and {B}, including job-board and background-check add-ons. Unlimited-seat marketing is not the same as a quote {PERSONA} can afford.' },
+    { title: 'Time-zone scheduling', body: 'Founder-led interviews span time zones. Test self-scheduling on {A} vs {B} in the corridors {PERSONA} actually uses, not a same-city demo.' },
+  ],
+  scaleups: [
+    { title: 'Audit-ready interview kits', body: 'As the hiring team grows, {PERSONA} needs kits that survive a later OFCCP or legal review. {A} vs {B} is a methodology choice, not a calendar app.' },
+    { title: 'Silver-medalist leakage', body: 'Closed roles get re-sourced from scratch without CRM nurture. Confirm whether {A} or {B} keeps silver medalists warm for {PERSONA}.' },
+    { title: 'HRIS and Checkr in the contract', body: 'Integrations quoted after signature stall offer-to-hire. {PERSONA} should lock HRIS, background-check, and assessment connectors for {A} and {B} now.' },
+  ],
+  agencies: [
+    { title: 'Client portals, not one req list', body: '{PERSONA} runs multi-account pipelines. {A} or {B} fails if it assumes a single in-house requisition list instead of client-tagged submissions.' },
+    { title: 'Retainer reporting', body: 'Submissions must be auditable per client. If {A} and {B} cannot export that trail, {PERSONA} will rebuild it in a spreadsheet for every retainer.' },
+    { title: 'Outbound without a second CRM', body: 'Agencies should not buy a second sourcing tool. Check whether {A} or {B} can run outbound for {PERSONA} natively.' },
+  ],
+  enterprise: [
+    { title: 'OFCCP in the RFP', body: '{PERSONA} should require EEO/OFCCP reporting and structured hiring in the {A} vs {B} RFP, not a slide-deck promise.' },
+    { title: 'SSO/SCIM before legal', body: 'Ask {A} and {B} for SSO, SCIM, and a named implementation owner before procurement signs.' },
+    { title: 'Interview-kit enforcement', body: 'Unlimited seats do not help if legal cannot reconstruct the file. Prioritize kit enforcement on {A} vs {B} for {PERSONA}.' },
+  ],
+  'remote-teams': [
+    { title: 'No shared office calendar', body: '{PERSONA} interviews with no overlapping hours. {A} and {B} must self-schedule across time zones without a hallway whiteboard.' },
+    { title: 'Async loops', body: 'Confirm async video or take-home workflows on {A} vs {B} so {PERSONA} can complete a loop when interviewers never overlap.' },
+    { title: 'Career-site language', body: 'If {PERSONA} hires outside one country, career-site localization on {A} and {B} is a bottleneck, not a nice-to-have.' },
+  ],
+};
+
+const PM_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
+  startups: [
+    { title: 'Check-ins without People Ops', body: '{PERSONA} will not staff a cycle admin. {A} or {B} must run weekly check-ins and 1:1s without a specialist sitting in the product.' },
+    { title: 'Module stacking', body: 'Goals, reviews, and surveys sold separately blow the seed-stage budget. Quote 12-month seats on {A} and {B} with every module {PERSONA} will actually turn on.' },
+    { title: 'Calibration too early', body: 'Skip compensation-calibration SKUs until a merit cycle exists. {A} vs {B} for {PERSONA} is a manager-cadence buy, not an enterprise talent-day buy.' },
+  ],
+  scaleups: [
+    { title: 'Three-tool review stack', body: '{PERSONA} already has a survey tool. If OKRs and reviews on {A} vs {B} do not land in one system, HRBPs will export CSV every cycle.' },
+    { title: 'Fake sandbox calibration', body: 'Test calibration with real manager data on {A} and {B}, not a vendor demo dataset {PERSONA} will never see again.' },
+    { title: 'Comp as a surprise SKU', body: 'Compensation modules quoted after kickoff wreck Finance. Force {A} and {B} to line-item them for {PERSONA} now.' },
+  ],
+  'people-ops': [
+    { title: 'HRBP console sprawl', body: '{PERSONA} needs engagement, calibration, and analytics in one console. {A} vs {B} fails if business partners maintain a shadow dashboard.' },
+    { title: 'CSV every cycle', body: 'Refuse a stack that exports reviews into a second file. That is the bottleneck {PERSONA} is buying {A} or {B} to kill.' },
+    { title: 'Shadow org chart', body: 'Without SSO and HRIS sync, {PERSONA} will keep a parallel org chart. Confirm that path on {A} and {B} before you rip out the incumbent.' },
+  ],
+  'remote-teams': [
+    { title: 'Async reviews', body: '{PERSONA} cannot run hallway calibration. {A} and {B} must support async check-ins and reviews across time zones.' },
+    { title: 'One-language assumption', body: 'Reject tools that assume one office language or one working day. That bottleneck shows up first for {PERSONA} on {A} vs {B}.' },
+    { title: 'Manager nudges off-HRIS', body: 'Managers are not in the HRIS all day. Slack/Teams nudges on {A} and {B} are how {PERSONA} gets cycle completion.' },
+  ],
+  agencies: [
+    { title: 'Billable-team reviews', body: '{PERSONA} does not have one in-house org chart. {A} or {B} must run cycles across studios and client teams without forcing a fake hierarchy.' },
+    { title: 'Completion by account', body: 'Cycle completion should be auditable per client or studio. That is the reporting bottleneck for {PERSONA} on {A} vs {B}.' },
+    { title: 'Mixed employee/contractor benches', body: 'Confirm 1:1s and feedback work for mixed benches. {PERSONA} will otherwise run contractors in a side process {A} and {B} never see.' },
+  ],
+  enterprise: [
+    { title: 'Legal-grade calibration', body: '{PERSONA} needs compensation calibration that survives legal review on {A} vs {B}, not a self-serve SMB form.' },
+    { title: 'Engagement science vs a pulse PDF', body: 'Ask {A} and {B} for engagement-science or works-council evidence before {PERSONA} signs.' },
+    { title: 'Implementation SLA', body: 'Get a named implementation SLA into the MSA. Enterprise performance rollouts fail in kickoff, not in the feature matrix, for {PERSONA}.' },
+  ],
+};
+
+function fillPersonaCopy(template: string, comparison: Comparison, modifierLabel: string): string {
+  return template
+    .replaceAll('{A}', comparison.tool_a_name)
+    .replaceAll('{B}', comparison.tool_b_name)
+    .replaceAll('{PERSONA}', modifierLabel);
+}
+
+export function buildWorkflowBottlenecks(comparison: Comparison): WorkflowBottleneck[] {
+  const family = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
+  const table =
+    family === 'ats' ? ATS_BOTTLENECKS : family === 'pm' ? PM_BOTTLENECKS : PAYROLL_BOTTLENECKS;
+  const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
+  const rows = table[comparison.niche_id] ?? table.scaleups ?? PAYROLL_BOTTLENECKS.scaleups ?? [];
+  return rows.slice(0, 3).map((item) => ({
+    title: fillPersonaCopy(item.title, comparison, modifierLabel),
+    body: fillPersonaCopy(item.body, comparison, modifierLabel),
+  }));
+}
+
 function packAndLabels(toolAId: string, toolBId: string): {
   packA: Record<string, Record<string, FeatureSpec>>;
   packB: Record<string, Record<string, FeatureSpec>>;
@@ -570,36 +693,42 @@ export function buildPersonaFaqItems(
   comparison: Comparison,
   rows: PersonaMatrixRow[],
   modifierLabel: string,
-  pricingAnswer: string
+  _pricingAnswer: string
 ): FaqItem[] {
   const a = comparison.tool_a_name;
   const b = comparison.tool_b_name;
-  const winnerName =
-    comparison.winner_id === comparison.tool_a_id
-      ? a
-      : comparison.winner_id === comparison.tool_b_id
-        ? b
-        : comparison.winner_id;
-  const top = rows[0];
-  const capabilityQ = top
-    ? `How do ${a} and ${b} differ on ${top.label.toLowerCase()} for ${modifierLabel}?`
-    : `Which capabilities should ${modifierLabel} compare first in ${a} vs ${b}?`;
-  const capabilityA = top
-    ? `${a}: ${top.a.spec} ${b}: ${top.b.spec}`
-    : `${a} and ${b} should be scored against the persona matrix on this page rather than a generic feature list.`;
+  const winner = winnerNameOf(comparison);
+  const buyers = buyerItemsFor(comparison);
+  const bottlenecks = buildWorkflowBottlenecks(comparison);
+  const distinct =
+    rows.find((row) => row.a.supported !== row.b.supported || row.a.spec !== row.b.spec) ?? rows[0];
+  const other = contrastNeed(comparison);
+  const firstBuyer = buyers[0] ?? `Score ${a} and ${b} against this ${modifierLabel} workflow before you sign.`;
+  const firstBottleneck = bottlenecks[0];
+
+  const capabilityQuestion = distinct
+    ? `How do ${a} and ${b} handle ${distinct.label.toLowerCase()} for ${modifierLabel}?`
+    : `Which capability should ${modifierLabel} compare first in ${a} vs ${b}?`;
+  const capabilityAnswer = distinct
+    ? `For ${modifierLabel}, ${a} ${distinct.a.supported ? 'covers' : 'does not cover'} ${distinct.label.toLowerCase()}: ${distinct.a.spec} ${b} ${distinct.b.supported ? 'covers' : 'does not cover'} it: ${distinct.b.spec}`
+    : firstBuyer;
 
   return [
     {
       question: `Is ${a} or ${b} better for ${modifierLabel}?`,
-      answer: `${winnerName} is the top-recommended platform for ${modifierLabel}. ${comparison.winner_reason}`.replace(/\s{2,}/g, ' '),
+      answer: `${winner} is the top-recommended platform for ${modifierLabel}. ${firstBuyer}${
+        other ? ` ${other.name} is the stronger alternative when you need ${needPhrase(other.need)}.` : ''
+      }`.replace(/\s{2,}/g, ' '),
     },
     {
-      question: capabilityQ,
-      answer: capabilityA,
+      question: capabilityQuestion,
+      answer: capabilityAnswer.replace(/\s{2,}/g, ' '),
     },
     {
-      question: `What should ${modifierLabel} verify before choosing ${a} or ${b}?`,
-      answer: `Verify the persona flags on this page—especially compliance, payout or integration coverage, and seat pricing—against your actual countries, hiring volume, or review cadence. ${pricingAnswer}`,
+      question: `What operational bottleneck should ${modifierLabel} resolve first when choosing ${a} or ${b}?`,
+      answer: firstBottleneck
+        ? `${firstBottleneck.title}: ${firstBottleneck.body}`
+        : firstBuyer,
     },
   ];
 }

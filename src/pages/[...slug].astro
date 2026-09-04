@@ -25,6 +25,7 @@ import { resolveScenarioSubtitle } from '../data/scenarios';
 import {
   buildPersonaEvaluation,
   buildPersonaFaqItems,
+  buildWorkflowBottlenecks,
   modifierTitleSuffix,
   personaRowsForComparison,
   pickHubComparison,
@@ -186,6 +187,7 @@ export function getStaticPaths() {
 
 const { comparison, related, lastUpdatedIso, firstPublishedIso, isHub, hubSlug, variants } =
   Astro.props as ComparisonPageProps;
+const isChildRoute = !isHub;
 
 const currentQuarter = `Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`;
 
@@ -599,7 +601,8 @@ const heroSubtitle = isHub
   : resolveScenarioSubtitle(comparison.niche_id, comparison.niche_name, comparison.target_audience);
 const personaRows = isHub ? [] : personaRowsForComparison(comparison);
 const personaEvaluation =
-  !isHub && personaRows.length > 0 ? buildPersonaEvaluation(comparison, personaRows) : null;
+  isChildRoute && personaRows.length > 0 ? buildPersonaEvaluation(comparison, personaRows) : null;
+const workflowBottlenecks = isChildRoute ? buildWorkflowBottlenecks(comparison) : [];
 
 
 const winnerName =
@@ -888,6 +891,20 @@ const relatedHref = (item: Comparison) =>
 
       <DataVerificationBadge quarter={currentQuarter} />
 
+      {isChildRoute && (
+        <aside class="mb-10 mt-8 rounded-2xl border border-indigo-200 bg-indigo-50/70 px-5 py-4 sm:px-6 sm:py-5" aria-label={`${modifierLabel} evaluation context`}>
+          <p class="text-sm leading-relaxed text-slate-800">
+            <span class="font-semibold text-indigo-900">Viewing {modifierLabel} Evaluation.</span>
+            {' '}
+            For the baseline feature-by-feature matrix, see the main
+            {' '}
+            <a href={`/${hubSlug}/`} class="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900">
+              {pairName} hub
+            </a>.
+          </p>
+        </aside>
+      )}
+
       {isHub && (
         <section class="mb-10 mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" aria-label="Who this evaluation covers">
           <h2 class="text-xl font-bold text-slate-900">Who This Evaluation Covers</h2>
@@ -943,13 +960,15 @@ const relatedHref = (item: Comparison) =>
       )}
 
       <!-- The HR Stack Guide Take: executive takeaway above the comparison tables -->
-      {comparison.hr_stack_take && (
+      {isHub && comparison.hr_stack_take && (
         <blockquote class="my-6 rounded-r-lg border-l-4 border-indigo-600 bg-slate-50 p-4 font-medium text-slate-800">
           <p class="text-xs font-bold uppercase tracking-wide text-indigo-700">The HR Stack Guide Take</p>
           <p class="mt-2 text-base leading-relaxed">{cleanCopy(comparison.hr_stack_take)}</p>
         </blockquote>
       )}
 
+      {isHub && (
+      <>
       <!-- SECTION 2: At-a-Glance Comparison Matrix -->
       <h2 class="mb-6 text-2xl font-bold text-slate-900">
         At a Glance: {comparison.tool_a_name} vs {comparison.tool_b_name}
@@ -1339,6 +1358,8 @@ const relatedHref = (item: Comparison) =>
           </div>
         </section>
       )}
+      </>
+      )}
 
       {!isHub && personaRows.length > 0 && (
         <>
@@ -1436,6 +1457,22 @@ const relatedHref = (item: Comparison) =>
                   ))}
                 </ul>
               </section>
+
+              {workflowBottlenecks.length > 0 && (
+                <section class="mt-8" aria-labelledby="workflow-bottlenecks-heading">
+                  <h3 id="workflow-bottlenecks-heading" class="mb-5 text-lg font-semibold text-slate-900">
+                    Key Workflow Bottlenecks for {personaEvaluation.modifierLabel}
+                  </h3>
+                  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    {workflowBottlenecks.map((item) => (
+                      <article class="rounded-2xl border border-amber-200 bg-amber-50/50 p-5 shadow-sm">
+                        <h4 class="text-sm font-semibold text-amber-950">{item.title}</h4>
+                        <p class="mt-2 text-sm leading-relaxed text-slate-700">{item.body}</p>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
             </section>
           )}
         </>
@@ -1446,6 +1483,8 @@ const relatedHref = (item: Comparison) =>
         <PreferredSourceButton theme="light" align="left" />
       </aside>
 
+      {isHub && (
+      <>
       <!-- Pros & Cons Section -->
       <section class="mb-12" aria-label="Pros and cons comparison">
         <h3 class="mb-6 text-xl font-bold text-slate-900">Pros &amp; Cons</h3>
@@ -1601,8 +1640,11 @@ const relatedHref = (item: Comparison) =>
       </section>
 
       <DemoQuestions toolA={comparison.tool_a_name} toolB={comparison.tool_b_name} />
+      </>
+      )}
 
       <!-- SECTION 5: Final Verdict & Primary CTAs -->
+      {isHub && (
       <section class="mb-12" aria-label="Final verdict">
         <h2 class="mb-6 text-2xl font-bold text-slate-900">
           {isHub ? 'Final Verdict' : `Final Verdict for ${modifierLabel}`}
@@ -1689,10 +1731,65 @@ const relatedHref = (item: Comparison) =>
           </div>
         </div>
       </section>
+      )}
+
+      {isChildRoute && (
+        <section class="mb-12" aria-label={`${modifierLabel} next steps`}>
+          <div class="flex flex-col items-start gap-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+            <p class="text-sm font-medium text-slate-800">
+              Ready to act on this {modifierLabel} evaluation of {pairName}?
+            </p>
+            <div class="flex flex-wrap gap-3">
+              {toolAIsManualLead ? (
+                <button
+                  type="button"
+                  data-modal-target={toolAModalId}
+                  class="open-modal-btn inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+                >
+                  Request Intro &amp; Pricing for {comparison.tool_a_name}
+                </button>
+              ) : (
+                <a
+                  href={toolAAffiliateHref}
+                  class="js-affiliate-cta inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
+                  target="_blank"
+                  rel={toolARel}
+                  data-track-vendor={comparison.tool_a_name}
+                  data-track-location="persona_next_step"
+                >
+                  Try {comparison.tool_a_name}
+                </a>
+              )}
+              {toolBIsManualLead ? (
+                <button
+                  type="button"
+                  data-modal-target={toolBModalId}
+                  class="open-modal-btn inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+                >
+                  Request Intro &amp; Pricing for {comparison.tool_b_name}
+                </button>
+              ) : (
+                <a
+                  href={toolBAffiliateHref}
+                  class="js-affiliate-cta inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
+                  target="_blank"
+                  rel={toolBRel}
+                  data-track-vendor={comparison.tool_b_name}
+                  data-track-location="persona_next_step"
+                >
+                  Try {comparison.tool_b_name}
+                </a>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       <!-- FAQ Section -->
-      <section class="mt-12" aria-label="Frequently asked questions">
-        <h2 class="mb-6 text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
+      <section class="mt-12" aria-label={isChildRoute ? `Frequently asked questions for ${modifierLabel}` : 'Frequently asked questions'}>
+        <h2 class="mb-6 text-2xl font-bold text-slate-900">
+          {isChildRoute ? `Frequently Asked Questions for ${modifierLabel}` : 'Frequently Asked Questions'}
+        </h2>
         <div class="space-y-4">
           {faqItems.map((item) => (
             <details class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm open:shadow-md">
@@ -1716,7 +1813,7 @@ const relatedHref = (item: Comparison) =>
         </div>
       </section>
 
-      {enterpriseSections.length > 0 && (
+      {isHub && enterpriseSections.length > 0 && (
         <details class="legal-deep-dive group mb-12">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-5 text-base font-bold text-slate-900 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-900 group-open:border-indigo-200 group-open:bg-indigo-50/80 [&::-webkit-details-marker]:hidden">
             <span>Deep-Dive Legal, IP &amp; Tax Analysis</span>
