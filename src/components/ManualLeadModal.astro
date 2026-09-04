@@ -11,7 +11,7 @@ interface Props {
 const {
   brandName,
   vendorId = '',
-  // Must match [slug].astro manualLeadModalId() — spaces become hyphens.
+  // Must match [slug].astro / [...slug].astro manualLeadModalId() — spaces become hyphens.
   modalId = `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`,
   partnerLandingUrl = '',
   formActionUrl = '/api/leads',

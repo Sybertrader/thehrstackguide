@@ -1,7 +1,17 @@
 ---
+/**
+ * 1-on-1 B2B HR comparison catch-all.
+ *
+ * Scoped to `brand-a-vs-brand-b` and `brand-a-vs-brand-b-for-modifier` slugs
+ * via getStaticPaths + `isComparisonRouteSlug`. Static utility routes
+ * (`recommendation.astro`, `about.astro`, `contact.astro`, `thank-you.astro`,
+ * category hubs) and `go/[slug].astro` take file-based precedence; Vercel
+ * `api/leads.js` remains the lead-capture endpoint under `/api/leads`.
+ */
 import Layout from '../layouts/Layout.astro';
 import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
+import { isComparisonRouteSlug } from '../lib/comparison-routes';
 import { getToolProfile } from '../lib/tools';
 import type { EnterpriseAnalysis } from '../lib/tools';
 import { affiliateLinks } from '../config/affiliates';
@@ -56,17 +66,23 @@ export function getStaticPaths() {
     return score;
   }
 
-  return comparisons.map((comparison) => {
-    const related = comparisons
-      .filter((candidate) => candidate.niche_id === comparison.niche_id && candidate.slug !== comparison.slug)
-      .sort((a, b) => relatedScore(b, comparison) - relatedScore(a, comparison))
-      .slice(0, 3);
+  // Static files (recommendation, about, contact, category hubs) and
+  // `src/pages/go/[slug].astro` / Vercel `api/*` already outrank this
+  // rest-parameter route. Still skip any CSV slug that is not a 1-on-1
+  // `brand-vs-brand` comparison so the catch-all cannot steal those paths.
+  return comparisons
+    .filter((comparison) => isComparisonRouteSlug(comparison.slug))
+    .map((comparison) => {
+      const related = comparisons
+        .filter((candidate) => candidate.niche_id === comparison.niche_id && candidate.slug !== comparison.slug)
+        .sort((a, b) => relatedScore(b, comparison) - relatedScore(a, comparison))
+        .slice(0, 3);
 
-    return {
-      params: { slug: comparison.slug },
-      props: { comparison, related, lastUpdatedIso, firstPublishedIso },
-    };
-  });
+      return {
+        params: { slug: comparison.slug },
+        props: { comparison, related, lastUpdatedIso, firstPublishedIso },
+      };
+    });
 }
 
 const { comparison, related, lastUpdatedIso, firstPublishedIso } = Astro.props as {

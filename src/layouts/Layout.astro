@@ -7,16 +7,23 @@ import Footer from '../components/Footer.astro';
 export interface Props {
   title: string;
   description?: string;
+  /**
+   * Optional robots directive. Omit for indexable pages (homepage, hubs,
+   * `/recommendation/`, comparison slugs). Pass `noindex, nofollow` on
+   * confirmation pages such as `/thank-you/`.
+   */
+  robots?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, robots } = Astro.props;
 
 /**
  * Self-referential canonical on every page that uses this layout (comparison
- * slugs, category hubs, legal pages, homepage). Built from the request path
- * against the www origin so it stays absolute, query/hash-free, and always
- * trailing-slash — matching sitemap loc URLs and `trailingSlash: 'always'`.
- * `/go/*` affiliate redirects do not use this layout and stay noindex.
+ * slugs, category hubs, legal pages, homepage, `/recommendation/`). Built from
+ * the request path against the www origin so it stays absolute, query/hash-free,
+ * and always trailing-slash — matching sitemap loc URLs and
+ * `trailingSlash: 'always'`. `/go/*` affiliate redirects do not use this
+ * layout and stay noindex. `/thank-you/` uses this layout with robots=noindex.
  */
 const SITE_ORIGIN = 'https://www.thehrstackguide.com';
 const canonicalPath = Astro.url.pathname.endsWith('/')
@@ -71,11 +78,11 @@ const organizationSchema = {
       Affiliate click tracking for GA4. Delegated from `document` so it covers
       every `/go/` CTA on the site — including ones rendered by components and
       any added later — without each page wiring up its own handler. The
-      parallel `.js-affiliate-cta` listener in src/pages/[slug].astro reports
+      parallel `.js-affiliate-cta` listener in src/pages/[...slug].astro reports
       to Vercel Analytics, so the two are separate destinations, not duplicates.
 
       Vendor and placement come from the `data-track-*` attributes that
-      src/pages/[slug].astro already sets, read via `closest()` so a wrapper
+      src/pages/[...slug].astro already sets, read via `closest()` so a wrapper
       element can carry them instead of the anchor. The fallbacks cover future
       CTAs added without those attributes: the slug in `/go/{slug}` matches the
       key in src/config/affiliates.ts, so vendor attribution survives either way.
@@ -139,6 +146,7 @@ const organizationSchema = {
     </noscript>
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonicalURL} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content="https://thehrstackguide.com/sg-logo.png" />

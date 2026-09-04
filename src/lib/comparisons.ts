@@ -2,63 +2,28 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { parse } from 'csv-parse/sync';
+import { isComparisonRouteSlug } from './comparison-routes';
+import type { Comparison } from '../types/comparison';
 
-export interface FeatureMatrixEntry {
-  a: boolean;
-  b: boolean;
-}
-
-export interface Comparison {
-  slug: string;
-  niche_id: string;
-  niche_name: string;
-  niche_audience_phrase: string;
-  target_audience: string;
-  tool_a_id: string;
-  tool_a_name: string;
-  /** Sub-niche positioning tag, e.g. "Best for US SMBs (1–50)". */
-  tool_a_badge: string;
-  tool_a_logo_url: string;
-  tool_a_rating: string;
-  tool_a_starting_price: string;
-  tool_a_pricing_model: string;
-  /** Fine print behind the headline price: add-ons, FX spreads, module gating. */
-  tool_a_pricing_nuance: string;
-  tool_a_free_trial: string;
-  tool_a_affiliate_url: string;
-  tool_a_key_features: string;
-  tool_a_pros: string;
-  tool_a_cons: string;
-  tool_b_id: string;
-  tool_b_name: string;
-  tool_b_badge: string;
-  tool_b_logo_url: string;
-  tool_b_rating: string;
-  tool_b_starting_price: string;
-  tool_b_pricing_model: string;
-  tool_b_pricing_nuance: string;
-  tool_b_free_trial: string;
-  tool_b_affiliate_url: string;
-  tool_b_key_features: string;
-  tool_b_pros: string;
-  tool_b_cons: string;
-  winner_id: string;
-  winner_category: string;
-  winner_label: string;
-  winner_bullets: string;
-  winner_reason: string;
-  verdict_summary: string;
-  /** Two-sentence editorial takeaway rendered as the "The HR Stack Guide Take" blockquote. */
-  hr_stack_take: string;
-  feature_matrix_json: string;
-  meta_title: string;
-  meta_description: string;
-}
+export type {
+  AtsFeatures,
+  AtsPersonaData,
+  Comparison,
+  ComparisonSubNiche,
+  FeatureMatrixEntry,
+  FeatureSpec,
+  GlobalPayrollFeatures,
+  GlobalPayrollPersonaData,
+  PerformanceMgmtFeatures,
+  PerformanceMgmtPersonaData,
+  PersonaData,
+} from '../types/comparison';
 
 export function loadComparisons(): Comparison[] {
   const csvPath = path.join(process.cwd(), 'comparisons.csv');
   const content = fs.readFileSync(csvPath, 'utf-8');
-  return parse(content, { columns: true, skip_empty_lines: true }) as Comparison[];
+  const rows = parse(content, { columns: true, skip_empty_lines: true }) as Comparison[];
+  return rows.filter((row) => isComparisonRouteSlug(row.slug));
 }
 
 /**

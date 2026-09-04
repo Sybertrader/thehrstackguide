@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import RecommendationEngine from '../components/RecommendationEngine.astro';
 
 const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
+
+// Indexable funnel: Layout emits a self-referential trailing-slash canonical.
+// Do not set robots=noindex here — confirmation pages such as /thank-you/ do.
 ---
 
 <Layout
