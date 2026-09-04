@@ -1,0 +1,89 @@
+---
+/**
+ * Persona-specific capability matrix for child modifier routes
+ * (`/brand-a-vs-brand-b-for-{modifier}/`). Each row is a Stage 2 FeatureSpec:
+ * boolean support plus a short technical note rendered as a text pill.
+ */
+import type { PersonaMatrixRow } from '../lib/persona-evaluation';
+
+interface Props {
+  toolAName: string;
+  toolBName: string;
+  modifierLabel: string;
+  rows: PersonaMatrixRow[];
+}
+
+const { toolAName, toolBName, modifierLabel, rows } = Astro.props;
+---
+
+{rows.length > 0 && (
+  <section class="mb-12" aria-label={`Persona evaluation matrix for ${modifierLabel}`}>
+    <h2 class="mb-2 text-2xl font-bold text-slate-900">
+      {modifierLabel} capability matrix
+    </h2>
+    <p class="mb-6 max-w-3xl text-sm text-slate-500">
+      Audited flags for this buyer workflow—not the generic pairing scorecard.
+      Checkmarks mark native support; crosses mark a gap or partner-only path. Specs sit in text pills beside each flag.
+    </p>
+    <div class="overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[640px] text-left text-sm">
+          <thead>
+            <tr class="border-b border-indigo-100 bg-indigo-50/70">
+              <th scope="col" class="px-5 py-4 font-semibold text-slate-700">Capability</th>
+              <th scope="col" class="px-5 py-4 font-semibold text-slate-700">{toolAName}</th>
+              <th scope="col" class="px-5 py-4 font-semibold text-slate-700">{toolBName}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {rows.map((row) => (
+              <tr class="align-top transition hover:bg-slate-50/80">
+                <th scope="row" class="px-5 py-4 font-medium text-slate-900">{row.label}</th>
+                <td class="px-5 py-4">
+                  <div class="flex items-start gap-2">
+                    {row.a.supported ? (
+                      <span class="mt-0.5 inline-flex text-emerald-600" aria-label="Supported">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                    ) : (
+                      <span class="mt-0.5 inline-flex text-slate-400" aria-label="Not supported">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                      </span>
+                    )}
+                    <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs leading-snug text-slate-600">
+                      {row.a.spec}
+                    </span>
+                  </div>
+                </td>
+                <td class="px-5 py-4">
+                  <div class="flex items-start gap-2">
+                    {row.b.supported ? (
+                      <span class="mt-0.5 inline-flex text-emerald-600" aria-label="Supported">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                    ) : (
+                      <span class="mt-0.5 inline-flex text-slate-400" aria-label="Not supported">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                        </svg>
+                      </span>
+                    )}
+                    <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs leading-snug text-slate-600">
+                      {row.b.spec}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+)}

@@ -18,18 +18,12 @@ export interface Props {
 const { title, description, noindex = false } = Astro.props;
 
 /**
- * Self-referential canonical on every page that uses this layout (comparison
- * slugs, category hubs, legal pages, homepage, `/recommendation/`). Built from
- * the request path against the www origin so it stays absolute, query/hash-free,
- * and always trailing-slash — matching sitemap loc URLs and
- * `trailingSlash: 'always'`. `/go/*` affiliate redirects do not use this
- * layout and stay noindex. `/thank-you/` uses this layout with `noindex`.
+ * Self-referencing canonical on every page that uses this layout. Uses the
+ * request URL (`Astro.url.href`) so the tag always matches the page being
+ * served. `/go/*` affiliate redirects do not use this layout. `/thank-you/`
+ * uses this layout with `noindex`.
  */
-const SITE_ORIGIN = 'https://www.thehrstackguide.com';
-const canonicalPath = Astro.url.pathname.endsWith('/')
-  ? Astro.url.pathname
-  : `${Astro.url.pathname}/`;
-const canonicalURL = new URL(canonicalPath, SITE_ORIGIN).href;
+const canonicalURL = Astro.url.href;
 
 const organizationSchema = {
   '@context': 'https://schema.org',

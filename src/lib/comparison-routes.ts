@@ -65,3 +65,26 @@ export function isComparisonRouteSlug(slug: string): boolean {
   const firstSegment = slug.split('/')[0] ?? '';
   return !isReservedRouteSegment(firstSegment);
 }
+
+/**
+ * Split `brand-a-vs-brand-b` from an optional `-for-{modifier}` suffix.
+ * Tool ids never contain `-for-`, so the first `-for-` after `-vs-` is the
+ * modifier boundary (`deel-vs-remote-for-us-latam` → hub `deel-vs-remote`).
+ */
+export function parseComparisonSlug(slug: string): { hubSlug: string; modifier: string | null } {
+  const vsIndex = slug.indexOf('-vs-');
+  if (vsIndex === -1) return { hubSlug: slug, modifier: null };
+
+  const afterVs = slug.slice(vsIndex + 4);
+  const forIndex = afterVs.indexOf('-for-');
+  if (forIndex === -1) return { hubSlug: slug, modifier: null };
+
+  const toolA = slug.slice(0, vsIndex);
+  const toolB = afterVs.slice(0, forIndex);
+  const modifier = afterVs.slice(forIndex + 5);
+  return { hubSlug: `${toolA}-vs-${toolB}`, modifier: modifier || null };
+}
+
+export function comparisonHubSlug(toolAId: string, toolBId: string): string {
+  return `${toolAId}-vs-${toolBId}`;
+}
