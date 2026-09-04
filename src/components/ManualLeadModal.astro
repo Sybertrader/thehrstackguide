@@ -243,6 +243,15 @@ const WEB3FORMS_KEY =
     var EMAIL_SEND_VENDORS = ['lever', 'jazzhr', 'culture-amp', 'performyard'];
     var WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
+    function trackGenerateLead(vendorId) {
+      if (typeof window.gtag === 'function' && vendorId) {
+        window.gtag('event', 'generate_lead', {
+          vendor_id: vendorId,
+          page_location: window.location.pathname,
+        });
+      }
+    }
+
     /**
      * Web3Forms supports browser-side posting, so this is a normal CORS fetch
      * the caller can await. Pass keepalive when a redirect follows immediately,
@@ -422,6 +431,7 @@ const WEB3FORMS_KEY =
             console.error('Web3Forms notification failed', err);
           });
 
+          trackGenerateLead(vendor);
           window.location.href = PERFORMYARD_REDIRECT_URL;
           return;
         }
@@ -438,6 +448,7 @@ const WEB3FORMS_KEY =
           console.error('Web3Forms notification failed', err);
         }
 
+        trackGenerateLead(vendor);
         form.classList.add('hidden');
         if (successMessage) successMessage.classList.remove('hidden');
         if (submitBtn) submitBtn.disabled = false;
@@ -480,6 +491,7 @@ const WEB3FORMS_KEY =
         }
 
         if (response.ok) {
+          trackGenerateLead(vendorId);
           var redirectUrl = result && result.redirectUrl ? String(result.redirectUrl) : '';
           if (redirectUrl) {
             window.location.href = redirectUrl;

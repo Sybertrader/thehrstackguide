@@ -3,6 +3,8 @@ import { VENDOR_OUTBOUND_REL, vendorLeadModalOnclick, vendorOutboundOnclick } fr
 
 interface Props {
   vendorName: string;
+  /** Stable tool id used as GA4 `vendor_id` (e.g. `lever`, `culture-amp`). */
+  vendorId?: string;
   location?: string;
   class?: string;
   /** Outbound affiliate / UTM href. Ignored when `modalId` is set. */
@@ -11,8 +13,9 @@ interface Props {
   modalId?: string;
 }
 
-const { href = '', vendorName, location = 'body_link', class: className = '', modalId = '' } = Astro.props;
+const { href = '', vendorName, vendorId = '', location = 'body_link', class: className = '', modalId = '' } = Astro.props;
 const opensModal = Boolean(modalId);
+const resolvedVendorId = vendorId || vendorName.toLowerCase().replace(/\s+/g, '-');
 ---
 
 {
@@ -21,9 +24,10 @@ const opensModal = Boolean(modalId);
       type="button"
       data-modal-target={modalId}
       class:list={['open-modal-btn', className]}
+      data-vendor-id={resolvedVendorId}
       data-track-vendor={vendorName}
       data-track-location={location}
-      onclick={vendorLeadModalOnclick(vendorName)}
+      onclick={vendorLeadModalOnclick(resolvedVendorId)}
     >
       <slot>Try {vendorName}</slot>
     </button>
@@ -33,10 +37,11 @@ const opensModal = Boolean(modalId);
       target="_blank"
       rel={VENDOR_OUTBOUND_REL}
       class:list={['js-affiliate-cta', className]}
+      data-vendor-id={resolvedVendorId}
       data-track-vendor={vendorName}
       data-track-location={location}
       data-vendor-outbound
-      onclick={vendorOutboundOnclick(vendorName)}
+      onclick={vendorOutboundOnclick(resolvedVendorId)}
     >
       <slot>Try {vendorName}</slot>
     </a>

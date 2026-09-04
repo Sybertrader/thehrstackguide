@@ -1016,6 +1016,7 @@ const relatedHref = (item: Comparison) =>
                       <VendorButton
                         href={toolAAffiliateHref}
                         modalId={toolAIsManualLead ? toolAModalId : undefined}
+                        vendorId={comparison.tool_a_id}
                         vendorName={comparison.tool_a_name}
                         location="feature_table"
                         class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
@@ -1027,6 +1028,7 @@ const relatedHref = (item: Comparison) =>
                       <VendorButton
                         href={toolBAffiliateHref}
                         modalId={toolBIsManualLead ? toolBModalId : undefined}
+                        vendorId={comparison.tool_b_id}
                         vendorName={comparison.tool_b_name}
                         location="feature_table"
                         class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
@@ -1177,6 +1179,7 @@ const relatedHref = (item: Comparison) =>
             <VendorButton
               href={toolAAffiliateHref}
               modalId={toolAIsManualLead ? toolAModalId : undefined}
+              vendorId={comparison.tool_a_id}
               vendorName={comparison.tool_a_name}
               location="decision_checklist"
               class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
@@ -1200,6 +1203,7 @@ const relatedHref = (item: Comparison) =>
             <VendorButton
               href={toolBAffiliateHref}
               modalId={toolBIsManualLead ? toolBModalId : undefined}
+              vendorId={comparison.tool_b_id}
               vendorName={comparison.tool_b_name}
               location="decision_checklist"
               class="mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
@@ -1262,6 +1266,7 @@ const relatedHref = (item: Comparison) =>
             <VendorButton
               href={toolAAffiliateHref}
               modalId={toolAIsManualLead ? toolAModalId : undefined}
+              vendorId={comparison.tool_a_id}
               vendorName={comparison.tool_a_name}
               location="final_verdict"
               class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
@@ -1271,6 +1276,7 @@ const relatedHref = (item: Comparison) =>
             <VendorButton
               href={toolBAffiliateHref}
               modalId={toolBIsManualLead ? toolBModalId : undefined}
+              vendorId={comparison.tool_b_id}
               vendorName={comparison.tool_b_name}
               location="final_verdict"
               class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
@@ -1292,6 +1298,7 @@ const relatedHref = (item: Comparison) =>
               <VendorButton
                 href={toolAAffiliateHref}
                 modalId={toolAIsManualLead ? toolAModalId : undefined}
+                vendorId={comparison.tool_a_id}
                 vendorName={comparison.tool_a_name}
                 location="persona_next_step"
                 class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
@@ -1301,6 +1308,7 @@ const relatedHref = (item: Comparison) =>
               <VendorButton
                 href={toolBAffiliateHref}
                 modalId={toolBIsManualLead ? toolBModalId : undefined}
+                vendorId={comparison.tool_b_id}
                 vendorName={comparison.tool_b_name}
                 location="persona_next_step"
                 class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"

@@ -150,6 +150,7 @@ function parseBool(value: string): boolean {
       <VendorButton
         href={toolAAffiliateHref}
         modalId={toolAIsManualLead ? toolAModalId : undefined}
+        vendorId={comparison.tool_a_id}
         vendorName={comparison.tool_a_name}
         location="comparison_card"
         class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -255,6 +256,7 @@ function parseBool(value: string): boolean {
       <VendorButton
         href={toolBAffiliateHref}
         modalId={toolBIsManualLead ? toolBModalId : undefined}
+        vendorId={comparison.tool_b_id}
         vendorName={comparison.tool_b_name}
         location="comparison_card"
         class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

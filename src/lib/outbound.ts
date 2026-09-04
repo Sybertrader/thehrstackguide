@@ -130,12 +130,19 @@ export function resolveVendorOutboundHref(toolId: string, csvFallbackUrl = ''): 
   return referralFallbackUrl(resolveVendorDomain(toolId, csvFallbackUrl));
 }
 
-/** Inline `onclick` body matching the unified GA4 `vendor_outbound_click` event. */
-export function vendorOutboundOnclick(vendorName: string): string {
-  return `if(typeof gtag==='function'){gtag('event','vendor_outbound_click',{'vendor_name':${JSON.stringify(vendorName)},'page_location':window.location.pathname});}`;
+export type VendorCtaDestination = 'outbound_redirect' | 'lead_modal';
+
+/** Inline `onclick` body for the unified GA4 `vendor_cta_click` event. */
+export function vendorCtaOnclick(vendorId: string, destinationType: VendorCtaDestination): string {
+  return `if(typeof window.gtag==='function'){window.gtag('event','vendor_cta_click',{'vendor_id':${JSON.stringify(vendorId)},'destination_type':${JSON.stringify(destinationType)},'page_location':window.location.pathname});}`;
+}
+
+/** Inline `onclick` for outbound affiliate / UTM CTAs. */
+export function vendorOutboundOnclick(vendorId: string): string {
+  return vendorCtaOnclick(vendorId, 'outbound_redirect');
 }
 
 /** Inline `onclick` for lead-capture CTAs that open the intro modal. */
-export function vendorLeadModalOnclick(vendorName: string): string {
-  return `if(typeof gtag==='function'){gtag('event','vendor_lead_modal_open',{'vendor_name':${JSON.stringify(vendorName)},'page_location':window.location.pathname});}`;
+export function vendorLeadModalOnclick(vendorId: string): string {
+  return vendorCtaOnclick(vendorId, 'lead_modal');
 }
