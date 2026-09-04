@@ -1527,7 +1527,7 @@ const relatedHref = (item: Comparison) =>
                 class="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"
               >
                 <span class="text-xs font-semibold uppercase tracking-wide text-indigo-600">
-                  {isHub ? 'Detailed comparison' : item.niche_name}
+                  {isHub ? 'Detailed comparison' : modifierTitleSuffix(item.niche_id, item.niche_name)}
                 </span>
                 <h3 class="mt-2 text-lg font-semibold text-slate-900 transition group-hover:text-indigo-600">
                   {item.tool_a_name} vs {item.tool_b_name}

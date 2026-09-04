@@ -20,17 +20,17 @@ export interface PersonaMatrixRow {
   b: FeatureSpec;
 }
 
-/** Display suffix after "for" in child titles, e.g. "US & LATAM Teams". */
+/** Public persona display title after "for" in child H1s, breadcrumbs, and banners. */
 export const MODIFIER_TITLE_SUFFIX: Record<string, string> = {
   'tech-startups': 'Startups',
   startups: 'Startups',
   scaleups: 'Scaleups',
   agencies: 'Agencies',
-  'us-latam': 'US & LATAM Teams',
-  'web3-crypto': 'Web3 & Crypto Teams',
-  enterprise: 'Enterprise Teams',
+  'us-latam': 'US & LATAM',
+  'web3-crypto': 'Web3 & Crypto',
+  enterprise: 'Enterprise',
   'remote-teams': 'Remote Teams',
-  'people-ops': 'People Ops Teams',
+  'people-ops': 'People Ops',
 };
 
 const NICHE_TO_PERSONA_KEY: Record<string, string> = {
@@ -105,17 +105,11 @@ export function variantsForPair(rows: Comparison[]): ComparisonVariantLink[] {
 
   for (const row of rows) {
     if (row.niche_id === 'tech-startups' || row.slug.endsWith('-for-tech-startups')) continue;
-    const titleSuffix = row.niche_id === 'startups' ? 'Startups' : modifierTitleSuffix(row.niche_id, row.niche_name);
-    const nicheName =
-      row.niche_id === 'remote-teams' || row.niche_name === 'Remote-First Teams'
-        ? 'Remote Teams'
-        : row.niche_name === 'Tech Startups'
-          ? 'Startups'
-          : row.niche_name;
+    const titleSuffix = modifierTitleSuffix(row.niche_id, row.niche_id === 'startups' ? 'Startups' : row.niche_name);
     links.push({
       slug: row.slug,
       nicheId: row.niche_id,
-      nicheName,
+      nicheName: titleSuffix,
       href: `/${row.slug}/`,
       titleSuffix,
     });
