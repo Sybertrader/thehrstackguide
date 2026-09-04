@@ -1,4 +1,9 @@
 ---
+import {
+  LEGACY_CATEGORY_VALUES,
+  PERSONAS_BY_CATEGORY,
+} from '../lib/recommendation-routing';
+
 interface Props {
   headline?: string;
   description?: string;
@@ -23,9 +28,7 @@ const categories = [
   { value: 'ats', label: 'Applicant Tracking Systems (ATS)' },
 ];
 
-// The Global Payroll & EOR hub links to /recommendation/?category=payroll, so
-// keep that older value pointing at the category it was always meant to select.
-const LEGACY_CATEGORY_VALUES: Record<string, string> = { payroll: 'global_eor' };
+// Hub CTAs still send ?category=payroll; that older value maps to global_eor.
 const resolvedPrefill = LEGACY_CATEGORY_VALUES[categoryPrefill] ?? categoryPrefill;
 
 // Labels for every persona token the wizard can emit. Question 2 only
@@ -41,11 +44,7 @@ const companyTypeCatalog: Record<string, string> = {
   'web3-crypto': 'Web3 & Crypto',
 };
 
-const personasByCategory: Record<string, string[]> = {
-  ats: ['startups', 'scaleups', 'enterprise', 'agencies', 'remote-teams'],
-  global_eor: ['startups', 'scaleups', 'agencies', 'us-latam', 'web3-crypto'],
-  performance: ['startups', 'scaleups', 'enterprise', 'people-ops', 'remote-teams'],
-};
+const personasByCategory = PERSONAS_BY_CATEGORY;
 
 function companyTypeOptionsFor(category: string): { value: string; label: string }[] {
   return (personasByCategory[category] ?? []).map((value) => ({
@@ -169,66 +168,7 @@ const HeadingTag = headingLevel;
 </section>
 
 <script>
-  /**
-   * Destinations are assembled from the persona values in Question 2 to match
-   * the comparison slugs, so every persona list below is limited to the
-   * personas that pair actually has a page for. Anything unpublished falls back
-   * to the category hub rather than a mismatched persona's page.
-   * `trailingSlash: 'always'` is enforced site-wide, hence the closing slashes.
-   */
-  const HUBS = {
-    performance: '/performance-management/',
-    ats: '/applicant-tracking-systems/',
-    globalEor: '/global-payroll-eor/',
-  };
-
-  const PERFORMANCE_PERSONAS = ['startups', 'scaleups', 'enterprise', 'remote-teams', 'people-ops'];
-  const ATS_PERSONAS = ['startups', 'scaleups', 'enterprise', 'remote-teams', 'agencies'];
-
-  // Payroll startup pages still use the legacy `tech-startups` token in this
-  // wizard; live child URLs for that persona canonicalize to `-for-startups`.
-  // `us-latam` is the public modifier (`-for-us-latam`) and must stay as-is.
-  const EOR_PERSONA_SLUGS: Record<string, string> = {
-    startups: 'tech-startups',
-    scaleups: 'scaleups',
-    agencies: 'agencies',
-    'us-latam': 'us-latam',
-    'web3-crypto': 'web3-crypto',
-  };
-
-  function resolveTargetUrl(category: string, companyType: string, location: string): string {
-    if (category === 'performance') {
-      return PERFORMANCE_PERSONAS.includes(companyType)
-        ? `/15five-vs-performyard-for-${companyType}/`
-        : HUBS.performance;
-    }
-
-    if (category === 'ats') {
-      return ATS_PERSONAS.includes(companyType)
-        ? `/ashby-vs-greenhouse-for-${companyType}/`
-        : HUBS.ats;
-    }
-
-    // `payroll` is the legacy value still used by inbound ?category= links.
-    if (category === 'global_eor' || category === 'payroll') {
-      const persona = EOR_PERSONA_SLUGS[companyType];
-      if (!persona) return HUBS.globalEor;
-
-      // Nearshore US + LATAM teams need an EOR pair with LATAM entity
-      // coverage (Deel / Oyster), not the US-payroll Gusto comparison.
-      if (persona === 'us-latam') {
-        return '/deel-vs-oyster-for-us-latam/';
-      }
-
-      // US-only startups get the domestic payroll pair instead of an EOR one.
-      if (location === 'us_only' && persona === 'tech-startups') {
-        return '/rippling-vs-gusto-for-tech-startups/';
-      }
-      return `/deel-vs-gusto-for-${persona}/`;
-    }
-
-    return HUBS.globalEor;
-  }
+  import { LEGACY_CATEGORY_VALUES, resolveRecommendationUrl } from '../lib/recommendation-routing';
 
   const INVALID_CLASSES = ['border-red-500', 'ring-2', 'ring-red-100'];
 
@@ -238,10 +178,6 @@ const HeadingTag = headingLevel;
     select.classList.toggle('border-slate-300', isValid);
     INVALID_CLASSES.forEach((className) => select.classList.toggle(className, !isValid));
   }
-
-  // Mirrors the server-side map in the frontmatter. The server path only runs
-  // under SSR, so on this static build the prefill happens here.
-  const LEGACY_CATEGORY_VALUES: Record<string, string> = { payroll: 'global_eor' };
 
   function applyCategoryPrefill(form: HTMLFormElement) {
     const select = form.querySelector('select[name="category"]') as HTMLSelectElement | null;
@@ -361,9 +297,10 @@ const HeadingTag = headingLevel;
       const data = new FormData(form);
       const category = String(data.get('category') || '').trim();
       const companyType = String(data.get('companyType') || '').trim();
+      const budget = String(data.get('budget') || '').trim();
       const location = String(data.get('location') || '').trim();
 
-      const targetUrl = resolveTargetUrl(category, companyType, location);
+      const targetUrl = resolveRecommendationUrl(category, companyType, budget, location);
       console.log('Wizard routing submission to:', targetUrl);
       window.location.href = targetUrl;
     });
