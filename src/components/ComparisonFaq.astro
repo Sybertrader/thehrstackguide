@@ -1,0 +1,39 @@
+---
+interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  heading: string;
+  ariaLabel: string;
+  items: FaqItem[];
+}
+
+const { heading, ariaLabel, items } = Astro.props;
+---
+
+<section class="mt-12 mb-12" aria-label={ariaLabel}>
+  <h2 class="mb-6 text-2xl font-bold text-slate-900">{heading}</h2>
+  <div class="space-y-4">
+    {items.map((item) => (
+      <details class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm open:shadow-md">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-slate-900">
+          {item.question}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            class="h-5 w-5 shrink-0 text-indigo-600 transition group-open:rotate-180"
+            aria-hidden="true"
+          >
+            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <p class="mt-4 text-sm leading-relaxed text-slate-600">
+          {item.answer}
+        </p>
+      </details>
+    ))}
+  </div>
+</section>

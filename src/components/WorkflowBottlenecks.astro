@@ -1,0 +1,26 @@
+---
+import type { WorkflowBottleneck } from '../lib/persona-evaluation';
+
+interface Props {
+  modifierLabel: string;
+  items: WorkflowBottleneck[];
+}
+
+const { modifierLabel, items } = Astro.props;
+---
+
+{items.length > 0 && (
+  <section class="mb-12" aria-labelledby="workflow-bottlenecks-heading">
+    <h3 id="workflow-bottlenecks-heading" class="mb-5 text-lg font-semibold text-slate-900">
+      Key Workflow Bottlenecks for {modifierLabel}
+    </h3>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      {items.map((item) => (
+        <article class="rounded-2xl border border-amber-200 bg-amber-50/50 p-5 shadow-sm">
+          <h4 class="text-sm font-semibold text-amber-950">{item.title}</h4>
+          <p class="mt-2 text-sm leading-relaxed text-slate-700">{item.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+)}

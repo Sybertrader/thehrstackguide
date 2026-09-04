@@ -1,0 +1,289 @@
+---
+/**
+ * Side-by-side vendor cards: pricing, ratings, highlights, and primary CTAs.
+ * Shared by hub (`isChildRoute === false`) and child modifier pages.
+ */
+import type { Comparison } from '../types/comparison';
+
+interface RatingDisplay {
+  rating: string;
+  reviewCountLabel: string | null;
+  ratingSource: string | null;
+}
+
+interface Props {
+  comparison: Comparison;
+  toolAFeatures: string[];
+  toolBFeatures: string[];
+  toolANarrative: RatingDisplay;
+  toolBNarrative: RatingDisplay;
+  toolAIsWinner: boolean;
+  toolBIsWinner: boolean;
+  winnerBadgeText: string;
+  toolABadgeColor: string;
+  toolBBadgeColor: string;
+  toolAIsManualLead: boolean;
+  toolBIsManualLead: boolean;
+  toolAModalId: string;
+  toolBModalId: string;
+  toolAAffiliateHref: string;
+  toolBAffiliateHref: string;
+  toolARel: string | undefined;
+  toolBRel: string | undefined;
+}
+
+const {
+  comparison,
+  toolAFeatures,
+  toolBFeatures,
+  toolANarrative,
+  toolBNarrative,
+  toolAIsWinner,
+  toolBIsWinner,
+  winnerBadgeText,
+  toolABadgeColor,
+  toolBBadgeColor,
+  toolAIsManualLead,
+  toolBIsManualLead,
+  toolAModalId,
+  toolBModalId,
+  toolAAffiliateHref,
+  toolBAffiliateHref,
+  toolARel,
+  toolBRel,
+} = Astro.props;
+
+function parseBool(value: string): boolean {
+  return value?.toLowerCase() === 'true';
+}
+---
+
+<h2 class="mb-6 mt-8 text-2xl font-bold text-slate-900">
+  At a Glance: {comparison.tool_a_name} vs {comparison.tool_b_name}
+</h2>
+
+<section class="mb-12 grid gap-6 lg:grid-cols-2" aria-label="Tool comparison cards">
+  <article
+    class:list={[
+      'relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md sm:p-8',
+      toolAIsWinner ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200',
+    ]}
+  >
+    {toolAIsWinner && (
+      <span class="absolute -top-3 left-6 inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white shadow">
+        {winnerBadgeText}
+      </span>
+    )}
+
+    <div class="flex items-center gap-4">
+      <div class="relative inline-flex h-10 w-10 shrink-0">
+        <img
+          src={comparison.tool_a_logo_url}
+          alt={`${comparison.tool_a_name} logo`}
+          class="w-10 h-10 rounded-lg object-contain bg-slate-100 aspect-square"
+          width="40"
+          height="40"
+          decoding="async"
+          loading="lazy"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div
+          class:list={[
+            'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
+            toolABadgeColor,
+          ]}
+          aria-hidden="true"
+        >
+          {comparison.tool_a_name.charAt(0)}
+        </div>
+      </div>
+      <div>
+        {comparison.tool_a_badge && (
+          <span class="mb-1.5 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+            {comparison.tool_a_badge}
+          </span>
+        )}
+        <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_a_name}</h2>
+        <p class="mt-1 text-sm font-medium text-slate-500">
+          ⭐️ {toolANarrative.rating}/5{toolANarrative.reviewCountLabel && ` (${toolANarrative.reviewCountLabel}+ reviews)`}
+        </p>
+        {toolANarrative.ratingSource && (
+          <p class="mt-1 text-xs text-slate-400">Based on {toolANarrative.ratingSource} user reviews</p>
+        )}
+      </div>
+    </div>
+
+    <div class="mt-6 space-y-3 border-t border-slate-100 pt-6">
+      <div class="flex items-baseline justify-between gap-4">
+        <span class="text-sm text-slate-500">Starting price</span>
+        <span class="text-2xl font-bold text-indigo-600">{comparison.tool_a_starting_price}</span>
+      </div>
+      <div class="flex items-start justify-between gap-4">
+        <span class="text-sm text-slate-500">Pricing model</span>
+        <span class="max-w-[60%] text-right text-sm font-medium text-slate-700">{comparison.tool_a_pricing_model}</span>
+      </div>
+      <div class="flex items-center justify-between gap-4">
+        <span class="text-sm text-slate-500">Free trial</span>
+        <span
+          class:list={[
+            'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
+            parseBool(comparison.tool_a_free_trial)
+              ? 'bg-emerald-50 text-emerald-700'
+              : 'bg-slate-100 text-slate-600',
+          ]}
+        >
+          {parseBool(comparison.tool_a_free_trial) ? 'Available' : 'Not available'}
+        </span>
+      </div>
+    </div>
+
+    {toolAFeatures.length > 0 && (
+      <ul class="mt-6 space-y-2 border-t border-slate-100 pt-6">
+        {toolAFeatures.map((feature) => (
+          <li class="flex items-start gap-2 text-sm text-slate-600">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+            </svg>
+            {feature}
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {toolAIsManualLead ? (
+      <button
+        type="button"
+        data-modal-target={toolAModalId}
+        class="open-modal-btn mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Request Intro &amp; Pricing
+      </button>
+    ) : (
+      <a
+        href={toolAAffiliateHref}
+        class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        target="_blank"
+        rel={toolARel}
+        data-track-vendor={comparison.tool_a_name}
+        data-track-location="comparison_card"
+      >
+        Try {comparison.tool_a_name}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
+          <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    )}
+  </article>
+
+  <article
+    class:list={[
+      'relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md sm:p-8',
+      toolBIsWinner ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200',
+    ]}
+  >
+    {toolBIsWinner && (
+      <span class="absolute -top-3 left-6 inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white shadow">
+        {winnerBadgeText}
+      </span>
+    )}
+
+    <div class="flex items-center gap-4">
+      <div class="relative inline-flex h-10 w-10 shrink-0">
+        <img
+          src={comparison.tool_b_logo_url}
+          alt={`${comparison.tool_b_name} logo`}
+          class="w-10 h-10 rounded-lg object-contain bg-slate-100 aspect-square"
+          width="40"
+          height="40"
+          decoding="async"
+          loading="lazy"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+        />
+        <div
+          class:list={[
+            'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
+            toolBBadgeColor,
+          ]}
+          aria-hidden="true"
+        >
+          {comparison.tool_b_name.charAt(0)}
+        </div>
+      </div>
+      <div>
+        {comparison.tool_b_badge && (
+          <span class="mb-1.5 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+            {comparison.tool_b_badge}
+          </span>
+        )}
+        <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_b_name}</h2>
+        <p class="mt-1 text-sm font-medium text-slate-500">
+          ⭐️ {toolBNarrative.rating}/5{toolBNarrative.reviewCountLabel && ` (${toolBNarrative.reviewCountLabel}+ reviews)`}
+        </p>
+        {toolBNarrative.ratingSource && (
+          <p class="mt-1 text-xs text-slate-400">Based on {toolBNarrative.ratingSource} user reviews</p>
+        )}
+      </div>
+    </div>
+
+    <div class="mt-6 space-y-3 border-t border-slate-100 pt-6">
+      <div class="flex items-baseline justify-between gap-4">
+        <span class="text-sm text-slate-500">Starting price</span>
+        <span class="text-2xl font-bold text-indigo-600">{comparison.tool_b_starting_price}</span>
+      </div>
+      <div class="flex items-start justify-between gap-4">
+        <span class="text-sm text-slate-500">Pricing model</span>
+        <span class="max-w-[60%] text-right text-sm font-medium text-slate-700">{comparison.tool_b_pricing_model}</span>
+      </div>
+      <div class="flex items-center justify-between gap-4">
+        <span class="text-sm text-slate-500">Free trial</span>
+        <span
+          class:list={[
+            'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
+            parseBool(comparison.tool_b_free_trial)
+              ? 'bg-emerald-50 text-emerald-700'
+              : 'bg-slate-100 text-slate-600',
+          ]}
+        >
+          {parseBool(comparison.tool_b_free_trial) ? 'Available' : 'Not available'}
+        </span>
+      </div>
+    </div>
+
+    {toolBFeatures.length > 0 && (
+      <ul class="mt-6 space-y-2 border-t border-slate-100 pt-6">
+        {toolBFeatures.map((feature) => (
+          <li class="flex items-start gap-2 text-sm text-slate-600">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+            </svg>
+            {feature}
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {toolBIsManualLead ? (
+      <button
+        type="button"
+        data-modal-target={toolBModalId}
+        class="open-modal-btn mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Request Intro &amp; Pricing
+      </button>
+    ) : (
+      <a
+        href={toolBAffiliateHref}
+        class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        target="_blank"
+        rel={toolBRel}
+        data-track-vendor={comparison.tool_b_name}
+        data-track-location="comparison_card"
+      >
+        Try {comparison.tool_b_name}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
+          <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    )}
+  </article>
+</section>

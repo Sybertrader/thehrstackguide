@@ -20,7 +20,14 @@ import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
 import DataVerificationBadge from '../components/DataVerificationBadge.astro';
 import DemoQuestions from '../components/DemoQuestions.astro';
+import AtAGlance from '../components/AtAGlance.astro';
+import VerdictCallout from '../components/VerdictCallout.astro';
+import SpecializedEvaluationsGrid from '../components/SpecializedEvaluationsGrid.astro';
+import WhoThisCovers from '../components/WhoThisCovers.astro';
+import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
+import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
+import ComparisonFaq from '../components/ComparisonFaq.astro';
 import { resolveScenarioSubtitle } from '../data/scenarios';
 import {
   buildPersonaEvaluation,
@@ -203,10 +210,6 @@ function parseFeatureMatrix(json: string): Record<string, FeatureMatrixEntry> {
   } catch {
     return {};
   }
-}
-
-function parseBool(value: string): boolean {
-  return value?.toLowerCase() === 'true';
 }
 
 function cleanCopy(text: string): string {
@@ -905,304 +908,41 @@ const relatedHref = (item: Comparison) =>
         </aside>
       )}
 
-      {isHub && (
-        <section class="mb-10 mt-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" aria-label="Who this evaluation covers">
-          <h2 class="text-xl font-bold text-slate-900">Who This Evaluation Covers</h2>
-          <p class="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">
-            This hub is the baseline {comparison.tool_a_name} vs {comparison.tool_b_name} comparison for general technology buyers. It is written for startups standing up an HR stack for the first time and for scaleups replacing spreadsheets or a first-generation vendor—not for a single niche workflow.
-          </p>
-          <ul class="mt-5 grid gap-3 sm:grid-cols-3">
-            <li class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
-              <p class="text-sm font-semibold text-slate-900">General tech buyers</p>
-              <p class="mt-1 text-xs leading-relaxed text-slate-600">Product, People, and Finance leads comparing the pairing on pricing, coverage, and implementation weight.</p>
-            </li>
-            <li class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
-              <p class="text-sm font-semibold text-slate-900">Startups</p>
-              <p class="mt-1 text-xs leading-relaxed text-slate-600">Teams that need a first system of record without an enterprise implementation project.</p>
-            </li>
-            <li class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
-              <p class="text-sm font-semibold text-slate-900">Scaleups</p>
-              <p class="mt-1 text-xs leading-relaxed text-slate-600">Operators consolidating multi-team processes and reporting onto one vendor.</p>
-            </li>
-          </ul>
-        </section>
+      <AtAGlance
+        comparison={comparison}
+        toolAFeatures={toolAFeatures}
+        toolBFeatures={toolBFeatures}
+        toolANarrative={toolANarrative}
+        toolBNarrative={toolBNarrative}
+        toolAIsWinner={toolAIsWinner}
+        toolBIsWinner={toolBIsWinner}
+        winnerBadgeText={winnerBadgeText}
+        toolABadgeColor={toolABadgeColor}
+        toolBBadgeColor={toolBBadgeColor}
+        toolAIsManualLead={toolAIsManualLead}
+        toolBIsManualLead={toolBIsManualLead}
+        toolAModalId={toolAModalId}
+        toolBModalId={toolBModalId}
+        toolAAffiliateHref={toolAAffiliateHref}
+        toolBAffiliateHref={toolBAffiliateHref}
+        toolARel={toolARel}
+        toolBRel={toolBRel}
+      />
+
+      {isHub && comparison.hr_stack_take && (
+        <VerdictCallout take={cleanCopy(comparison.hr_stack_take)} />
       )}
 
       {isHub && variants.length > 0 && (
-        <section class="mb-12" aria-label="Specialized use-case evaluations">
-          <h2 class="mb-2 text-xl font-bold text-slate-900">Specialized Use-Case Evaluations</h2>
-          <p class="mb-5 max-w-3xl text-sm text-slate-500">
-            Jump to the modifier page that matches your workflow. Each child URL has its own capability matrix, evaluation, and schema.
-          </p>
-          <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {variants
-              .filter(
-                (variant) =>
-                  !variant.slug.endsWith('-for-tech-startups') &&
-                  variant.titleSuffix !== 'Tech Startups' &&
-                  variant.nicheId !== 'tech-startups'
-              )
-              .map((variant) => (
-              <li>
-                <a
-                  href={variant.href}
-                  class="flex h-full flex-col rounded-xl border border-indigo-100 bg-indigo-50/40 px-4 py-3 transition hover:border-indigo-300 hover:bg-indigo-50"
-                >
-                  <span class="text-sm font-semibold text-indigo-800">{variant.titleSuffix}</span>
-                  {variant.nicheName !== variant.titleSuffix && variant.nicheName !== 'Tech Startups' && (
-                    <span class="mt-1 text-xs text-slate-500">{variant.nicheName}</span>
-                  )}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
+        <SpecializedEvaluationsGrid variants={variants} />
       )}
 
-      <!-- The HR Stack Guide Take: executive takeaway above the comparison tables -->
-      {isHub && comparison.hr_stack_take && (
-        <blockquote class="my-6 rounded-r-lg border-l-4 border-indigo-600 bg-slate-50 p-4 font-medium text-slate-800">
-          <p class="text-xs font-bold uppercase tracking-wide text-indigo-700">The HR Stack Guide Take</p>
-          <p class="mt-2 text-base leading-relaxed">{cleanCopy(comparison.hr_stack_take)}</p>
-        </blockquote>
+      {isHub && (
+        <WhoThisCovers toolAName={comparison.tool_a_name} toolBName={comparison.tool_b_name} />
       )}
 
       {isHub && (
       <>
-      <!-- SECTION 2: At-a-Glance Comparison Matrix -->
-      <h2 class="mb-6 text-2xl font-bold text-slate-900">
-        At a Glance: {comparison.tool_a_name} vs {comparison.tool_b_name}
-      </h2>
-
-      <!-- Side-by-Side Cards -->
-      <section class="mb-12 grid gap-6 lg:grid-cols-2" aria-label="Tool comparison cards">
-        <!-- Tool A -->
-        <article
-          class:list={[
-            'relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md sm:p-8',
-            toolAIsWinner ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200',
-          ]}
-        >
-          {toolAIsWinner && (
-            <span class="absolute -top-3 left-6 inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white shadow">
-              {winnerBadgeText}
-            </span>
-          )}
-
-          <div class="flex items-center gap-4">
-            <div class="relative inline-flex h-10 w-10 shrink-0">
-              <img
-                src={comparison.tool_a_logo_url}
-                alt={`${comparison.tool_a_name} logo`}
-                class="w-10 h-10 rounded-lg object-contain bg-slate-100 aspect-square"
-                width="40"
-              height="40"
-              decoding="async"
-              loading="lazy"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-              />
-              <div
-                class:list={[
-                  'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
-                  toolABadgeColor,
-                ]}
-                aria-hidden="true"
-              >
-                {comparison.tool_a_name.charAt(0)}
-              </div>
-            </div>
-            <div>
-              {comparison.tool_a_badge && (
-                <span class="mb-1.5 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                  {comparison.tool_a_badge}
-                </span>
-              )}
-              <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_a_name}</h2>
-              <p class="mt-1 text-sm font-medium text-slate-500">
-                ⭐️ {toolANarrative.rating}/5{toolANarrative.reviewCountLabel && ` (${toolANarrative.reviewCountLabel}+ reviews)`}
-              </p>
-              {toolANarrative.ratingSource && (
-                <p class="mt-1 text-xs text-slate-400">Based on {toolANarrative.ratingSource} user reviews</p>
-              )}
-            </div>
-          </div>
-
-          <div class="mt-6 space-y-3 border-t border-slate-100 pt-6">
-            <div class="flex items-baseline justify-between gap-4">
-              <span class="text-sm text-slate-500">Starting price</span>
-              <span class="text-2xl font-bold text-indigo-600">{comparison.tool_a_starting_price}</span>
-            </div>
-            <div class="flex items-start justify-between gap-4">
-              <span class="text-sm text-slate-500">Pricing model</span>
-              <span class="max-w-[60%] text-right text-sm font-medium text-slate-700">{comparison.tool_a_pricing_model}</span>
-            </div>
-            <div class="flex items-center justify-between gap-4">
-              <span class="text-sm text-slate-500">Free trial</span>
-              <span
-                class:list={[
-                  'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
-                  parseBool(comparison.tool_a_free_trial)
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'bg-slate-100 text-slate-600',
-                ]}
-              >
-                {parseBool(comparison.tool_a_free_trial) ? 'Available' : 'Not available'}
-              </span>
-            </div>
-          </div>
-
-          {toolAFeatures.length > 0 && (
-            <ul class="mt-6 space-y-2 border-t border-slate-100 pt-6">
-              {toolAFeatures.map((feature) => (
-                <li class="flex items-start gap-2 text-sm text-slate-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                  </svg>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {toolAIsManualLead ? (
-            <button
-              type="button"
-              data-modal-target={toolAModalId}
-              class="open-modal-btn mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Request Intro &amp; Pricing
-            </button>
-          ) : (
-            <a
-              href={toolAAffiliateHref}
-              class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              target="_blank"
-              rel={toolARel}
-              data-track-vendor={comparison.tool_a_name}
-              data-track-location="comparison_card"
-            >
-              Try {comparison.tool_a_name}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
-                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-              </svg>
-            </a>
-          )}
-        </article>
-
-        <!-- Tool B -->
-        <article
-          class:list={[
-            'relative flex flex-col rounded-2xl border bg-white p-6 shadow-sm transition hover:shadow-md sm:p-8',
-            toolBIsWinner ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200',
-          ]}
-        >
-          {toolBIsWinner && (
-            <span class="absolute -top-3 left-6 inline-flex items-center rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold text-white shadow">
-              {winnerBadgeText}
-            </span>
-          )}
-
-          <div class="flex items-center gap-4">
-            <div class="relative inline-flex h-10 w-10 shrink-0">
-              <img
-                src={comparison.tool_b_logo_url}
-                alt={`${comparison.tool_b_name} logo`}
-                class="w-10 h-10 rounded-lg object-contain bg-slate-100 aspect-square"
-                width="40"
-              height="40"
-              decoding="async"
-              loading="lazy"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-              />
-              <div
-                class:list={[
-                  'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
-                  toolBBadgeColor,
-                ]}
-                aria-hidden="true"
-              >
-                {comparison.tool_b_name.charAt(0)}
-              </div>
-            </div>
-            <div>
-              {comparison.tool_b_badge && (
-                <span class="mb-1.5 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                  {comparison.tool_b_badge}
-                </span>
-              )}
-              <h2 class="text-2xl font-bold text-slate-900">{comparison.tool_b_name}</h2>
-              <p class="mt-1 text-sm font-medium text-slate-500">
-                ⭐️ {toolBNarrative.rating}/5{toolBNarrative.reviewCountLabel && ` (${toolBNarrative.reviewCountLabel}+ reviews)`}
-              </p>
-              {toolBNarrative.ratingSource && (
-                <p class="mt-1 text-xs text-slate-400">Based on {toolBNarrative.ratingSource} user reviews</p>
-              )}
-            </div>
-          </div>
-
-          <div class="mt-6 space-y-3 border-t border-slate-100 pt-6">
-            <div class="flex items-baseline justify-between gap-4">
-              <span class="text-sm text-slate-500">Starting price</span>
-              <span class="text-2xl font-bold text-indigo-600">{comparison.tool_b_starting_price}</span>
-            </div>
-            <div class="flex items-start justify-between gap-4">
-              <span class="text-sm text-slate-500">Pricing model</span>
-              <span class="max-w-[60%] text-right text-sm font-medium text-slate-700">{comparison.tool_b_pricing_model}</span>
-            </div>
-            <div class="flex items-center justify-between gap-4">
-              <span class="text-sm text-slate-500">Free trial</span>
-              <span
-                class:list={[
-                  'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
-                  parseBool(comparison.tool_b_free_trial)
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'bg-slate-100 text-slate-600',
-                ]}
-              >
-                {parseBool(comparison.tool_b_free_trial) ? 'Available' : 'Not available'}
-              </span>
-            </div>
-          </div>
-
-          {toolBFeatures.length > 0 && (
-            <ul class="mt-6 space-y-2 border-t border-slate-100 pt-6">
-              {toolBFeatures.map((feature) => (
-                <li class="flex items-start gap-2 text-sm text-slate-600">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-indigo-500" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                  </svg>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {toolBIsManualLead ? (
-            <button
-              type="button"
-              data-modal-target={toolBModalId}
-              class="open-modal-btn mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Request Intro &amp; Pricing
-            </button>
-          ) : (
-            <a
-              href={toolBAffiliateHref}
-              class="js-affiliate-cta mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              target="_blank"
-              rel={toolBRel}
-              data-track-vendor={comparison.tool_b_name}
-              data-track-location="comparison_card"
-            >
-              Try {comparison.tool_b_name}
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
-                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-              </svg>
-            </a>
-          )}
-        </article>
-      </section>
-
       <!-- Pricing Nuance: the fine print behind the headline rates above -->
       {(comparison.tool_a_pricing_nuance || comparison.tool_b_pricing_nuance) && (
         <section class="mb-12" aria-label="Pricing nuance and hidden fees">
@@ -1361,127 +1101,37 @@ const relatedHref = (item: Comparison) =>
       </>
       )}
 
-      {!isHub && personaRows.length > 0 && (
-        <>
-          <PersonaEvaluationMatrix
-            toolAName={comparison.tool_a_name}
-            toolBName={comparison.tool_b_name}
-            modifierLabel={modifierLabel}
-            rows={personaRows}
-          />
-          {personaEvaluation && (
-            <section class="mx-auto mb-12 w-full max-w-6xl" aria-labelledby="persona-evaluation-heading">
-              <h2 id="persona-evaluation-heading" class="mb-6 text-2xl font-bold text-slate-900">
-                Evaluation for {personaEvaluation.modifierLabel}
-              </h2>
-
-              <div class="border-l-4 border-indigo-600 bg-indigo-50/50 p-5 dark:bg-indigo-950/20 sm:p-6">
-                <p class="mb-3">
-                  <span class="inline-flex rounded-full bg-indigo-600 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white">
-                    The bottom line for {personaEvaluation.modifierLabel}
-                  </span>
-                </p>
-                <p class="text-base leading-relaxed text-slate-800">{personaEvaluation.bottomLine}</p>
-              </div>
-
-              <div class="my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
-                <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                  <h3 class="mb-4 text-lg font-semibold text-slate-900">
-                    Where {personaEvaluation.toolAName} Wins for {personaEvaluation.modifierLabel}
-                  </h3>
-                  {personaEvaluation.whereAWins.length > 0 ? (
-                    <ul class="space-y-3">
-                      {personaEvaluation.whereAWins.map((point) => (
-                        <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
-                          <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                            </svg>
-                          </span>
-                          <span>
-                            <strong class="font-semibold text-slate-900">{point.label.replace(/[.,;:]+$/, '')}.</strong>
-                            {point.spec ? ` ${point.spec}` : ''}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p class="text-sm leading-relaxed text-slate-600">
-                      No exclusive {personaEvaluation.toolAName} advantages on this persona matrix—use the capability table above.
-                    </p>
-                  )}
-                </article>
-
-                <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                  <h3 class="mb-4 text-lg font-semibold text-slate-900">
-                    Where {personaEvaluation.toolBName} Wins for {personaEvaluation.modifierLabel}
-                  </h3>
-                  {personaEvaluation.whereBWins.length > 0 ? (
-                    <ul class="space-y-3">
-                      {personaEvaluation.whereBWins.map((point) => (
-                        <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
-                          <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                            </svg>
-                          </span>
-                          <span>
-                            <strong class="font-semibold text-slate-900">{point.label.replace(/[.,;:]+$/, '')}.</strong>
-                            {point.spec ? ` ${point.spec}` : ''}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p class="text-sm leading-relaxed text-slate-600">
-                      No exclusive {personaEvaluation.toolBName} advantages on this persona matrix—use the capability table above.
-                    </p>
-                  )}
-                </article>
-              </div>
-
-              <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" aria-labelledby="buyer-considerations-heading">
-                <h3 id="buyer-considerations-heading" class="mb-5 text-lg font-semibold text-slate-900">
-                  Buyer Considerations for {personaEvaluation.modifierLabel}
-                </h3>
-                <ul class="space-y-4">
-                  {personaEvaluation.buyerConsiderations.map((item) => (
-                    <li class="flex items-start gap-3 text-sm leading-relaxed text-slate-700">
-                      <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-indigo-100 text-indigo-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                        </svg>
-                      </span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-
-              {workflowBottlenecks.length > 0 && (
-                <section class="mt-8" aria-labelledby="workflow-bottlenecks-heading">
-                  <h3 id="workflow-bottlenecks-heading" class="mb-5 text-lg font-semibold text-slate-900">
-                    Key Workflow Bottlenecks for {personaEvaluation.modifierLabel}
-                  </h3>
-                  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    {workflowBottlenecks.map((item) => (
-                      <article class="rounded-2xl border border-amber-200 bg-amber-50/50 p-5 shadow-sm">
-                        <h4 class="text-sm font-semibold text-amber-950">{item.title}</h4>
-                        <p class="mt-2 text-sm leading-relaxed text-slate-700">{item.body}</p>
-                      </article>
-                    ))}
-                  </div>
-                </section>
-              )}
-            </section>
-          )}
-        </>
+      {isChildRoute && personaEvaluation && (
+        <PersonaEvaluation evaluation={personaEvaluation} />
       )}
 
+      {isChildRoute && personaRows.length > 0 && (
+        <PersonaEvaluationMatrix
+          toolAName={comparison.tool_a_name}
+          toolBName={comparison.tool_b_name}
+          modifierLabel={modifierLabel}
+          rows={personaRows}
+        />
+      )}
+
+      {isChildRoute && (
+        <WorkflowBottlenecks modifierLabel={modifierLabel} items={workflowBottlenecks} />
+      )}
+
+      {isChildRoute && (
+        <ComparisonFaq
+          heading={`Frequently Asked Questions for ${modifierLabel}`}
+          ariaLabel={`Frequently asked questions for ${modifierLabel}`}
+          items={faqItems}
+        />
+      )}
+
+      {isHub && (
       <aside class="mb-12" aria-label="Add as a Google preferred source">
         <p class="text-sm font-medium text-slate-700">Enjoying benchmarks from The HR Stack Guide?</p>
         <PreferredSourceButton theme="light" align="left" />
       </aside>
+      )}
 
       {isHub && (
       <>
@@ -1785,33 +1435,13 @@ const relatedHref = (item: Comparison) =>
         </section>
       )}
 
-      <!-- FAQ Section -->
-      <section class="mt-12" aria-label={isChildRoute ? `Frequently asked questions for ${modifierLabel}` : 'Frequently asked questions'}>
-        <h2 class="mb-6 text-2xl font-bold text-slate-900">
-          {isChildRoute ? `Frequently Asked Questions for ${modifierLabel}` : 'Frequently Asked Questions'}
-        </h2>
-        <div class="space-y-4">
-          {faqItems.map((item) => (
-            <details class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm open:shadow-md">
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-slate-900">
-                {item.question}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  class="h-5 w-5 shrink-0 text-indigo-600 transition group-open:rotate-180"
-                  aria-hidden="true"
-                >
-                  <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
-                </svg>
-              </summary>
-              <p class="mt-4 text-sm leading-relaxed text-slate-600">
-                {item.answer}
-              </p>
-            </details>
-          ))}
-        </div>
-      </section>
+      {isHub && (
+        <ComparisonFaq
+          heading="Frequently Asked Questions"
+          ariaLabel="Frequently asked questions"
+          items={faqItems}
+        />
+      )}
 
       {isHub && enterpriseSections.length > 0 && (
         <details class="legal-deep-dive group mb-12">

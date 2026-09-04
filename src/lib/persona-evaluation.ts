@@ -3,7 +3,7 @@ import { atsPersonaByToolId } from '../data/personaData.ats';
 import { performancePersonaByToolId } from '../data/personaData.pm';
 import { globalPayrollPersonaByToolId } from '../data/personaData.payroll';
 import { comparisonHubSlug } from './comparison-routes';
-import { ATS_BOTTLENECKS, ATS_FAQS, PM_BOTTLENECKS, PM_FAQS } from './persona-vertical-copy';
+import { ATS_BOTTLENECKS, ATS_FAQS, PAYROLL_FAQS, PM_BOTTLENECKS, PM_FAQS } from './persona-vertical-copy';
 
 export interface ComparisonVariantLink {
   slug: string;
@@ -256,14 +256,32 @@ const PAYROLL_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
     { title: 'Device and payroll on one record', body: 'Agencies provision client laptops and app access beside payroll. {PERSONA} should confirm {A} or {B} can sit IT identity on the same worker record as the payout.' },
   ],
   'us-latam': [
-    { title: 'Brazil/Mexico employment vehicle', body: '{PERSONA} must lock owned-entity vs partner EOR in Brazil and Mexico before offers go out. {A} and {B} are not interchangeable once 13th-month and FGTS/social charges hit the fully loaded number.' },
-    { title: 'Contractor tax withholding', body: 'US companies paying LATAM contractors skip withholding until an audit. Confirm how {A} vs {B} handles 1099/W-8BEN, local invoices, and misclassification cover for this corridor.' },
-    { title: 'FX on take-home pay', body: 'BRL and MXN payroll that does not match the signed offer is a resignation event. Model FX on {A} and {B} before {PERSONA} sends the contract.' },
+    {
+      title: 'RFC tax ID validation & MXN/COP/BRL local payout rails for {PERSONA}',
+      body: 'For {PERSONA}, payroll is not a USD wire with a country flag. {A} vs {B} must run RFC tax ID validation before MXN/COP/BRL local payout rails post, or SAT rejects the deposit and {PERSONA} still owes the contractor. A corridor that cannot land CLABE/PIX-equivalent rails in Mexico, Colombia, and Brazil is a resignation event, not an FX footnote.',
+    },
+    {
+      title: 'Monotributista invoice auditing & cross-border contractor withholding for {PERSONA}',
+      body: 'For {PERSONA}, Argentina and remote-contractor files fail on paperwork, not FX. {A} or {B} needs monotributista invoice auditing plus cross-border contractor withholding on the US→LATAM 1099/W-8BEN path {PERSONA} actually pays. Skipping factura/CFDI evidence until Q4 is how {PERSONA} buys a misclassification audit.',
+    },
+    {
+      title: '13th-month aguinaldo rules on Brazil/Mexico EOR for {PERSONA}',
+      body: 'For {PERSONA}, owned-entity vs partner EOR in Brazil and Mexico is decided by 13th-month aguinaldo rules, FGTS, and social charges on the fully loaded number. If {A} or {B} cannot accrue aguinaldo before the offer goes out, {PERSONA} will underquote the hire and relitigate compensation at month twelve.',
+    },
   ],
   'web3-crypto': [
-    { title: 'USDC is not a fiat HRIS feature', body: '{PERSONA} should confirm native USDC or crypto payouts on {A} and {B}. A fiat wallet with an off-platform treasury rail is not payroll.' },
-    { title: 'Token comp off the payroll file', body: 'Keep token grants off {A} or {B} unless the vendor actually supports them. Mixing tokens into 1099/W-8BEN without a rail creates a tax file {PERSONA} cannot defend.' },
-    { title: 'Fiat FX on the rest of the bench', body: 'Not every contributor is paid in USDC. Model fiat corridors on {A} vs {B} for locally employed staff beside the crypto bench.' },
+    {
+      title: 'USDC/USDT stablecoin settlement & non-custodial wallet payouts for {PERSONA}',
+      body: 'For {PERSONA}, a fiat HRIS with an off-platform treasury tab is not payroll. {A} vs {B} must prove native USDC/USDT stablecoin settlement and non-custodial wallet payouts, or {PERSONA} will reconcile contributors in a spreadsheet the DAO cannot defend. Custodial-only wallets that freeze tokens during a network incident are a walk-away.',
+    },
+    {
+      title: 'DAO contributor agreements & token grant vesting schedules for {PERSONA}',
+      body: 'For {PERSONA}, the worker file has to hold DAO contributor agreements next to token grant vesting schedules—not a USD 1099 with a Side Letter in Notion. If {A} or {B} cannot attach cliff, unlock, and revocation terms to the same record {PERSONA} uses for the fiat remainder, legal will split the bench and the cap table will drift.',
+    },
+    {
+      title: 'Gas fee reconciliation on the crypto bench for {PERSONA}',
+      body: 'For {PERSONA}, token and stablecoin payouts are incomplete without gas fee reconciliation. {A} vs {B} should itemize network fees per wallet so finance can close the month. A lump USDC send with no gas line leaves {PERSONA} guessing whether the treasury or the contributor ate the fee.',
+    },
   ],
   enterprise: [
     { title: 'SSO before the demo', body: '{PERSONA} should require SAML 2.0 and SCIM in the security questionnaire for {A} and {B} before procurement books time.' },
@@ -384,16 +402,16 @@ const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
     'Model cost at peak bench size (holiday and campaign spikes), not last month’s average roster.',
   ],
   'us-latam': [
-    'Lock Brazil and Mexico as owned-entity versus partner EOR before you issue offers.',
-    'Accrue 13th-month pay, social charges, and statutory vacation into the fully loaded offer.',
-    'Confirm FX treatment on BRL/MXN payroll so take-home matches the number in the signed contract.',
-    'Put local IP assignment in the employment agreement before day-one onboarding starts.',
+    'For {PERSONA}, require RFC tax ID validation on Mexican hires before MXN/COP/BRL local payout rails go live on {A} or {B}.',
+    'Run monotributista invoice auditing on Argentina contractors so factura packets match what {PERSONA} booked.',
+    'Confirm cross-border contractor withholding on the US→LATAM 1099/W-8BEN path, not a USD wire with no local tax file.',
+    'Accrue 13th-month aguinaldo rules, FGTS, and social charges into the Brazil/Mexico fully loaded offer before {PERSONA} signs.',
   ],
   'web3-crypto': [
-    'Confirm native USDC or crypto payouts—do not assume a fiat HRIS can run treasury rails.',
-    'Keep token compensation off the payroll file unless the vendor actually supports it.',
-    'Model fiat FX on the rest of the bench (USD/USDC contractors versus locally employed staff).',
-    'Check contractor misclassification cover if you mix token grants with 1099 or W-8BEN workers.',
+    'For {PERSONA}, confirm native USDC/USDT stablecoin settlement—do not assume a fiat HRIS can run treasury rails on {A} or {B}.',
+    'Attach DAO contributor agreements to the same worker record {PERSONA} uses for the fiat remainder of the bench.',
+    'Keep token grant vesting schedules on-file (cliff, unlock, revocation) instead of a Side Letter in Notion.',
+    'Require non-custodial wallet payouts plus gas fee reconciliation so {PERSONA} can close the crypto month.',
   ],
   enterprise: [
     'Require SAML 2.0 SSO and SCIM in the security questionnaire before procurement starts.',
@@ -585,16 +603,84 @@ function needPhrase(need: string): string {
   return need.toLowerCase();
 }
 
+function payrollCorridorTest(comparison: Comparison, modifierLabel: string): string {
+  if (comparison.niche_id === 'us-latam') {
+    return `For ${modifierLabel}, the corridor test is RFC tax ID validation, monotributista invoice auditing, MXN/COP/BRL local payout rails, cross-border contractor withholding, and 13th-month aguinaldo rules—not a generic EOR brochure.`;
+  }
+  if (comparison.niche_id === 'web3-crypto') {
+    return `For ${modifierLabel}, the corridor test is USDC/USDT stablecoin settlement, DAO contributor agreements, token grant vesting schedules, non-custodial wallet payouts, and gas fee reconciliation—not a fiat-only HRIS.`;
+  }
+  return '';
+}
+
+function payrollEvaluationOverlays(
+  comparison: Comparison,
+  modifierLabel: string
+): { a: PersonaWinPoint[]; b: PersonaWinPoint[] } {
+  const a = comparison.tool_a_name;
+  const b = comparison.tool_b_name;
+  if (comparison.niche_id === 'us-latam') {
+    return {
+      a: [
+        {
+          label: 'RFC tax ID validation',
+          spec: `Score ${a} on RFC tax ID validation before MXN/COP/BRL local payout rails post for ${modifierLabel}.`,
+        },
+        {
+          label: '13th-month aguinaldo rules',
+          spec: `Confirm ${a} accrues 13th-month aguinaldo rules into the Brazil/Mexico fully loaded number ${modifierLabel} signs.`,
+        },
+      ],
+      b: [
+        {
+          label: 'Monotributista invoice auditing',
+          spec: `Score ${b} on monotributista invoice auditing so ${modifierLabel} can defend Argentina contractor files.`,
+        },
+        {
+          label: 'Cross-border contractor withholding',
+          spec: `Confirm ${b} handles cross-border contractor withholding on the US→LATAM corridor ${modifierLabel} pays.`,
+        },
+      ],
+    };
+  }
+  if (comparison.niche_id === 'web3-crypto') {
+    return {
+      a: [
+        {
+          label: 'USDC/USDT stablecoin settlement',
+          spec: `Score ${a} on native USDC/USDT stablecoin settlement, not an off-platform treasury tab ${modifierLabel} cannot audit.`,
+        },
+        {
+          label: 'DAO contributor agreements',
+          spec: `Confirm ${a} can attach DAO contributor agreements to the worker record ${modifierLabel} uses for grants.`,
+        },
+      ],
+      b: [
+        {
+          label: 'Token grant vesting schedules',
+          spec: `Score ${b} on token grant vesting schedules (cliff, unlock, revocation) staying on the same file ${modifierLabel} uses for fiat remainder.`,
+        },
+        {
+          label: 'Non-custodial wallet payouts',
+          spec: `Confirm ${b} supports non-custodial wallet payouts and gas fee reconciliation for the crypto bench ${modifierLabel} pays.`,
+        },
+      ],
+    };
+  }
+  return { a: [], b: [] };
+}
+
 function buildBottomLine(comparison: Comparison, modifierLabel: string): string {
   const winner = winnerNameOf(comparison);
   const lead = `${winner} is the top-recommended platform for ${modifierLabel}.`;
   const support = punchySupport(comparison);
+  const corridor = payrollCorridorTest(comparison, modifierLabel);
   const other = contrastNeed(comparison);
   const contrast = other
     ? `${other.name} is the stronger alternative when you need ${needPhrase(other.need)}.`
     : '';
 
-  return [lead, support, contrast]
+  return [lead, support, corridor, contrast]
     .map((part) => part.replace(/\s{2,}/g, ' ').trim())
     .filter(Boolean)
     .join(' ');
@@ -612,6 +698,7 @@ export function buildPersonaEvaluation(
 
   const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
   const wins = whereTheyWin(comparison, rows);
+  const overlays = payrollEvaluationOverlays(comparison, modifierLabel);
   const workflowItems = buyerItemsFor(comparison);
 
   return {
@@ -619,9 +706,11 @@ export function buildPersonaEvaluation(
     toolAName: comparison.tool_a_name,
     toolBName: comparison.tool_b_name,
     bottomLine: buildBottomLine(comparison, modifierLabel),
-    whereAWins: wins.a,
-    whereBWins: wins.b,
-    buyerConsiderations: workflowItems.slice(0, 4),
+    whereAWins: [...overlays.a, ...wins.a].slice(0, 4),
+    whereBWins: [...overlays.b, ...wins.b].slice(0, 4),
+    buyerConsiderations: workflowItems
+      .slice(0, 4)
+      .map((item) => fillPersonaCopy(item, comparison, modifierLabel)),
   };
 }
 
@@ -637,14 +726,18 @@ export function buildPersonaFaqItems(
   _pricingAnswer: string
 ): FaqItem[] {
   const family = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
-  const verticalFaqs = family === 'ats' ? ATS_FAQS : family === 'pm' ? PM_FAQS : null;
+  const verticalFaqs =
+    family === 'ats' ? ATS_FAQS : family === 'pm' ? PM_FAQS : family === 'payroll' ? PAYROLL_FAQS : null;
 
   if (verticalFaqs) {
-    const templates = verticalFaqs[comparison.niche_id] ?? verticalFaqs.scaleups ?? [];
-    return templates.slice(0, 3).map((item) => ({
-      question: fillPersonaCopy(item.question, comparison, modifierLabel),
-      answer: fillPersonaCopy(item.answer, comparison, modifierLabel),
-    }));
+    const templates =
+      verticalFaqs[comparison.niche_id] ?? (family === 'payroll' ? undefined : verticalFaqs.scaleups);
+    if (templates && templates.length > 0) {
+      return templates.slice(0, 3).map((item) => ({
+        question: fillPersonaCopy(item.question, comparison, modifierLabel),
+        answer: fillPersonaCopy(item.answer, comparison, modifierLabel),
+      }));
+    }
   }
 
   const a = comparison.tool_a_name;

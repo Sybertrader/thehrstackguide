@@ -1,0 +1,98 @@
+---
+import type { PersonaEvaluationContent } from '../lib/persona-evaluation';
+
+interface Props {
+  evaluation: PersonaEvaluationContent;
+}
+
+const { evaluation } = Astro.props;
+---
+
+<section class="mx-auto mb-12 w-full max-w-6xl" aria-labelledby="persona-evaluation-heading">
+  <h2 id="persona-evaluation-heading" class="mb-6 text-2xl font-bold text-slate-900">
+    Evaluation for {evaluation.modifierLabel}
+  </h2>
+
+  <div class="border-l-4 border-indigo-600 bg-indigo-50/50 p-5 dark:bg-indigo-950/20 sm:p-6">
+    <p class="mb-3">
+      <span class="inline-flex rounded-full bg-indigo-600 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white">
+        The bottom line for {evaluation.modifierLabel}
+      </span>
+    </p>
+    <p class="text-base leading-relaxed text-slate-800">{evaluation.bottomLine}</p>
+  </div>
+
+  <div class="my-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h3 class="mb-4 text-lg font-semibold text-slate-900">
+        Where {evaluation.toolAName} Wins for {evaluation.modifierLabel}
+      </h3>
+      {evaluation.whereAWins.length > 0 ? (
+        <ul class="space-y-3">
+          {evaluation.whereAWins.map((point) => (
+            <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                </svg>
+              </span>
+              <span>
+                <strong class="font-semibold text-slate-900">{point.label.replace(/[.,;:]+$/, '')}.</strong>
+                {point.spec ? ` ${point.spec}` : ''}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-sm leading-relaxed text-slate-600">
+          No exclusive {evaluation.toolAName} advantages on this persona matrix—use the capability table below.
+        </p>
+      )}
+    </article>
+
+    <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h3 class="mb-4 text-lg font-semibold text-slate-900">
+        Where {evaluation.toolBName} Wins for {evaluation.modifierLabel}
+      </h3>
+      {evaluation.whereBWins.length > 0 ? (
+        <ul class="space-y-3">
+          {evaluation.whereBWins.map((point) => (
+            <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+              <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                </svg>
+              </span>
+              <span>
+                <strong class="font-semibold text-slate-900">{point.label.replace(/[.,;:]+$/, '')}.</strong>
+                {point.spec ? ` ${point.spec}` : ''}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="text-sm leading-relaxed text-slate-600">
+          No exclusive {evaluation.toolBName} advantages on this persona matrix—use the capability table below.
+        </p>
+      )}
+    </article>
+  </div>
+
+  <section class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8" aria-labelledby="buyer-considerations-heading">
+    <h3 id="buyer-considerations-heading" class="mb-5 text-lg font-semibold text-slate-900">
+      Buyer Considerations for {evaluation.modifierLabel}
+    </h3>
+    <ul class="space-y-4">
+      {evaluation.buyerConsiderations.map((item) => (
+        <li class="flex items-start gap-3 text-sm leading-relaxed text-slate-700">
+          <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-indigo-100 text-indigo-700">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
+              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+            </svg>
+          </span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</section>

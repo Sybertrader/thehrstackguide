@@ -355,3 +355,42 @@ export const PM_FAQS: Record<string, FaqItem[]> = {
     },
   ],
 };
+
+/** Global Payroll / EOR child-page FAQs: LATAM compliance vs crypto/Web3 rails. */
+export const PAYROLL_FAQS: Record<string, FaqItem[]> = {
+  'us-latam': [
+    {
+      question: 'How should RFC tax ID validation and MXN/COP/BRL local payout rails work for {PERSONA} on {A} vs {B}?',
+      answer:
+        'For {PERSONA}, RFC tax ID validation has to pass before MXN/COP/BRL local payout rails post. {A} vs {B} fails this corridor if SAT can reject a Mexican deposit or if Colombia/Brazil rails never leave USD correspondent banking. {PERSONA} should treat CLABE/PIX-equivalent landing as a buying test, not an FX footnote.',
+    },
+    {
+      question: 'Do monotributista invoice auditing and cross-border contractor withholding on {A} or {B} actually fit for {PERSONA}?',
+      answer:
+        'For {PERSONA}, Argentina contractor files need monotributista invoice auditing, not a PDF dumped in Drive. {A} vs {B} should also run cross-border contractor withholding on the US→LATAM 1099/W-8BEN path {PERSONA} pays. Missing factura/CFDI evidence is how {PERSONA} inherits a misclassification audit.',
+    },
+    {
+      question: 'What do 13th-month aguinaldo rules change about Brazil/Mexico EOR for {PERSONA} on {A} vs {B}?',
+      answer:
+        'For {PERSONA}, 13th-month aguinaldo rules, FGTS, and social charges decide the fully loaded Brazil/Mexico number before the offer goes out. {A} vs {B} cannot treat aguinaldo as a year-end surprise. If the employment vehicle cannot accrue it, {PERSONA} will underquote the hire and relitigate compensation at month twelve.',
+    },
+  ],
+  'web3-crypto': [
+    {
+      question: 'How should USDC/USDT stablecoin settlement and non-custodial wallet payouts work for {PERSONA} on {A} vs {B}?',
+      answer:
+        'For {PERSONA}, USDC/USDT stablecoin settlement has to be native, with non-custodial wallet payouts on the same record. {A} vs {B} is not a fit if crypto leaves the HRIS for an off-platform treasury tab {PERSONA} cannot audit. Custodial-only wallets that freeze during a network incident are a walk-away.',
+    },
+    {
+      question: 'Can DAO contributor agreements and token grant vesting schedules on {A} or {B} sit on one file for {PERSONA}?',
+      answer:
+        'For {PERSONA}, DAO contributor agreements and token grant vesting schedules (cliff, unlock, revocation) belong on the worker file next to any fiat remainder. {A} vs {B} fails if grants live in a Notion Side Letter {PERSONA} legal cannot produce. Splitting the cap table from payroll is how {PERSONA} loses the bench.',
+    },
+    {
+      question: 'What does gas fee reconciliation look like for {PERSONA} when choosing {A} or {B}?',
+      answer:
+        'For {PERSONA}, gas fee reconciliation has to itemize network fees per wallet so finance can close the month. {A} vs {B} should not send a lump USDC amount with no gas line. {PERSONA} needs to see whether the treasury or the contributor ate the fee, or month-end will not tie out.',
+    },
+  ],
+};
+
