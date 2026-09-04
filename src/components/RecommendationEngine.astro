@@ -35,6 +35,7 @@ const companyTypes = [
   { value: 'scaleups', label: 'Scaleup (50-250 employees)' },
   { value: 'enterprise', label: 'Enterprise' },
   { value: 'remote-teams', label: 'Remote / Distributed Team' },
+  { value: 'us-latam', label: 'US & LATAM / Nearshore Team' },
   { value: 'people-ops', label: 'People Ops Leader' },
   { value: 'agencies', label: 'Agency / Professional Services' },
   { value: 'web3-crypto', label: 'Web3 / Crypto' },
@@ -158,11 +159,14 @@ const HeadingTag = headingLevel;
   const PERFORMANCE_PERSONAS = ['startups', 'scaleups', 'enterprise', 'remote-teams', 'people-ops'];
   const ATS_PERSONAS = ['startups', 'scaleups', 'enterprise', 'remote-teams', 'agencies'];
 
-  // The payroll pair words its startup persona differently from the rest.
+  // Payroll startup pages still use the legacy `tech-startups` token in this
+  // wizard; live child URLs for that persona canonicalize to `-for-startups`.
+  // `us-latam` is the public modifier (`-for-us-latam`) and must stay as-is.
   const EOR_PERSONA_SLUGS: Record<string, string> = {
     startups: 'tech-startups',
     scaleups: 'scaleups',
     agencies: 'agencies',
+    'us-latam': 'us-latam',
     'web3-crypto': 'web3-crypto',
   };
 
@@ -183,6 +187,12 @@ const HeadingTag = headingLevel;
     if (category === 'global_eor' || category === 'payroll') {
       const persona = EOR_PERSONA_SLUGS[companyType];
       if (!persona) return HUBS.globalEor;
+
+      // Nearshore US + LATAM teams need an EOR pair with LATAM entity
+      // coverage (Deel / Oyster), not the US-payroll Gusto comparison.
+      if (persona === 'us-latam') {
+        return '/deel-vs-oyster-for-us-latam/';
+      }
 
       // US-only startups get the domestic payroll pair instead of an EOR one.
       if (location === 'us_only' && persona === 'tech-startups') {
