@@ -21,9 +21,9 @@ import PreferredSourceButton from '../components/PreferredSourceButton.astro';
 import DataVerificationBadge from '../components/DataVerificationBadge.astro';
 import DemoQuestions from '../components/DemoQuestions.astro';
 import AtAGlance from '../components/AtAGlance.astro';
+import PricingNuance from '../components/PricingNuance.astro';
 import VerdictCallout from '../components/VerdictCallout.astro';
-import SpecializedEvaluationsGrid from '../components/SpecializedEvaluationsGrid.astro';
-import WhoThisCovers from '../components/WhoThisCovers.astro';
+import TailoredEvaluationsSection from '../components/TailoredEvaluationsSection.astro';
 import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
 import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
@@ -951,61 +951,25 @@ const relatedHref = (item: Comparison) =>
         toolBRel={toolBRel}
       />
 
+      {isHub && (
+        <PricingNuance
+          toolAName={comparison.tool_a_name}
+          toolBName={comparison.tool_b_name}
+          toolANuance={comparison.tool_a_pricing_nuance ? cleanCopy(comparison.tool_a_pricing_nuance) : ''}
+          toolBNuance={comparison.tool_b_pricing_nuance ? cleanCopy(comparison.tool_b_pricing_nuance) : ''}
+        />
+      )}
+
       {isHub && comparison.hr_stack_take && (
         <VerdictCallout take={cleanCopy(comparison.hr_stack_take)} />
       )}
 
-      {isHub && (
-        <WhoThisCovers
-          toolAName={comparison.tool_a_name}
-          toolBName={comparison.tool_b_name}
-          family={hubFamily}
-          variants={variants}
-        />
-      )}
-
       {isHub && variants.length > 0 && (
-        <SpecializedEvaluationsGrid variants={variants} />
+        <TailoredEvaluationsSection variants={variants} family={hubFamily} />
       )}
 
       {isHub && (
       <>
-      <!-- Pricing Nuance: the fine print behind the headline rates above -->
-      {(comparison.tool_a_pricing_nuance || comparison.tool_b_pricing_nuance) && (
-        <section class="mb-12" aria-label="Pricing nuance and hidden fees">
-          <h3 class="mb-2 text-xl font-bold text-slate-900">Pricing Nuance &amp; Hidden Fees</h3>
-          <p class="mb-4 max-w-3xl text-sm text-slate-500">
-            The headline prices above rarely survive contact with a real quote. Here is what each vendor bills on top.
-          </p>
-          <div class="rounded-2xl border border-amber-200 bg-amber-50/60 p-6">
-            <ul class="space-y-5">
-              {comparison.tool_a_pricing_nuance && (
-                <li class="flex items-start gap-3">
-                  <span aria-hidden="true" class="shrink-0 text-base leading-6">💡</span>
-                  <p class="text-sm leading-relaxed text-slate-700">
-                    <strong class="font-semibold text-slate-900">
-                      Pricing Nuance — {comparison.tool_a_name}:
-                    </strong>{' '}
-                    {cleanCopy(comparison.tool_a_pricing_nuance)}
-                  </p>
-                </li>
-              )}
-              {comparison.tool_b_pricing_nuance && (
-                <li class="flex items-start gap-3">
-                  <span aria-hidden="true" class="shrink-0 text-base leading-6">💡</span>
-                  <p class="text-sm leading-relaxed text-slate-700">
-                    <strong class="font-semibold text-slate-900">
-                      Pricing Nuance — {comparison.tool_b_name}:
-                    </strong>{' '}
-                    {cleanCopy(comparison.tool_b_pricing_nuance)}
-                  </p>
-                </li>
-              )}
-            </ul>
-          </div>
-        </section>
-      )}
-
       <!-- Feature Matrix Table -->
       {featureMatrixRows.length > 0 && (
         <section class="mb-12" aria-label="Feature comparison matrix">

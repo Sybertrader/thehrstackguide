@@ -1,0 +1,54 @@
+---
+import type { ComparisonFamily, ComparisonVariantLink } from '../lib/persona-evaluation';
+
+interface Props {
+  variants: ComparisonVariantLink[];
+  family?: ComparisonFamily | null;
+}
+
+const { variants, family = null } = Astro.props;
+
+const VERTICAL_ORDER: Record<ComparisonFamily, string[]> = {
+  ats: ['startups', 'scaleups', 'enterprise', 'agencies', 'remote-teams'],
+  payroll: ['startups', 'scaleups', 'agencies', 'us-latam', 'web3-crypto'],
+  pm: ['startups', 'scaleups', 'enterprise', 'people-ops', 'remote-teams'],
+};
+
+const visibleVariants = variants.filter(
+  (variant) =>
+    !variant.slug.endsWith('-for-tech-startups') &&
+    variant.titleSuffix !== 'Tech Startups' &&
+    variant.nicheId !== 'tech-startups'
+);
+
+const order = (family && VERTICAL_ORDER[family]) || [];
+const ranked = visibleVariants
+  .map((variant) => {
+    const nicheId = variant.nicheId === 'tech-startups' ? 'startups' : variant.nicheId;
+    const rank = order.indexOf(nicheId);
+    return { variant, rank: rank === -1 ? 99 : rank };
+  })
+  .sort((left, right) => left.rank - right.rank || left.variant.titleSuffix.localeCompare(right.variant.titleSuffix))
+  .map((entry) => entry.variant);
+---
+
+{ranked.length > 0 && (
+  <section class="mb-12" aria-label="Role or team-specific evaluations">
+    <h2 class="mb-2 text-xl font-bold text-slate-900">Looking for a Role or Team-Specific Evaluation?</h2>
+    <p class="mb-5 max-w-3xl text-sm text-slate-500">
+      This guide provides the baseline comparison for general technology buyers. If you are evaluating software for a specific team size or workflow, select your profile below:
+    </p>
+    <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {ranked.map((variant) => (
+        <li>
+          <a
+            href={variant.href}
+            class="flex h-full flex-col rounded-xl border border-indigo-100 bg-indigo-50/40 px-4 py-3 transition hover:border-indigo-300 hover:bg-indigo-50"
+          >
+            <span class="text-sm font-semibold text-indigo-800">{variant.titleSuffix}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
