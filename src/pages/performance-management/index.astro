@@ -1,8 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ConciergeLeadBox from '../../components/ConciergeLeadBox.astro';
+import CategoryComparisonBrowser from '../../components/CategoryComparisonBrowser.astro';
 import { loadComparisons } from '../../lib/comparisons';
-import type { Comparison } from '../../lib/comparisons';
 import { getToolsByCategory } from '../../lib/tools';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
@@ -50,54 +50,6 @@ const toolRoster = toolProfiles
     bestFor: badgeById.get(profile.id) ?? null,
   }))
   .sort((a, b) => parseFloat(b.rating ?? '0') - parseFloat(a.rating ?? '0'));
-
-interface NicheGroup {
-  nicheId: string;
-  nicheName: string;
-  comparisons: Comparison[];
-}
-
-const nicheGroups: NicheGroup[] = [];
-const nicheGroupById = new Map<string, NicheGroup>();
-for (const comparison of categoryComparisons) {
-  let group = nicheGroupById.get(comparison.niche_id);
-  if (!group) {
-    group = { nicheId: comparison.niche_id, nicheName: comparison.niche_name, comparisons: [] };
-    nicheGroupById.set(comparison.niche_id, group);
-    nicheGroups.push(group);
-  }
-  group.comparisons.push(comparison);
-}
-
-// Tab order + short labels are curated for readability (e.g. "Remote-First"
-// instead of the longer on-page niche name), but the tab list itself is
-// still derived from the real niche groups above, so a tab silently drops
-// out (rather than pointing at an empty result set) if that niche's
-// comparisons ever disappear from comparisons.csv.
-const tabLabelOverrides: Record<string, string> = {
-  startups: 'Startups',
-  scaleups: 'Scaleups',
-  enterprise: 'Enterprise',
-  'remote-teams': 'Remote-First',
-  'people-ops': 'People Ops',
-};
-const tabOrder = ['startups', 'scaleups', 'enterprise', 'remote-teams', 'people-ops'];
-
-interface TabDef {
-  id: string;
-  label: string;
-}
-
-const tabs: TabDef[] = tabOrder
-  .map((id) => nicheGroupById.get(id))
-  .filter((group): group is NicheGroup => Boolean(group))
-  .map((group) => ({ id: group.nicheId, label: tabLabelOverrides[group.nicheId] ?? group.nicheName }));
-
-// No "All Use Cases" tab: only one niche's comparisons are ever visible at
-// once (server-rendered this way too, not just after JS runs), so neither
-// users nor crawlers see all category links as a single wall of text.
-const defaultTabId = tabs[0]?.id ?? null;
-const comparisonsPerNiche = nicheGroups[0]?.comparisons.length ?? 0;
 
 const buyerGuide = [
   {
@@ -288,116 +240,9 @@ const collectionSchema = {
     <!-- Comparison Directory -->
     <section aria-label="Comparison directory">
       <h2 class="mb-2 text-2xl font-bold text-slate-900">Browse All Comparisons</h2>
-      <p class="mb-6 max-w-3xl text-sm text-slate-500">
-        {categoryComparisons.length} head-to-head comparisons across {nicheGroups.length} audience-specific use cases. Filter by team type to jump straight to the {comparisonsPerNiche} comparisons built for your situation.
-      </p>
-
-      <div class="mb-8 flex flex-wrap gap-2" role="tablist" aria-label="Filter comparisons by use case">
-        {tabs.map((tab, index) => (
-          <button
-            type="button"
-            role="tab"
-            id={`pm-tab-${tab.id}`}
-            data-niche-tab={tab.id}
-            aria-selected={index === 0 ? 'true' : 'false'}
-            class:list={[
-              'inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition',
-              index === 0
-                ? 'border-sky-600 bg-sky-600 text-white shadow-sm'
-                : 'border-slate-200 bg-white text-slate-600 hover:border-sky-300 hover:text-sky-700',
-            ]}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id="pm-comparison-grid">
-        {categoryComparisons.map((comparison) => (
-          <a
-            href={`/${comparison.slug}/`}
-            data-niche={comparison.niche_id}
-            class:list={[
-              'comparison-card group flex flex-col gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-md',
-              comparison.niche_id === defaultTabId ? '' : 'hidden opacity-0',
-            ]}
-          >
-            <span class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-              {comparison.niche_name}
-            </span>
-            <span class="flex items-center justify-between gap-3">
-              <span class="font-semibold text-slate-800 transition group-hover:text-sky-600">
-                {comparison.tool_a_name} vs {comparison.tool_b_name}
-              </span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 shrink-0 text-slate-400 transition group-hover:text-sky-600" aria-hidden="true">
-                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-              </svg>
-            </span>
-          </a>
-        ))}
-      </div>
-
-      <p id="pm-comparison-empty-state" class="hidden mt-10 text-center text-sm text-slate-500">
-        No comparisons found for this use case yet.
-      </p>
+      <CategoryComparisonBrowser comparisons={categoryComparisons} theme="sky" idPrefix="pm" />
     </section>
 
     <ConciergeLeadBox categoryName="Performance Management" theme="sky" ctaHref="/recommendation/?category=performance" />
   </main>
-
-  <script>
-    function initNicheFilter() {
-      const ACTIVE_CLASSES = ['border-sky-600', 'bg-sky-600', 'text-white', 'shadow-sm'];
-      const INACTIVE_CLASSES = ['border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-sky-300', 'hover:text-sky-700'];
-
-      const tabButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-niche-tab]'));
-      const cards = Array.from(document.querySelectorAll<HTMLAnchorElement>('.comparison-card'));
-      const emptyState = document.getElementById('pm-comparison-empty-state');
-      if (!tabButtons.length || !cards.length) return;
-
-      function showCard(card: HTMLElement) {
-        // Avoid forced reflow (offsetWidth) — class toggles alone are enough for INP.
-        card.classList.remove('hidden', 'opacity-0');
-      }
-
-      function hideCard(card: HTMLElement) {
-        card.classList.add('hidden', 'opacity-0');
-      }
-
-      function applyFilter(nicheId: string) {
-        let visibleCount = 0;
-        for (const card of cards) {
-          const matches = card.dataset.niche === nicheId;
-          if (matches) {
-            visibleCount += 1;
-            showCard(card);
-          } else {
-            hideCard(card);
-          }
-        }
-        emptyState?.classList.toggle('hidden', visibleCount > 0);
-      }
-
-      for (const button of tabButtons) {
-        button.addEventListener('click', () => {
-          const nicheId = button.dataset.nicheTab;
-          if (!nicheId) return;
-
-          for (const btn of tabButtons) {
-            const isActive = btn === button;
-            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-            btn.classList.remove(...ACTIVE_CLASSES, ...INACTIVE_CLASSES);
-            btn.classList.add(...(isActive ? ACTIVE_CLASSES : INACTIVE_CLASSES));
-          }
-
-          // Defer DOM filter work to the next frame so the tab paint stays responsive (INP).
-          requestAnimationFrame(() => applyFilter(nicheId));
-        });
-      }
-    }
-
-    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-      initNicheFilter();
-    }
-  </script>
 </Layout>

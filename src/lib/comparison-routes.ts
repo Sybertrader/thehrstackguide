@@ -89,6 +89,20 @@ export function comparisonHubSlug(toolAId: string, toolBId: string): string {
   return `${toolAId}-vs-${toolBId}`;
 }
 
+/**
+ * Public `-for-{modifier}` token for live child URLs.
+ * Payroll CSV still uses `tech-startups`; those pages are served at `-for-startups`.
+ * Never emit `remote-first` — the live modifier is `remote-teams`.
+ */
+export function publicModifierSlug(nicheId: string): string {
+  if (nicheId === 'tech-startups') return 'startups';
+  return nicheId;
+}
+
+export function childComparisonHref(toolAId: string, toolBId: string, nicheId: string): string {
+  return `/${comparisonHubSlug(toolAId, toolBId)}-for-${publicModifierSlug(nicheId)}/`;
+}
+
 /** True for pruned payroll slugs that 301 to the pair's master hub. */
 export function isLegacyTechStartupsSlug(slug: string): boolean {
   return slug.endsWith('-for-tech-startups');
