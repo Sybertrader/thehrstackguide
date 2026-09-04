@@ -28,6 +28,7 @@ import {
   modifierTitleSuffix,
   personaRowsForComparison,
   pickHubComparison,
+  startupAliasForPair,
   variantsForPair,
   type ComparisonVariantLink,
 } from '../lib/persona-evaluation';
@@ -157,7 +158,27 @@ export function getStaticPaths() {
       };
     });
 
-  return [...childPaths, ...hubPaths];
+  const startupAliasPaths = [...pairGroups.values()].flatMap((rows) => {
+    const alias = startupAliasForPair(rows);
+    if (!alias || !isComparisonRouteSlug(alias.slug)) return [];
+    const hubSlug = comparisonHubSlug(alias.tool_a_id, alias.tool_b_id);
+    return [
+      {
+        params: { slug: alias.slug },
+        props: {
+          comparison: alias,
+          related: relatedChildren(alias),
+          lastUpdatedIso,
+          firstPublishedIso,
+          isHub: false,
+          hubSlug,
+          variants: variantsForPair(rows),
+        } satisfies ComparisonPageProps,
+      },
+    ];
+  });
+
+  return [...childPaths, ...hubPaths, ...startupAliasPaths];
 }
 
 const { comparison, related, lastUpdatedIso, firstPublishedIso, isHub, hubSlug, variants } =
@@ -575,7 +596,7 @@ const heroSubtitle = isHub
   : resolveScenarioSubtitle(comparison.niche_id, comparison.niche_name, comparison.target_audience);
 const personaRows = isHub ? [] : personaRowsForComparison(comparison);
 const personaEvaluation =
-  !isHub && personaRows.length > 0 ? buildPersonaEvaluation(comparison, personaRows) : '';
+  !isHub && personaRows.length > 0 ? buildPersonaEvaluation(comparison, personaRows) : [];
 
 
 const winnerName =
@@ -894,14 +915,21 @@ const relatedHref = (item: Comparison) =>
             Jump to the modifier page that matches your workflow. Each child URL has its own capability matrix, evaluation, and schema.
           </p>
           <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {variants.map((variant) => (
+            {variants
+              .filter(
+                (variant) =>
+                  !variant.slug.endsWith('-for-tech-startups') &&
+                  variant.titleSuffix !== 'Tech Startups' &&
+                  variant.nicheId !== 'tech-startups'
+              )
+              .map((variant) => (
               <li>
                 <a
                   href={variant.href}
                   class="flex h-full flex-col rounded-xl border border-indigo-100 bg-indigo-50/40 px-4 py-3 transition hover:border-indigo-300 hover:bg-indigo-50"
                 >
                   <span class="text-sm font-semibold text-indigo-800">{variant.titleSuffix}</span>
-                  {variant.nicheName !== variant.titleSuffix && (
+                  {variant.nicheName !== variant.titleSuffix && variant.nicheName !== 'Tech Startups' && (
                     <span class="mt-1 text-xs text-slate-500">{variant.nicheName}</span>
                   )}
                 </a>
@@ -1317,12 +1345,16 @@ const relatedHref = (item: Comparison) =>
             modifierLabel={modifierLabel}
             rows={personaRows}
           />
-          {personaEvaluation && (
+          {personaEvaluation.length > 0 && (
             <section class="mb-12" aria-label={`${modifierLabel} evaluation`}>
-              <h2 class="mb-3 text-2xl font-bold text-slate-900">
+              <h2 class="mb-4 text-2xl font-bold text-slate-900">
                 Evaluation for {modifierLabel}
               </h2>
-              <p class="max-w-3xl text-base leading-relaxed text-slate-700">{personaEvaluation}</p>
+              <div class="w-full max-w-4xl space-y-4">
+                {personaEvaluation.map((paragraph) => (
+                  <p class="text-base leading-relaxed text-slate-700">{paragraph}</p>
+                ))}
+              </div>
             </section>
           )}
         </>

@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import RecommendationTeaser from '../components/RecommendationTeaser.astro';
 import { loadComparisons } from '../lib/comparisons';
+import { comparisonHubSlug } from '../lib/comparison-routes';
 import { loadToolProfiles } from '../lib/tools';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
@@ -139,11 +140,21 @@ const searchTools = Object.entries(toolProfiles).map(([id, profile]) => ({
   href: (profile.category && hubHrefByCategory[profile.category]) || '/',
 }));
 
-const searchComparisons = comparisons.map((comparison) => ({
-  slug: comparison.slug,
-  a: comparison.tool_a_name,
-  b: comparison.tool_b_name,
-}));
+const searchComparisons = (() => {
+  const seen = new Set<string>();
+  const unique: Array<{ slug: string; a: string; b: string }> = [];
+  for (const comparison of comparisons) {
+    const hubSlug = comparisonHubSlug(comparison.tool_a_id, comparison.tool_b_id);
+    if (seen.has(hubSlug)) continue;
+    seen.add(hubSlug);
+    unique.push({
+      slug: hubSlug,
+      a: comparison.tool_a_name,
+      b: comparison.tool_b_name,
+    });
+  }
+  return unique;
+})();
 
 const searchData = JSON.stringify({ tools: searchTools, comparisons: searchComparisons });
 

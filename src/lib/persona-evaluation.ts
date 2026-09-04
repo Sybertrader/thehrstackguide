@@ -2,6 +2,7 @@ import type { Comparison, FeatureSpec } from '../types/comparison';
 import { atsPersonaByToolId } from '../data/personaData.ats';
 import { performancePersonaByToolId } from '../data/personaData.pm';
 import { globalPayrollPersonaByToolId } from '../data/personaData.payroll';
+import { comparisonHubSlug } from './comparison-routes';
 
 export interface ComparisonVariantLink {
   slug: string;
@@ -20,7 +21,7 @@ export interface PersonaMatrixRow {
 
 /** Display suffix after "for" in child titles, e.g. "US & LATAM Teams". */
 export const MODIFIER_TITLE_SUFFIX: Record<string, string> = {
-  'tech-startups': 'Tech Startups',
+  'tech-startups': 'Startups',
   startups: 'Startups',
   scaleups: 'Scaleups',
   agencies: 'Agencies',
@@ -97,13 +98,48 @@ export function pickHubComparison(rows: Comparison[]): Comparison {
 }
 
 export function variantsForPair(rows: Comparison[]): ComparisonVariantLink[] {
-  return rows.map((row) => ({
-    slug: row.slug,
-    nicheId: row.niche_id,
-    nicheName: row.niche_name,
-    href: `/${row.slug}/`,
-    titleSuffix: modifierTitleSuffix(row.niche_id, row.niche_name),
-  }));
+  const hasStartupsNiche = rows.some((row) => row.niche_id === 'startups');
+  const techStartups = rows.find((row) => row.niche_id === 'tech-startups');
+  const links: ComparisonVariantLink[] = [];
+
+  for (const row of rows) {
+    if (row.niche_id === 'tech-startups' || row.slug.endsWith('-for-tech-startups')) continue;
+    const titleSuffix = row.niche_id === 'startups' ? 'Startups' : modifierTitleSuffix(row.niche_id, row.niche_name);
+    links.push({
+      slug: row.slug,
+      nicheId: row.niche_id,
+      nicheName: row.niche_name === 'Tech Startups' ? 'Startups' : row.niche_name,
+      href: `/${row.slug}/`,
+      titleSuffix,
+    });
+  }
+
+  if (techStartups && !hasStartupsNiche) {
+    const slug = `${comparisonHubSlug(techStartups.tool_a_id, techStartups.tool_b_id)}-for-startups`;
+    links.unshift({
+      slug,
+      nicheId: 'startups',
+      nicheName: 'Startups',
+      href: `/${slug}/`,
+      titleSuffix: 'Startups',
+    });
+  }
+
+  return links;
+}
+
+/** Payroll CSV still uses `tech-startups`; expose a `for-startups` alias for hub cards. */
+export function startupAliasForPair(rows: Comparison[]): Comparison | null {
+  const techStartups = rows.find((row) => row.niche_id === 'tech-startups');
+  if (!techStartups) return null;
+  if (rows.some((row) => row.niche_id === 'startups')) return null;
+  const hubSlug = comparisonHubSlug(techStartups.tool_a_id, techStartups.tool_b_id);
+  return {
+    ...techStartups,
+    slug: `${hubSlug}-for-startups`,
+    niche_id: 'startups',
+    niche_name: 'Startups',
+  };
 }
 
 function packAndLabels(toolAId: string, toolBId: string): {
@@ -206,37 +242,32 @@ function fitSentence(comparison: Comparison, modifierLabel: string): string {
 }
 
 /**
- * 150–200 word persona evaluation unique to this pairing and modifier.
- * Specs are clipped so long technical notes cannot blow the cap.
+ * Persona evaluation as separate paragraphs (not one dense block).
  */
-export function buildPersonaEvaluation(comparison: Comparison, rows: PersonaMatrixRow[]): string {
+export function buildPersonaEvaluation(comparison: Comparison, rows: PersonaMatrixRow[]): string[] {
   const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
   const a = comparison.tool_a_name;
   const b = comparison.tool_b_name;
   const highlight = rows.slice(0, 4);
-  const specBlock = highlight
-    .map((row) => {
-      const aSpec = clipSpec(row.a.spec, 20);
-      const bSpec = clipSpec(row.b.spec, 20);
-      return `On ${row.label.toLowerCase()}, ${a} ${row.a.supported ? 'covers the need' : 'falls short'}: ${aSpec} ${b} ${row.b.supported ? 'covers it' : 'does not'}: ${bSpec}`;
-    })
-    .join(' ');
+  const specSentence = (row: PersonaMatrixRow) => {
+    const aSpec = clipSpec(row.a.spec, 20);
+    const bSpec = clipSpec(row.b.spec, 20);
+    return `On ${row.label.toLowerCase()}, ${a} ${row.a.supported ? 'covers the need' : 'falls short'}: ${aSpec} ${b} ${row.b.supported ? 'covers it' : 'does not'}: ${bSpec}`;
+  };
 
   const workflow = WORKFLOW_BY_NICHE[comparison.niche_id] ?? WORKFLOW_BY_NICHE.scaleups;
   const closing = `Treat the persona matrix on this page as the source of record for ${modifierLabel}, not the generic ${a} vs ${b} hub. Confirm current country lists, add-on SKUs, and SSO packaging on a live demo before you sign.`;
 
-  let text = `${a} versus ${b} for ${modifierLabel} is a workflow decision, not a brand-preference exercise. ${fitSentence(comparison, modifierLabel)} ${specBlock} ${workflow} ${closing}`;
-  text = text.replace(/\s{2,}/g, ' ').trim();
+  const paragraphs = [
+    `${a} versus ${b} for ${modifierLabel} is a workflow decision, not a brand-preference exercise. ${fitSentence(comparison, modifierLabel)}`,
+    highlight.slice(0, 2).map(specSentence).join(' '),
+    highlight.slice(2, 4).map(specSentence).join(' '),
+    `${workflow} ${closing}`,
+  ]
+    .map((paragraph) => paragraph.replace(/\s{2,}/g, ' ').trim())
+    .filter(Boolean);
 
-  let words = text.split(/\s+/);
-  if (words.length < 150) {
-    text = `${text} If both vendors appear close on the scorecard, prefer the one whose entity, compliance, or integration flags are native rather than partner-routed, because that is what fails first in this buyer’s operating model.`;
-    words = text.split(/\s+/);
-  }
-  if (words.length > 200) {
-    text = `${words.slice(0, 200).join(' ').replace(/[.,;:]+$/, '')}.`;
-  }
-  return text;
+  return paragraphs;
 }
 
 export interface FaqItem {
