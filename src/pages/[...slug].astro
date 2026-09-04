@@ -28,7 +28,7 @@ import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
 import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
 import ComparisonFaq from '../components/ComparisonFaq.astro';
-import { resolveScenarioSubtitle } from '../data/scenarios';
+import { resolveChildHeroSubtitle } from '../data/scenarios';
 import {
   buildPersonaEvaluation,
   buildPersonaFaqItems,
@@ -600,10 +600,15 @@ const pageHeading = isHub
   : `${pairName} for ${modifierLabel}`;
 const pageDescription = isHub
   ? `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for technology buyers, startups, and scaleups. Feature matrix, pricing nuance, and specialized use-case evaluations.`
-  : `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for ${modifierLabel}. Persona capability flags, workflow evaluation, and pricing nuance.`;
+  : `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for ${modifierLabel}. Tailored capability breakdown, workflow evaluation, and pricing nuance.`;
 const heroSubtitle = isHub
   ? `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for general technology buyers, startups, and scaleups evaluating HR stack software.`
-  : resolveScenarioSubtitle(comparison.niche_id, comparison.niche_name, comparison.target_audience);
+  : resolveChildHeroSubtitle(
+      hubFamily,
+      comparison.niche_id,
+      comparison.niche_name,
+      comparison.target_audience
+    );
 const personaRows = isHub ? [] : personaRowsForComparison(comparison);
 const personaEvaluation =
   isChildRoute && personaRows.length > 0 ? buildPersonaEvaluation(comparison, personaRows) : null;
@@ -904,7 +909,7 @@ const relatedHref = (item: Comparison) =>
           immediately adjacent to the comparison that the affiliate links cover.
         -->
         <p class="text-xs text-slate-500 mt-2 mb-4">
-          <span class="font-medium text-slate-500">Disclosure:</span> The HR Stack Guide is an independent evaluation hub. We may earn a commission if you sign up through our links at no extra cost to you.
+          <span class="font-medium text-slate-500">Disclosure:</span> The HR Stack Guide is an independent comparison guide. We may earn a commission if you sign up through our links at no extra cost to you.
           <a href="/affiliate-disclosure/" class="text-slate-500 underline underline-offset-2 hover:text-indigo-600">Read full disclosure</a>.
         </p>
       </header>
@@ -916,10 +921,10 @@ const relatedHref = (item: Comparison) =>
           <p class="text-sm leading-relaxed text-slate-800">
             <span class="font-semibold text-indigo-900">Viewing {modifierLabel} Evaluation.</span>
             {' '}
-            For the baseline feature-by-feature matrix, see the main
+            For the baseline feature-by-feature comparison, see the main
             {' '}
             <a href={`/${hubSlug}/`} class="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900">
-              {pairName} hub
+              {pairName} comparison guide
             </a>.
           </p>
         </aside>

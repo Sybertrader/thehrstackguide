@@ -87,3 +87,65 @@ export function resolveScenarioSubtitle(
   if (group) return BUYER_GROUP_SUBTITLES[group];
   return fallback?.trim() || BUYER_GROUP_SUBTITLES.scaleups;
 }
+
+type ChildHeroVertical = 'ats' | 'payroll' | 'pm';
+
+/** Child-page hero subheads: one description per vertical × persona. */
+export const CHILD_HERO_SUBTITLES: Record<ChildHeroVertical, Record<string, string>> = {
+  ats: {
+    startups:
+      'Early-stage startups building structured candidate pipelines and scaling headcount without complex HR overhead.',
+    scaleups:
+      'Fast-scaling companies expanding hiring teams, automating candidate scheduling, and optimizing funnel analytics.',
+    enterprise:
+      'Enterprise talent acquisition teams managing multi-department requisitions, offer approvals, and talent CRMs.',
+    agencies:
+      'Staffing and recruitment agencies managing multi-client candidate pipelines, requisitions, and placement tracking.',
+    'remote-teams':
+      'Distributed teams sourcing international candidates and coordinating multi-time-zone interview loops.',
+  },
+  payroll: {
+    startups:
+      'Early-stage startups and distributed teams hiring global contractors and employees compliant across borders.',
+    scaleups:
+      'High-growth scaleups consolidating international entities, multi-currency payroll, and local tax filings.',
+    agencies:
+      'Design, dev, and marketing agencies managing client-billable contractor payouts and international worker records.',
+    'us-latam':
+      'US technology companies expanding nearshore engineering and operations teams across Latin America.',
+    'web3-crypto':
+      'Web3 protocols and DAOs managing global contributor payouts, stablecoin settlements, and token grant vesting.',
+  },
+  pm: {
+    startups:
+      'Startups implementing lightweight 1:1 check-in habits, goal alignment, and continuous manager feedback.',
+    scaleups:
+      'Growing companies formalizing 360-degree review cycles, OKRs, and performance calibration sessions.',
+    enterprise:
+      'Enterprise People Ops teams running structured talent reviews, 9-box matrices, and compensation alignment.',
+    'people-ops':
+      'People Operations leads automating review cycle logistics, engagement surveys, and manager enablement.',
+    'remote-teams':
+      'Remote-first companies building asynchronous feedback habits, virtual check-ins, and distributed engagement tracking.',
+  },
+};
+
+function publicPersonaId(nicheId: string): string {
+  return nicheId === 'tech-startups' ? 'startups' : nicheId;
+}
+
+/**
+ * Child-route hero subheading from the active vertical and persona.
+ * Falls back to the inclusive buyer-group subtitle if a pair is unmapped.
+ */
+export function resolveChildHeroSubtitle(
+  family: ChildHeroVertical | null | undefined,
+  nicheId: string,
+  nicheName: string,
+  fallback?: string
+): string {
+  const personaId = publicPersonaId(nicheId);
+  const mapped = family ? CHILD_HERO_SUBTITLES[family][personaId] : undefined;
+  if (mapped) return mapped;
+  return resolveScenarioSubtitle(nicheId, nicheName, fallback);
+}
