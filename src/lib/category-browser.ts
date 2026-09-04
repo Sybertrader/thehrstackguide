@@ -32,6 +32,8 @@ export interface CategoryPersonaPill {
 
 export interface CategoryPairingCard {
   baseSlug: string;
+  toolAId: string;
+  toolBId: string;
   toolAName: string;
   toolBName: string;
   modifiers: string[];
@@ -64,6 +66,8 @@ export function buildCategoryBrowser(comparisons: Comparison[]): {
     if (!pairing) {
       pairing = {
         baseSlug,
+        toolAId: row.tool_a_id,
+        toolBId: row.tool_b_id,
         toolAName: row.tool_a_name,
         toolBName: row.tool_b_name,
         modifiers: [],

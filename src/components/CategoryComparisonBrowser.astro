@@ -46,6 +46,16 @@ const palette = themeClasses[theme];
         {pairings.length} head-to-head pairings across {pills.length} audience-specific use cases. Filter by team type to open the child comparison built for that workflow.
       </p>
 
+      <p
+        data-vendor-filter-banner
+        class="mb-6 hidden rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600"
+      >
+        Showing head-to-head guides that include <span data-vendor-filter-name class="font-semibold text-slate-900"></span>
+        <a data-vendor-clear href="./" class="font-semibold text-indigo-600 hover:text-indigo-700">
+          View all comparisons
+        </a>
+      </p>
+
       <div class="mb-8 flex flex-wrap gap-2" role="tablist" aria-label="Filter comparisons by use case">
         {pills.map((pill, index) => (
           <button
@@ -73,6 +83,10 @@ const palette = themeClasses[theme];
               href={childHref(pairing.baseSlug, defaultPill.slug)}
               data-base-slug={pairing.baseSlug}
               data-modifiers={pairing.modifiers.join(',')}
+              data-tool-a-id={pairing.toolAId}
+              data-tool-b-id={pairing.toolBId}
+              data-tool-a-name={pairing.toolAName}
+              data-tool-b-name={pairing.toolBName}
               class:list={[
                 'comparison-card group flex flex-col gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:shadow-md',
                 palette.cardHover,
@@ -130,14 +144,39 @@ const palette = themeClasses[theme];
       const tabButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-persona-pill]'));
       const cards = Array.from(root.querySelectorAll<HTMLAnchorElement>('.comparison-card'));
       const emptyState = root.querySelector<HTMLElement>('[data-comparison-empty-state]');
+      const vendorBanner = root.querySelector<HTMLElement>('[data-vendor-filter-banner]');
+      const vendorNameEl = root.querySelector<HTMLElement>('[data-vendor-filter-name]');
+      const vendorClear = root.querySelector<HTMLAnchorElement>('[data-vendor-clear]');
       if (!tabButtons.length || !cards.length) continue;
+
+      const vendor = (new URLSearchParams(window.location.search).get('vendor') ?? '').trim().toLowerCase();
+
+      function cardMatchesVendor(card: HTMLAnchorElement): boolean {
+        if (!vendor) return true;
+        return card.dataset.toolAId === vendor || card.dataset.toolBId === vendor;
+      }
+
+      function vendorDisplayName(): string {
+        for (const card of cards) {
+          if (card.dataset.toolAId === vendor) return card.dataset.toolAName || vendor;
+          if (card.dataset.toolBId === vendor) return card.dataset.toolBName || vendor;
+        }
+        return vendor;
+      }
+
+      if (vendor && vendorBanner && vendorNameEl) {
+        vendorNameEl.textContent = `${vendorDisplayName().trim()}.`;
+        vendorBanner.classList.remove('hidden');
+        if (vendorClear) vendorClear.href = window.location.pathname;
+      }
 
       function applyPersona(personaSlug: string, label: string) {
         let visibleCount = 0;
         for (const card of cards) {
           const baseSlug = card.dataset.baseSlug;
           const modifiers = (card.dataset.modifiers ?? '').split(',').filter(Boolean);
-          const matches = Boolean(baseSlug) && modifiers.includes(personaSlug);
+          const matches =
+            Boolean(baseSlug) && modifiers.includes(personaSlug) && cardMatchesVendor(card);
           if (matches && baseSlug) {
             visibleCount += 1;
             card.href = `/${baseSlug}-for-${personaSlug}/`;
@@ -151,19 +190,43 @@ const palette = themeClasses[theme];
         emptyState?.classList.toggle('hidden', visibleCount > 0);
       }
 
+      function setActiveTab(button: HTMLButtonElement) {
+        for (const btn of tabButtons) {
+          const isActive = btn === button;
+          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          btn.classList.remove(...palette.active, ...palette.inactive);
+          btn.classList.add(...(isActive ? palette.active : palette.inactive));
+        }
+      }
+
+      function personaHasVendorMatches(personaSlug: string): boolean {
+        return cards.some((card) => {
+          const modifiers = (card.dataset.modifiers ?? '').split(',').filter(Boolean);
+          return modifiers.includes(personaSlug) && cardMatchesVendor(card);
+        });
+      }
+
+      if (vendor) {
+        const current = tabButtons.find((button) => button.getAttribute('aria-selected') === 'true');
+        const fallback =
+          (current && personaHasVendorMatches(current.dataset.personaPill ?? '')
+            ? current
+            : tabButtons.find((button) => personaHasVendorMatches(button.dataset.personaPill ?? ''))) ??
+          current ??
+          tabButtons[0];
+        if (fallback) {
+          setActiveTab(fallback);
+          applyPersona(fallback.dataset.personaPill ?? '', fallback.dataset.personaLabel ?? '');
+        }
+      }
+
       for (const button of tabButtons) {
         button.addEventListener('click', () => {
           const personaSlug = button.dataset.personaPill;
           const label = button.dataset.personaLabel ?? personaSlug ?? '';
           if (!personaSlug) return;
 
-          for (const btn of tabButtons) {
-            const isActive = btn === button;
-            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-            btn.classList.remove(...palette.active, ...palette.inactive);
-            btn.classList.add(...(isActive ? palette.active : palette.inactive));
-          }
-
+          setActiveTab(button);
           requestAnimationFrame(() => applyPersona(personaSlug, label));
         });
       }
