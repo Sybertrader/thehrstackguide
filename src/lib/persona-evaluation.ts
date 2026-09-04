@@ -3,6 +3,7 @@ import { atsPersonaByToolId } from '../data/personaData.ats';
 import { performancePersonaByToolId } from '../data/personaData.pm';
 import { globalPayrollPersonaByToolId } from '../data/personaData.payroll';
 import { comparisonHubSlug } from './comparison-routes';
+import { ATS_BOTTLENECKS, ATS_FAQS, PM_BOTTLENECKS, PM_FAQS } from './persona-vertical-copy';
 
 export interface ComparisonVariantLink {
   slug: string;
@@ -183,16 +184,16 @@ const PM_BUYER_ITEMS: Record<string, string[]> = {
     'Check Slack or Teams so feedback does not live behind a second login.',
   ],
   scaleups: [
-    'Require OKRs and reviews in one system before you add a third survey tool.',
-    'Test calibration with real manager data, not a sandbox demo dataset.',
-    'Quote compensation modules as a line item so Finance sees the all-in number.',
-    'Confirm HRIS and SSO sync so reviews are not keyed off a shadow org chart.',
+    'Require OKRs and reviews in one system before third-survey sprawl starts.',
+    'Test calibration with quota-carrying managers, not a sandbox demo dataset.',
+    'Quote the compensation-module sticker as a line item so Finance sees the all-in number.',
+    'Confirm HRIS and SSO sync so a series-b headcount wave is not keyed off a shadow org chart.',
   ],
   'people-ops': [
-    'Score whether engagement, talent calibration, and people analytics live in one HRBP console.',
-    'Refuse a stack that forces a CSV export into a second dashboard every review cycle.',
-    'Confirm manager 1:1s and reviews can be templated without buying extra admin seats.',
-    'Check SSO and HRIS sync so People Ops is not maintaining a shadow org chart.',
+    'Score whether engagement-science packs, talent calibration, and a people-analytics overlay live in one business-partner console lock.',
+    'Refuse a stack that dumps the cycle-admin runbook into a second dashboard every review cycle.',
+    'Confirm office-hours talent clinics and reviews can be templated without buying extra admin seats.',
+    'Check a succession-slate facilitation kit so People Ops is not rebuilding slates in a side file.',
   ],
   'remote-teams': [
     'Require async check-ins and reviews that work across time zones without hallway context.',
@@ -271,71 +272,11 @@ const PAYROLL_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
   ],
 };
 
-const ATS_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
-  startups: [
-    { title: 'Scorecards without recruiting ops', body: '{PERSONA} will not hire a recruiting-ops lead. If {A} or {B} cannot run structured scorecards self-serve, interview quality collapses after the first five roles.' },
-    { title: 'Seat vs flat-fee surprise', body: 'Price year-one hiring volume on {A} and {B}, including job-board and background-check add-ons. Unlimited-seat marketing is not the same as a quote {PERSONA} can afford.' },
-    { title: 'Time-zone scheduling', body: 'Founder-led interviews span time zones. Test self-scheduling on {A} vs {B} in the corridors {PERSONA} actually uses, not a same-city demo.' },
-  ],
-  scaleups: [
-    { title: 'Audit-ready interview kits', body: 'As the hiring team grows, {PERSONA} needs kits that survive a later OFCCP or legal review. {A} vs {B} is a methodology choice, not a calendar app.' },
-    { title: 'Silver-medalist leakage', body: 'Closed roles get re-sourced from scratch without CRM nurture. Confirm whether {A} or {B} keeps silver medalists warm for {PERSONA}.' },
-    { title: 'HRIS and Checkr in the contract', body: 'Integrations quoted after signature stall offer-to-hire. {PERSONA} should lock HRIS, background-check, and assessment connectors for {A} and {B} now.' },
-  ],
-  agencies: [
-    { title: 'Client portals, not one req list', body: '{PERSONA} runs multi-account pipelines. {A} or {B} fails if it assumes a single in-house requisition list instead of client-tagged submissions.' },
-    { title: 'Retainer reporting', body: 'Submissions must be auditable per client. If {A} and {B} cannot export that trail, {PERSONA} will rebuild it in a spreadsheet for every retainer.' },
-    { title: 'Outbound without a second CRM', body: 'Agencies should not buy a second sourcing tool. Check whether {A} or {B} can run outbound for {PERSONA} natively.' },
-  ],
-  enterprise: [
-    { title: 'OFCCP in the RFP', body: '{PERSONA} should require EEO/OFCCP reporting and structured hiring in the {A} vs {B} RFP, not a slide-deck promise.' },
-    { title: 'SSO/SCIM before legal', body: 'Ask {A} and {B} for SSO, SCIM, and a named implementation owner before procurement signs.' },
-    { title: 'Interview-kit enforcement', body: 'Unlimited seats do not help if legal cannot reconstruct the file. Prioritize kit enforcement on {A} vs {B} for {PERSONA}.' },
-  ],
-  'remote-teams': [
-    { title: 'No shared office calendar', body: '{PERSONA} interviews with no overlapping hours. {A} and {B} must self-schedule across time zones without a hallway whiteboard.' },
-    { title: 'Async loops', body: 'Confirm async video or take-home workflows on {A} vs {B} so {PERSONA} can complete a loop when interviewers never overlap.' },
-    { title: 'Career-site language', body: 'If {PERSONA} hires outside one country, career-site localization on {A} and {B} is a bottleneck, not a nice-to-have.' },
-  ],
-};
-
-const PM_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
-  startups: [
-    { title: 'Check-ins without People Ops', body: '{PERSONA} will not staff a cycle admin. {A} or {B} must run weekly check-ins and 1:1s without a specialist sitting in the product.' },
-    { title: 'Module stacking', body: 'Goals, reviews, and surveys sold separately blow the seed-stage budget. Quote 12-month seats on {A} and {B} with every module {PERSONA} will actually turn on.' },
-    { title: 'Calibration too early', body: 'Skip compensation-calibration SKUs until a merit cycle exists. {A} vs {B} for {PERSONA} is a manager-cadence buy, not an enterprise talent-day buy.' },
-  ],
-  scaleups: [
-    { title: 'Three-tool review stack', body: '{PERSONA} already has a survey tool. If OKRs and reviews on {A} vs {B} do not land in one system, HRBPs will export CSV every cycle.' },
-    { title: 'Fake sandbox calibration', body: 'Test calibration with real manager data on {A} and {B}, not a vendor demo dataset {PERSONA} will never see again.' },
-    { title: 'Comp as a surprise SKU', body: 'Compensation modules quoted after kickoff wreck Finance. Force {A} and {B} to line-item them for {PERSONA} now.' },
-  ],
-  'people-ops': [
-    { title: 'HRBP console sprawl', body: '{PERSONA} needs engagement, calibration, and analytics in one console. {A} vs {B} fails if business partners maintain a shadow dashboard.' },
-    { title: 'CSV every cycle', body: 'Refuse a stack that exports reviews into a second file. That is the bottleneck {PERSONA} is buying {A} or {B} to kill.' },
-    { title: 'Shadow org chart', body: 'Without SSO and HRIS sync, {PERSONA} will keep a parallel org chart. Confirm that path on {A} and {B} before you rip out the incumbent.' },
-  ],
-  'remote-teams': [
-    { title: 'Async reviews', body: '{PERSONA} cannot run hallway calibration. {A} and {B} must support async check-ins and reviews across time zones.' },
-    { title: 'One-language assumption', body: 'Reject tools that assume one office language or one working day. That bottleneck shows up first for {PERSONA} on {A} vs {B}.' },
-    { title: 'Manager nudges off-HRIS', body: 'Managers are not in the HRIS all day. Slack/Teams nudges on {A} and {B} are how {PERSONA} gets cycle completion.' },
-  ],
-  agencies: [
-    { title: 'Billable-team reviews', body: '{PERSONA} does not have one in-house org chart. {A} or {B} must run cycles across studios and client teams without forcing a fake hierarchy.' },
-    { title: 'Completion by account', body: 'Cycle completion should be auditable per client or studio. That is the reporting bottleneck for {PERSONA} on {A} vs {B}.' },
-    { title: 'Mixed employee/contractor benches', body: 'Confirm 1:1s and feedback work for mixed benches. {PERSONA} will otherwise run contractors in a side process {A} and {B} never see.' },
-  ],
-  enterprise: [
-    { title: 'Legal-grade calibration', body: '{PERSONA} needs compensation calibration that survives legal review on {A} vs {B}, not a self-serve SMB form.' },
-    { title: 'Engagement science vs a pulse PDF', body: 'Ask {A} and {B} for engagement-science or works-council evidence before {PERSONA} signs.' },
-    { title: 'Implementation SLA', body: 'Get a named implementation SLA into the MSA. Enterprise performance rollouts fail in kickoff, not in the feature matrix, for {PERSONA}.' },
-  ],
-};
-
 function fillPersonaCopy(template: string, comparison: Comparison, modifierLabel: string): string {
   return template
     .replaceAll('{A}', comparison.tool_a_name)
     .replaceAll('{B}', comparison.tool_b_name)
+    .replaceAll('{FOR}', `for ${modifierLabel}`)
     .replaceAll('{PERSONA}', modifierLabel);
 }
 
@@ -695,6 +636,17 @@ export function buildPersonaFaqItems(
   modifierLabel: string,
   _pricingAnswer: string
 ): FaqItem[] {
+  const family = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
+  const verticalFaqs = family === 'ats' ? ATS_FAQS : family === 'pm' ? PM_FAQS : null;
+
+  if (verticalFaqs) {
+    const templates = verticalFaqs[comparison.niche_id] ?? verticalFaqs.scaleups ?? [];
+    return templates.slice(0, 3).map((item) => ({
+      question: fillPersonaCopy(item.question, comparison, modifierLabel),
+      answer: fillPersonaCopy(item.answer, comparison, modifierLabel),
+    }));
+  }
+
   const a = comparison.tool_a_name;
   const b = comparison.tool_b_name;
   const winner = winnerNameOf(comparison);
