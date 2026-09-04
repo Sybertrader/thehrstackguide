@@ -208,26 +208,59 @@ function clipSpec(spec: string, maxWords = 24): string {
   return `${words.slice(0, maxWords).join(' ').replace(/[.,;:]+$/, '')}.`;
 }
 
-const WORKFLOW_BY_NICHE: Record<string, string> = {
-  'tech-startups':
-    'The buying workflow is speed first: stand up payroll or hiring without a specialist admin, then revisit entity ownership, compliance reporting, and seat math once headcount clears the first twenty people.',
-  startups:
-    'The buying workflow is speed first: stand up the process without a specialist admin, then revisit compliance reporting and seat math once hiring volume or review cycles actually exist.',
-  scaleups:
-    'The buying workflow is operating-system replacement: consolidate multi-country or multi-team processes onto one vendor, then instrument reporting so People and Finance are not reconciling spreadsheets at month end.',
-  agencies:
-    'The buying workflow is client-facing throughput: batch contractor or candidate movement across accounts, keep submissions or payouts auditable, and avoid tools that assume a single in-house headcount plan.',
-  'us-latam':
-    'The buying workflow is country-by-country employment: lock the Brazil/Mexico vehicle (owned entity versus partner), accrue 13th-month and social charges into the offer, then run onboarding only after FX and IP assignment are in the contract.',
-  'web3-crypto':
-    'The buying workflow is treasury plus employment: confirm whether USDC or crypto payouts are native, model fiat FX on the rest of the bench, and keep token compensation off the payroll rail unless the vendor actually supports it.',
-  enterprise:
-    'The buying workflow is procurement: SAML 2.0 SSO, audit-ready EEO or works-council evidence, and compensation or structured-hiring calibration that survives legal review—not a self-serve SMB checkout.',
-  'remote-teams':
-    'The buying workflow is async-first: multi-time-zone scheduling or Slack/Teams check-ins have to work without hallway context, and the vendor must not assume one office language or one calendar.',
-  'people-ops':
-    'The buying workflow is the HRBP console: engagement science, talent calibration, and people analytics have to land in one place so business partners are not exporting CSV into a second dashboard.',
+const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
+  'tech-startups': [
+    'Prioritize speed: stand up payroll or hiring without a specialist admin.',
+    'Revisit entity ownership, compliance reporting, and seat math once headcount clears the first twenty people.',
+  ],
+  startups: [
+    'Prioritize speed: stand up the process without a specialist admin.',
+    'Revisit compliance reporting and seat math once hiring volume or review cycles actually exist.',
+  ],
+  scaleups: [
+    'Treat this as an operating-system replacement: consolidate multi-country or multi-team processes onto one vendor.',
+    'Instrument reporting so People and Finance are not reconciling spreadsheets at month end.',
+  ],
+  agencies: [
+    'Optimize for client-facing throughput: batch contractor or candidate movement across accounts.',
+    'Keep submissions or payouts auditable, and avoid tools that assume a single in-house headcount plan.',
+  ],
+  'us-latam': [
+    'Lock the Brazil/Mexico employment vehicle (owned entity versus partner) before you run offers.',
+    'Accrue 13th-month and social charges into the offer, then onboard only after FX and IP assignment are in the contract.',
+  ],
+  'web3-crypto': [
+    'Confirm whether USDC or crypto payouts are native before you model treasury plus employment.',
+    'Keep token compensation off the payroll rail unless the vendor actually supports it, and model fiat FX on the rest of the bench.',
+  ],
+  enterprise: [
+    'Run this as procurement: require SAML 2.0 SSO and audit-ready EEO or works-council evidence.',
+    'Demand compensation or structured-hiring calibration that survives legal review—not a self-serve SMB checkout.',
+  ],
+  'remote-teams': [
+    'Require async-first workflows: multi-time-zone scheduling or Slack/Teams check-ins must work without hallway context.',
+    'Reject vendors that assume one office language or one shared calendar.',
+  ],
+  'people-ops': [
+    'Score the HRBP console: engagement science, talent calibration, and people analytics should land in one place.',
+    'Avoid a stack that forces business partners to export CSV into a second dashboard.',
+  ],
 };
+
+export interface PersonaWinPoint {
+  label: string;
+  spec: string;
+}
+
+export interface PersonaEvaluationContent {
+  modifierLabel: string;
+  toolAName: string;
+  toolBName: string;
+  bottomLine: string;
+  whereAWins: PersonaWinPoint[];
+  whereBWins: PersonaWinPoint[];
+  buyerConsiderations: string[];
+}
 
 function fitSentence(comparison: Comparison, modifierLabel: string): string {
   const winnerName =
@@ -241,33 +274,79 @@ function fitSentence(comparison: Comparison, modifierLabel: string): string {
   return `${winnerName} is the recommended lean for ${modifierLabel}. ${ended}`;
 }
 
+function winPoint(row: PersonaMatrixRow, side: 'a' | 'b'): PersonaWinPoint {
+  return { label: row.label, spec: clipSpec(row[side].spec, 22) };
+}
+
+function fillWinColumn(
+  exclusive: PersonaWinPoint[],
+  fallbackRows: PersonaMatrixRow[],
+  side: 'a' | 'b',
+  max = 5
+): PersonaWinPoint[] {
+  const points = exclusive.slice(0, max);
+  if (points.length >= 3) return points;
+
+  for (const row of fallbackRows) {
+    if (points.length >= max) break;
+    if (!row[side].supported) continue;
+    if (points.some((point) => point.label === row.label)) continue;
+    points.push(winPoint(row, side));
+  }
+
+  return points;
+}
+
+function whereTheyWin(rows: PersonaMatrixRow[]): {
+  a: PersonaWinPoint[];
+  b: PersonaWinPoint[];
+} {
+  const exclusiveA: PersonaWinPoint[] = [];
+  const exclusiveB: PersonaWinPoint[] = [];
+
+  for (const row of rows) {
+    if (row.a.supported && !row.b.supported) exclusiveA.push(winPoint(row, 'a'));
+    else if (row.b.supported && !row.a.supported) exclusiveB.push(winPoint(row, 'b'));
+  }
+
+  return {
+    a: fillWinColumn(exclusiveA, rows, 'a'),
+    b: fillWinColumn(exclusiveB, rows, 'b'),
+  };
+}
+
 /**
- * Persona evaluation as separate paragraphs (not one dense block).
+ * Structured persona evaluation for the child-page verdict UI.
+ * Copy stays in real headings, paragraphs, and lists for crawler indexability.
  */
-export function buildPersonaEvaluation(comparison: Comparison, rows: PersonaMatrixRow[]): string[] {
+export function buildPersonaEvaluation(
+  comparison: Comparison,
+  rows: PersonaMatrixRow[]
+): PersonaEvaluationContent | null {
+  if (rows.length === 0) return null;
+
   const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
   const a = comparison.tool_a_name;
   const b = comparison.tool_b_name;
-  const highlight = rows.slice(0, 4);
-  const specSentence = (row: PersonaMatrixRow) => {
-    const aSpec = clipSpec(row.a.spec, 20);
-    const bSpec = clipSpec(row.b.spec, 20);
-    return `On ${row.label.toLowerCase()}, ${a} ${row.a.supported ? 'covers the need' : 'falls short'}: ${aSpec} ${b} ${row.b.supported ? 'covers it' : 'does not'}: ${bSpec}`;
+  const wins = whereTheyWin(rows);
+  const workflowItems = BUYER_WORKFLOW_ITEMS[comparison.niche_id] ?? BUYER_WORKFLOW_ITEMS.scaleups;
+
+  return {
+    modifierLabel,
+    toolAName: a,
+    toolBName: b,
+    bottomLine: `${a} versus ${b} for ${modifierLabel} is a workflow decision, not a brand-preference exercise. ${fitSentence(comparison, modifierLabel)}`.replace(
+      /\s{2,}/g,
+      ' '
+    ),
+    whereAWins: wins.a,
+    whereBWins: wins.b,
+    buyerConsiderations: [
+      ...workflowItems,
+      `Treat the persona matrix on this page as the source of record for ${modifierLabel}, not the generic ${a} vs ${b} hub.`,
+      'Confirm current country lists, add-on SKUs, and SSO packaging on a live demo before you sign.',
+    ],
   };
-
-  const workflow = WORKFLOW_BY_NICHE[comparison.niche_id] ?? WORKFLOW_BY_NICHE.scaleups;
-  const closing = `Treat the persona matrix on this page as the source of record for ${modifierLabel}, not the generic ${a} vs ${b} hub. Confirm current country lists, add-on SKUs, and SSO packaging on a live demo before you sign.`;
-
-  const paragraphs = [
-    `${a} versus ${b} for ${modifierLabel} is a workflow decision, not a brand-preference exercise. ${fitSentence(comparison, modifierLabel)}`,
-    highlight.slice(0, 2).map(specSentence).join(' '),
-    highlight.slice(2, 4).map(specSentence).join(' '),
-    `${workflow} ${closing}`,
-  ]
-    .map((paragraph) => paragraph.replace(/\s{2,}/g, ' ').trim())
-    .filter(Boolean);
-
-  return paragraphs;
 }
 
 export interface FaqItem {
