@@ -40,7 +40,7 @@ export default defineConfig({
 
   integrations: [
     sitemap({
-      filter: includeInSitemap,
+      filter: (page) => !page.includes('/go/') && includeInSitemap(page),
       serialize(item) {
         item.url = withTrailingSlash(item.url);
         item.lastmod = new Date().toISOString();

@@ -11,6 +11,8 @@ export function getStaticPaths() {
 
 const { slug } = Astro.params;
 const { targetUrl } = Astro.props;
+
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 ---
 
 <!DOCTYPE html>
