@@ -10,7 +10,7 @@
 import { affiliateLinks } from '../config/affiliates';
 import { getToolProfile, type ToolProfile } from './tools';
 
-export { VENDOR_OUTBOUND_REL } from './links';
+export { VENDOR_OUTBOUND_REL, outboundRel } from './links';
 export const UTM_SOURCE = 'hrstackguide.com';
 export const UTM_MEDIUM = 'referral';
 
