@@ -1,0 +1,11 @@
+# The HR Stack Guide
+
+> Independent buyer's guide, software comparisons, and directory for modern HR technology.
+
+## Core Directories
+- [/applicant-tracking-systems/](https://www.thehrstackguide.com/applicant-tracking-systems/): Applicant Tracking Systems (ATS) software comparison and reviews.
+- [/global-payroll-eor/](https://www.thehrstackguide.com/global-payroll-eor/): Global payroll and Employer of Record (EOR) platform evaluation.
+- [/performance-management/](https://www.thehrstackguide.com/performance-management/): HR performance management and employee engagement software.
+
+## Key Comparisons
+- Head-to-head comparison pages evaluate pricing, feature matrices, integration ecosystems, and buyer checklists for HR platforms.
