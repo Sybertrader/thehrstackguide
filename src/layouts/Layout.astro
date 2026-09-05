@@ -5,6 +5,7 @@ import SpeedInsights from '@vercel/speed-insights/astro';
 import Footer from '../components/Footer.astro';
 
 export interface Props {
+  /** Document `<title>` / OG title. Must not match the page H1. */
   title: string;
   description?: string;
   /**
@@ -142,11 +143,14 @@ const organizationSchema = {
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       />
     </noscript>
+    <!-- Document title only. On-page H1s are set by each page template and must not match this string. -->
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalURL} />
+    <meta property="og:title" content={title} />
     <meta property="og:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
     <meta property="og:image" content="https://thehrstackguide.com/sg-logo.png" />
     <meta property="og:image:type" content="image/png" />
     <meta name="twitter:image" content="https://thehrstackguide.com/sg-logo.png" />

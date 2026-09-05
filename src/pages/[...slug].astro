@@ -566,18 +566,17 @@ const richSnippetSchema = [
   }));
 
 /**
- * Hub routes (`/deel-vs-remote/`) keep a modifier-free title so child pages
- * (`/deel-vs-remote-for-us-latam/`) are the only URLs that compete for
- * audience-specific queries.
+ * Document `<title>` follows the CTR formula and must never equal the H1.
+ * Hub routes stay modifier-free so child pages (`-for-{persona}/`) compete
+ * for audience-specific queries. The on-page H1 is the pair name only.
  */
 const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
 const pairName = `${comparison.tool_a_name} vs ${comparison.tool_b_name}`;
+const titleYear = new Date().getFullYear();
 const pageTitle = isHub
-  ? `${pairName}: Detailed Comparison`
-  : `${pairName} for ${modifierLabel}`;
-const pageHeading = isHub
-  ? `${pairName}: Detailed Comparison`
-  : `${pairName} for ${modifierLabel}`;
+  ? `${pairName} (${titleYear} Comparison) | The HR Stack Guide`
+  : `${pairName} for ${modifierLabel} (${titleYear} Comparison) | The HR Stack Guide`;
+const pageHeading = isHub ? pairName : `${pairName} for ${modifierLabel}`;
 const pageDescription = isHub
   ? `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for technology buyers, startups, and scaleups. Feature matrix, pricing nuance, and specialized use-case evaluations.`
   : `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for ${modifierLabel}. Tailored capability breakdown, workflow evaluation, and pricing nuance.`;
