@@ -580,7 +580,7 @@ PM_TOOLS = {
     },
     "reflektive": {
         "name": "PeopleFluent",
-        "logo": "/reflektive.png",
+        "logo": "/people fluent.jpeg",
         "rating": 4.2,
         "starting_price": "Custom quote",
         "pricing_model": "Custom quote (Workday-era packaging)",

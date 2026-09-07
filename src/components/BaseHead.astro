@@ -1,10 +1,7 @@
 ---
 /**
- * Shared document-head resource hints, LCP preloads, and deferred analytics.
+ * Shared document-head resource hints and LCP preloads.
  * Inter is self-hosted (`font-display: swap` in @fontsource-variable/inter).
- * Google Fonts CSS is not loaded; dns-prefetch/preconnect still warm the
- * Google Fonts origins in case a page opts into them later, and match the
- * recommended head pattern without a render-blocking stylesheet.
  */
 import interLatinWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 
@@ -35,54 +32,30 @@ const { gaMeasurementId = '', lcpImages = [] } = Astro.props;
 
 {gaMeasurementId && (
   <>
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} is:inline></script>
     <script is:inline define:vars={{ gaId: gaMeasurementId }}>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       window.gtag = gtag;
-      window.addEventListener(
-        'load',
-        function () {
-          if (!gaId || window.__ga4Loaded) return;
-          window.__ga4Loaded = true;
-          var s = document.createElement('script');
-          s.async = true;
-          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
-          s.onload = function () {
-            gtag('js', new Date());
-            gtag('config', gaId);
-          };
-          document.head.appendChild(s);
-        },
-        { once: true },
-      );
+      gtag('js', new Date());
+      gtag('config', gaId);
     </script>
   </>
 )}
 
-<link rel="dns-prefetch" href="https://www.clarity.ms" />
 <script is:inline>
-  (function () {
-    function loadClarity() {
-      if (window.__clarityLoaded) return;
-      window.__clarityLoaded = true;
-      (function (c, l, a, r, i, t, y) {
-        c[a] =
-          c[a] ||
-          function () {
-            (c[a].q = c[a].q || []).push(arguments);
-          };
-        t = l.createElement(r);
-        t.async = true;
-        t.defer = true;
-        t.src = 'https://www.clarity.ms/tag/' + i;
-        y = l.getElementsByTagName(r)[0];
-        y.parentNode.insertBefore(t, y);
-      })(window, document, 'clarity', 'script', 'xx8emm4258');
-    }
-    if (document.readyState === 'complete') loadClarity();
-    else window.addEventListener('load', loadClarity, { once: true });
-  })();
+  (function (c, l, a, r, i, t, y) {
+    c[a] =
+      c[a] ||
+      function () {
+        (c[a].q = c[a].q || []).push(arguments);
+      };
+    t = l.createElement(r);
+    t.async = 1;
+    t.src = 'https://www.clarity.ms/tag/' + i;
+    y = l.getElementsByTagName(r)[0];
+    y.parentNode.insertBefore(t, y);
+  })(window, document, 'clarity', 'script', 'xx8emm4258');
 </script>
