@@ -12,4 +12,6 @@ interface ImportMeta {
 interface Window {
   dataLayer?: unknown[];
   gtag?: (...args: unknown[]) => void;
+  __ga4Loaded?: boolean;
+  __clarityLoaded?: boolean;
 }

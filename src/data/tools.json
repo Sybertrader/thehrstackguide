@@ -1,6 +1,7 @@
 {
   "deel": {
     "category": "payroll-eor",
+    "logo": "/deel.png",
     "rating": "4.8",
     "review_count": "6,000",
     "rating_source": "G2 & Industry Benchmark",
@@ -187,6 +188,7 @@
   },
   "oyster": {
     "category": "payroll-eor",
+    "logo": "/Oyster.png",
     "rating": "4.5",
     "review_count": "800",
     "rating_source": "G2 & Industry Benchmark",
@@ -559,6 +561,7 @@
   },
   "ashby": {
     "category": "ats",
+    "logo": "/Ashby.png",
     "rating": "4.7",
     "review_count": "400",
     "rating_source": "G2 & Industry Benchmark",
@@ -598,6 +601,7 @@
   },
   "lever": {
     "category": "ats",
+    "logo": "/Lever.jpeg",
     "rating": "4.4",
     "review_count": "1,800",
     "rating_source": "G2 & Industry Benchmark",
@@ -617,6 +621,7 @@
   },
   "workable": {
     "category": "ats",
+    "logo": "/workable.png",
     "rating": "4.4",
     "review_count": "800",
     "rating_source": "G2 & Industry Benchmark",
@@ -659,6 +664,7 @@
   },
   "jazzhr": {
     "category": "ats",
+    "logo": "/jazzhr.png",
     "rating": "4.4",
     "review_count": "500",
     "rating_source": "G2 & Industry Benchmark",
@@ -678,6 +684,7 @@
   },
   "recruitee": {
     "category": "ats",
+    "logo": "/Recruitee.png",
     "rating": "4.5",
     "review_count": "600",
     "rating_source": "G2 & Industry Benchmark",
@@ -723,6 +730,7 @@
   },
   "15five": {
     "category": "performance-management",
+    "logo": "/15five.png",
     "rating": "4.6",
     "review_count": "1,900",
     "rating_source": "G2 & Industry Benchmark",
@@ -808,6 +816,7 @@
   },
   "culture-amp": {
     "category": "performance-management",
+    "logo": "/culture-amp.png",
     "rating": "4.5",
     "review_count": "1,600",
     "rating_source": "G2 & Industry Benchmark",
@@ -827,6 +836,7 @@
   },
   "reflektive": {
     "category": "performance-management",
+    "logo": "/reflektive.png",
     "rating": "4.2",
     "review_count": "300",
     "rating_source": "G2 & Industry Benchmark",

@@ -29,6 +29,7 @@ import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
 import ComparisonFaq from '../components/ComparisonFaq.astro';
 import VendorButton from '../components/VendorButton.astro';
 import VendorLogo from '../components/VendorLogo.astro';
+import { vendorLogoPreloadHref } from '../lib/vendor-logo';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildPersonaEvaluation,
@@ -764,9 +765,16 @@ const schemaGraph = buildSchemaGraph(
 const relatedHref = (item: Comparison) =>
   isHub ? `/${comparisonHubSlug(item.tool_a_id, item.tool_b_id)}/` : `/${item.slug}/`;
 
+const heroLogoPreloads = (
+  await Promise.all([
+    vendorLogoPreloadHref(comparison.tool_a_logo_url),
+    vendorLogoPreloadHref(comparison.tool_b_logo_url),
+  ])
+).filter((href): href is string => Boolean(href));
+
 ---
 
-<Layout title={pageTitle} description={pageDescription}>
+<Layout title={pageTitle} description={pageDescription} lcpImages={heroLogoPreloads}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
   {richSnippetSchema.length > 0 && (
     <script slot="head" type="application/ld+json" set:html={JSON.stringify(richSnippetSchema)} />
@@ -838,6 +846,7 @@ const relatedHref = (item: Comparison) =>
             name={comparison.tool_a_name}
             badgeColor={toolABadgeColor}
             loading="eager"
+            priority
           />
           <span class="text-sm font-semibold uppercase tracking-wide text-slate-400">vs</span>
           <VendorLogo
@@ -846,6 +855,7 @@ const relatedHref = (item: Comparison) =>
             name={comparison.tool_b_name}
             badgeColor={toolBBadgeColor}
             loading="eager"
+            priority
           />
         </div>
 

@@ -252,7 +252,7 @@ TOOLS = {
 ATS_TOOLS = {
     "ashby": {
         "name": "Ashby",
-        "logo": "https://unavatar.io/ashbyhq.com",
+        "logo": "/Ashby.png",
         "rating": 4.7,
         "starting_price": "$400/mo",
         "pricing_model": "Flat monthly fee up to 100 employees (Foundations plan)",
@@ -300,7 +300,7 @@ ATS_TOOLS = {
     },
     "lever": {
         "name": "Lever",
-        "logo": "https://unavatar.io/lever.co",
+        "logo": "/Lever.jpeg",
         "rating": 4.4,
         "starting_price": "Custom quote",
         "pricing_model": "Custom annual contract (quote-based)",
@@ -324,7 +324,7 @@ ATS_TOOLS = {
     },
     "workable": {
         "name": "Workable",
-        "logo": "https://unavatar.io/workable.com",
+        "logo": "/workable.png",
         "rating": 4.4,
         "starting_price": "$299/mo",
         "pricing_model": "Standard plan from $299/mo (1–20 employees)",
@@ -372,7 +372,7 @@ ATS_TOOLS = {
     },
     "jazzhr": {
         "name": "JazzHR",
-        "logo": "https://unavatar.io/jazzhr.com",
+        "logo": "/jazzhr.png",
         "rating": 4.4,
         "starting_price": "$75/mo",
         "pricing_model": "Tiered monthly plans from $75/mo",
@@ -447,7 +447,7 @@ ATS_TOOLS = {
 PM_TOOLS = {
     "15five": {
         "name": "15Five",
-        "logo": "https://unavatar.io/15five.com",
+        "logo": "/15five.png",
         "rating": 4.6,
         "starting_price": "$4/user/mo",
         "pricing_model": "Per user / month (Engage, Perform, and Total Platform tiers)",
@@ -556,7 +556,7 @@ PM_TOOLS = {
     },
     "culture-amp": {
         "name": "Culture Amp",
-        "logo": "https://unavatar.io/cultureamp.com",
+        "logo": "/culture-amp.png",
         "rating": 4.5,
         "starting_price": "Custom quote",
         "pricing_model": "Custom quote (Engage / Perform / Develop bundles)",
@@ -580,7 +580,7 @@ PM_TOOLS = {
     },
     "reflektive": {
         "name": "PeopleFluent",
-        "logo": "https://unavatar.io/peoplefluent.com",
+        "logo": "/reflektive.png",
         "rating": 4.2,
         "starting_price": "Custom quote",
         "pricing_model": "Custom quote (Workday-era packaging)",
