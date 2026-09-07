@@ -9,8 +9,9 @@
  */
 import { affiliateLinks } from '../config/affiliates';
 import { getToolProfile, type ToolProfile } from './tools';
+import { affiliateGoHref } from './links';
 
-export { VENDOR_OUTBOUND_REL, outboundRel } from './links';
+export { VENDOR_OUTBOUND_REL, outboundRel, affiliateGoHref, ensureAffiliateGoTrailingSlash } from './links';
 export const UTM_SOURCE = 'hrstackguide.com';
 export const UTM_MEDIUM = 'referral';
 
@@ -99,8 +100,12 @@ export function referralFallbackUrl(domain: string): string {
   return `https://${host}/?utm_source=${UTM_SOURCE}&utm_medium=${UTM_MEDIUM}`;
 }
 
+function registeredAffiliateUrl(toolId: string): string | undefined {
+  return affiliateLinks[toolId.trim().toLowerCase()]?.trim();
+}
+
 function isActiveAffiliateUrl(profile: ToolProfile | null, toolId: string): string | null {
-  const registered = affiliateLinks[toolId]?.trim();
+  const registered = registeredAffiliateUrl(toolId);
   if (registered) return registered;
 
   if (!profile?.affiliate_url?.trim()) return null;
@@ -122,7 +127,7 @@ export function resolveVendorDomain(toolId: string, csvFallbackUrl = ''): string
  * first-party domain with default referral UTMs.
  */
 export function resolveVendorOutboundHref(toolId: string, csvFallbackUrl = ''): string {
-  if (affiliateLinks[toolId]) return `/go/${toolId}/`;
+  if (registeredAffiliateUrl(toolId)) return affiliateGoHref(toolId);
 
   const profile = getToolProfile(toolId);
   const active = isActiveAffiliateUrl(profile, toolId);

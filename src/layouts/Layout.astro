@@ -87,7 +87,7 @@ const organizationSchema = {
       `/go/` redirects and any `.js-affiliate-cta` missing an inline handler.
       CTAs that already fire `vendor_cta_click` inline are skipped.
       Vendor id comes from `data-vendor-id` when present; otherwise the slug
-      in `/go/{slug}` matches the key in src/config/affiliates.ts.
+      in `/go/{slug}/` matches the key in src/config/affiliates.ts.
     -->
     <script is:inline>
       document.addEventListener('click', function (e) {

@@ -1,5 +1,5 @@
 ---
-import { outboundRel, vendorLeadModalOnclick, vendorOutboundOnclick } from '../lib/outbound';
+import { ensureAffiliateGoTrailingSlash, outboundRel, vendorLeadModalOnclick, vendorOutboundOnclick } from '../lib/outbound';
 
 interface Props {
   vendorName: string;
@@ -16,7 +16,8 @@ interface Props {
 const { href = '', vendorName, vendorId = '', location = 'body_link', class: className = '', modalId = '' } = Astro.props;
 const opensModal = Boolean(modalId);
 const resolvedVendorId = vendorId || vendorName.toLowerCase().replace(/\s+/g, '-');
-const linkRel = outboundRel(href);
+const resolvedHref = ensureAffiliateGoTrailingSlash(href);
+const linkRel = outboundRel(resolvedHref);
 const isOutbound = Boolean(linkRel);
 ---
 
@@ -35,7 +36,7 @@ const isOutbound = Boolean(linkRel);
     </button>
   ) : (
     <a
-      href={href}
+      href={resolvedHref}
       target={isOutbound ? '_blank' : undefined}
       rel={linkRel}
       class:list={['js-affiliate-cta', className]}
