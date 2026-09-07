@@ -142,7 +142,7 @@ TOOLS = {
     },
     "papaya": {
         "name": "Papaya Global",
-        "logo": "https://unavatar.io/papayaglobal.com",
+        "logo": "/Papaya global.jpg",
         "rating": 4.5,
         "contractor_price": 5,
         "eor_price": 499,
