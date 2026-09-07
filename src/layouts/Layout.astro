@@ -25,6 +25,14 @@ export interface Props {
 const { title, description, noindex = false, includeOrganizationSchema = true } = Astro.props;
 const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID ?? '';
 
+/** Full `<title>` keeps the brand suffix for Google; OG/Twitter titles do not. */
+const BRAND_TITLE_SUFFIX = ' | The HR Stack Guide';
+const socialTitle = title.endsWith(BRAND_TITLE_SUFFIX)
+  ? title.slice(0, -BRAND_TITLE_SUFFIX.length)
+  : title;
+
+const ogImageUrl = 'https://www.thehrstackguide.com/og-banner.png';
+
 /**
  * Self-referencing canonical on every page that uses this layout. Uses the
  * request URL (`Astro.url.href`) so the tag always matches the page being
@@ -154,13 +162,18 @@ const organizationSchema = {
     {description && <meta name="description" content={description} />}
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonicalURL} />
-    <meta property="og:title" content={title} />
+    <meta property="og:site_name" content="The HR Stack Guide" />
+    <meta property="og:title" content={socialTitle} />
+    {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={canonicalURL} />
-    <meta name="twitter:title" content={title} />
-    <meta property="og:image" content="https://thehrstackguide.com/sg-logo.png" />
+    <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:type" content="image/png" />
-    <meta name="twitter:image" content="https://thehrstackguide.com/sg-logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={socialTitle} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImageUrl} />
     {includeOrganizationSchema && (
       <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
     )}
