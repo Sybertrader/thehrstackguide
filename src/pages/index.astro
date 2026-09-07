@@ -164,33 +164,33 @@ const searchComparisons = (() => {
 
 const searchData = JSON.stringify({ tools: searchTools, comparisons: searchComparisons });
 
-// Sitelinks Searchbox schema: tells Google our homepage exposes a site search
-// so a search box can render directly under our result in the SERP. The
-// urlTemplate's query param ("q") matches the hero search input's name below,
-// and the hero search script reads that same param on load so the target
-// URL is a genuinely working search, not just a decorative homepage link.
-const siteUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
-const websiteSchema = {
+const homepageSchema = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'The HR Stack Guide',
-  url: siteUrl,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: `${siteUrl}?q={search_term_string}`,
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.thehrstackguide.com/#website',
+      url: 'https://www.thehrstackguide.com/',
+      name: 'The HR Stack Guide',
+      description: 'Programmatic HR Software Comparisons and Stack Guides',
     },
-    'query-input': 'required name=search_term_string',
-  },
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.thehrstackguide.com/#organization',
+      name: 'The HR Stack Guide',
+      url: 'https://www.thehrstackguide.com/',
+      logo: 'https://www.thehrstackguide.com/favicon.svg',
+    },
+  ],
 };
 ---
 
 <Layout
   title="HR Software Comparisons (2026 Guide) | The HR Stack Guide"
   description={`Independent, data-driven comparisons of the leading global payroll, EOR, applicant tracking system (ATS), and performance management platforms for ${currentMonthYear}.`}
+  includeOrganizationSchema={false}
 >
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(homepageSchema)} />
 
   <main class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
     <!-- Hero Section -->
