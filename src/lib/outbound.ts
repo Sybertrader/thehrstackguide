@@ -55,6 +55,7 @@ const AFFILIATE_HOST_MARKERS = [
   'impact.com',
   'get.deel.com',
   'get.gusto.com',
+  'get.papayaglobal.com',
   'join.tellent.com',
   'sales.ashbyhq.com',
 ];
