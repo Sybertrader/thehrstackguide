@@ -34,6 +34,9 @@ function withTrailingSlash(url) {
 export default defineConfig({
   site: 'https://www.thehrstackguide.com',
   trailingSlash: 'always',
+  image: {
+    remotePatterns: [{ protocol: 'https', hostname: 'unavatar.io' }],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

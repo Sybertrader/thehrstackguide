@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import ConciergeLeadBox from '../../components/ConciergeLeadBox.astro';
 import CategoryComparisonBrowser from '../../components/CategoryComparisonBrowser.astro';
 import VendorButton from '../../components/VendorButton.astro';
+import VendorLogo from '../../components/VendorLogo.astro';
 import ManualLeadModal from '../../components/ManualLeadModal.astro';
 import { loadComparisons } from '../../lib/comparisons';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref } from '../../lib/outbound';
@@ -187,30 +188,12 @@ const collectionSchema = {
               </span>
             )}
             <div class="flex items-center gap-3">
-              <div class="relative inline-flex h-10 w-10 shrink-0">
-                {tool.logo && (
-                  <img
-                    src={tool.logo}
-                    alt={`${tool.name} logo`}
-                    class="h-10 w-10 rounded-lg bg-slate-100 object-contain aspect-square"
-                    width="40"
-              height="40"
-              decoding="async"
-              loading="lazy"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                  />
-                )}
-                <div
-                  class:list={[
-                    tool.logo ? 'hidden' : 'flex',
-                    'h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
-                    logoBadgeColor(tool.name),
-                  ]}
-                  aria-hidden="true"
-                >
-                  {tool.name.charAt(0)}
-                </div>
-              </div>
+              <VendorLogo
+                src={tool.logo}
+                alt={`${tool.name} logo`}
+                name={tool.name}
+                badgeColor={logoBadgeColor(tool.name)}
+              />
               <div>
                 <h3 class="text-lg font-bold text-slate-900">{tool.name}</h3>
                 {tool.rating && (

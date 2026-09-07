@@ -28,6 +28,7 @@ import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro
 import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
 import ComparisonFaq from '../components/ComparisonFaq.astro';
 import VendorButton from '../components/VendorButton.astro';
+import VendorLogo from '../components/VendorLogo.astro';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildPersonaEvaluation,
@@ -831,49 +832,21 @@ const relatedHref = (item: Comparison) =>
         </nav>
 
         <div class="mt-4 flex items-center gap-3">
-          <div class="relative inline-flex h-10 w-10 shrink-0">
-            <img
-              src={comparison.tool_a_logo_url}
-              alt={`${comparison.tool_a_name} logo`}
-              class="w-10 h-10 rounded-lg object-contain bg-slate-100 aspect-square"
-              width="40"
-              height="40"
-              decoding="async"
-              loading="lazy"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-            />
-            <div
-              class:list={[
-                'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
-                toolABadgeColor,
-              ]}
-              aria-hidden="true"
-            >
-              {comparison.tool_a_name.charAt(0)}
-            </div>
-          </div>
+          <VendorLogo
+            src={comparison.tool_a_logo_url}
+            alt={`${comparison.tool_a_name} logo`}
+            name={comparison.tool_a_name}
+            badgeColor={toolABadgeColor}
+            loading="eager"
+          />
           <span class="text-sm font-semibold uppercase tracking-wide text-slate-400">vs</span>
-          <div class="relative inline-flex h-10 w-10 shrink-0">
-            <img
-              src={comparison.tool_b_logo_url}
-              alt={`${comparison.tool_b_name} logo`}
-              class="w-10 h-10 rounded-lg object-contain bg-slate-100 aspect-square"
-              width="40"
-              height="40"
-              decoding="async"
-              loading="lazy"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-            />
-            <div
-              class:list={[
-                'hidden h-10 w-10 items-center justify-center rounded-lg text-sm font-bold uppercase text-white',
-                toolBBadgeColor,
-              ]}
-              aria-hidden="true"
-            >
-              {comparison.tool_b_name.charAt(0)}
-            </div>
-          </div>
+          <VendorLogo
+            src={comparison.tool_b_logo_url}
+            alt={`${comparison.tool_b_name} logo`}
+            name={comparison.tool_b_name}
+            badgeColor={toolBBadgeColor}
+            loading="eager"
+          />
         </div>
 
         <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
