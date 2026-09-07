@@ -6,6 +6,7 @@ import { loadComparisons } from '../lib/comparisons';
 import { comparisonHubSlug } from '../lib/comparison-routes';
 import { loadToolProfiles } from '../lib/tools';
 import { modifierTitleSuffix } from '../lib/persona-evaluation';
+import { ORGANIZATION_SAME_AS } from '../lib/organization';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
   month: 'long',
@@ -120,7 +121,7 @@ const useCaseGuides = [
 ];
 
 const proofStats = [
-  { value: '425+', label: 'Head-to-Head Comparisons' },
+  { value: '500+', label: 'Head-to-Head Comparisons' },
   { value: '24+', label: 'Vetted HR Platforms' },
   { value: '100%', label: 'Independent Methodology' },
   { value: currentYear, label: 'Verified Pricing' },
@@ -181,6 +182,7 @@ const homepageSchema = {
       name: 'The HR Stack Guide',
       url: 'https://www.thehrstackguide.com/',
       logo: 'https://www.thehrstackguide.com/favicon.svg',
+      sameAs: [...ORGANIZATION_SAME_AS],
     },
   ],
 };

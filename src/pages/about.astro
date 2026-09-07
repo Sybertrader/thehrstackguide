@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { ORGANIZATION_SAME_AS } from '../lib/organization';
 
 const lastUpdated = 'August 4, 2026';
 
@@ -19,6 +20,7 @@ const aboutSchema = {
     name: 'Stack Guide Media',
     url: siteUrl,
     logo: 'https://www.thehrstackguide.com/icon-512.png',
+    sameAs: [...ORGANIZATION_SAME_AS],
     description:
       'Stack Guide Media publishes The HR Stack Guide, an independent buyer\u2019s guide comparing global payroll, EOR, and applicant tracking system (ATS) platforms.',
     email: 'dave@thehrstackguide.com',
