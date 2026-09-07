@@ -30,10 +30,15 @@ const { gaMeasurementId = '', lcpImages = [] } = Astro.props;
   <link rel="preload" href={href} as="image" type="image/webp" fetchpriority="high" />
 ))}
 
-{gaMeasurementId && (
+{import.meta.env.PROD && gaMeasurementId && (
   <>
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} is:inline></script>
-    <script is:inline define:vars={{ gaId: gaMeasurementId }}>
+    <script
+      type="text/partytown"
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+      is:inline
+    ></script>
+    <script type="text/partytown" define:vars={{ gaId: gaMeasurementId }} is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
@@ -45,17 +50,19 @@ const { gaMeasurementId = '', lcpImages = [] } = Astro.props;
   </>
 )}
 
-<script is:inline>
-  (function (c, l, a, r, i, t, y) {
-    c[a] =
-      c[a] ||
-      function () {
-        (c[a].q = c[a].q || []).push(arguments);
-      };
-    t = l.createElement(r);
-    t.async = 1;
-    t.src = 'https://www.clarity.ms/tag/' + i;
-    y = l.getElementsByTagName(r)[0];
-    y.parentNode.insertBefore(t, y);
-  })(window, document, 'clarity', 'script', 'xx8emm4258');
-</script>
+{import.meta.env.PROD && (
+  <script type="text/partytown" is:inline>
+    (function (c, l, a, r, i, t, y) {
+      c[a] =
+        c[a] ||
+        function () {
+          (c[a].q = c[a].q || []).push(arguments);
+        };
+      t = l.createElement(r);
+      t.async = 1;
+      t.src = 'https://www.clarity.ms/tag/' + i;
+      y = l.getElementsByTagName(r)[0];
+      y.parentNode.insertBefore(t, y);
+    })(window, document, 'clarity', 'script', 'xx8emm4258');
+  </script>
+)}

@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
+import partytown from '@astrojs/partytown';
 
 /**
  * Keep noindex / operational URLs out of sitemap-index.xml.
@@ -42,6 +43,11 @@ export default defineConfig({
   },
 
   integrations: [
+    partytown({
+      config: {
+        forward: ["dataLayer.push", "gtag"],
+      },
+    }),
     sitemap({
       filter: (page) => !page.includes('/go/') && includeInSitemap(page),
       serialize(item) {
