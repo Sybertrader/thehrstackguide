@@ -62,7 +62,7 @@ const gustoBase: GlobalPayrollFeatures = {
 
 const papayaBase: GlobalPayrollFeatures = {
   ownedLocalEntities: spec(false, 'Payroll orchestration and embedded payments across 160+ countries; not a Deel-style owned-entity EOR network as the core product.'),
-  eorCountryCoverage: spec(true, 'EOR from $499/employee/month with enterprise packaging; contractor from $5/month. High minimums unfit sub-50 teams.'),
+  eorCountryCoverage: spec(true, 'Full-Service EOR from $650/employee/month; Premium EOR $770. Contractor management $25–$30/month; payroll-only $12–$25/employee/month. High minimums unfit sub-50 teams.'),
   contractorPayments: spec(true, 'Embedded contractor payments into enterprise payroll rails rather than a founder-facing contractor wallet.'),
   nativePayrollFilings: spec(true, 'Multi-country payroll filings designed to sit next to ERP/finance controls, not a 50-state US SMB payroll UX.'),
   fxAndMultiCurrency: spec(true, 'Treasury-grade multi-currency payroll; FX is priced into enterprise contracts rather than a consumer zero-markup promise.'),

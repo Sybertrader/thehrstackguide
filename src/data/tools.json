@@ -254,20 +254,20 @@
     "positioning": "Enterprise-grade global workforce platform delivering deep payroll intelligence and consolidated multi-country financial analytics.",
     "text_compliance": "Papaya Global uses AI-driven compliance engine checks paired with local in-country experts across 160+ jurisdictions. They oversee mandatory tax filings, worker classification risks, and legal contract amendments for complex corporate structures.",
     "text_global_reach": "Operating in over 160 countries, Papaya specializes in unifying fragmented international payroll networks. They allow multinational enterprises to manage localized EOR workers, direct payroll entities, and global contractors from a single business intelligence console.",
-    "text_pricing_truth": "Contractor management starts from about $5/month per contractor. EOR pricing starts from $499/month per employee on Papaya’s 2026 public pricing (enterprise packages and country complexity can raise the all-in rate). Expect add-on costs for complex benefit administration and deposits.",
+    "text_pricing_truth": "Contractor management and payments are $25–$30/month per contractor. Full-Service EOR starts at $650/month per employee, with Premium EOR at $770/month. Payroll-only / direct-entity global payroll is $12–$25/month per employee. Implementation fees, platform minimums, and country complexity can raise the all-in rate; complex benefit administration and deposits are quoted separately.",
     "choose_if": [
       "Your finance department needs enterprise business intelligence and consolidated reporting across multiple foreign entities.",
       "You operate a hybrid model of owned foreign subsidiaries alongside EOR employees.",
       "You require white-glove corporate account management and custom legal review.",
       "You manage large enterprise workforces across 20+ countries simultaneously."
     ],
-    "starting_price": "$5/mo",
+    "starting_price": "From $25/mo",
     "free_trial": false,
     "affiliate_url": "https://get.papayaglobal.com/75dun5g00gq4",
     "has_active_affiliate": true,
     "is_partner": true,
-    "contractor_price": 5,
-    "eor_price": 499,
+    "contractor_price": 25,
+    "eor_price": 650,
     "countries": "180+",
     "target_segment": "Global/Enterprise",
     "enterprise_analysis": {
@@ -299,12 +299,12 @@
         ]
       },
       "fee_structure": {
-        "summary": "Papaya's $499/month per employee EOR starting rate is among the lower published enterprise figures, but its own pricing notes point to deposits and add-ons as the places where the all-in number actually moves.",
+        "summary": "Papaya publishes four 2026 tiers: Full-Service EOR from $650/month per employee, Premium EOR at $770/month, contractor management at $25–$30/month, and payroll-only / direct-entity processing at $12–$25/month per employee. Deposits and add-ons still move the all-in number.",
         "bullets": [
-          "The $499 figure is a starting point. Enterprise packages and country complexity raise the effective rate.",
+          "Full-Service EOR starts at $650/employee/month. Premium EOR is $770/employee/month.",
+          "Contractor management and payments are $25–$30/contractor/month. Payroll-only / direct-entity global payroll is $12–$25/employee/month.",
           "Papaya's guidance explicitly calls out security deposits, commonly framed as one to two months of salary held upfront.",
-          "Complex benefit administration is an add-on rather than bundled into the base rate.",
-          "Contractor management from roughly $5/month per contractor is a completely different price model. Do not blend the two when building a TCO comparison."
+          "Complex benefit administration is an add-on rather than bundled into the base rate. Do not blend EOR, contractor, and payroll-only fees when building a TCO comparison."
         ]
       }
     }

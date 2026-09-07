@@ -629,6 +629,11 @@ function extractMonthlyPrice(price: string): number | null {
   return match ? parseFloat(match[1]) : null;
 }
 
+/** Card badges may use "From $25/mo"; FAQ copy already says "starts at". */
+function startingPriceForCopy(price: string): string {
+  return price.replace(/^from\s+/i, '').trim();
+}
+
 function contractorPaymentAnswer(current: Comparison, matrix: Record<string, FeatureMatrixEntry>): string {
   const relevantKeys = ['Contractor Auto-Pay', 'Native Legal Entities', 'Zero FX Rate Markup', 'Global Tax Filings'];
   const key = relevantKeys.find((candidate) => matrix[candidate]);
@@ -690,7 +695,7 @@ const faqIntro = isHub
     : `${winnerName} is the better fit for ${comparison.niche_audience_phrase}. `;
 
 const pricingFaqAnswer = cleanCopy(
-  `${comparison.tool_a_name} starts at ${comparison.tool_a_starting_price}; ${comparison.tool_a_pricing_model}. ${comparison.tool_b_name} starts at ${comparison.tool_b_starting_price}; ${comparison.tool_b_pricing_model}.${priceDiffSentence}${pricingNuanceClause}`
+  `${comparison.tool_a_name} starts at ${startingPriceForCopy(comparison.tool_a_starting_price)}; ${comparison.tool_a_pricing_model}. ${comparison.tool_b_name} starts at ${startingPriceForCopy(comparison.tool_b_starting_price)}; ${comparison.tool_b_pricing_model}.${priceDiffSentence}${pricingNuanceClause}`
 );
 
 const hubFaq3 =
