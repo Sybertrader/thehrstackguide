@@ -20,6 +20,4 @@ export const affiliateLinks: Record<string, string> = {
   gusto: 'https://get.gusto.com/79drghc7zcm7',
   papaya: 'https://get.papayaglobal.com/75dun5g00gq4',
   'papaya-global': 'https://get.papayaglobal.com/75dun5g00gq4',
-  plane:
-    'https://plane.com/?utm_source=hrstackguide.com&utm_medium=referral&utm_campaign=eor-comparisons',
 };

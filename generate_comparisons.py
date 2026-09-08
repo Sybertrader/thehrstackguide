@@ -203,7 +203,7 @@ TOOLS = {
         "starting_price": "$39/mo",
         "pricing_model": "EOR starts at $499/mo",
         "free_trial": True,
-        "affiliate_url": "https://plane.com",
+        "affiliate_url": "https://plane.com/?utm_source=hrstackguide.com&utm_medium=referral",
         "key_features": ["Zero FX Markup", "Stock Option Grants", "Flat-Fee Pricing", "Direct Crypto/Fiat Pay"],
         "pros": ["Transparent contractor pricing from $39/contractor/month with low FX markup on bank payouts", "Flat $499/mo EOR with free HRIS for startups", "Direct crypto and fiat payout options for global contractors"],
         "cons": ["Fewer automated localized HR add-ons", "Smaller legal footprint"],
