@@ -71,37 +71,6 @@ const organizationSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <BaseHead gaMeasurementId={gaMeasurementId} lcpImages={lcpImages} />
 
-    <!--
-      Vendor CTA fallback for GA4. Delegated from `document` so it covers
-      `/go/` redirects and any `.js-affiliate-cta` missing an inline handler.
-      CTAs that already fire `vendor_cta_click` inline are skipped.
-      Vendor id comes from `data-vendor-id` when present; otherwise the slug
-      in `/go/{slug}/` matches the key in src/config/affiliates.ts.
-    -->
-    <script is:inline>
-      document.addEventListener('click', function (e) {
-        const link = e.target.closest('a.js-affiliate-cta, a[href^="/go/"], a[data-vendor-outbound]');
-        if (!link || typeof window.gtag !== 'function') return;
-
-        const handler = link.getAttribute('onclick') || '';
-        if (handler.indexOf('vendor_cta_click') !== -1) return;
-
-        const vendorSource = link.closest('[data-vendor-id]');
-        const vendorId =
-          (vendorSource && vendorSource.getAttribute('data-vendor-id')) ||
-          link.getAttribute('data-vendor-id') ||
-          (link.getAttribute('href') || '').replace(/^\/go\//, '').replace(/\/$/, '');
-
-        if (!vendorId) return;
-
-        window.gtag('event', 'vendor_cta_click', {
-          vendor_id: vendorId,
-          destination_type: 'outbound_redirect',
-          page_location: window.location.pathname,
-        });
-      });
-    </script>
-
     <!-- Google Preferred Sources: lets readers pin this domain in Search, AI Overviews, and AI Mode. -->
     <script async src="https://news.google.com/swg/js/v1/publisher.js" is:inline></script>
 
@@ -217,6 +186,23 @@ const organizationSchema = {
           toggle.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
         });
       }
+    </script>
+    <script is:inline>
+      document.body.addEventListener('click', function (e) {
+        const target = e.target;
+        if (!target || typeof target.closest !== 'function') return;
+        const cta = target.closest('.js-affiliate-cta');
+        if (!cta || typeof window.gtag !== 'function') return;
+
+        window.gtag('event', 'vendor_cta_click', {
+          vendor_id: cta.getAttribute('data-vendor-id') || '',
+          vendor_name: cta.getAttribute('data-track-vendor') || '',
+          cta_location: cta.getAttribute('data-track-location') || '',
+          destination_type: cta.getAttribute('data-destination-type') || '',
+          link_url: cta.getAttribute('href') || '',
+          page_location: window.location.pathname,
+        });
+      });
     </script>
   </body>
 </html>

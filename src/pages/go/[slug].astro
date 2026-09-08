@@ -37,7 +37,17 @@ Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
     <p class="text-lg font-medium mb-2">Redirecting to partner site...</p>
     <p class="text-sm text-slate-500">
       If you are not redirected automatically, 
-      <a href={targetUrl} rel={VENDOR_OUTBOUND_REL} target="_blank" onclick={vendorOutboundOnclick(slug ?? '')} class="text-blue-600 underline hover:text-blue-800">click here</a>.
+      <a
+        href={targetUrl}
+        rel={VENDOR_OUTBOUND_REL}
+        target="_blank"
+        class="js-affiliate-cta text-blue-600 underline hover:text-blue-800"
+        data-vendor-id={slug ?? ''}
+        data-track-vendor={slug ?? ''}
+        data-track-location="go_redirect_fallback"
+        data-destination-type="direct_outbound"
+        onclick={vendorOutboundOnclick(slug ?? '', 'direct_outbound')}
+      >click here</a>.
     </p>
   </div>
 </body>

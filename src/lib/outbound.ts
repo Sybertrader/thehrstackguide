@@ -9,7 +9,7 @@
  */
 import { affiliateLinks } from '../config/affiliates';
 import { getToolProfile, type ToolProfile } from './tools';
-import { affiliateGoHref } from './links';
+import { affiliateGoHref, isAffiliateRedirect } from './links';
 
 export { VENDOR_OUTBOUND_REL, outboundRel, affiliateGoHref, ensureAffiliateGoTrailingSlash, isAffiliateRedirect } from './links';
 export const UTM_SOURCE = 'hrstackguide.com';
@@ -136,7 +136,13 @@ export function resolveVendorOutboundHref(toolId: string, csvFallbackUrl = ''): 
   return referralFallbackUrl(resolveVendorDomain(toolId, csvFallbackUrl));
 }
 
-export type VendorCtaDestination = 'outbound_redirect' | 'lead_modal';
+export type VendorCtaDestination = 'lead_modal' | 'go_redirect' | 'direct_outbound';
+
+export function vendorCtaDestinationType(href: string, opensModal = false): VendorCtaDestination {
+  if (opensModal) return 'lead_modal';
+  if (isAffiliateRedirect(href)) return 'go_redirect';
+  return 'direct_outbound';
+}
 
 /** Inline `onclick` body for the unified GA4 `vendor_cta_click` event. */
 export function vendorCtaOnclick(vendorId: string, destinationType: VendorCtaDestination): string {
@@ -144,8 +150,8 @@ export function vendorCtaOnclick(vendorId: string, destinationType: VendorCtaDes
 }
 
 /** Inline `onclick` for outbound affiliate / UTM CTAs. */
-export function vendorOutboundOnclick(vendorId: string): string {
-  return vendorCtaOnclick(vendorId, 'outbound_redirect');
+export function vendorOutboundOnclick(vendorId: string, destinationType: VendorCtaDestination = 'direct_outbound'): string {
+  return vendorCtaOnclick(vendorId, destinationType);
 }
 
 /** Inline `onclick` for lead-capture CTAs that open the intro modal. */

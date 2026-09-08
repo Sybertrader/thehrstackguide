@@ -1,5 +1,10 @@
 ---
-import { ensureAffiliateGoTrailingSlash, isAffiliateRedirect, outboundRel, vendorLeadModalOnclick, vendorOutboundOnclick } from '../lib/outbound';
+import {
+  ensureAffiliateGoTrailingSlash,
+  isAffiliateRedirect,
+  outboundRel,
+  vendorCtaDestinationType,
+} from '../lib/outbound';
 
 interface Props {
   vendorName: string;
@@ -19,6 +24,7 @@ const resolvedVendorId = vendorId || vendorName.toLowerCase().replace(/\s+/g, '-
 const resolvedHref = ensureAffiliateGoTrailingSlash(href);
 const linkRel = outboundRel(resolvedHref);
 const opensNewTab = Boolean(linkRel) || isAffiliateRedirect(resolvedHref);
+const destinationType = vendorCtaDestinationType(resolvedHref, opensModal);
 ---
 
 {
@@ -26,11 +32,11 @@ const opensNewTab = Boolean(linkRel) || isAffiliateRedirect(resolvedHref);
     <button
       type="button"
       data-modal-target={modalId}
-      class:list={['open-modal-btn', className]}
+      class:list={['js-affiliate-cta', 'open-modal-btn', className]}
       data-vendor-id={resolvedVendorId}
       data-track-vendor={vendorName}
       data-track-location={location}
-      onclick={vendorLeadModalOnclick(resolvedVendorId)}
+      data-destination-type={destinationType}
     >
       <slot>Try {vendorName}</slot>
     </button>
@@ -43,8 +49,8 @@ const opensNewTab = Boolean(linkRel) || isAffiliateRedirect(resolvedHref);
       data-vendor-id={resolvedVendorId}
       data-track-vendor={vendorName}
       data-track-location={location}
+      data-destination-type={destinationType}
       data-vendor-outbound
-      onclick={vendorOutboundOnclick(resolvedVendorId)}
     >
       <slot>Try {vendorName}</slot>
     </a>
