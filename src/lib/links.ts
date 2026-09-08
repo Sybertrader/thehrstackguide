@@ -1,18 +1,11 @@
 /**
- * Single source of truth for the `rel` attribute on outbound CTAs.
+ * Single source of truth for the `rel` attribute on vendor CTAs.
  *
- * The rule this encodes, and why it is not simply "external gets nofollow":
- *
- * Vendor CTAs point either straight at a partner's URL or at our own
- * `/go/{id}/` redirect (see src/config/affiliates.ts and src/pages/go/[slug].astro).
- * Both are monetized links, so both keep `noopener sponsored nofollow` even
- * though one of them wears an internal path. Cloaking an affiliate link behind our own
- * domain does not change what it is, and `/go/` pages are thin meta-refresh
- * redirectors that would absorb link equity and dead-end it at a partner.
- *
- * Every other internal route — nav, breadcrumbs, related comparisons, legal
- * pages — must come back with no `rel` at all so internal PageRank flows
- * freely. Returning `undefined` makes Astro omit the attribute entirely.
+ * `noopener sponsored nofollow` is for off-site destinations only
+ * (`deel.com`, Impact partners, etc.). Same-host hrefs — `/`, category
+ * hubs, comparison slugs, and `thehrstackguide.com` URLs, including
+ * cloaked `/go/{id}/` redirects — omit `rel` so internal equity is not
+ * tagged nofollow/sponsored.
  */
 
 /** Namespace for our own affiliate redirect routes. Always trailing-slash. */
@@ -81,17 +74,16 @@ export function isAffiliateRedirect(href: string): boolean {
 }
 
 /**
- * Returns the `rel` for a vendor CTA, or `undefined` when the link is an
- * ordinary internal route that should pass link equity.
+ * Returns the `rel` for a vendor CTA, or `undefined` when the href is
+ * same-host (`/`, `/go/…`, `thehrstackguide.com`) and must not carry
+ * `nofollow` or `sponsored`.
  *
- * `/go/` and off-site http(s) URLs get `noopener sponsored nofollow`.
- * Same-host paths (nav, comparisons, hubs) omit `rel` entirely.
+ * Off-site http(s) URLs get `noopener sponsored nofollow`.
  */
 export const VENDOR_OUTBOUND_REL = 'noopener sponsored nofollow';
 
 export function outboundRel(href: string): string | undefined {
-  if (isAffiliateRedirect(href) || !isInternalHref(href)) {
-    return VENDOR_OUTBOUND_REL;
-  }
-  return undefined;
+  if (!href.trim()) return undefined;
+  if (isInternalHref(href)) return undefined;
+  return VENDOR_OUTBOUND_REL;
 }

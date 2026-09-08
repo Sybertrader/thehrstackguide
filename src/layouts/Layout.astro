@@ -12,8 +12,9 @@ export interface Props {
   description?: string;
   /**
    * When true, emit `<meta name="robots" content="noindex, nofollow" />`.
-   * Use on confirmation pages such as `/thank-you/`. Omit on indexable
-   * pages (homepage, hubs, `/recommendation/`, comparison slugs).
+   * Draft and utility pages only (`/thank-you/`, `/contact/`, 404).
+   * Comparison hubs, child modifiers, category indexes, and the homepage
+   * always emit `index, follow`.
    */
   noindex?: boolean;
   /**
@@ -121,7 +122,11 @@ const organizationSchema = {
     <!-- Document title only. On-page H1s are set by each page template and must not match this string. -->
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {noindex ? (
+      <meta name="robots" content="noindex, nofollow" />
+    ) : (
+      <meta name="robots" content="index, follow" />
+    )}
     <link rel="canonical" href={canonicalURL} />
     <meta property="og:site_name" content="The HR Stack Guide" />
     <meta property="og:title" content={socialTitle} />

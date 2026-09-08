@@ -51,7 +51,7 @@
       ]
     },
     {
-      "source": "/go(.*)",
+      "source": "/api/:path*",
       "headers": [
         {
           "key": "X-Robots-Tag",

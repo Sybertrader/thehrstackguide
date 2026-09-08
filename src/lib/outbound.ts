@@ -11,7 +11,7 @@ import { affiliateLinks } from '../config/affiliates';
 import { getToolProfile, type ToolProfile } from './tools';
 import { affiliateGoHref } from './links';
 
-export { VENDOR_OUTBOUND_REL, outboundRel, affiliateGoHref, ensureAffiliateGoTrailingSlash } from './links';
+export { VENDOR_OUTBOUND_REL, outboundRel, affiliateGoHref, ensureAffiliateGoTrailingSlash, isAffiliateRedirect } from './links';
 export const UTM_SOURCE = 'hrstackguide.com';
 export const UTM_MEDIUM = 'referral';
 

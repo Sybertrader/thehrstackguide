@@ -1,5 +1,5 @@
 ---
-import { ensureAffiliateGoTrailingSlash, outboundRel, vendorLeadModalOnclick, vendorOutboundOnclick } from '../lib/outbound';
+import { ensureAffiliateGoTrailingSlash, isAffiliateRedirect, outboundRel, vendorLeadModalOnclick, vendorOutboundOnclick } from '../lib/outbound';
 
 interface Props {
   vendorName: string;
@@ -18,7 +18,7 @@ const opensModal = Boolean(modalId);
 const resolvedVendorId = vendorId || vendorName.toLowerCase().replace(/\s+/g, '-');
 const resolvedHref = ensureAffiliateGoTrailingSlash(href);
 const linkRel = outboundRel(resolvedHref);
-const isOutbound = Boolean(linkRel);
+const opensNewTab = Boolean(linkRel) || isAffiliateRedirect(resolvedHref);
 ---
 
 {
@@ -37,8 +37,8 @@ const isOutbound = Boolean(linkRel);
   ) : (
     <a
       href={resolvedHref}
-      target={isOutbound ? '_blank' : undefined}
-      rel={linkRel}
+      target={opensNewTab ? '_blank' : undefined}
+      rel={linkRel ?? (opensNewTab ? 'noopener' : undefined)}
       class:list={['js-affiliate-cta', className]}
       data-vendor-id={resolvedVendorId}
       data-track-vendor={vendorName}
