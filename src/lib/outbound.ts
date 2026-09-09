@@ -37,18 +37,31 @@ export const MANUAL_LEAD_BRANDS = [
   ...NON_AFFILIATE_LEAD_BRANDS,
 ] as const;
 
-export const LEAD_MODAL_CTA_LABEL = 'Request Demo & Pricing';
+/** Official homepages used for post-submit redirects (not affiliate/UTM URLs). */
+export const NON_AFFILIATE_VENDOR_HOME_URLS: Record<(typeof NON_AFFILIATE_LEAD_BRANDS)[number], string> = {
+  plane: 'https://plane.com',
+  rippling: 'https://www.rippling.com',
+  greenhouse: 'https://www.greenhouse.com',
+  workable: 'https://www.workable.com',
+  '15five': 'https://www.15five.com',
+  leapsome: 'https://www.leapsome.com',
+  peoplefluent: 'https://www.peoplefluent.com',
+  clearcompany: 'https://www.clearcompany.com',
+  'oyster-hr': 'https://www.oysterhr.com',
+};
 
 export function isNonAffiliateLeadBrand(toolId: string): boolean {
   const id = toolId.toLowerCase().trim();
   return (NON_AFFILIATE_LEAD_BRANDS as readonly string[]).includes(id);
 }
 
-/** Button copy: request-demo for the 9 non-affiliate vendors, otherwise “Try {name}”. */
-export function vendorCtaLabel(toolId: string, vendorName: string): string {
-  if (isManualLeadBrand(toolId) && isNonAffiliateLeadBrand(toolId)) {
-    return LEAD_MODAL_CTA_LABEL;
-  }
+export function nonAffiliateVendorHomeUrl(toolId: string): string {
+  const id = toolId.toLowerCase().trim() as (typeof NON_AFFILIATE_LEAD_BRANDS)[number];
+  return NON_AFFILIATE_VENDOR_HOME_URLS[id] ?? '';
+}
+
+/** CTA copy for all vendors: “Try {name}”. */
+export function vendorCtaLabel(_toolId: string, vendorName: string): string {
   return `Try ${vendorName}`;
 }
 

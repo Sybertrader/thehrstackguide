@@ -1,5 +1,5 @@
 ---
-import { isNonAffiliateLeadBrand, vendorLeadModalHeading } from '../lib/outbound';
+import { isNonAffiliateLeadBrand, nonAffiliateVendorHomeUrl, vendorLeadModalHeading } from '../lib/outbound';
 
 interface Props {
   brandName: string;
@@ -23,6 +23,7 @@ const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-'
 const headingText = isNonAffiliateLeadBrand(resolvedVendorId)
   ? vendorLeadModalHeading(brandName)
   : `Connect with ${brandName}`;
+const vendorHomeUrl = nonAffiliateVendorHomeUrl(resolvedVendorId);
 
 // Needs the PUBLIC_ prefix to survive into the browser bundle. Falls back to the
 // same key api/leads.js uses so a deploy without the env var still collects
@@ -39,6 +40,7 @@ const WEB3FORMS_KEY =
   data-vendor-id={resolvedVendorId}
   data-brand-name={brandName}
   data-partner-landing-url={partnerLandingUrl}
+  data-vendor-url={vendorHomeUrl || undefined}
 >
   <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 text-left my-auto z-[10000]">
     
@@ -259,6 +261,17 @@ const WEB3FORMS_KEY =
       'clearcompany',
       'oyster-hr',
     ];
+    var NON_AFFILIATE_HOME_URLS = {
+      plane: 'https://plane.com',
+      rippling: 'https://www.rippling.com',
+      greenhouse: 'https://www.greenhouse.com',
+      workable: 'https://www.workable.com',
+      '15five': 'https://www.15five.com',
+      leapsome: 'https://www.leapsome.com',
+      peoplefluent: 'https://www.peoplefluent.com',
+      clearcompany: 'https://www.clearcompany.com',
+      'oyster-hr': 'https://www.oysterhr.com',
+    };
     var WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
     function trackGenerateLead(vendorId) {
@@ -290,7 +303,7 @@ const WEB3FORMS_KEY =
       return Object.fromEntries(formData.entries());
     }
 
-    function applyClickedVendorToModal(modal, vendorId, vendorName) {
+    function applyClickedVendorToModal(modal, vendorId, vendorName, vendorUrl) {
       if (vendorId) {
         modal.setAttribute('data-vendor-id', vendorId);
         var vendorInput = modal.querySelector('input[name="vendorId"]');
@@ -311,6 +324,9 @@ const WEB3FORMS_KEY =
           if (heading) heading.textContent = 'Request ' + vendorName + ' Pricing & Demo';
         }
       }
+      if (vendorUrl) {
+        modal.setAttribute('data-vendor-url', vendorUrl);
+      }
 
       var form = modal.querySelector('form');
       var successMessage = modal.querySelector('.success-message');
@@ -328,6 +344,7 @@ const WEB3FORMS_KEY =
       if (openBtn) {
         var clickedVendorId = (openBtn.getAttribute('data-vendor-id') || '').toLowerCase().trim();
         var clickedVendorName = (openBtn.getAttribute('data-vendor-name') || '').trim();
+        var clickedVendorUrl = (openBtn.getAttribute('data-vendor-url') || '').trim();
 
         // Prefer explicit data attribute — avoid innerText (forces layout / hurts INP).
         var modalId = openBtn.getAttribute('data-modal-target');
@@ -351,7 +368,7 @@ const WEB3FORMS_KEY =
             if (modal.parentElement !== document.body) {
               document.body.appendChild(modal);
             }
-            applyClickedVendorToModal(modal, clickedVendorId, clickedVendorName);
+            applyClickedVendorToModal(modal, clickedVendorId, clickedVendorName, clickedVendorUrl);
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
           }
@@ -525,6 +542,16 @@ const WEB3FORMS_KEY =
 
         if (response.ok) {
           trackGenerateLead(vendorId);
+          var targetVendorUrl =
+            (backdrop && backdrop.getAttribute('data-vendor-url')) ||
+            NON_AFFILIATE_HOME_URLS[vendor] ||
+            '';
+          // Nine non-affiliate vendors: redirect to the official homepage after
+          // /api/leads succeeds. PerformYard / Web3Forms paths never reach here.
+          if (REQUEST_DEMO_VENDORS.indexOf(vendor) !== -1 && targetVendorUrl) {
+            window.location.href = targetVendorUrl;
+            return;
+          }
           var redirectUrl = result && result.redirectUrl ? String(result.redirectUrl) : '';
           if (redirectUrl) {
             window.location.href = redirectUrl;

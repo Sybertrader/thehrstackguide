@@ -2,6 +2,7 @@
 import {
   ensureAffiliateGoTrailingSlash,
   isAffiliateRedirect,
+  nonAffiliateVendorHomeUrl,
   outboundRel,
   vendorCtaDestinationType,
   vendorCtaLabel,
@@ -26,6 +27,7 @@ const resolvedHref = ensureAffiliateGoTrailingSlash(href);
 const linkRel = outboundRel(resolvedHref);
 const opensNewTab = Boolean(linkRel) || isAffiliateRedirect(resolvedHref);
 const destinationType = vendorCtaDestinationType(resolvedHref, opensModal);
+const vendorHomeUrl = nonAffiliateVendorHomeUrl(resolvedVendorId);
 ---
 
 {
@@ -36,6 +38,7 @@ const destinationType = vendorCtaDestinationType(resolvedHref, opensModal);
       class:list={['js-affiliate-cta', 'open-modal-btn', 'open-lead-modal', className]}
       data-vendor-id={resolvedVendorId}
       data-vendor-name={vendorName}
+      data-vendor-url={vendorHomeUrl || undefined}
       data-track-vendor={vendorName}
       data-track-location={location}
       data-destination-type={destinationType}
