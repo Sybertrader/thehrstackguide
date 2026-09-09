@@ -13,7 +13,6 @@ export type SeoFamily = 'payroll' | 'ats' | 'pm' | null;
 const TITLE_NAME_BY_ID: Record<string, string> = {
   'payoneer-workforce-management': 'Payoneer',
   papaya: 'Papaya',
-  oyster: 'Oyster',
   'breezy-hr': 'Breezy',
   'bamboohr-ats': 'BambooHR',
 };

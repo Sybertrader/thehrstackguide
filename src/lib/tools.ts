@@ -86,6 +86,17 @@ export function getToolProfile(toolId: string): ToolProfile | null {
   return profiles[toolId] ?? null;
 }
 
+/** True only for vendor ids that currently exist as keys in `src/data/tools.json`. */
+export function isLiveVendorId(toolId: string): boolean {
+  if (!toolId) return false;
+  return Object.prototype.hasOwnProperty.call(loadToolProfiles(), toolId);
+}
+
+/** Comparison pairings are live only when both CSV vendor ids are in tools.json. */
+export function comparisonVendorsAreLive(toolAId: string, toolBId: string): boolean {
+  return isLiveVendorId(toolAId) && isLiveVendorId(toolBId);
+}
+
 /** Returns all tool profiles (with their ids) matching a given category, e.g. 'payroll-eor', 'ats', or 'performance-management'. */
 export function getToolsByCategory(category: string): Array<ToolProfile & { id: string }> {
   const profiles = loadToolProfiles();

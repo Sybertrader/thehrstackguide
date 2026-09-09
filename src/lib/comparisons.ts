@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { parse } from 'csv-parse/sync';
 import { personaDataForComparison } from '../data/personaData';
 import { isComparisonRouteSlug } from './comparison-routes';
+import { comparisonVendorsAreLive } from './tools';
 import type { Comparison } from '../types/comparison';
 
 export type {
@@ -26,6 +27,7 @@ export function loadComparisons(): Comparison[] {
   const rows = parse(content, { columns: true, skip_empty_lines: true }) as Comparison[];
   return rows
     .filter((row) => isComparisonRouteSlug(row.slug))
+    .filter((row) => comparisonVendorsAreLive(row.tool_a_id, row.tool_b_id))
     .map((row) => {
       const personaData = personaDataForComparison(
         row.tool_a_id,

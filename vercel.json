@@ -11,6 +11,16 @@
       "source": "/:slug*-for-tech-startups/",
       "destination": "/:slug*/",
       "permanent": true
+    },
+    {
+      "source": "/go/papaya-global",
+      "destination": "/go/papaya/",
+      "permanent": true
+    },
+    {
+      "source": "/go/papaya-global/",
+      "destination": "/go/papaya/",
+      "permanent": true
     }
   ],
   "headers": [

@@ -45,7 +45,7 @@ const oysterBase: GlobalPayrollFeatures = {
   nativePayrollFilings: spec(true, 'Payroll taxes and statutory filings run through the local employment vehicle (owned or partner) in each coverage market.'),
   fxAndMultiCurrency: spec(true, 'FX conversion is not zero-markup; model corridor spread on top of the $699 EOR list price.'),
   statutoryBenefits: spec(true, 'Localized health benefits and statutory leave administered per market; partner markets can lag owned-entity SLAs.'),
-  ipAndWorkProductAssignment: spec(true, 'IP assignment quality depends on whether the hire sits on an owned Oyster entity or a local partner entity.'),
+  ipAndWorkProductAssignment: spec(true, 'IP assignment quality depends on whether the hire sits on an owned Oyster HR entity or a local partner entity.'),
   onboardingSla: spec(true, 'Clean first-time international contractor UX; EOR go-live follows entity/partner availability rather than a 24-hour Deel-style SLA.'),
 };
 

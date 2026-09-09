@@ -12,7 +12,7 @@ import Layout from '../layouts/Layout.astro';
 import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { isComparisonRouteSlug, comparisonHubSlug, isLegacyTechStartupsSlug, categoryHubNav } from '../lib/comparison-routes';
-import { getToolProfile } from '../lib/tools';
+import { comparisonVendorsAreLive, getToolProfile } from '../lib/tools';
 import type { EnterpriseAnalysis, ToolProfile } from '../lib/tools';
 import TechnicalComplianceMatrix from '../components/TechnicalComplianceMatrix.astro';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref } from '../lib/outbound';
@@ -80,8 +80,14 @@ export function getStaticPaths() {
     return score;
   }
 
+  // tools.json is the vendor allowlist. CSV rows (and any leftover alias
+  // paths) whose tool ids are not keys in that catalog never become HTML.
+  const liveComparisons = comparisons.filter((row) =>
+    comparisonVendorsAreLive(row.tool_a_id, row.tool_b_id)
+  );
+
   const pairGroups = new Map<string, Comparison[]>();
-  for (const row of comparisons) {
+  for (const row of liveComparisons) {
     const key = comparisonHubSlug(row.tool_a_id, row.tool_b_id);
     const list = pairGroups.get(key) ?? [];
     list.push(row);
@@ -89,7 +95,7 @@ export function getStaticPaths() {
   }
 
   function relatedChildren(current: Comparison): Comparison[] {
-    return comparisons
+    return liveComparisons
       .filter((candidate) => candidate.niche_id === current.niche_id && candidate.slug !== current.slug)
       .sort((a, b) => relatedScore(b, current) - relatedScore(a, current))
       .slice(0, 3);
@@ -116,7 +122,7 @@ export function getStaticPaths() {
   // `brand-vs-brand` comparison so the catch-all cannot steal those paths.
   // Legacy `-for-tech-startups` CSV slugs 301 to the master hub via vercel.json.
   // Active startup children are the `for-startups` alias paths below.
-  const childPaths = comparisons
+  const childPaths = liveComparisons
     .filter((comparison) => isComparisonRouteSlug(comparison.slug))
     .filter((comparison) => !isLegacyTechStartupsSlug(comparison.slug))
     .map((comparison) => {
@@ -138,6 +144,10 @@ export function getStaticPaths() {
 
   const hubPaths = [...pairGroups.entries()]
     .filter(([hubSlug]) => isComparisonRouteSlug(hubSlug))
+    .filter(([, rows]) => {
+      const comparison = pickHubComparison(rows);
+      return comparisonVendorsAreLive(comparison.tool_a_id, comparison.tool_b_id);
+    })
     .map(([hubSlug, rows]) => {
       const comparison = pickHubComparison(rows);
       return {
@@ -157,6 +167,7 @@ export function getStaticPaths() {
   const startupAliasPaths = [...pairGroups.values()].flatMap((rows) => {
     const alias = startupAliasForPair(rows);
     if (!alias || !isComparisonRouteSlug(alias.slug)) return [];
+    if (!comparisonVendorsAreLive(alias.tool_a_id, alias.tool_b_id)) return [];
     const hubSlug = comparisonHubSlug(alias.tool_a_id, alias.tool_b_id);
     return [
       {
@@ -634,7 +645,7 @@ const toolBBadgeColor = logoBadgeColor(comparison.tool_b_name);
 const toolADisplayRating = comparison.tool_a_rating;
 const toolBDisplayRating = comparison.tool_b_rating;
 
-// For comparisons against a global partner platform (Deel, Remote, Oyster, Gusto),
+// For comparisons against a global partner platform (Deel, Remote, Oyster HR, Gusto),
 // the verdict is framed around a specific use case (Global EOR, International
 // Contractor Management, SMB Usability) rather than a blanket "better overall"
 // claim. Other comparisons fall back to the generic overall-winner framing.

@@ -8,7 +8,7 @@
  *     when no active affiliate URL exists.
  */
 import { affiliateLinks } from '../config/affiliates';
-import { getToolProfile, type ToolProfile } from './tools';
+import { getToolProfile, isLiveVendorId, type ToolProfile } from './tools';
 import { affiliateGoHref, isAffiliateRedirect } from './links';
 
 export { VENDOR_OUTBOUND_REL, outboundRel, affiliateGoHref, ensureAffiliateGoTrailingSlash, isAffiliateRedirect } from './links';
@@ -21,6 +21,7 @@ export const MANUAL_LEAD_BRANDS = ['lever', 'jazzhr', 'culture-amp', 'performyar
 /**
  * First-party marketing domains used to build the UTM fallback. Affiliate
  * network hosts (Impact, partnerlinks, etc.) are never used as the fallback.
+ * Keys must match live `src/data/tools.json` vendor ids.
  */
 export const VENDOR_DOMAINS: Record<string, string> = {
   '15five': '15five.com',
@@ -62,7 +63,8 @@ const AFFILIATE_HOST_MARKERS = [
 ];
 
 export function isManualLeadBrand(toolId: string): boolean {
-  return (MANUAL_LEAD_BRANDS as readonly string[]).includes(toolId.toLowerCase().trim());
+  const id = toolId.toLowerCase().trim();
+  return (MANUAL_LEAD_BRANDS as readonly string[]).includes(id) && isLiveVendorId(id);
 }
 
 /** Must match ManualLeadModal default `modalId` (spaces become hyphens). */
@@ -101,7 +103,9 @@ export function referralFallbackUrl(domain: string): string {
 }
 
 function registeredAffiliateUrl(toolId: string): string | undefined {
-  return affiliateLinks[toolId.trim().toLowerCase()]?.trim();
+  const id = toolId.trim().toLowerCase();
+  if (!isLiveVendorId(id)) return undefined;
+  return affiliateLinks[id]?.trim();
 }
 
 function isActiveAffiliateUrl(profile: ToolProfile | null, toolId: string): string | null {
@@ -117,7 +121,7 @@ function isActiveAffiliateUrl(profile: ToolProfile | null, toolId: string): stri
 export function resolveVendorDomain(toolId: string, csvFallbackUrl = ''): string {
   const profile = getToolProfile(toolId);
   if (profile?.domain?.trim()) return normalizeVendorDomain(profile.domain);
-  if (VENDOR_DOMAINS[toolId]) return VENDOR_DOMAINS[toolId];
+  if (isLiveVendorId(toolId) && VENDOR_DOMAINS[toolId]) return VENDOR_DOMAINS[toolId];
   return hostFromUrl(profile?.website) ?? hostFromUrl(csvFallbackUrl) ?? normalizeVendorDomain(toolId);
 }
 

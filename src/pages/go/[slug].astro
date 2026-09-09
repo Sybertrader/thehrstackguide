@@ -1,12 +1,15 @@
 ---
 import { affiliateLinks } from '../../config/affiliates';
 import { VENDOR_OUTBOUND_REL, vendorOutboundOnclick } from '../../lib/outbound';
+import { isLiveVendorId } from '../../lib/tools';
 
 export function getStaticPaths() {
-  return Object.keys(affiliateLinks).map((slug) => ({
-    params: { slug },
-    props: { targetUrl: affiliateLinks[slug] },
-  }));
+  return Object.keys(affiliateLinks)
+    .filter((slug) => isLiveVendorId(slug))
+    .map((slug) => ({
+      params: { slug },
+      props: { targetUrl: affiliateLinks[slug] },
+    }));
 }
 
 const { slug } = Astro.params;

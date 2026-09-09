@@ -217,7 +217,7 @@
       "fee_structure": {
         "summary": "At $400/month per employee, Multiplier is one of the more aggressive mid-market EOR price points, which makes the add-on lines proportionally more significant to total cost.",
         "bullets": [
-          "The $400 EOR rate undercuts Deel and Remote at $599 and Oyster at $699, but employer taxes still sit on top of all of them.",
+          "The $400 EOR rate undercuts Deel and Remote at $599 and Oyster HR at $699, but employer taxes still sit on top of all of them.",
           "Local benefit package add-ons and per-country admin fees are Multiplier's own flagged variable costs.",
           "Contractor management is priced separately at $40/month per active contractor.",
           "Verify FX handling and any deposit requirement for your payout corridors, since a low platform fee can be quietly offset by conversion spread."
@@ -245,14 +245,16 @@
     "idealHeadcount": "50–250 seats"
   },
   "oyster": {
+    "name": "Oyster HR",
+    "displayName": "Oyster HR",
     "category": "payroll-eor",
     "logo": "/Oyster.png",
     "rating": "4.5",
     "review_count": "800",
     "rating_source": "G2 & Industry Benchmark",
     "positioning": "An intuitive, designer-friendly global employment platform built for mid-market remote companies prioritising team experience.",
-    "text_compliance": "Oyster automates local employment agreements and statutory compliance in 180+ countries. They handle misclassification safeguards, localized IP assignments, and statutory benefit filings through a mix of owned infrastructure and local HR partners.",
-    "text_global_reach": "Oyster supports hiring across 180+ countries, offering robust international onboarding tools, local currency payouts, and localized benefits administration tailored to distributed tech and creative teams.",
+    "text_compliance": "Oyster HR automates local employment agreements and statutory compliance in 180+ countries. They handle misclassification safeguards, localized IP assignments, and statutory benefit filings through a mix of owned infrastructure and local HR partners.",
+    "text_global_reach": "Oyster HR supports hiring across 180+ countries, offering robust international onboarding tools, local currency payouts, and localized benefits administration tailored to distributed tech and creative teams.",
     "text_pricing_truth": "Contractor management starts at $29/month after a 30-day free trial, with EOR listed at $699/month per employee on the public pricing page (volume/annual seat discounts may apply). Watch FX spreads and any required salary deposits when modeling total cost of ownership.",
     "choose_if": [
       "You value an exceptionally clean, user-friendly UI for both admins and international hires.",
@@ -268,16 +270,16 @@
     "target_segment": "Scaleups 50–250",
     "enterprise_analysis": {
       "ip_assignment": {
-        "summary": "Oyster automates localized IP assignment as part of its employment agreements, delivered through a mix of owned infrastructure and local HR partners across 180+ countries.",
+        "summary": "Oyster HR automates localized IP assignment as part of its employment agreements, delivered through a mix of owned infrastructure and local HR partners across 180+ countries.",
         "bullets": [
           "Assignment clauses are localized per country rather than applied as a single global template.",
-          "Because coverage blends owned entities and local partners, the assignment chain differs by market. Ask Oyster which model applies to your hiring countries.",
+          "Because coverage blends owned entities and local partners, the assignment chain differs by market. Ask Oyster HR which model applies to your hiring countries.",
           "Misclassification safeguards reinforce the assignment, since a contractor reclassified as an employee can undermine the original IP transfer.",
           "The platform is oriented toward distributed design and engineering teams, which is where the strength of a clean IP chain matters most."
         ]
       },
       "tax_withholding": {
-        "summary": "Oyster handles statutory benefit filings and localized tax withholding across its 180+ country footprint, paying workers in their local currency by default.",
+        "summary": "Oyster HR handles statutory benefit filings and localized tax withholding across its 180+ country footprint, paying workers in their local currency by default.",
         "bullets": [
           "Employer contributions and employee withholding are calculated at local rates and filed on the local schedule.",
           "13th-month obligations in markets such as Brazil, Italy, and the Philippines are treated as part of statutory employment cost.",
@@ -286,16 +288,16 @@
         ]
       },
       "statutory_benefits": {
-        "summary": "Oyster administers localized benefits tailored to distributed teams, with statutory filings handled through owned infrastructure or local HR partners depending on the market.",
+        "summary": "Oyster HR administers localized benefits tailored to distributed teams, with statutory filings handled through owned infrastructure or local HR partners depending on the market.",
         "bullets": [
           "Statutory health cover, pension, and mandatory leave follow each country's legal floor.",
-          "Notice periods and severance are enforced to local statute, with Oyster as the employing party in EOR markets.",
+          "Notice periods and severance are enforced to local statute, with Oyster HR as the employing party in EOR markets.",
           "Termination liability shielding is the core EOR benefit for an SMB hiring its first employee in a new country.",
           "Benefits depth can differ between owned-entity and partner markets, so verify coverage for your specific countries."
         ]
       },
       "fee_structure": {
-        "summary": "Oyster publishes $699/month per employee for EOR and $29/month for contractors after a 30-day trial, and its own guidance points to FX spreads and salary deposits as the lines that move total cost.",
+        "summary": "Oyster HR publishes $699/month per employee for EOR and $29/month for contractors after a 30-day trial, and its own guidance points to FX spreads and salary deposits as the lines that move total cost.",
         "bullets": [
           "At $699 the published EOR rate sits above Deel and Remote's $599 annual-commitment pricing, though volume and annual discounts may apply.",
           "FX spread on local-currency payouts is a real cost that never appears in the per-employee rate.",
@@ -545,7 +547,7 @@
       "fee_structure": {
         "summary": "Plane prices EOR at $499/month per employee and contractors at $39/month with transparent flat fees, and makes low FX markup on direct bank payouts an explicit selling point rather than a hidden line.",
         "bullets": [
-          "The $499 EOR rate undercuts Deel and Remote at $599 and Oyster at $699, with a free HRIS bundled rather than upsold.",
+          "The $499 EOR rate undercuts Deel and Remote at $599 and Oyster HR at $699, with a free HRIS bundled rather than upsold.",
           "Low FX markup on direct bank payouts is a stated differentiator, which matters most for contractor-heavy engineering fleets.",
           "Employer taxes and statutory contributions still sit on top of the platform fee, as with every EOR.",
           "Confirm deposit, prefunding, and offboarding terms in writing, since transparent monthly pricing does not by itself tell you the working-capital requirement."
