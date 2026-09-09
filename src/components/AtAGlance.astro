@@ -6,6 +6,7 @@
 import type { Comparison } from '../types/comparison';
 import VendorButton from './VendorButton.astro';
 import VendorLogo from './VendorLogo.astro';
+import { vendorCtaLabel } from '../lib/outbound';
 
 interface RatingDisplay {
   rating: string;
@@ -141,7 +142,7 @@ function parseBool(value: string): boolean {
         location="comparison_card"
         class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
-        Try {comparison.tool_a_name}
+        {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}
         {
           !toolAIsManualLead && (
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">
@@ -232,7 +233,7 @@ function parseBool(value: string): boolean {
         location="comparison_card"
         class="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
-        Try {comparison.tool_b_name}
+        {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}
         {
           !toolBIsManualLead && (
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-2 h-4 w-4" aria-hidden="true">

@@ -15,8 +15,46 @@ export { VENDOR_OUTBOUND_REL, outboundRel, affiliateGoHref, ensureAffiliateGoTra
 export const UTM_SOURCE = 'hrstackguide.com';
 export const UTM_MEDIUM = 'referral';
 
+/** Non-affiliate vendors whose CTAs open the lead modal (not an outbound URL). */
+export const NON_AFFILIATE_LEAD_BRANDS = [
+  'plane',
+  'rippling',
+  'greenhouse',
+  'workable',
+  '15five',
+  'leapsome',
+  'peoplefluent',
+  'clearcompany',
+  'oyster-hr',
+] as const;
+
 /** Brands that open the lead-capture modal instead of an outbound URL. */
-export const MANUAL_LEAD_BRANDS = ['lever', 'jazzhr', 'culture-amp', 'performyard'] as const;
+export const MANUAL_LEAD_BRANDS = [
+  'lever',
+  'jazzhr',
+  'culture-amp',
+  'performyard',
+  ...NON_AFFILIATE_LEAD_BRANDS,
+] as const;
+
+export const LEAD_MODAL_CTA_LABEL = 'Request Demo & Pricing';
+
+export function isNonAffiliateLeadBrand(toolId: string): boolean {
+  const id = toolId.toLowerCase().trim();
+  return (NON_AFFILIATE_LEAD_BRANDS as readonly string[]).includes(id);
+}
+
+/** Button copy: request-demo for the 9 non-affiliate vendors, otherwise “Try {name}”. */
+export function vendorCtaLabel(toolId: string, vendorName: string): string {
+  if (isManualLeadBrand(toolId) && isNonAffiliateLeadBrand(toolId)) {
+    return LEAD_MODAL_CTA_LABEL;
+  }
+  return `Try ${vendorName}`;
+}
+
+export function vendorLeadModalHeading(vendorName: string): string {
+  return `Request ${vendorName} Pricing & Demo`;
+}
 
 /**
  * First-party marketing domains used to build the UTM fallback. Affiliate

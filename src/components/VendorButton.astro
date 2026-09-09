@@ -4,6 +4,7 @@ import {
   isAffiliateRedirect,
   outboundRel,
   vendorCtaDestinationType,
+  vendorCtaLabel,
 } from '../lib/outbound';
 
 interface Props {
@@ -32,13 +33,14 @@ const destinationType = vendorCtaDestinationType(resolvedHref, opensModal);
     <button
       type="button"
       data-modal-target={modalId}
-      class:list={['js-affiliate-cta', 'open-modal-btn', className]}
+      class:list={['js-affiliate-cta', 'open-modal-btn', 'open-lead-modal', className]}
       data-vendor-id={resolvedVendorId}
+      data-vendor-name={vendorName}
       data-track-vendor={vendorName}
       data-track-location={location}
       data-destination-type={destinationType}
     >
-      <slot>Try {vendorName}</slot>
+      <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
     </button>
   ) : (
     <a
@@ -47,12 +49,13 @@ const destinationType = vendorCtaDestinationType(resolvedHref, opensModal);
       rel={linkRel ?? (opensNewTab ? 'noopener' : undefined)}
       class:list={['js-affiliate-cta', className]}
       data-vendor-id={resolvedVendorId}
+      data-vendor-name={vendorName}
       data-track-vendor={vendorName}
       data-track-location={location}
       data-destination-type={destinationType}
       data-vendor-outbound
     >
-      <slot>Try {vendorName}</slot>
+      <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
     </a>
   )
 }

@@ -6,7 +6,7 @@ import VendorButton from '../../components/VendorButton.astro';
 import VendorLogo from '../../components/VendorLogo.astro';
 import ManualLeadModal from '../../components/ManualLeadModal.astro';
 import { loadComparisons } from '../../lib/comparisons';
-import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref } from '../../lib/outbound';
+import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../../lib/outbound';
 import { getToolsByCategory } from '../../lib/tools';
 import { PAYROLL_HUB_HEADING, PAYROLL_HUB_TITLE } from '../../lib/seo';
 
@@ -216,7 +216,7 @@ const collectionSchema = {
               location="hub_roster"
               class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
             >
-              Try {tool.name}
+              {vendorCtaLabel(tool.id, tool.name)}
             </VendorButton>
           </article>
         ))}

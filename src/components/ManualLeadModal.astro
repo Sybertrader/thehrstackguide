@@ -1,4 +1,6 @@
 ---
+import { isNonAffiliateLeadBrand, vendorLeadModalHeading } from '../lib/outbound';
+
 interface Props {
   brandName: string;
   vendorId?: string;
@@ -18,6 +20,9 @@ const {
 } = Astro.props;
 
 const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-');
+const headingText = isNonAffiliateLeadBrand(resolvedVendorId)
+  ? vendorLeadModalHeading(brandName)
+  : `Connect with ${brandName}`;
 
 // Needs the PUBLIC_ prefix to survive into the browser bundle. Falls back to the
 // same key api/leads.js uses so a deploy without the env var still collects
@@ -40,7 +45,7 @@ const WEB3FORMS_KEY =
     <!-- Header -->
     <div class="bg-slate-900 px-6 py-5 text-white flex justify-between items-center">
       <div>
-        <h3 class="text-xl font-bold tracking-tight">Connect with {brandName}</h3>
+        <h3 class="lead-modal-heading text-xl font-bold tracking-tight">{headingText}</h3>
         <p class="text-xs text-slate-300 mt-1">Get custom pricing & priority onboarding support</p>
       </div>
       <button
@@ -205,7 +210,7 @@ const WEB3FORMS_KEY =
         </button>
 
         <p class="text-[11px] text-slate-400 text-center mt-3 leading-relaxed">
-          By submitting, you agree to allow <em>The HR Stack Guide</em> to connect your business directly with an authorized representative at {brandName}.
+          By submitting, you agree to allow <em>The HR Stack Guide</em> to connect your business directly with an authorized representative at <span class="lead-modal-brand">{brandName}</span>.
         </p>
       </form>
 
@@ -238,9 +243,22 @@ const WEB3FORMS_KEY =
     var PERFORMYARD_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/17923801/46vtmid/';
     var PERFORMYARD_REDIRECT_URL = 'https://www.performyard.com/';
 
-    // The only vendors whose modal submissions this script handles. Anything
-    // else keeps the original /api/leads behaviour.
+    // Client-side Web3Forms path for existing partner brands. The nine
+    // non-affiliate vendors (plane, rippling, greenhouse, workable, 15five,
+    // leapsome, peoplefluent, clearcompany, oyster-hr) are NOT listed here
+    // so they post to /api/leads. Zapier is gated on vendorId === 'performyard'.
     var EMAIL_SEND_VENDORS = ['lever', 'jazzhr', 'culture-amp', 'performyard'];
+    var REQUEST_DEMO_VENDORS = [
+      'plane',
+      'rippling',
+      'greenhouse',
+      'workable',
+      '15five',
+      'leapsome',
+      'peoplefluent',
+      'clearcompany',
+      'oyster-hr',
+    ];
     var WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
 
     function trackGenerateLead(vendorId) {
@@ -272,16 +290,50 @@ const WEB3FORMS_KEY =
       return Object.fromEntries(formData.entries());
     }
 
+    function applyClickedVendorToModal(modal, vendorId, vendorName) {
+      if (vendorId) {
+        modal.setAttribute('data-vendor-id', vendorId);
+        var vendorInput = modal.querySelector('input[name="vendorId"]');
+        if (vendorInput) vendorInput.value = vendorId;
+      }
+      if (vendorName) {
+        modal.setAttribute('data-brand-name', vendorName);
+        var brandInput = modal.querySelector('input[name="brandName"]');
+        var targetInput = modal.querySelector('input[name="target_software"]');
+        if (brandInput) brandInput.value = vendorName;
+        if (targetInput) targetInput.value = vendorName;
+        var brandEls = modal.querySelectorAll('.lead-modal-brand');
+        for (var i = 0; i < brandEls.length; i++) {
+          brandEls[i].textContent = vendorName;
+        }
+        if (REQUEST_DEMO_VENDORS.indexOf(vendorId) !== -1) {
+          var heading = modal.querySelector('.lead-modal-heading');
+          if (heading) heading.textContent = 'Request ' + vendorName + ' Pricing & Demo';
+        }
+      }
+
+      var form = modal.querySelector('form');
+      var successMessage = modal.querySelector('.success-message');
+      if (form) form.classList.remove('hidden');
+      if (successMessage) successMessage.classList.add('hidden');
+    }
+
     document.addEventListener('click', function(e) {
       var target = e.target;
       if (!target || !target.closest) return;
 
-      var openBtn = target.closest('[data-modal-target]') || target.closest('.open-modal-btn');
+      var openBtn = target.closest('[data-modal-target], .open-modal-btn, .open-lead-modal');
       var closeBtn = target.closest('.close-modal-btn');
 
       if (openBtn) {
+        var clickedVendorId = (openBtn.getAttribute('data-vendor-id') || '').toLowerCase().trim();
+        var clickedVendorName = (openBtn.getAttribute('data-vendor-name') || '').trim();
+
         // Prefer explicit data attribute — avoid innerText (forces layout / hurts INP).
         var modalId = openBtn.getAttribute('data-modal-target');
+        if (!modalId && clickedVendorName) {
+          modalId = 'lead-modal-' + clickedVendorName.toLowerCase().replace(/\s+/g, '-');
+        }
         if (!modalId) {
           var label = (openBtn.getAttribute('aria-label') || openBtn.textContent || '').toLowerCase();
           if (label.indexOf('lever') !== -1) modalId = 'lead-modal-lever';
@@ -299,6 +351,7 @@ const WEB3FORMS_KEY =
             if (modal.parentElement !== document.body) {
               document.body.appendChild(modal);
             }
+            applyClickedVendorToModal(modal, clickedVendorId, clickedVendorName);
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
           }
@@ -385,8 +438,7 @@ const WEB3FORMS_KEY =
           vendor: vendor,
         };
 
-        // PerformYard: text/plain JSON POST avoids a CORS preflight; Zapier
-        // still parses the JSON keys. Redirect only after await fetch settles.
+        // PerformYard only: Zapier Catch Hook. Other modal vendors never enter.
         if (vendor === 'performyard') {
           const rawData = Object.fromEntries(new FormData(event.target).entries());
           const { vendorId, target_software, partnerLandingUrl, brandName, ...cleanPayload } = rawData;

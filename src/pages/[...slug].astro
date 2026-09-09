@@ -16,7 +16,7 @@ import { isComparisonRouteSlug, comparisonHubSlug, isLegacyTechStartupsSlug, cat
 import { comparisonVendorsAreLive, getToolProfile } from '../lib/tools';
 import type { EnterpriseAnalysis, ToolProfile } from '../lib/tools';
 import TechnicalComplianceMatrix from '../components/TechnicalComplianceMatrix.astro';
-import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref } from '../lib/outbound';
+import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../lib/outbound';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
 import DataVerificationBadge from '../components/DataVerificationBadge.astro';
@@ -48,11 +48,12 @@ import {
 } from '../lib/persona-evaluation';
 
 /**
- * The four vendors whose CTAs open the lead capture modal (see
- * src/components/ManualLeadModal.astro) instead of linking out. `isManualLeadBrand`
- * in src/lib/outbound.ts must stay in sync with EMAIL_SEND_VENDORS in that
- * component. Applying the rule here keeps every CTA on a comparison page
- * (cards, feature table, decision checklist, final verdict) consistent.
+ * Vendors whose CTAs open the lead capture modal (see
+ * src/components/ManualLeadModal.astro) instead of linking out.
+ * `isManualLeadBrand` in src/lib/outbound.ts is the allowlist.
+ * EMAIL_SEND_VENDORS in the modal (Lever, JazzHR, Culture Amp, PerformYard)
+ * is a separate Web3Forms path — the nine non-affiliate brands post to
+ * /api/leads. Zapier is PerformYard-only.
  */
 
 interface ComparisonPageProps {
@@ -837,10 +838,10 @@ const heroLogoPreloads = (
 
   <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       <!--
-        Manual lead-capture modals for brands awaiting affiliate approval
-        (Plane, Rippling, Lever, JazzHR). Mounted once per tool (not wrapped
-        in display:none — that permanently hid the backdrop) so every CTA
-        below can open the same instance via data-modal-target={toolXModalId}.
+        Manual lead-capture modals for brands that do not have an outbound
+        affiliate CTA. Mounted once per tool (not wrapped in display:none —
+        that permanently hid the backdrop) so every CTA below can open the
+        same instance via data-modal-target={toolXModalId}.
         modalId is passed explicitly so it always matches the button attribute.
       -->
       {toolAIsManualLead && (
@@ -1058,7 +1059,7 @@ const heroLogoPreloads = (
                         location="feature_table"
                         class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
                       >
-                        Try {comparison.tool_a_name}{toolAIsManualLead ? '' : ' ↗'}
+                        {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}{toolAIsManualLead ? '' : ' ↗'}
                       </VendorButton>
                     </td>
                     <td class="px-6 py-4">
@@ -1070,7 +1071,7 @@ const heroLogoPreloads = (
                         location="feature_table"
                         class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
                       >
-                        Try {comparison.tool_b_name}{toolBIsManualLead ? '' : ' ↗'}
+                        {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}{toolBIsManualLead ? '' : ' ↗'}
                       </VendorButton>
                     </td>
                   </tr>
@@ -1224,7 +1225,7 @@ const heroLogoPreloads = (
               location="decision_checklist"
               class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
             >
-              Try {comparison.tool_a_name}
+              {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}
             </VendorButton>
           </div>
 
@@ -1248,7 +1249,7 @@ const heroLogoPreloads = (
               location="decision_checklist"
               class="mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
             >
-              Try {comparison.tool_b_name}
+              {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}
             </VendorButton>
           </div>
         </div>
@@ -1311,7 +1312,7 @@ const heroLogoPreloads = (
               location="final_verdict"
               class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
             >
-              Try {comparison.tool_a_name}
+              {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}
             </VendorButton>
             <VendorButton
               href={toolBAffiliateHref}
@@ -1321,7 +1322,7 @@ const heroLogoPreloads = (
               location="final_verdict"
               class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
             >
-              Try {comparison.tool_b_name}
+              {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}
             </VendorButton>
           </div>
         </div>
@@ -1343,7 +1344,7 @@ const heroLogoPreloads = (
                 location="persona_next_step"
                 class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
               >
-                Try {comparison.tool_a_name}
+                {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}
               </VendorButton>
               <VendorButton
                 href={toolBAffiliateHref}
@@ -1353,7 +1354,7 @@ const heroLogoPreloads = (
                 location="persona_next_step"
                 class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
               >
-                Try {comparison.tool_b_name}
+                {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}
               </VendorButton>
             </div>
           </div>

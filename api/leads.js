@@ -18,11 +18,11 @@ export default async function handler(req, res) {
     const lastName = String(body.lastName || body.last_name || '').trim();
     const fullName =
       String(body.fullName || '').trim() || [firstName, lastName].filter(Boolean).join(' ').trim();
-    const workEmail = String(body.workEmail || body.work_email || '').trim();
-    const companyName = String(body.companyName || body.company_name || '').trim();
-    const headcount = String(body.headcount || body.company_size || '').trim();
+    const workEmail = String(body.workEmail || body.work_email || body.email || '').trim();
+    const companyName = String(body.companyName || body.company_name || body.company || '').trim();
+    const headcount = String(body.headcount || body.company_size || body.employeeCount || '').trim();
     const region = String(body.region || '').trim() || 'Not provided';
-    const needs = String(body.needs || body.notes || '').trim();
+    const needs = String(body.needs || body.notes || body.requirements || '').trim();
     const jobTitle = String(body.jobTitle || body.job_title || '').trim();
     const phone = String(body.phone || '').trim();
 
@@ -69,17 +69,21 @@ export default async function handler(req, res) {
       const zapierUrl = process.env.PERFORMYARD_ZAPIER_WEBHOOK_URL;
       if (zapierUrl) {
         const zapierPayload = {
-          fullName,
-          workEmail,
-          companyName,
-          headcount,
+          firstName,
+          lastName,
+          email: workEmail,
+          company: companyName,
+          jobTitle,
+          employeeCount: headcount,
           region,
-          needs,
-          source: 'The HR Stack Guide',
+          phone,
+          requirements: needs,
+          source: 'thehrstackguide.com',
+          timestamp: new Date().toISOString(),
         };
         const zapRes = await fetch(zapierUrl, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
           body: JSON.stringify(zapierPayload),
         });
         if (!zapRes.ok) {
