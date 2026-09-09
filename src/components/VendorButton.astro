@@ -57,6 +57,7 @@ const vendorHomeUrl = nonAffiliateVendorHomeUrl(resolvedVendorId);
       data-track-location={location}
       data-destination-type={destinationType}
       data-vendor-outbound
+      data-astro-prefetch={isAffiliateRedirect(resolvedHref) ? 'false' : undefined}
     >
       <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
     </a>

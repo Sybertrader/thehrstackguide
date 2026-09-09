@@ -44,6 +44,7 @@ Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
         href={targetUrl}
         rel={VENDOR_OUTBOUND_REL}
         target="_blank"
+        data-astro-prefetch="false"
         class="js-affiliate-cta text-blue-600 underline hover:text-blue-800"
         data-vendor-id={slug ?? ''}
         data-track-vendor={slug ?? ''}

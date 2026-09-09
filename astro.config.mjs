@@ -35,6 +35,10 @@ function withTrailingSlash(url) {
 export default defineConfig({
   site: 'https://www.thehrstackguide.com',
   trailingSlash: 'always',
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: 'tap',
+  },
   image: {
     remotePatterns: [{ protocol: 'https', hostname: 'unavatar.io' }],
   },
