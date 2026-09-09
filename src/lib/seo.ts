@@ -102,6 +102,16 @@ export function categoryHubTitle(categoryName: string, audience: string): string
   return firstInRange(candidates);
 }
 
+/** Exact ATS hub H1. Document / OG / Twitter title is `ATS_HUB_TITLE`. */
+export const ATS_HUB_HEADING =
+  `Best Applicant Tracking System (ATS) Software for Growing Teams (${SEO_TITLE_YEAR})`;
+export const ATS_HUB_TITLE = `${ATS_HUB_HEADING} | The HR Stack Guide`;
+
+/** Exact performance-management hub H1. Document / OG / Twitter title is `PM_HUB_TITLE`. */
+export const PM_HUB_HEADING =
+  `Best Performance Management Software for Teams (${SEO_TITLE_YEAR})`;
+export const PM_HUB_TITLE = `${PM_HUB_HEADING} | The HR Stack Guide`;
+
 /** H1 keeps the title keyword phrase without the year suffix. */
 export function categoryHubHeading(title: string): string {
   return title.replace(new RegExp(`\\s*\\(${SEO_TITLE_YEAR}\\)\\s*$`), '').trim();

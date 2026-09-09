@@ -578,7 +578,7 @@ PM_TOOLS = {
             "Free Trial Available": False
         }
     },
-    "reflektive": {
+    "peoplefluent": {
         "name": "PeopleFluent",
         "logo": "/people fluent.jpeg",
         "rating": 4.2,
@@ -587,7 +587,7 @@ PM_TOOLS = {
         "free_trial": False,
         "affiliate_url": "https://www.peoplefluent.com/",
         "key_features": ["Real-Time Feedback", "Goals", "Review Cycles", "Recognition Feed"],
-        "pros": ["Lightweight continuous feedback and recognition UX", "Familiar for teams transitioning from legacy Reflektive workflows", "Solid Slack-native feedback loops"],
+        "pros": ["Lightweight continuous feedback and recognition UX", "Familiar for teams transitioning from incumbent PeopleFluent workflows", "Solid Slack-native feedback loops"],
         "cons": ["Smaller modern market footprint versus category leaders", "Fewer modern AI and compensation modules than Lattice/Leapsome"],
         "matrix": {
             "OKRs & Goal Cascading": True,
@@ -781,7 +781,7 @@ VENDOR_EDITORIAL = {
         "take_fit": "engagement measurement and people-science benchmarks are the actual reason you are buying",
         "take_edge": "its survey methodology and benchmark dataset are the strongest evidence base in the category",
     },
-    "reflektive": {
+    "peoplefluent": {
         "badge": "Best for Lightweight Continuous Feedback (PeopleFluent)",
         "pricing_nuance": "Quote-only under legacy Workday-era packaging, so pricing is negotiated rather than published and contract terms vary widely. The feature set is narrower than modern rivals, which makes benchmarking any quote against cheaper per-seat tools essential before renewal.",
         "take_fit": "you want Slack-native recognition and continuous feedback without a full performance suite",

@@ -91,6 +91,36 @@
       "source": "/go/papaya/",
       "destination": "/go/papaya-global/",
       "permanent": true
+    },
+    {
+      "source": "/reflektive-vs-:rest*",
+      "destination": "/peoplefluent-vs-:rest*/",
+      "permanent": true
+    },
+    {
+      "source": "/reflektive-vs-:rest*/",
+      "destination": "/peoplefluent-vs-:rest*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-reflektive-for-:mod*",
+      "destination": "/:pair*-vs-peoplefluent-for-:mod*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-reflektive-for-:mod*/",
+      "destination": "/:pair*-vs-peoplefluent-for-:mod*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-reflektive",
+      "destination": "/:pair*-vs-peoplefluent/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-reflektive/",
+      "destination": "/:pair*-vs-peoplefluent/",
+      "permanent": true
     }
   ],
   "headers": [

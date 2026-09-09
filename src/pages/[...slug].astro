@@ -2,8 +2,9 @@
 /**
  * 1-on-1 B2B HR comparison catch-all.
  *
- * Scoped to `brand-a-vs-brand-b` and `brand-a-vs-brand-b-for-modifier` slugs
- * via getStaticPaths + `isComparisonRouteSlug`. Static utility routes
+ * Scoped to flat `brand-a-vs-brand-b` and `brand-a-vs-brand-b-for-modifier`
+ * slugs via getStaticPaths + `isComparisonRouteSlug`. Do not nest these under
+ * category prefixes (`/performance-management/...`). Static utility routes
  * (`recommendation.astro`, `about.astro`, `contact.astro`, `thank-you.astro`,
  * category hubs) and `go/[slug].astro` take file-based precedence; Vercel
  * `api/leads.js` remains the lead-capture endpoint under `/api/leads`.

@@ -60,9 +60,9 @@ const cultureAmpBase: PerformanceMgmtFeatures = {
   ssoAndHrisIntegrations: spec(true, 'SAML SSO, HRIS, Slack/Teams. HRBP analytics dashboards are the integration story, not GitHub/Jira reviews.'),
 };
 
-const reflektiveBase: PerformanceMgmtFeatures = {
+const peoplefluentBase: PerformanceMgmtFeatures = {
   okrsAndGoals: spec(true, 'Goals and review cycles in the PeopleFluent/Workday-era packaging; lighter than Lattice OKR suites.'),
-  continuousFeedback: spec(true, 'Real-time feedback and recognition feed, including Slack-native loops from the Reflektive heritage UX.'),
+  continuousFeedback: spec(true, 'Real-time feedback and recognition feed, including Slack-native loops from the PeopleFluent UX.'),
   structuredReviews: spec(true, 'Review cycles exist; 360 is supported. Implementation feels legacy versus Leapsome/Lattice.'),
   calibration: spec(false, 'No modern compensation calibration module comparable to Lattice Compensation.'),
   engagementSurveys: spec(false, 'Not a Culture Amp engagement platform. Recognition ≠ engagement science.'),
@@ -198,26 +198,26 @@ export const performancePersonaByToolId: Record<string, PerformanceMgmtPersonaDa
       ssoAndHrisIntegrations: spec(true, 'SAML 2.0 SSO and people-science benchmarks for global HRBPs; Perform is secondary to Engage in most enterprise deals.'),
     }),
   },
-  reflektive: {
-    startupFeatures: pm(reflektiveBase, {
-      continuousFeedback: spec(true, 'Lightweight Slack feedback if a team is already on a PeopleFluent/Reflektive footprint; not a greenfield startup pick.'),
+  peoplefluent: {
+    startupFeatures: pm(peoplefluentBase, {
+      continuousFeedback: spec(true, 'Lightweight Slack feedback if a team is already on a PeopleFluent footprint; not a greenfield startup pick.'),
     }),
-    scaleupFeatures: pm(reflektiveBase, {
-      continuousFeedback: spec(true, 'Recognition plus goals for mid-market teams migrating off legacy Reflektive, not a Lattice displacement.'),
+    scaleupFeatures: pm(peoplefluentBase, {
+      continuousFeedback: spec(true, 'Recognition plus goals for mid-market teams already on PeopleFluent, not a Lattice displacement.'),
     }),
-    peopleOpsFeatures: pm(reflektiveBase, {
+    peopleOpsFeatures: pm(peoplefluentBase, {
       engagementSurveys: spec(false, 'People Ops looking for survey science should be on Culture Amp; this is a feedback/review remnant stack.'),
     }),
-    remoteFeatures: pm(reflektiveBase, {
+    remoteFeatures: pm(peoplefluentBase, {
       ssoAndHrisIntegrations: spec(true, 'Slack-native feedback loops for distributed teams that already live in chat.'),
     }),
-    engineeringFeatures: pm(reflektiveBase, {
+    engineeringFeatures: pm(peoplefluentBase, {
       ssoAndHrisIntegrations: spec(false, 'No GitHub/Jira native reviews. Engineering feedback is Slack comments, not repo telemetry.'),
     }),
-    agencyFeatures: pm(reflektiveBase, {
+    agencyFeatures: pm(peoplefluentBase, {
       structuredReviews: spec(false, 'No billable client-project review module.'),
     }),
-    enterpriseFeatures: pm(reflektiveBase, {
+    enterpriseFeatures: pm(peoplefluentBase, {
       ssoAndHrisIntegrations: spec(true, 'Enterprise SSO inside PeopleFluent/Workday-era packaging; fewer AI and compensation modules than Lattice/Leapsome.'),
     }),
   },

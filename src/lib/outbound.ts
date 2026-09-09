@@ -44,7 +44,7 @@ export const VENDOR_DOMAINS: Record<string, string> = {
   performyard: 'performyard.com',
   plane: 'plane.com',
   recruitee: 'recruitee.com',
-  reflektive: 'peoplefluent.com',
+  peoplefluent: 'peoplefluent.com',
   remote: 'remote.com',
   rippling: 'rippling.com',
   workable: 'workable.com',
