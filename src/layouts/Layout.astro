@@ -57,12 +57,21 @@ const socialTitle = title;
 const ogImageUrl = 'https://www.thehrstackguide.com/og-banner.png';
 
 /**
- * Self-referencing canonical on every page that uses this layout. Uses the
- * request URL (`Astro.url.href`) so the tag always matches the page being
- * served. `/go/*` affiliate redirects do not use this layout. `/thank-you/`
- * uses this layout with `noindex`.
+ * Self-referencing canonical on every page that uses this layout.
+ * Built from the current route path against `Astro.site` so the tag is
+ * absolute, query/hash-free, and never inherits a parent category hub.
+ * Catch-all `[...slug]` comparison pages reconstruct the path from params
+ * because SSG can report the wrong `Astro.url` for rest-parameter routes.
+ * `/go/*` affiliate redirects do not use this layout.
  */
-const canonicalURL = Astro.url.href;
+const restSlug = Astro.params.slug;
+const pathname =
+  restSlug != null && String(restSlug).length > 0
+    ? `/${(Array.isArray(restSlug) ? restSlug.filter(Boolean) : String(restSlug).split('/').filter(Boolean)).join('/')}/`
+    : Astro.url.pathname === '/' || Astro.url.pathname.endsWith('/')
+      ? Astro.url.pathname
+      : `${Astro.url.pathname}/`;
+const canonicalURL = new URL(pathname, Astro.site ?? Astro.url);
 
 const organizationSchema = {
   '@context': 'https://schema.org',
@@ -127,7 +136,7 @@ const organizationSchema = {
     <JsonLdSchema
       title={title}
       description={description ?? ''}
-      url={canonicalURL}
+      url={canonicalURL.href}
       vendorA={vendorA}
       vendorB={vendorB}
     />
