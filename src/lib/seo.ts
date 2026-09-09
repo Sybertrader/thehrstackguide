@@ -12,7 +12,6 @@ export type SeoFamily = 'payroll' | 'ats' | 'pm' | null;
 /** Shorter names used in `<title>` and H1 when the full brand would overflow. */
 const TITLE_NAME_BY_ID: Record<string, string> = {
   'payoneer-workforce-management': 'Payoneer',
-  papaya: 'Papaya',
   'breezy-hr': 'Breezy',
   'bamboohr-ats': 'BambooHR',
 };

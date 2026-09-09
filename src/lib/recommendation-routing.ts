@@ -1,8 +1,8 @@
 /**
  * Recommendation wizard destination matrix.
  *
- * Pair slugs are the live comparison hubs (Papaya is `deel-vs-papaya`, Breezy
- * is `workable-vs-breezy-hr`, ClearCompany is `leapsome-vs-clearcompany`).
+ * Pair slugs are the live comparison hubs (Papaya Global is `deel-vs-papaya-global`,
+ * Breezy is `workable-vs-breezy-hr`, ClearCompany is `leapsome-vs-clearcompany`).
  * Persona tokens match Question 2 values and the public `-for-{persona}`
  * child URLs, including payroll startups at `-for-startups` (never the
  * legacy `-for-tech-startups` redirect).
@@ -78,15 +78,15 @@ function resolveAtsPair(persona: string, budget: string, location: string): stri
  */
 function resolvePayrollPair(persona: string, budget: string, location: string): string {
   if (persona === 'web3-crypto' || persona === 'us-latam') {
-    return 'deel-vs-papaya';
+    return 'deel-vs-papaya-global';
   }
   if (persona === 'scaleups' || isHighBudget(budget)) {
     return 'deel-vs-rippling';
   }
   if (persona === 'startups' && isLowBudget(budget)) {
-    // Lean US-only teams get Remote vs Papaya; global / hybrid hiring lands
+    // Lean US-only teams get Remote vs Papaya Global; global / hybrid hiring lands
     // on Deel vs Remote at the public `-for-startups` child.
-    return isUsOnly(location) ? 'remote-vs-papaya' : 'deel-vs-remote';
+    return isUsOnly(location) ? 'remote-vs-papaya-global' : 'deel-vs-remote';
   }
   return 'deel-vs-remote';
 }

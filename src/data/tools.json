@@ -244,172 +244,6 @@
     "deploymentType": "Cloud / SaaS",
     "idealHeadcount": "50–250 seats"
   },
-  "oyster": {
-    "name": "Oyster HR",
-    "displayName": "Oyster HR",
-    "category": "payroll-eor",
-    "logo": "/Oyster.png",
-    "rating": "4.5",
-    "review_count": "800",
-    "rating_source": "G2 & Industry Benchmark",
-    "positioning": "An intuitive, designer-friendly global employment platform built for mid-market remote companies prioritising team experience.",
-    "text_compliance": "Oyster HR automates local employment agreements and statutory compliance in 180+ countries. They handle misclassification safeguards, localized IP assignments, and statutory benefit filings through a mix of owned infrastructure and local HR partners.",
-    "text_global_reach": "Oyster HR supports hiring across 180+ countries, offering robust international onboarding tools, local currency payouts, and localized benefits administration tailored to distributed tech and creative teams.",
-    "text_pricing_truth": "Contractor management starts at $29/month after a 30-day free trial, with EOR listed at $699/month per employee on the public pricing page (volume/annual seat discounts may apply). Watch FX spreads and any required salary deposits when modeling total cost of ownership.",
-    "choose_if": [
-      "You value an exceptionally clean, user-friendly UI for both admins and international hires.",
-      "You want a free contractor management tier to test hires before converting them to EOR.",
-      "Your company scales past 10+ employees where volume discounts significantly lower the $699 base rate.",
-      "You require dedicated remote work tools, such as country-by-country salary calculators."
-    ],
-    "starting_price": "$29/mo",
-    "free_trial": true,
-    "contractor_price": 29,
-    "eor_price": 699,
-    "countries": "180+",
-    "target_segment": "Scaleups 50–250",
-    "enterprise_analysis": {
-      "ip_assignment": {
-        "summary": "Oyster HR automates localized IP assignment as part of its employment agreements, delivered through a mix of owned infrastructure and local HR partners across 180+ countries.",
-        "bullets": [
-          "Assignment clauses are localized per country rather than applied as a single global template.",
-          "Because coverage blends owned entities and local partners, the assignment chain differs by market. Ask Oyster HR which model applies to your hiring countries.",
-          "Misclassification safeguards reinforce the assignment, since a contractor reclassified as an employee can undermine the original IP transfer.",
-          "The platform is oriented toward distributed design and engineering teams, which is where the strength of a clean IP chain matters most."
-        ]
-      },
-      "tax_withholding": {
-        "summary": "Oyster HR handles statutory benefit filings and localized tax withholding across its 180+ country footprint, paying workers in their local currency by default.",
-        "bullets": [
-          "Employer contributions and employee withholding are calculated at local rates and filed on the local schedule.",
-          "13th-month obligations in markets such as Brazil, Italy, and the Philippines are treated as part of statutory employment cost.",
-          "Local currency payout shifts FX exposure onto the platform's conversion rate rather than onto the employee.",
-          "Given the mixed owned and partner model, confirm which entity carries the filing obligation in each of your markets."
-        ]
-      },
-      "statutory_benefits": {
-        "summary": "Oyster HR administers localized benefits tailored to distributed teams, with statutory filings handled through owned infrastructure or local HR partners depending on the market.",
-        "bullets": [
-          "Statutory health cover, pension, and mandatory leave follow each country's legal floor.",
-          "Notice periods and severance are enforced to local statute, with Oyster HR as the employing party in EOR markets.",
-          "Termination liability shielding is the core EOR benefit for an SMB hiring its first employee in a new country.",
-          "Benefits depth can differ between owned-entity and partner markets, so verify coverage for your specific countries."
-        ]
-      },
-      "fee_structure": {
-        "summary": "Oyster HR publishes $699/month per employee for EOR and $29/month for contractors after a 30-day trial, and its own guidance points to FX spreads and salary deposits as the lines that move total cost.",
-        "bullets": [
-          "At $699 the published EOR rate sits above Deel and Remote's $599 annual-commitment pricing, though volume and annual discounts may apply.",
-          "FX spread on local-currency payouts is a real cost that never appears in the per-employee rate.",
-          "Required salary deposits are a working-capital commitment rather than a fee. Model the cash impact separately.",
-          "The 30-day free trial applies to contractor management, not to EOR hiring."
-        ]
-      }
-    },
-    "compliance": [
-      "SOC2 Type II",
-      "ISO 27001",
-      "GDPR",
-      "CCPA",
-      "HMRC RTI"
-    ],
-    "integrations": [
-      "Slack",
-      "Google Workspace",
-      "Xero",
-      "NetSuite",
-      "Okta",
-      "Zapier",
-      "REST API"
-    ],
-    "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
-    "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "50–250 seats"
-  },
-  "papaya": {
-    "category": "payroll-eor",
-    "logo": "/Papaya global.jpg",
-    "rating": "4.5",
-    "review_count": "500",
-    "rating_source": "G2 & Industry Benchmark",
-    "positioning": "Enterprise-grade global workforce platform delivering deep payroll intelligence and consolidated multi-country financial analytics.",
-    "text_compliance": "Papaya Global uses AI-driven compliance engine checks paired with local in-country experts across 160+ jurisdictions. They oversee mandatory tax filings, worker classification risks, and legal contract amendments for complex corporate structures.",
-    "text_global_reach": "Operating in over 160 countries, Papaya specializes in unifying fragmented international payroll networks. They allow multinational enterprises to manage localized EOR workers, direct payroll entities, and global contractors from a single business intelligence console.",
-    "text_pricing_truth": "Contractor management and payments are $25–$30/month per contractor. Full-Service EOR starts at $650/month per employee, with Premium EOR at $770/month. Payroll-only / direct-entity global payroll is $12–$25/month per employee. Implementation fees, platform minimums, and country complexity can raise the all-in rate; complex benefit administration and deposits are quoted separately.",
-    "choose_if": [
-      "Your finance department needs enterprise business intelligence and consolidated reporting across multiple foreign entities.",
-      "You operate a hybrid model of owned foreign subsidiaries alongside EOR employees.",
-      "You require white-glove corporate account management and custom legal review.",
-      "You manage large enterprise workforces across 20+ countries simultaneously."
-    ],
-    "starting_price": "From $25/mo",
-    "free_trial": false,
-    "affiliate_url": "https://get.papayaglobal.com/75dun5g00gq4",
-    "has_active_affiliate": true,
-    "is_partner": true,
-    "contractor_price": 25,
-    "eor_price": 650,
-    "countries": "180+",
-    "target_segment": "Global/Enterprise",
-    "enterprise_analysis": {
-      "ip_assignment": {
-        "summary": "Papaya serves multinationals running a hybrid of owned foreign subsidiaries alongside EOR workers, so IP assignment depends on which employment vehicle each worker sits under. That distinction matters more here than with single-model providers.",
-        "bullets": [
-          "Workers hired through your own subsidiary assign IP directly to that entity, while EOR workers assign through Papaya's in-country arrangement.",
-          "Coverage across 160+ jurisdictions uses a mix of owned infrastructure and local partners. Ask which model applies in each market you hire in.",
-          "Where a local partner is the employing entity, the IP chain includes a sub-licensing step. Request the specific assignment wording for those markets.",
-          "Legal contract amendments are handled by Papaya's in-country experts, which is the practical route to strengthening a weak assignment clause."
-        ]
-      },
-      "tax_withholding": {
-        "summary": "Payroll intelligence is Papaya's core product. It consolidates localized withholding, employer contributions, and statutory filings across many countries into a single reporting console built for enterprise finance teams.",
-        "bullets": [
-          "The differentiator is consolidated multi-country payroll reporting rather than the mechanics of withholding, which every EOR performs.",
-          "Mandatory 13th and 14th month payments are handled as part of localized payroll in the markets that require them.",
-          "The BI layer is what lets a CFO compare employer tax burden across countries side by side, which is usually the real reason enterprises choose this over a cheaper EOR.",
-          "Complex or unusual jurisdictions may route through local partners, so confirm who carries filing responsibility per market."
-        ]
-      },
-      "statutory_benefits": {
-        "summary": "Papaya administers statutory benefits across its jurisdiction network and explicitly flags complex benefit administration as an area that carries add-on cost, which is worth scoping during the quote rather than after signature.",
-        "bullets": [
-          "Statutory health, pension, and leave entitlements are administered locally across 160+ jurisdictions.",
-          "Papaya's own pricing guidance calls out add-on costs for complex benefit administration.",
-          "Severance and notice-period enforcement follow local statute, with legal amendments handled by in-country experts.",
-          "For enterprises operating in 20+ countries, consolidated benefit reporting is often worth more than a per-employee rate difference."
-        ]
-      },
-      "fee_structure": {
-        "summary": "Papaya publishes four 2026 tiers: Full-Service EOR from $650/month per employee, Premium EOR at $770/month, contractor management at $25–$30/month, and payroll-only / direct-entity processing at $12–$25/month per employee. Deposits and add-ons still move the all-in number.",
-        "bullets": [
-          "Full-Service EOR starts at $650/employee/month. Premium EOR is $770/employee/month.",
-          "Contractor management and payments are $25–$30/contractor/month. Payroll-only / direct-entity global payroll is $12–$25/employee/month.",
-          "Papaya's guidance explicitly calls out security deposits, commonly framed as one to two months of salary held upfront.",
-          "Complex benefit administration is an add-on rather than bundled into the base rate. Do not blend EOR, contractor, and payroll-only fees when building a TCO comparison."
-        ]
-      }
-    },
-    "compliance": [
-      "SOC2 Type II",
-      "ISO 27001",
-      "GDPR",
-      "HIPAA",
-      "CCPA",
-      "HMRC RTI"
-    ],
-    "integrations": [
-      "Slack",
-      "Workday",
-      "SAP",
-      "NetSuite",
-      "Xero",
-      "Okta",
-      "REST API"
-    ],
-    "supportSLA": "24/7 Dedicated CSM, White-glove implementation, Knowledge Base",
-    "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "250–1000+ enterprise"
-  },
   "payoneer-workforce-management": {
     "category": "payroll-eor",
     "logo": "/payoneer-logo.png",
@@ -1311,5 +1145,173 @@
     "supportSLA": "Dedicated CSM, Ticketed SLA, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
     "idealHeadcount": "50–250 seats"
+  },
+  "oyster-hr": {
+    "name": "Oyster HR",
+    "displayName": "Oyster HR",
+    "category": "payroll-eor",
+    "logo": "/Oyster.png",
+    "rating": "4.5",
+    "review_count": "800",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "An intuitive, designer-friendly global employment platform built for mid-market remote companies prioritising team experience.",
+    "text_compliance": "Oyster HR automates local employment agreements and statutory compliance in 180+ countries. They handle misclassification safeguards, localized IP assignments, and statutory benefit filings through a mix of owned infrastructure and local HR partners.",
+    "text_global_reach": "Oyster HR supports hiring across 180+ countries, offering robust international onboarding tools, local currency payouts, and localized benefits administration tailored to distributed tech and creative teams.",
+    "text_pricing_truth": "Contractor management starts at $29/month after a 30-day free trial, with EOR listed at $699/month per employee on the public pricing page (volume/annual seat discounts may apply). Watch FX spreads and any required salary deposits when modeling total cost of ownership.",
+    "choose_if": [
+      "You value an exceptionally clean, user-friendly UI for both admins and international hires.",
+      "You want a free contractor management tier to test hires before converting them to EOR.",
+      "Your company scales past 10+ employees where volume discounts significantly lower the $699 base rate.",
+      "You require dedicated remote work tools, such as country-by-country salary calculators."
+    ],
+    "starting_price": "$29/mo",
+    "free_trial": true,
+    "contractor_price": 29,
+    "eor_price": 699,
+    "countries": "180+",
+    "target_segment": "Scaleups 50–250",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Oyster HR automates localized IP assignment as part of its employment agreements, delivered through a mix of owned infrastructure and local HR partners across 180+ countries.",
+        "bullets": [
+          "Assignment clauses are localized per country rather than applied as a single global template.",
+          "Because coverage blends owned entities and local partners, the assignment chain differs by market. Ask Oyster HR which model applies to your hiring countries.",
+          "Misclassification safeguards reinforce the assignment, since a contractor reclassified as an employee can undermine the original IP transfer.",
+          "The platform is oriented toward distributed design and engineering teams, which is where the strength of a clean IP chain matters most."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Oyster HR handles statutory benefit filings and localized tax withholding across its 180+ country footprint, paying workers in their local currency by default.",
+        "bullets": [
+          "Employer contributions and employee withholding are calculated at local rates and filed on the local schedule.",
+          "13th-month obligations in markets such as Brazil, Italy, and the Philippines are treated as part of statutory employment cost.",
+          "Local currency payout shifts FX exposure onto the platform's conversion rate rather than onto the employee.",
+          "Given the mixed owned and partner model, confirm which entity carries the filing obligation in each of your markets."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Oyster HR administers localized benefits tailored to distributed teams, with statutory filings handled through owned infrastructure or local HR partners depending on the market.",
+        "bullets": [
+          "Statutory health cover, pension, and mandatory leave follow each country's legal floor.",
+          "Notice periods and severance are enforced to local statute, with Oyster HR as the employing party in EOR markets.",
+          "Termination liability shielding is the core EOR benefit for an SMB hiring its first employee in a new country.",
+          "Benefits depth can differ between owned-entity and partner markets, so verify coverage for your specific countries."
+        ]
+      },
+      "fee_structure": {
+        "summary": "Oyster HR publishes $699/month per employee for EOR and $29/month for contractors after a 30-day trial, and its own guidance points to FX spreads and salary deposits as the lines that move total cost.",
+        "bullets": [
+          "At $699 the published EOR rate sits above Deel and Remote's $599 annual-commitment pricing, though volume and annual discounts may apply.",
+          "FX spread on local-currency payouts is a real cost that never appears in the per-employee rate.",
+          "Required salary deposits are a working-capital commitment rather than a fee. Model the cash impact separately.",
+          "The 30-day free trial applies to contractor management, not to EOR hiring."
+        ]
+      }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "Xero",
+      "NetSuite",
+      "Okta",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "50–250 seats"
+  },
+  "papaya-global": {
+    "category": "payroll-eor",
+    "logo": "/Papaya global.jpg",
+    "rating": "4.5",
+    "review_count": "500",
+    "rating_source": "G2 & Industry Benchmark",
+    "positioning": "Enterprise-grade global workforce platform delivering deep payroll intelligence and consolidated multi-country financial analytics.",
+    "text_compliance": "Papaya Global uses AI-driven compliance engine checks paired with local in-country experts across 160+ jurisdictions. They oversee mandatory tax filings, worker classification risks, and legal contract amendments for complex corporate structures.",
+    "text_global_reach": "Operating in over 160 countries, Papaya Global specializes in unifying fragmented international payroll networks. They allow multinational enterprises to manage localized EOR workers, direct payroll entities, and global contractors from a single business intelligence console.",
+    "text_pricing_truth": "Contractor management and payments are $25–$30/month per contractor. Full-Service EOR starts at $650/month per employee, with Premium EOR at $770/month. Payroll-only / direct-entity global payroll is $12–$25/month per employee. Implementation fees, platform minimums, and country complexity can raise the all-in rate; complex benefit administration and deposits are quoted separately.",
+    "choose_if": [
+      "Your finance department needs enterprise business intelligence and consolidated reporting across multiple foreign entities.",
+      "You operate a hybrid model of owned foreign subsidiaries alongside EOR employees.",
+      "You require white-glove corporate account management and custom legal review.",
+      "You manage large enterprise workforces across 20+ countries simultaneously."
+    ],
+    "starting_price": "From $25/mo",
+    "free_trial": false,
+    "affiliate_url": "https://get.papayaglobal.com/75dun5g00gq4",
+    "has_active_affiliate": true,
+    "is_partner": true,
+    "contractor_price": 25,
+    "eor_price": 650,
+    "countries": "180+",
+    "target_segment": "Global/Enterprise",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "Papaya Global serves multinationals running a hybrid of owned foreign subsidiaries alongside EOR workers, so IP assignment depends on which employment vehicle each worker sits under. That distinction matters more here than with single-model providers.",
+        "bullets": [
+          "Workers hired through your own subsidiary assign IP directly to that entity, while EOR workers assign through Papaya Global's in-country arrangement.",
+          "Coverage across 160+ jurisdictions uses a mix of owned infrastructure and local partners. Ask which model applies in each market you hire in.",
+          "Where a local partner is the employing entity, the IP chain includes a sub-licensing step. Request the specific assignment wording for those markets.",
+          "Legal contract amendments are handled by Papaya Global's in-country experts, which is the practical route to strengthening a weak assignment clause."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Payroll intelligence is Papaya Global's core product. It consolidates localized withholding, employer contributions, and statutory filings across many countries into a single reporting console built for enterprise finance teams.",
+        "bullets": [
+          "The differentiator is consolidated multi-country payroll reporting rather than the mechanics of withholding, which every EOR performs.",
+          "Mandatory 13th and 14th month payments are handled as part of localized payroll in the markets that require them.",
+          "The BI layer is what lets a CFO compare employer tax burden across countries side by side, which is usually the real reason enterprises choose this over a cheaper EOR.",
+          "Complex or unusual jurisdictions may route through local partners, so confirm who carries filing responsibility per market."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Papaya Global administers statutory benefits across its jurisdiction network and explicitly flags complex benefit administration as an area that carries add-on cost, which is worth scoping during the quote rather than after signature.",
+        "bullets": [
+          "Statutory health, pension, and leave entitlements are administered locally across 160+ jurisdictions.",
+          "Papaya Global's own pricing guidance calls out add-on costs for complex benefit administration.",
+          "Severance and notice-period enforcement follow local statute, with legal amendments handled by in-country experts.",
+          "For enterprises operating in 20+ countries, consolidated benefit reporting is often worth more than a per-employee rate difference."
+        ]
+      },
+      "fee_structure": {
+        "summary": "Papaya Global publishes four 2026 tiers: Full-Service EOR from $650/month per employee, Premium EOR at $770/month, contractor management at $25–$30/month, and payroll-only / direct-entity processing at $12–$25/month per employee. Deposits and add-ons still move the all-in number.",
+        "bullets": [
+          "Full-Service EOR starts at $650/employee/month. Premium EOR is $770/employee/month.",
+          "Contractor management and payments are $25–$30/contractor/month. Payroll-only / direct-entity global payroll is $12–$25/employee/month.",
+          "Papaya Global's guidance explicitly calls out security deposits, commonly framed as one to two months of salary held upfront.",
+          "Complex benefit administration is an add-on rather than bundled into the base rate. Do not blend EOR, contractor, and payroll-only fees when building a TCO comparison."
+        ]
+      }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Workday",
+      "SAP",
+      "NetSuite",
+      "Xero",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Dedicated CSM, White-glove implementation, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "250–1000+ enterprise",
+    "name": "Papaya Global",
+    "displayName": "Papaya Global"
   }
 }

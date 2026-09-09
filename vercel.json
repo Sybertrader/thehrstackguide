@@ -13,13 +13,83 @@
       "permanent": true
     },
     {
-      "source": "/go/papaya-global",
-      "destination": "/go/papaya/",
+      "source": "/oyster-vs-:rest*",
+      "destination": "/oyster-hr-vs-:rest*/",
       "permanent": true
     },
     {
-      "source": "/go/papaya-global/",
-      "destination": "/go/papaya/",
+      "source": "/oyster-vs-:rest*/",
+      "destination": "/oyster-hr-vs-:rest*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-oyster-for-:mod*",
+      "destination": "/:pair*-vs-oyster-hr-for-:mod*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-oyster-for-:mod*/",
+      "destination": "/:pair*-vs-oyster-hr-for-:mod*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-oyster",
+      "destination": "/:pair*-vs-oyster-hr/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-oyster/",
+      "destination": "/:pair*-vs-oyster-hr/",
+      "permanent": true
+    },
+    {
+      "source": "/papaya-vs-:rest*",
+      "destination": "/papaya-global-vs-:rest*/",
+      "permanent": true
+    },
+    {
+      "source": "/papaya-vs-:rest*/",
+      "destination": "/papaya-global-vs-:rest*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-papaya-for-:mod*",
+      "destination": "/:pair*-vs-papaya-global-for-:mod*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-papaya-for-:mod*/",
+      "destination": "/:pair*-vs-papaya-global-for-:mod*/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-papaya",
+      "destination": "/:pair*-vs-papaya-global/",
+      "permanent": true
+    },
+    {
+      "source": "/:pair*-vs-papaya/",
+      "destination": "/:pair*-vs-papaya-global/",
+      "permanent": true
+    },
+    {
+      "source": "/go/oyster",
+      "destination": "/go/oyster-hr/",
+      "permanent": true
+    },
+    {
+      "source": "/go/oyster/",
+      "destination": "/go/oyster-hr/",
+      "permanent": true
+    },
+    {
+      "source": "/go/papaya",
+      "destination": "/go/papaya-global/",
+      "permanent": true
+    },
+    {
+      "source": "/go/papaya/",
+      "destination": "/go/papaya-global/",
       "permanent": true
     }
   ],

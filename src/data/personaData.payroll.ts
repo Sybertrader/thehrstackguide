@@ -67,7 +67,7 @@ const papayaBase: GlobalPayrollFeatures = {
   nativePayrollFilings: spec(true, 'Multi-country payroll filings designed to sit next to ERP/finance controls, not a 50-state US SMB payroll UX.'),
   fxAndMultiCurrency: spec(true, 'Treasury-grade multi-currency payroll; FX is priced into enterprise contracts rather than a consumer zero-markup promise.'),
   statutoryBenefits: spec(true, 'Statutory benefits and works-council reporting are handled as part of enterprise country payroll, not a startup benefits shop.'),
-  ipAndWorkProductAssignment: spec(true, 'IP terms follow the local employment or payroll vehicle Papaya operates in each country; confirm owned vs partner per market.'),
+  ipAndWorkProductAssignment: spec(true, 'IP terms follow the local employment or payroll vehicle Papaya Global operates in each country; confirm owned vs partner per market.'),
   onboardingSla: spec(false, 'Implementation is an enterprise payroll project, not 24-hour self-serve EOR onboarding.'),
 };
 
@@ -183,7 +183,7 @@ export const globalPayrollPersonaByToolId: Record<string, GlobalPayrollPersonaDa
       ownedLocalEntities: spec(true, 'SAML 2.0 SSO on enterprise plans; 100% owned-entity story is the procurement answer versus partner-network EORs.'),
     }),
   },
-  oyster: {
+  'oyster-hr': {
     startupFeatures: gp(oysterBase, {
       onboardingSla: spec(true, 'Employment Cost Calculator plus 30-day contractor trial for first-time international hiring without a payroll specialist.'),
     }),
@@ -235,9 +235,9 @@ export const globalPayrollPersonaByToolId: Record<string, GlobalPayrollPersonaDa
       nativePayrollFilings: spec(true, 'SAML SSO on Gusto Plus/higher; still a US payroll system of record, not a global EOR with works-council coverage.'),
     }),
   },
-  papaya: {
+  'papaya-global': {
     startupFeatures: gp(papayaBase, {
-      onboardingSla: spec(false, 'Enterprise minimums and implementation overhead make Papaya a poor fit below ~50-100 globally paid employees.'),
+      onboardingSla: spec(false, 'Enterprise minimums and implementation overhead make Papaya Global a poor fit below ~50-100 globally paid employees.'),
     }),
     scaleupFeatures: gp(papayaBase, {
       nativePayrollFilings: spec(true, 'Workforce intelligence plus multi-country payroll once finance wants ERP-linked controls rather than a founder EOR.'),
@@ -249,7 +249,7 @@ export const globalPayrollPersonaByToolId: Record<string, GlobalPayrollPersonaDa
       statutoryBenefits: spec(true, 'Country payroll in Brazil/Mexico includes statutory filings; confirm owned vs partner employer per entity.'),
     }),
     web3Features: gp(papayaBase, {
-      fxAndMultiCurrency: spec(false, 'Treasury multi-currency, not a USDC payroll product. Crypto payouts are not the Papaya motion.'),
+      fxAndMultiCurrency: spec(false, 'Treasury multi-currency, not a USDC payroll product. Crypto payouts are not the Papaya Global motion.'),
     }),
     contractorFeatures: gp(papayaBase, {
       contractorPayments: spec(true, 'Contractor payments inside enterprise payroll; 1099/W-8BEN is not the Gusto-style self-serve workflow.'),
@@ -281,7 +281,7 @@ export const globalPayrollPersonaByToolId: Record<string, GlobalPayrollPersonaDa
       contractorPayments: spec(true, 'Contractor KYC and localized agreements; W-8BEN-style collection where US payors require it.'),
     }),
     ukEuropeFeatures: gp(multiplierBase, {
-      statutoryBenefits: spec(true, 'UK/EU EOR depends on live entity list; works-council handling is local-employer standard rather than a Papaya-grade analytics suite.'),
+      statutoryBenefits: spec(true, 'UK/EU EOR depends on live entity list; works-council handling is local-employer standard rather than a Papaya Global-grade analytics suite.'),
     }),
     enterpriseFeatures: gp(multiplierBase, {
       ownedLocalEntities: spec(true, 'SSO on enterprise contracts; APAC owned-entity story is the procurement angle versus a 150-country Deel RFP.'),
@@ -310,7 +310,7 @@ export const globalPayrollPersonaByToolId: Record<string, GlobalPayrollPersonaDa
       ipAndWorkProductAssignment: spec(true, 'UK/EU owned-entity IP assignment for software teams; confirm works-council markets before promising a go-live date.'),
     }),
     enterpriseFeatures: gp(planeBase, {
-      onboardingSla: spec(false, 'SSO is quote-based. Plane is not the SAML/ERP payroll fabric Papaya sells to global finance.'),
+      onboardingSla: spec(false, 'SSO is quote-based. Plane is not the SAML/ERP payroll fabric Papaya Global sells to global finance.'),
     }),
   },
   'payoneer-workforce-management': {

@@ -88,7 +88,7 @@ TOOLS = {
             "Free Trial Available": True
         }
     },
-    "oyster": {
+    "oyster-hr": {
         "name": "Oyster HR",
         "logo": "/Oyster.png",
         "rating": 4.5,
@@ -140,7 +140,7 @@ TOOLS = {
             "Free Trial Available": True
         }
     },
-    "papaya": {
+    "papaya-global": {
         "name": "Papaya Global",
         "logo": "/Papaya global.jpg",
         "rating": 4.5,
@@ -665,7 +665,7 @@ VENDOR_EDITORIAL = {
         "take_fit": "your board treats IP ownership and compliance purity as non-negotiable",
         "take_edge": "it owns 100% of its local entities and folds IP assignment plus zero-markup FX into the base fee",
     },
-    "oyster": {
+    "oyster-hr": {
         "badge": "Best for Mid-Market UX & Remote Perks",
         "pricing_nuance": "The $699/month EOR list price is the highest published rate in this category, and also the most negotiable: volume and annual commitments routinely pull it below list for teams above roughly ten employees. Contractor management is $29/month after a 30-day trial, and some markets are served through local partners rather than owned entities, which can introduce deposit requirements.",
         "take_fit": "you are a mid-market remote team where admin and employee experience drive adoption",
@@ -677,7 +677,7 @@ VENDOR_EDITORIAL = {
         "take_fit": "your workforce is US-based and you want payroll, tax filings, and benefits to run themselves",
         "take_edge": "automated federal, state, and local filings come standard with the cleanest admin experience for lean teams",
     },
-    "papaya": {
+    "papaya-global": {
         "badge": "Best for Enterprise Consolidated Payroll BI",
         "pricing_nuance": "Full-Service EOR starts at $650/month per employee; Premium EOR is $770/month. Contractor management and payments are $25–$30/month per contractor. Payroll-only / direct-entity global payroll is $12–$25/month per employee. Implementation fees, platform minimums, and country-complexity surcharges still apply, and benefit administration plus salary deposits in higher-risk jurisdictions are quoted separately.",
         "take_fit": "your finance team needs consolidated payroll reporting across owned entities and EOR workers in 20+ countries",
@@ -814,7 +814,7 @@ attach_vendor_editorial()
 # framed around the specific use case our audience cares about rather than a
 # single blanket "better overall" claim, while the underlying star ratings above
 # stay untouched and reflect the same consistent criteria for every vendor.
-PARTNER_IDS = {"deel", "oyster", "remote", "gusto", "payoneer-workforce-management"}
+PARTNER_IDS = {"deel", "oyster-hr", "remote", "gusto", "payoneer-workforce-management"}
 
 PARTNER_FOCUS = {
     "deel": {
@@ -833,7 +833,7 @@ PARTNER_FOCUS = {
             "Built-in IP and invention-assignment protections purpose-built for distributed, IP-sensitive teams",
         ],
     },
-    "oyster": {
+    "oyster-hr": {
         "category": "International Contractor Management",
         "bullets": [
             "180+ country contractor and EOR reach with a dedicated Global Employment Cost Calculator for upfront budgeting",
