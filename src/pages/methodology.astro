@@ -1,14 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const lastUpdated = 'August 31, 2026';
+const lastUpdated = 'September 2026';
 const pageTitle = 'Evaluation Framework & Editorial Methodology — The HR Stack Guide';
+const pageDescription =
+  'At The HR Stack Guide, we evaluate B2B HR software using a standardized 4-pillar framework. Every rating, data matrix, and comparison pair across Global Payroll & EOR, Applicant Tracking Systems (ATS), and Performance Management is scored against this rubric.';
 ---
 
 <Layout
   title={pageTitle}
   heading={pageTitle}
-  description="How The HR Stack Guide evaluates HR software: our standardized 4-pillar framework covering pricing transparency, global compliance, platform usability, and data verification."
+  description={pageDescription}
 >
   <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
     <header class="mb-10">
@@ -28,52 +30,79 @@ const pageTitle = 'Evaluation Framework & Editorial Methodology — The HR Stack
     <article class="space-y-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
       <section>
         <p class="text-base leading-relaxed text-slate-700">
-          At The HR Stack Guide, our mission is to provide objective, data-driven comparisons for founders,
-          HR leaders, and People Ops executives. Our rankings and vendor matrices are based on a standardized
-          4-pillar evaluation framework updated quarterly for 2026.
+          At The HR Stack Guide, we evaluate B2B HR software using a standardized 4-pillar framework. Every
+          rating, data matrix, and comparison pair across Global Payroll &amp; EOR, Applicant Tracking Systems
+          (ATS), and Performance Management is scored against this rubric.
         </p>
       </section>
 
       <section>
-        <h2 class="text-lg font-semibold text-slate-900">Pillar 1: Transparent Pricing &amp; Real Cost Structure</h2>
+        <h2 class="text-lg font-semibold text-slate-900">Pillar 1: Transparent Pricing &amp; True Cost of Ownership (TCO)</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          We break down base platform fees, per-employee-per-month (PEPM) pricing, hidden currency conversion
-          markups, deposit requirements, and contract cancellation terms to calculate the true Total Cost of
-          Ownership (TCO).
+          We look beyond advertised starting prices to calculate actual operating costs. Our analysis breaks
+          down base platform fees, per-employee-per-month (PEPM) rates, implementation fees, currency
+          conversion markups, deposit requirements, and contract cancellation terms.
         </p>
       </section>
 
       <section>
-        <h2 class="text-lg font-semibold text-slate-900">Pillar 2: Global Compliance &amp; Legal Infrastructure</h2>
+        <h2 class="text-lg font-semibold text-slate-900">Pillar 2: Feature Depth, Security &amp; Compliance</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          For Employer of Record (EOR) and Global Payroll platforms, we verify owned-entity coverage vs.
-          third-party partner network reliance, automated localized tax withholding, statutory benefits
-          administration, and IP assignment protections.
+          We evaluate whether platforms meet regulatory and enterprise operational standards:
+        </p>
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-700">
+          <li>
+            <strong>Payroll &amp; EOR:</strong> Owned-entity networks vs. third-party reliance, automated
+            localized tax withholding, statutory benefits, and IP assignment protections.
+          </li>
+          <li>
+            <strong>ATS:</strong> GDPR/CCPA compliance, EEOC/OFCCP tracking, structured interviewing rubrics,
+            and automated candidate consent workflows.
+          </li>
+          <li>
+            <strong>Performance Management:</strong> Role-based access controls (RBAC), SOC 2 Type II
+            certifications, 360-degree review privacy, and audit logging.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-slate-900">Pillar 3: Integration Ecosystem &amp; Usability</h2>
+        <p class="mt-2 text-base leading-relaxed text-slate-700">
+          We test how well each platform fits into an existing tech stack. This includes evaluating native
+          integrations with accounting software (QuickBooks, NetSuite, Xero), communication tools (Slack,
+          Teams), identity providers (Okta, Google Workspace), and REST API accessibility for custom
+          workflows.
         </p>
       </section>
 
       <section>
-        <h2 class="text-lg font-semibold text-slate-900">Pillar 3: Platform Usability &amp; Integration Depth</h2>
+        <h2 class="text-lg font-semibold text-slate-900">Pillar 4: Data Verification &amp; Editorial Independence</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          We assess API ecosystem depth, native integrations with core HRIS/Accounting software (e.g.,
-          QuickBooks, Xero, NetSuite), onboarding speed, and self-serve employee mobile access.
+          Our data matrices are compiled using primary vendor documentation, verified API specs, public
+          changelogs, and hands-on trial environment testing.
         </p>
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-700">
+          <li>
+            <strong>No Paid Placement:</strong> Vendors cannot pay for higher rankings, preferred badge
+            placements, or altered performance scores.
+          </li>
+          <li>
+            <strong>Affiliate Separation:</strong> Commercial affiliate relationships are handled separately
+            from our scoring methodology.
+          </li>
+          <li>
+            <strong>Fact-Checking:</strong> We re-audit comparison data on a scheduled basis and update our
+            published dates whenever material features or prices change.
+          </li>
+        </ul>
       </section>
 
       <section>
-        <h2 class="text-lg font-semibold text-slate-900">Pillar 4: Data Verification &amp; Independence</h2>
+        <h2 class="text-lg font-semibold text-slate-900">Questions &amp; Methodological Corrections</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          Our research combines direct platform testing, verified public documentation, statutory labor
-          guidelines, and aggregated buyer feedback. Vendors cannot pay for higher rankings or altered
-          performance scores.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-lg font-semibold text-slate-900">Questions</h2>
-        <p class="mt-2 text-base leading-relaxed text-slate-700">
-          For questions regarding our testing criteria or data verification, contact our research team at
-          <a href="mailto:research@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">research@thehrstackguide.com</a>.
+          If you have questions about our testing criteria or need to report a data discrepancy, contact us at
+          <a href="mailto:dave@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">dave@thehrstackguide.com</a>.
         </p>
       </section>
     </article>

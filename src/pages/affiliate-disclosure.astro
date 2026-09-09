@@ -1,14 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const lastUpdated = 'July 30, 2026';
+const lastUpdated = 'September 2026';
 const pageTitle = 'Affiliate Disclosure — The HR Stack Guide';
+const pageDescription =
+  'The HR Stack Guide is published by Stack Guide Media. In accordance with the Federal Trade Commission\'s (FTC) 16 CFR Part 255 guidelines on endorsements and testimonials, we are fully transparent about how this site generates revenue and maintains editorial independence.';
 ---
 
 <Layout
   title={pageTitle}
   heading={pageTitle}
-  description="Learn how The HR Stack Guide is compensated, how that relates to our independent review process, and how we stay compliant with FTC endorsement guidelines."
+  description={pageDescription}
 >
   <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
     <header class="mb-10">
@@ -29,71 +31,54 @@ const pageTitle = 'Affiliate Disclosure — The HR Stack Guide';
       <section>
         <p class="text-base leading-relaxed text-slate-700">
           The HR Stack Guide is published by Stack Guide Media. In accordance with the Federal Trade
-          Commission's 16 CFR Part 255 guidelines on endorsements and testimonials, we want to be fully
-          transparent about how this site is funded and how that relates to the recommendations we publish.
+          Commission's (FTC) 16 CFR Part 255 guidelines on endorsements and testimonials, we are fully
+          transparent about how this site generates revenue and maintains editorial independence.
         </p>
       </section>
 
       <section>
-        <h2 class="text-lg font-semibold text-slate-900">How we make money</h2>
+        <h2 class="text-lg font-semibold text-slate-900">How We Earn Revenue</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          Some of the links on The HR Stack Guide, including the "Try [Vendor]" buttons on our comparison
-          pages, are affiliate links. If you click one of these links and subsequently sign up for, trial, or
-          purchase a vendor's product, we may earn a commission from that vendor. This comes at
-          <strong>no extra cost to you</strong> — the price you pay is the same whether you use our link or go
-          directly to the vendor's website.
+          Some links on The HR Stack Guide—including "Try [Vendor]" buttons, pricing links, and comparison
+          callouts—are affiliate links. If you click one of these links and subsequently sign up for or
+          purchase a vendor's product, we may earn a referral commission. This occurs at no extra cost to
+          you; vendor pricing remains identical whether you use our link or navigate directly to the vendor's
+          site.
         </p>
       </section>
 
       <section>
-        <h2 class="text-lg font-semibold text-slate-900">Our independence policy</h2>
+        <h2 class="text-lg font-semibold text-slate-900">Editorial Independence &amp; Anti-Pay-for-Play</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          Whether or not a vendor participates in an affiliate program never determines whether that vendor is
-          included in a comparison, and it never changes the star ratings we assign. Our ratings are based on
-          publicly available pricing, product documentation, feature sets, and vendor-published policies,
-          evaluated against a consistent rubric across every tool we cover. When a specific vendor is highlighted
-          as the best fit for a use case (for example "Winner for Global EOR"), that recommendation is grounded in
-          documented product capabilities relevant to that use case, not in commission rates.
+          Affiliate participation never determines whether a vendor is included in a comparison, nor does it
+          influence ratings, scoring, or "Winner" badge placement across our Global Payroll &amp; EOR, ATS,
+          or Performance Management guides. Rankings are determined solely by our standardized 4-pillar
+          evaluation framework based on publicly verified product capabilities, official pricing, and primary
+          vendor documentation.
         </p>
       </section>
 
       <section>
-        <h2 class="text-lg font-semibold text-slate-900">Editorial process</h2>
+        <h2 class="text-lg font-semibold text-slate-900">Search Engine Compliance &amp; Link Standards</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          Our comparison content is produced by our B2B software operations analysts using a repeatable
-          methodology: we review each vendor's official pricing pages, product documentation, and public
-          customer feedback, then map their capabilities against the needs of the audience segment described
-          on each page (for example, tech startups, agencies, or mid-market scaleups). We periodically
-          re-review vendors as pricing and features change.
+          Outbound affiliate links on this site utilize standard
+          <code class="rounded bg-slate-100 px-1.5 py-0.5 text-sm">rel="noopener sponsored nofollow"</code>
+          attributes in full compliance with search engine webmaster guidelines. Additionally, The HR Stack
+          Guide maintains a strict policy against trademark bidding: we do not run paid search campaigns
+          targeting vendor brand names or registered trademarks.
         </p>
       </section>
 
       <section>
-        <h2 class="text-lg font-semibold text-slate-900">Identifying sponsored links</h2>
+        <h2 class="text-lg font-semibold text-slate-900">Contact Information</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          Outbound links to vendor websites on this site are marked with the <code class="rounded bg-slate-100 px-1.5 py-0.5 text-sm">rel="noopener sponsored nofollow"</code>
-          attributes where applicable, consistent with search engine guidance for identifying paid or affiliate
-          relationships.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-lg font-semibold text-slate-900">Search Engine Compliance &amp; Brand Protection</h2>
-        <p class="mt-2 text-base leading-relaxed text-slate-700">
-          The HR Stack Guide enforces a strict zero PPC trademark bidding policy and does not run paid search
-          engine advertising targeting vendor brand names or trademarks. All traffic routed to our software
-          partners is generated purely through organic search engine optimization (SEO), generative AI search
-          citations (GEO), and independent editorial research.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-lg font-semibold text-slate-900">Questions</h2>
-        <p class="mt-2 text-base leading-relaxed text-slate-700">
-          If you have questions about a specific recommendation or about our affiliate relationships, contact
-          us at <a href="mailto:dave@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">dave@thehrstackguide.com</a>.
-          You can also review our <a href="/privacy-policy/" class="font-medium text-indigo-600 hover:underline">Privacy Policy</a>
-          and <a href="/terms/" class="font-medium text-indigo-600 hover:underline">Terms of Service</a> for more information.
+          If you have questions about our commercial relationships or editorial standards, please contact
+          <a href="mailto:dave@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">dave@thehrstackguide.com</a>.
+          You can also review our
+          <a href="/privacy-policy/" class="font-medium text-indigo-600 hover:underline">Privacy Policy</a>,
+          <a href="/terms/" class="font-medium text-indigo-600 hover:underline">Terms of Service</a>, and
+          <a href="/methodology/" class="font-medium text-indigo-600 hover:underline">Methodology</a>
+          for further details.
         </p>
       </section>
     </article>
