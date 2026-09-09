@@ -102,15 +102,15 @@ export function categoryHubTitle(categoryName: string, audience: string): string
   return firstInRange(candidates);
 }
 
-/** Exact ATS hub H1. Document / OG / Twitter title is `ATS_HUB_TITLE`. */
-export const ATS_HUB_HEADING =
-  `Best Applicant Tracking System (ATS) Software for Growing Teams (${SEO_TITLE_YEAR})`;
-export const ATS_HUB_TITLE = `${ATS_HUB_HEADING} | The HR Stack Guide`;
+/** Category hub `<title>` and `<h1>` are 1:1 and stay under 60 characters. */
+export const ATS_HUB_TITLE = 'Applicant Tracking Systems (ATS) — The HR Stack Guide';
+export const ATS_HUB_HEADING = ATS_HUB_TITLE;
 
-/** Exact performance-management hub H1. Document / OG / Twitter title is `PM_HUB_TITLE`. */
-export const PM_HUB_HEADING =
-  `Best Performance Management Software for Teams (${SEO_TITLE_YEAR})`;
-export const PM_HUB_TITLE = `${PM_HUB_HEADING} | The HR Stack Guide`;
+export const PAYROLL_HUB_TITLE = 'Global Payroll & EOR Platforms — The HR Stack Guide';
+export const PAYROLL_HUB_HEADING = PAYROLL_HUB_TITLE;
+
+export const PM_HUB_TITLE = 'Performance Management Software — The HR Stack Guide';
+export const PM_HUB_HEADING = PM_HUB_TITLE;
 
 /** H1 keeps the title keyword phrase without the year suffix. */
 export function categoryHubHeading(title: string): string {

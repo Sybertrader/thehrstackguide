@@ -8,7 +8,7 @@ import ManualLeadModal from '../../components/ManualLeadModal.astro';
 import { loadComparisons } from '../../lib/comparisons';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref } from '../../lib/outbound';
 import { getToolsByCategory } from '../../lib/tools';
-import { SEO_TITLE_YEAR } from '../../lib/seo';
+import { PAYROLL_HUB_HEADING, PAYROLL_HUB_TITLE } from '../../lib/seo';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
   month: 'long',
@@ -96,8 +96,8 @@ function parseReviewCount(value?: string): number | null {
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 const siteRootUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
-const pageHeading = 'Best Global Payroll & EOR Software for Global Teams';
-const pageTitle = `${pageHeading} (${SEO_TITLE_YEAR})`;
+const pageHeading = PAYROLL_HUB_HEADING;
+const pageTitle = PAYROLL_HUB_TITLE;
 
 const collectionSchema = {
   '@context': 'https://schema.org',
