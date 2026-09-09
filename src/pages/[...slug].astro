@@ -11,7 +11,7 @@
 import Layout from '../layouts/Layout.astro';
 import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
-import { isComparisonRouteSlug, comparisonHubSlug, isLegacyTechStartupsSlug } from '../lib/comparison-routes';
+import { isComparisonRouteSlug, comparisonHubSlug, isLegacyTechStartupsSlug, categoryHubNav } from '../lib/comparison-routes';
 import { getToolProfile } from '../lib/tools';
 import type { EnterpriseAnalysis, ToolProfile } from '../lib/tools';
 import TechnicalComplianceMatrix from '../components/TechnicalComplianceMatrix.astro';
@@ -309,6 +309,8 @@ function buildSchemaGraph(
   schemaOptions: {
     isHub: boolean;
     hubUrl: string;
+    categoryName: string;
+    categoryUrl: string;
     modifierLabel?: string;
     softwareDescriptionA?: string;
     softwareDescriptionB?: string;
@@ -324,12 +326,12 @@ function buildSchemaGraph(
   const breadcrumbItems = schemaOptions.isHub
     ? [
         { '@type': 'ListItem', position: 1, name: 'Home', item: siteRootUrl },
-        { '@type': 'ListItem', position: 2, name: 'Comparisons', item: siteRootUrl },
+        { '@type': 'ListItem', position: 2, name: schemaOptions.categoryName, item: schemaOptions.categoryUrl },
         { '@type': 'ListItem', position: 3, name: pairName, item: pageUrl },
       ]
     : [
         { '@type': 'ListItem', position: 1, name: 'Home', item: siteRootUrl },
-        { '@type': 'ListItem', position: 2, name: 'Comparisons', item: siteRootUrl },
+        { '@type': 'ListItem', position: 2, name: schemaOptions.categoryName, item: schemaOptions.categoryUrl },
         { '@type': 'ListItem', position: 3, name: pairName, item: schemaOptions.hubUrl },
         {
           '@type': 'ListItem',
@@ -751,6 +753,8 @@ const faqItems: FaqItem[] = isHub
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 const siteRootUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
 const hubUrl = new URL(`/${hubSlug}/`, Astro.site ?? Astro.url.origin).href;
+const categoryHub = categoryHubNav(hubFamily);
+const categoryUrl = new URL(categoryHub.href, Astro.site ?? Astro.url.origin).href;
 const schemaGraph = buildSchemaGraph(
   comparison,
   pageUrl,
@@ -766,6 +770,8 @@ const schemaGraph = buildSchemaGraph(
   {
     isHub,
     hubUrl,
+    categoryName: categoryHub.label,
+    categoryUrl,
     modifierLabel: isHub ? undefined : modifierLabel,
     softwareDescriptionA: isHub
       ? undefined
@@ -849,7 +855,7 @@ const heroLogoPreloads = (
             </li>
             <li aria-hidden="true" class="text-slate-300">&gt;</li>
             <li>
-              <a href="/" class="transition hover:text-indigo-600">Comparisons</a>
+              <a href={categoryHub.href} class="transition hover:text-indigo-600">{categoryHub.label}</a>
             </li>
             <li aria-hidden="true" class="text-slate-300">&gt;</li>
             {isHub ? (

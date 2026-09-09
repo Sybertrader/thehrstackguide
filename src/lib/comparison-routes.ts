@@ -107,3 +107,20 @@ export function childComparisonHref(toolAId: string, toolBId: string, nicheId: s
 export function isLegacyTechStartupsSlug(slug: string): boolean {
   return slug.endsWith('-for-tech-startups');
 }
+
+/** Category hub crumb for comparison breadcrumbs (HTML + BreadcrumbList). */
+export const CATEGORY_HUB_NAV = {
+  payroll: { label: 'Global Payroll & EOR', href: '/global-payroll-eor/' },
+  ats: { label: 'Applicant Tracking Systems (ATS)', href: '/applicant-tracking-systems/' },
+  pm: { label: 'Performance Management', href: '/performance-management/' },
+} as const;
+
+export type CategoryHubFamily = keyof typeof CATEGORY_HUB_NAV;
+
+export function categoryHubNav(family: CategoryHubFamily | null | undefined): {
+  label: string;
+  href: string;
+} {
+  if (family && family in CATEGORY_HUB_NAV) return CATEGORY_HUB_NAV[family];
+  return { label: 'Comparisons', href: '/' };
+}
