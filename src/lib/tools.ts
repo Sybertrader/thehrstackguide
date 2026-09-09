@@ -58,6 +58,16 @@ export interface ToolProfile {
   text_pricing_truth: string;
   choose_if: string[];
   enterprise_analysis?: EnterpriseAnalysisSet;
+  /** Published security / compliance attestations (SOC 2, GDPR, HIPAA, etc.). */
+  compliance: string[];
+  /** Native and marketplace integrations (Slack, HRIS, accounting, IdP, API). */
+  integrations: string[];
+  /** Support coverage and SLA posture, e.g. 24/7 live chat plus dedicated CSM. */
+  supportSLA: string;
+  /** How the product is delivered, e.g. Cloud / SaaS / Mobile Native. */
+  deploymentType: string;
+  /** Typical buyer headcount band, e.g. 50–250 seats. */
+  idealHeadcount: string;
 }
 
 let cache: Record<string, ToolProfile> | null = null;

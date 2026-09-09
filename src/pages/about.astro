@@ -8,7 +8,7 @@ const siteUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
 const aboutSchema = {
   '@context': 'https://schema.org',
   '@type': 'AboutPage',
-  name: 'About The HR Stack Guide',
+  name: 'About Us — The HR Stack Guide',
   url: new URL('/about', siteUrl).href,
   isPartOf: {
     '@type': 'WebSite',
@@ -76,10 +76,13 @@ const steps = [
       'Pricing and features change; we periodically re-check published comparisons and update the "last updated" date whenever a material fact changes.',
   },
 ];
+
+const pageTitle = 'About Us — The HR Stack Guide';
 ---
 
 <Layout
-  title="About Us — The HR Stack Guide"
+  title={pageTitle}
+  heading={pageTitle}
   description="Learn who publishes The HR Stack Guide, how our B2B software operations analysts evaluate HR, payroll, and ATS platforms, and how we stay editorially independent."
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(aboutSchema)} />
@@ -94,7 +97,7 @@ const steps = [
         </ol>
       </nav>
       <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-        About The HR Stack Guide
+        {pageTitle}
       </h1>
       <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
     </header>

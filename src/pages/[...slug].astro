@@ -13,7 +13,8 @@ import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublishe
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { isComparisonRouteSlug, comparisonHubSlug, isLegacyTechStartupsSlug } from '../lib/comparison-routes';
 import { getToolProfile } from '../lib/tools';
-import type { EnterpriseAnalysis } from '../lib/tools';
+import type { EnterpriseAnalysis, ToolProfile } from '../lib/tools';
+import TechnicalComplianceMatrix from '../components/TechnicalComplianceMatrix.astro';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref } from '../lib/outbound';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
@@ -30,6 +31,7 @@ import ComparisonFaq from '../components/ComparisonFaq.astro';
 import VendorButton from '../components/VendorButton.astro';
 import VendorLogo from '../components/VendorLogo.astro';
 import { vendorLogoPreloadHref } from '../lib/vendor-logo';
+import { comparisonSeo } from '../lib/seo';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildPersonaEvaluation,
@@ -526,6 +528,17 @@ interface EnterpriseSection {
 const toolAProfile = getToolProfile(comparison.tool_a_id);
 const toolBProfile = getToolProfile(comparison.tool_b_id);
 
+function techMatrixColumn(name: string, profile: ToolProfile | null) {
+  return {
+    name,
+    compliance: profile?.compliance ?? [],
+    integrations: profile?.integrations ?? [],
+    supportSLA: profile?.supportSLA ?? '',
+    deploymentType: profile?.deploymentType ?? '',
+    idealHeadcount: profile?.idealHeadcount ?? '',
+  };
+}
+
 const enterpriseSections: EnterpriseSection[] = ENTERPRISE_SECTION_META.map((meta) => {
   const columns = [
     { name: comparison.tool_a_name, entry: toolAProfile?.enterprise_analysis?.[meta.key] },
@@ -568,17 +581,17 @@ const richSnippetSchema = [
   }));
 
 /**
- * Document `<title>` follows the CTR formula and must never equal the H1.
- * Hub routes stay modifier-free so child pages (`-for-{persona}/`) compete
- * for audience-specific queries. The on-page H1 is the pair name only.
+ * Document `<title>` is 50–60 characters: `[A] vs [B] (2026): [Category] Comparison`.
+ * The single `<h1>` is `[A] vs [B] Comparison & Analysis` using the same
+ * vendor names as the title so the core `A vs B` phrase matches 1:1.
  */
 const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
 const pairName = `${comparison.tool_a_name} vs ${comparison.tool_b_name}`;
-const titleYear = new Date().getFullYear();
-const pageTitle = isHub
-  ? `${pairName} (${titleYear} Comparison) | The HR Stack Guide`
-  : `${pairName} for ${modifierLabel} (${titleYear} Comparison) | The HR Stack Guide`;
-const pageHeading = isHub ? pairName : `${pairName} for ${modifierLabel}`;
+const { title: pageTitle, heading: pageHeading } = comparisonSeo(
+  { id: comparison.tool_a_id, name: comparison.tool_a_name },
+  { id: comparison.tool_b_id, name: comparison.tool_b_name },
+  hubFamily
+);
 const pageDescription = isHub
   ? `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for technology buyers, startups, and scaleups. Feature matrix, pricing nuance, and specialized use-case evaluations.`
   : `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for ${modifierLabel}. Tailored capability breakdown, workflow evaluation, and pricing nuance.`;
@@ -774,7 +787,26 @@ const heroLogoPreloads = (
 
 ---
 
-<Layout title={pageTitle} description={pageDescription} lcpImages={heroLogoPreloads}>
+<Layout
+  title={pageTitle}
+  heading={pageHeading}
+  description={pageDescription}
+  lcpImages={heroLogoPreloads}
+  vendorA={{
+    name: comparison.tool_a_name,
+    category: toolAProfile?.category,
+    rating: comparison.tool_a_rating || undefined,
+    reviewCount: toolANarrative.reviewCountNumeric ?? undefined,
+    priceStartingAt: comparison.tool_a_starting_price || undefined,
+  }}
+  vendorB={{
+    name: comparison.tool_b_name,
+    category: toolBProfile?.category,
+    rating: comparison.tool_b_rating || undefined,
+    reviewCount: toolBNarrative.reviewCountNumeric ?? undefined,
+    priceStartingAt: comparison.tool_b_starting_price || undefined,
+  }}
+>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
   {richSnippetSchema.length > 0 && (
     <script slot="head" type="application/ld+json" set:html={JSON.stringify(richSnippetSchema)} />
@@ -929,10 +961,7 @@ const heroLogoPreloads = (
         <TailoredEvaluationsSection variants={variants} family={hubFamily} />
       )}
 
-      {isHub && (
-      <>
-      <!-- Feature Matrix Table -->
-      {featureMatrixRows.length > 0 && (
+      {isHub && featureMatrixRows.length > 0 && (
         <section class="mb-12" aria-label="Feature comparison matrix">
           <h3 class="mb-6 text-xl font-bold text-slate-900">Feature Comparison</h3>
           <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -1030,8 +1059,11 @@ const heroLogoPreloads = (
           </div>
         </section>
       )}
-      </>
-      )}
+
+      <TechnicalComplianceMatrix
+        toolA={techMatrixColumn(comparison.tool_a_name, toolAProfile)}
+        toolB={techMatrixColumn(comparison.tool_b_name, toolBProfile)}
+      />
 
       {isChildRoute && personaEvaluation && (
         <PersonaEvaluation evaluation={personaEvaluation} />

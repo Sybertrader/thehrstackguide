@@ -1,0 +1,119 @@
+---
+/**
+ * Side-by-side Technical, Security & Integration Matrix for 1-vs-1 routes.
+ * Labels are inline <strong> so crawlers see the B2B HR terms in context
+ * (compliance, SOC 2, integrations, SLA, API, onboarding, headcount).
+ */
+export interface TechMatrixColumn {
+  name: string;
+  compliance: string[];
+  integrations: string[];
+  supportSLA: string;
+  deploymentType: string;
+  idealHeadcount: string;
+}
+
+interface Props {
+  toolA: TechMatrixColumn;
+  toolB: TechMatrixColumn;
+}
+
+const { toolA, toolB } = Astro.props;
+
+function hasContent(column: TechMatrixColumn): boolean {
+  return (
+    column.compliance.length > 0 ||
+    column.integrations.length > 0 ||
+    Boolean(column.supportSLA) ||
+    Boolean(column.deploymentType) ||
+    Boolean(column.idealHeadcount)
+  );
+}
+
+const show = hasContent(toolA) || hasContent(toolB);
+---
+
+{show && (
+  <section class="mb-12" aria-label="Technical, security and integration matrix">
+    <h2 class="mb-2 text-xl font-bold text-slate-900">Technical, Security &amp; Integration Matrix</h2>
+    <p class="mb-6 max-w-3xl text-sm text-slate-500">
+      Compliance standards, native integrations, support SLAs, deployment type, and ideal headcount for {toolA.name} vs {toolB.name}.
+    </p>
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[560px] text-left text-sm">
+          <thead>
+            <tr class="border-b border-slate-200 bg-slate-50">
+              <th scope="col" class="px-6 py-4 font-semibold text-slate-700">Capability</th>
+              <th scope="col" class="px-6 py-4 font-semibold text-slate-700">{toolA.name}</th>
+              <th scope="col" class="px-6 py-4 font-semibold text-slate-700">{toolB.name}</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr class="align-top transition hover:bg-slate-50/80">
+              <th scope="row" class="px-6 py-4 font-medium text-slate-900">Compliance Standards</th>
+              {[toolA, toolB].map((column) => (
+                <td class="px-6 py-4 text-slate-700">
+                  <p class="mb-2"><strong>Compliance Standards:</strong></p>
+                  {column.compliance.length > 0 ? (
+                    <ul class="list-disc space-y-1 pl-5">
+                      {column.compliance.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Not published</p>
+                  )}
+                </td>
+              ))}
+            </tr>
+            <tr class="align-top transition hover:bg-slate-50/80">
+              <th scope="row" class="px-6 py-4 font-medium text-slate-900">Native Integrations</th>
+              {[toolA, toolB].map((column) => (
+                <td class="px-6 py-4 text-slate-700">
+                  <p class="mb-2"><strong>Native Integrations:</strong></p>
+                  {column.integrations.length > 0 ? (
+                    <ul class="list-disc space-y-1 pl-5">
+                      {column.integrations.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>Not published</p>
+                  )}
+                </td>
+              ))}
+            </tr>
+            <tr class="align-top transition hover:bg-slate-50/80">
+              <th scope="row" class="px-6 py-4 font-medium text-slate-900">Support &amp; SLAs</th>
+              {[toolA, toolB].map((column) => (
+                <td class="px-6 py-4 text-slate-700">
+                  <p class="mb-1"><strong>Support &amp; SLAs:</strong></p>
+                  <p>{column.supportSLA || 'Not published'}</p>
+                </td>
+              ))}
+            </tr>
+            <tr class="align-top transition hover:bg-slate-50/80">
+              <th scope="row" class="px-6 py-4 font-medium text-slate-900">Deployment Type</th>
+              {[toolA, toolB].map((column) => (
+                <td class="px-6 py-4 text-slate-700">
+                  <p class="mb-1"><strong>Deployment Type:</strong></p>
+                  <p>{column.deploymentType || 'Not published'}</p>
+                </td>
+              ))}
+            </tr>
+            <tr class="align-top transition hover:bg-slate-50/80">
+              <th scope="row" class="px-6 py-4 font-medium text-slate-900">Ideal Headcount</th>
+              {[toolA, toolB].map((column) => (
+                <td class="px-6 py-4 text-slate-700">
+                  <p class="mb-1"><strong>Ideal Headcount:</strong></p>
+                  <p>{column.idealHeadcount || 'Not published'}</p>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+)}

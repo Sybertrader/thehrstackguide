@@ -1,6 +1,7 @@
 # build output
 dist/
 .astro/
+seo-audit.csv
 
 # dependencies
 node_modules/

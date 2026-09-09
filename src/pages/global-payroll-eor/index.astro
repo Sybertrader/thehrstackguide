@@ -8,6 +8,7 @@ import ManualLeadModal from '../../components/ManualLeadModal.astro';
 import { loadComparisons } from '../../lib/comparisons';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref } from '../../lib/outbound';
 import { getToolsByCategory } from '../../lib/tools';
+import { categoryHubTitle } from '../../lib/seo';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
   month: 'long',
@@ -95,11 +96,12 @@ function parseReviewCount(value?: string): number | null {
 
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
 const siteRootUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
+const pageTitle = categoryHubTitle('Global Payroll & EOR', 'Teams');
 
 const collectionSchema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'Global Payroll & EOR Software Comparisons',
+  name: pageTitle,
   description:
     'Independent, data-driven comparisons of the leading Global Payroll and Employer of Record (EOR) platforms on compliance, global reach, and real pricing.',
   url: pageUrl,
@@ -145,7 +147,8 @@ const collectionSchema = {
 ---
 
 <Layout
-  title="Global Payroll & EOR (2026 Guide) | The HR Stack Guide"
+  title={pageTitle}
+  heading={pageTitle}
   description={`Independent ${currentMonthYear} global payroll and EOR software comparisons. Compare Deel, Rippling, Remote, Gusto, and more on real pricing, fees, and compliance.`}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
@@ -166,7 +169,7 @@ const collectionSchema = {
       </span>
 
       <h1 class="mt-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-        Global Payroll &amp; EOR
+        {pageTitle}
       </h1>
       <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
         Independent, data-driven comparisons of the platforms modern companies use to hire, pay, and stay compliant with employees and contractors across 150+ countries. Every rating, price, and compliance claim below is sourced from our {currentMonthYear} evaluation.

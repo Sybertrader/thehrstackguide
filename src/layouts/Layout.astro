@@ -5,9 +5,11 @@ import SpeedInsights from '@vercel/speed-insights/astro';
 import Footer from '../components/Footer.astro';
 import BaseHead from '../components/BaseHead.astro';
 import { ORGANIZATION_SAME_AS } from '../lib/organization';
+import JsonLdSchema from '../components/SEO/JsonLdSchema.astro';
+import type { SoftwareVendor } from '../components/SEO/JsonLdSchema.astro';
 
 export interface Props {
-  /** Document `<title>` / OG title. Must not match the page H1. */
+  /** Document `<title>`, Open Graph, and Twitter title. Must match 1:1. */
   title: string;
   description?: string;
   /**
@@ -25,6 +27,17 @@ export interface Props {
   includeOrganizationSchema?: boolean;
   /** Optimized WebP hrefs for above-the-fold logos (`<link rel="preload">`). */
   lcpImages?: string[];
+  /**
+   * Comparison-page vendors for ItemPage JSON-LD. When omitted (static routes,
+   * legal pages, category hubs), Layout emits a fallback WebPage schema.
+   */
+  vendorA?: SoftwareVendor;
+  vendorB?: SoftwareVendor;
+  /**
+   * Exact on-page `<h1>` for this route. Pages render the heading once;
+   * `<title>`, `og:title`, and `twitter:title` all use `title` 1:1.
+   */
+  heading?: string;
 }
 
 const {
@@ -33,14 +46,13 @@ const {
   noindex = false,
   includeOrganizationSchema = true,
   lcpImages = [],
+  vendorA,
+  vendorB,
 } = Astro.props;
 const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID ?? '';
 
-/** Full `<title>` keeps the brand suffix for Google; OG/Twitter titles do not. */
-const BRAND_TITLE_SUFFIX = ' | The HR Stack Guide';
-const socialTitle = title.endsWith(BRAND_TITLE_SUFFIX)
-  ? title.slice(0, -BRAND_TITLE_SUFFIX.length)
-  : title;
+/** Open Graph and Twitter titles match the document `<title>` 1:1. */
+const socialTitle = title;
 
 const ogImageUrl = 'https://www.thehrstackguide.com/og-banner.png';
 
@@ -88,7 +100,7 @@ const organizationSchema = {
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#ffffff" />
     <!-- Inter is self-hosted via @fontsource-variable/inter (`font-display: swap`). -->
-    <!-- Document title only. On-page H1s are set by each page template and must not match this string. -->
+    <!-- Document title matches og:title and twitter:title 1:1. On-page H1 is set by each page. -->
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     {noindex ? (
@@ -112,6 +124,13 @@ const organizationSchema = {
     {includeOrganizationSchema && (
       <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
     )}
+    <JsonLdSchema
+      title={title}
+      description={description ?? ''}
+      url={canonicalURL}
+      vendorA={vendorA}
+      vendorB={vendorB}
+    />
     <slot name="head" />
   </head>
   <body class="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 antialiased">

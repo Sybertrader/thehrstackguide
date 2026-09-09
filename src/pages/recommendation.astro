@@ -3,19 +3,21 @@ import Layout from '../layouts/Layout.astro';
 import RecommendationEngine from '../components/RecommendationEngine.astro';
 
 const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
+const pageTitle = 'Get an HR Tech Recommendation (2026) | The HR Stack Guide';
 
 // Indexable funnel: Layout emits a self-referential trailing-slash canonical.
 // Do not set noindex here — confirmation pages such as /thank-you/ do.
 ---
 
 <Layout
-  title="Get an HR Tech Recommendation (2026) | The HR Stack Guide"
+  title={pageTitle}
+  heading={pageTitle}
   description="Answer four quick questions about your category, headcount, budget, and workforce location to get an instant unbiased HR tech stack recommendation."
 >
   <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
     <RecommendationEngine
       headingLevel="h1"
-      headline="Get our recommendation"
+      headline={pageTitle}
       description="Answer 4 quick questions and see an instant recommendation tailored to your team."
       categoryPrefill={categoryPrefill}
     />

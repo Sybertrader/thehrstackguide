@@ -1,0 +1,73 @@
+---
+export interface SoftwareVendor {
+  name: string;
+  category?: string;
+  rating?: string | number;
+  reviewCount?: string | number;
+  priceStartingAt?: string;
+}
+
+export interface Props {
+  title: string;
+  description: string;
+  url: string;
+  vendorA?: SoftwareVendor;
+  vendorB?: SoftwareVendor;
+}
+
+const { title, description, url, vendorA, vendorB } = Astro.props;
+
+function hasRating(vendor: SoftwareVendor): boolean {
+  return vendor.rating != null && vendor.rating !== '' && vendor.reviewCount != null && vendor.reviewCount !== '';
+}
+
+function softwareApplication(vendor: SoftwareVendor) {
+  const node: Record<string, unknown> = {
+    '@type': 'SoftwareApplication',
+    name: vendor.name,
+    operatingSystem: 'Web-Based',
+    applicationCategory: vendor.category || 'BusinessApplication',
+  };
+
+  if (hasRating(vendor)) {
+    node.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: vendor.rating,
+      reviewCount: vendor.reviewCount,
+    };
+  }
+
+  if (vendor.priceStartingAt) {
+    node.offers = {
+      '@type': 'Offer',
+      price: vendor.priceStartingAt,
+      priceCurrency: 'USD',
+    };
+  }
+
+  return node;
+}
+
+const itemPageSchema = vendorA
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'ItemPage',
+      name: title,
+      description,
+      url,
+      mainEntity: [softwareApplication(vendorA), ...(vendorB ? [softwareApplication(vendorB)] : [])],
+    }
+  : null;
+
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: title,
+  description,
+  url,
+};
+
+const schema = itemPageSchema ?? webPageSchema;
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -61,7 +61,28 @@
           "Get offboarding and contract-termination terms in writing, since notice-period payroll continues to bill throughout the wind-down."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "Xero",
+      "QuickBooks",
+      "NetSuite",
+      "Okta",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "50–1000+ enterprise"
   },
   "gusto": {
     "category": "payroll-eor",
@@ -120,7 +141,25 @@
           "Comparing $6/user against a $599/employee EOR rate is not like-for-like. The two products solve different problems."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA",
+      "HIPAA"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "QuickBooks",
+      "Xero",
+      "Zapier",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "Business-hours Live Chat, Dedicated CSM (Plus+), Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "1–50 seats"
   },
   "multiplier": {
     "category": "payroll-eor",
@@ -184,7 +223,26 @@
           "Verify FX handling and any deposit requirement for your payout corridors, since a low platform fee can be quietly offset by conversion spread."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "Xero",
+      "QuickBooks",
+      "Zapier",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "50–250 seats"
   },
   "oyster": {
     "category": "payroll-eor",
@@ -245,7 +303,26 @@
           "The 30-day free trial applies to contractor management, not to EOR hiring."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "Xero",
+      "NetSuite",
+      "Okta",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "50–250 seats"
   },
   "papaya": {
     "category": "payroll-eor",
@@ -309,7 +386,27 @@
           "Complex benefit administration is an add-on rather than bundled into the base rate. Do not blend EOR, contractor, and payroll-only fees when building a TCO comparison."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Workday",
+      "SAP",
+      "NetSuite",
+      "Xero",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Dedicated CSM, White-glove implementation, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "250–1000+ enterprise"
   },
   "payoneer-workforce-management": {
     "category": "payroll-eor",
@@ -372,7 +469,24 @@
           "Against a $499 to $699 per-employee EOR rate this looks dramatically cheaper, but it buys a different service with the compliance risk retained by you."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "PCI DSS",
+      "GDPR",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Xero",
+      "QuickBooks",
+      "NetSuite",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Business-hours Live Chat, Ticketed support, Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "5–250 contractor seats"
   },
   "plane": {
     "category": "payroll-eor",
@@ -437,7 +551,24 @@
           "Confirm deposit, prefunding, and offboarding terms in writing, since transparent monthly pricing does not by itself tell you the working-capital requirement."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "QuickBooks",
+      "Zapier",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "Live Chat, Dedicated CSM (Growth+), Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "1–50 seats"
   },
   "remote": {
     "category": "payroll-eor",
@@ -498,7 +629,27 @@
           "Confirm deposit and prefunding requirements for your markets, since these vary and are a cash-flow consideration rather than a line-item fee."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "Xero",
+      "QuickBooks",
+      "NetSuite",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "50–1000+ enterprise"
   },
   "rippling": {
     "category": "payroll-eor",
@@ -557,7 +708,27 @@
           "Device management and app provisioning are genuine cost offsets if they replace separate IT tooling, so count that on the other side of the ledger."
         ]
       }
-    }
+    },
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA",
+      "CCPA",
+      "HMRC RTI"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "Okta",
+      "QuickBooks",
+      "NetSuite",
+      "Xero",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "50–1000+ enterprise"
   },
   "ashby": {
     "category": "ats",
@@ -577,7 +748,25 @@
     ],
     "starting_price": "$400/mo",
     "free_trial": false,
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA",
+      "EEOC / OFCCP"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "LinkedIn",
+      "Okta",
+      "Workday",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Dedicated CSM, Ticketed support, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "50–250 seats"
   },
   "greenhouse": {
     "category": "ats",
@@ -597,7 +786,26 @@
     ],
     "starting_price": "Custom quote",
     "free_trial": false,
-    "target_segment": "Global/Enterprise"
+    "target_segment": "Global/Enterprise",
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "CCPA",
+      "EEOC / OFCCP"
+    ],
+    "integrations": [
+      "Slack",
+      "Workday",
+      "SAP SuccessFactors",
+      "Okta",
+      "LinkedIn",
+      "Checkr",
+      "REST API"
+    ],
+    "supportSLA": "24/7 Enterprise Support, Dedicated CSM, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "250–1000+ enterprise"
   },
   "lever": {
     "category": "ats",
@@ -617,7 +825,24 @@
     ],
     "starting_price": "Custom quote",
     "free_trial": false,
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA",
+      "EEOC"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "LinkedIn",
+      "Okta",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Dedicated CSM, Ticketed support, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "50–250 seats"
   },
   "workable": {
     "category": "ats",
@@ -637,7 +862,24 @@
     ],
     "starting_price": "$299/mo",
     "free_trial": true,
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA",
+      "EEOC"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "LinkedIn",
+      "Indeed",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Live Chat, Dedicated CSM (Premier+), Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "1–50 seats"
   },
   "breezy-hr": {
     "category": "ats",
@@ -660,7 +902,23 @@
     "affiliate_url": "https://breezyhr.partnerlinks.io/ahid34bxoa2w",
     "has_active_affiliate": true,
     "website": "https://breezyhr.partnerlinks.io/ahid34bxoa2w",
-    "target_segment": "Startups 1–20"
+    "target_segment": "Startups 1–20",
+    "compliance": [
+      "GDPR",
+      "CCPA",
+      "EEOC"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "LinkedIn",
+      "Indeed",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Live Chat (paid plans), Email support, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "1–50 seats"
   },
   "jazzhr": {
     "category": "ats",
@@ -680,7 +938,24 @@
     ],
     "starting_price": "$75/mo",
     "free_trial": true,
-    "target_segment": "Startups 1–20"
+    "target_segment": "Startups 1–20",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA",
+      "EEOC / OFCCP"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "Indeed",
+      "ZipRecruiter",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Email support, Ticketed SLA, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "1–50 seats"
   },
   "recruitee": {
     "category": "ats",
@@ -703,7 +978,24 @@
     "affiliate_url": "https://join.tellent.com/t5yy8cn4dn30",
     "has_active_affiliate": true,
     "is_partner": true,
-    "target_segment": "Startups 1–20"
+    "target_segment": "Startups 1–20",
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "LinkedIn",
+      "Okta",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Live Chat, Dedicated CSM (Scale+), Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "1–50 seats"
   },
   "bamboohr-ats": {
     "name": "BambooHR",
@@ -726,7 +1018,25 @@
     "free_trial": true,
     "website": "https://www.bamboohr.com/?eid=fopydE",
     "affiliate_url": "https://www.bamboohr.com/?eid=fopydE",
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "HIPAA",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "QuickBooks",
+      "Xero",
+      "Okta",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Phone + Live Chat, Dedicated CSM (Pro), Knowledge Base",
+    "deploymentType": "Cloud / SaaS / Mobile Native",
+    "idealHeadcount": "50–250 seats"
   },
   "15five": {
     "category": "performance-management",
@@ -746,7 +1056,23 @@
     ],
     "starting_price": "$4/user/mo",
     "free_trial": true,
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Microsoft Teams",
+      "Google Workspace",
+      "Okta",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Live Chat, Dedicated CSM (higher tiers), Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "50–250 seats"
   },
   "performyard": {
     "category": "performance-management",
@@ -769,7 +1095,23 @@
     "hasFreeTrial": false,
     "isManualLead": true,
     "partner_landing_url": "https://www.performyard.com",
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Microsoft Teams",
+      "BambooHR",
+      "ADP",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "Dedicated CSM, Ticketed SLA, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "50–250 seats"
   },
   "leapsome": {
     "category": "performance-management",
@@ -789,7 +1131,24 @@
     ],
     "starting_price": "$8/user/mo",
     "free_trial": true,
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Microsoft Teams",
+      "Personio",
+      "DATEV",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "Live Chat, Dedicated CSM, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "50–250 seats"
   },
   "lattice": {
     "category": "performance-management",
@@ -812,7 +1171,25 @@
     "affiliate_url": "https://lattice.com/demo?utm_source=The-HR-Stack-Guide&utm_medium=partner&utm_campaign=referral",
     "has_active_affiliate": true,
     "website": "https://lattice.com/demo?utm_source=The-HR-Stack-Guide&utm_medium=partner&utm_campaign=referral",
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "HIPAA",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Microsoft Teams",
+      "Workday",
+      "Greenhouse",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "Dedicated CSM, Enterprise SLA, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "250–1000+ enterprise"
   },
   "culture-amp": {
     "category": "performance-management",
@@ -832,7 +1209,24 @@
     ],
     "starting_price": "Custom quote",
     "free_trial": false,
-    "target_segment": "Global/Enterprise"
+    "target_segment": "Global/Enterprise",
+    "compliance": [
+      "SOC2 Type II",
+      "ISO 27001",
+      "GDPR",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Microsoft Teams",
+      "Workday",
+      "SAP",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "Dedicated CSM, Enterprise SLA, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "250–1000+ enterprise"
   },
   "reflektive": {
     "category": "performance-management",
@@ -857,7 +1251,23 @@
     "badge": "PeopleFluent (formerly Reflektive)",
     "website": "https://www.peoplefluent.com/",
     "affiliate_url": "https://www.peoplefluent.com/",
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Microsoft Teams",
+      "Workday",
+      "SAP SuccessFactors",
+      "Okta",
+      "REST API"
+    ],
+    "supportSLA": "Dedicated CSM, Ticketed SLA, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "250–1000+ enterprise"
   },
   "clearcompany": {
     "name": "ClearCo",
@@ -882,6 +1292,22 @@
     ],
     "starting_price": "Custom quote",
     "free_trial": false,
-    "target_segment": "Scaleups 50–250"
+    "target_segment": "Scaleups 50–250",
+    "compliance": [
+      "SOC2 Type II",
+      "GDPR",
+      "CCPA"
+    ],
+    "integrations": [
+      "Slack",
+      "Google Workspace",
+      "ADP",
+      "Okta",
+      "Zapier",
+      "REST API"
+    ],
+    "supportSLA": "Dedicated CSM, Ticketed SLA, Knowledge Base",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "50–250 seats"
   }
 }
