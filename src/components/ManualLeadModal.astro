@@ -73,7 +73,7 @@ const WEB3FORMS_KEY =
             <input
               type="text"
               id={`fname-${modalId}`}
-              name="first_name"
+              name="firstName"
               required
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
               placeholder="Sarah"
@@ -84,7 +84,7 @@ const WEB3FORMS_KEY =
             <input
               type="text"
               id={`lname-${modalId}`}
-              name="last_name"
+              name="lastName"
               required
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
               placeholder="Jenkins"
@@ -98,7 +98,7 @@ const WEB3FORMS_KEY =
           <input
             type="email"
             id={`email-${modalId}`}
-            name="work_email"
+            name="email"
             required
             class="work-email-input w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
             placeholder="sarah@company.com"
@@ -113,7 +113,7 @@ const WEB3FORMS_KEY =
             <input
               type="text"
               id={`company-${modalId}`}
-              name="company_name"
+              name="company"
               required
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
               placeholder="Acme Corp"
@@ -124,7 +124,7 @@ const WEB3FORMS_KEY =
             <input
               type="text"
               id={`role-${modalId}`}
-              name="job_title"
+              name="jobTitle"
               required
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
               placeholder="HR Director"
@@ -138,7 +138,7 @@ const WEB3FORMS_KEY =
             <label for={`size-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Employee Count *</label>
             <select
               id={`size-${modalId}`}
-              name="company_size"
+              name="employeeCount"
               required
               class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none bg-white transition"
             >
@@ -186,7 +186,7 @@ const WEB3FORMS_KEY =
           <label for={`notes-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Primary Requirements / Timeline</label>
           <textarea
             id={`notes-${modalId}`}
-            name="notes"
+            name="requirements"
             rows="2"
             class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition resize-none"
             placeholder="Looking to switch within 30 days..."
@@ -266,35 +266,10 @@ const WEB3FORMS_KEY =
       });
     }
 
-    /**
-     * Fire-and-forget POST that must never block the redirect or surface an
-     * error to the visitor. sendBeacon keeps the request alive across the
-     * navigation; the fetch fallback uses no-cors + keepalive for the same
-     * reason. Neither path can be inspected for success, so callers must not
-     * treat a return value as delivery confirmation.
-     */
-    function dispatchInBackground(url, payload) {
-      var body = JSON.stringify(payload);
-
-      try {
-        if (navigator.sendBeacon) {
-          var blob = new Blob([body], { type: 'application/json' });
-          if (navigator.sendBeacon(url, blob)) return;
-        }
-      } catch (_) {
-        // Fall through to fetch below.
-      }
-
-      try {
-        fetch(url, {
-          method: 'POST',
-          mode: 'no-cors',
-          keepalive: true,
-          body: body,
-        }).catch(function () {});
-      } catch (_) {
-        // Nothing left to try — never interrupt the handoff.
-      }
+    /** Plain object of every named field on the submitted modal form. */
+    function payloadFromForm(formElement) {
+      var formData = new FormData(formElement);
+      return Object.fromEntries(formData.entries());
     }
 
     document.addEventListener('click', function(e) {
@@ -346,11 +321,11 @@ const WEB3FORMS_KEY =
       }
     }, { passive: false });
 
-    document.addEventListener('submit', async function(e) {
-      var form = e.target;
+    document.addEventListener('submit', async function(event) {
+      var form = event.target;
       if (!form || !form.id || form.id.indexOf('form-lead-modal-') !== 0) return;
 
-      e.preventDefault();
+      event.preventDefault();
 
       var emailInput = form.querySelector('.work-email-input');
       var emailError = form.querySelector('.email-error');
@@ -381,10 +356,10 @@ const WEB3FORMS_KEY =
       // Read through FormData scoped to the submitted form: comparison pages
       // render two modal instances, so a document-wide id lookup could pick up
       // the other vendor's fields.
-      var formData = new FormData(form);
-      var firstName = String(formData.get('first_name') || '').trim();
-      var lastName = String(formData.get('last_name') || '').trim();
-      var vendorId = String(formData.get('vendorId') || (backdrop && backdrop.getAttribute('data-vendor-id')) || '').trim();
+      var fields = payloadFromForm(form);
+      var firstName = String(fields.firstName || '').trim();
+      var lastName = String(fields.lastName || '').trim();
+      var vendorId = String(fields.vendorId || (backdrop && backdrop.getAttribute('data-vendor-id')) || '').trim();
       var vendor = vendorId.toLowerCase();
 
       if (EMAIL_SEND_VENDORS.indexOf(vendor) !== -1) {
@@ -393,46 +368,52 @@ const WEB3FORMS_KEY =
           console.error('Web3Forms access key missing — set PUBLIC_WEB3FORMS_KEY. Lead will not be emailed.');
         }
 
-        var company = String(formData.get('company_name') || '').trim();
+        var company = String(fields.company || '').trim();
         var emailPayload = {
           access_key: accessKey,
           subject: 'New Lead: ' + vendor.toUpperCase() + ' - ' + company,
           from_name: 'The HR Stack Guide',
           firstName: firstName,
           lastName: lastName,
-          email: String(formData.get('work_email') || '').trim(),
+          email: String(fields.email || '').trim(),
           company: company,
-          jobTitle: String(formData.get('job_title') || '').trim(),
-          employeeCount: String(formData.get('company_size') || '').trim(),
-          region: String(formData.get('region') || '').trim(),
-          phone: String(formData.get('phone') || '').trim(),
-          requirements: String(formData.get('notes') || '').trim(),
+          jobTitle: String(fields.jobTitle || '').trim(),
+          employeeCount: String(fields.employeeCount || '').trim(),
+          region: String(fields.region || '').trim(),
+          phone: String(fields.phone || '').trim(),
+          requirements: String(fields.requirements || '').trim(),
           vendor: vendor,
         };
 
-        // PerformYard leads go straight from the browser to Shane's Zapier catch
-        // hook, then hand the visitor off to PerformYard.
+        // PerformYard: text/plain JSON POST avoids a CORS preflight; Zapier
+        // still parses the JSON keys. Redirect only after await fetch settles.
         if (vendor === 'performyard') {
-          dispatchInBackground(PERFORMYARD_ZAPIER_WEBHOOK, {
-            firstName: firstName,
-            lastName: lastName,
-            email: String(formData.get('work_email') || '').trim(),
-            company: String(formData.get('company_name') || '').trim(),
-            jobTitle: String(formData.get('job_title') || '').trim(),
-            employeeCount: String(formData.get('company_size') || '').trim(),
-            region: String(formData.get('region') || '').trim(),
-            phone: String(formData.get('phone') || '').trim(),
-            requirements: String(formData.get('notes') || '').trim(),
-            source: 'thehrstackguide.com',
-            timestamp: new Date().toISOString(),
-          });
+          const rawData = Object.fromEntries(new FormData(event.target).entries());
+          const { vendorId, target_software, partnerLandingUrl, brandName, ...cleanPayload } = rawData;
+          console.log('PerformYard Zapier payload', cleanPayload);
 
-          sendWeb3FormsEmail(emailPayload, true).catch(function (err) {
-            console.error('Web3Forms notification failed', err);
-          });
+          try {
+            await fetch(PERFORMYARD_ZAPIER_WEBHOOK, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'text/plain;charset=utf-8',
+              },
+              body: JSON.stringify(cleanPayload),
+            });
 
-          trackGenerateLead(vendor);
-          window.location.href = PERFORMYARD_REDIRECT_URL;
+            sendWeb3FormsEmail(emailPayload, true).catch(function (err) {
+              console.error('Web3Forms notification failed', err);
+            });
+            trackGenerateLead(vendor);
+          } catch (zapErr) {
+            console.error('PerformYard Zapier webhook failed', zapErr);
+          } finally {
+            if (backdrop) {
+              backdrop.classList.add('hidden');
+              document.body.style.overflow = '';
+            }
+            window.location.href = PERFORMYARD_REDIRECT_URL;
+          }
           return;
         }
 
@@ -460,19 +441,19 @@ const WEB3FORMS_KEY =
       try {
         var payload = {
           vendorId: vendorId,
-          brandName: String(formData.get('brandName') || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
+          brandName: String(fields.brandName || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
           firstName: firstName,
           lastName: lastName,
           fullName: (firstName + ' ' + lastName).trim(),
-          workEmail: String(formData.get('work_email') || '').trim(),
-          companyName: String(formData.get('company_name') || '').trim(),
-          jobTitle: String(formData.get('job_title') || '').trim(),
-          headcount: String(formData.get('company_size') || '').trim(),
-          region: String(formData.get('region') || '').trim(),
-          phone: String(formData.get('phone') || '').trim(),
-          needs: String(formData.get('notes') || '').trim(),
+          workEmail: String(fields.email || '').trim(),
+          companyName: String(fields.company || '').trim(),
+          jobTitle: String(fields.jobTitle || '').trim(),
+          headcount: String(fields.employeeCount || '').trim(),
+          region: String(fields.region || '').trim(),
+          phone: String(fields.phone || '').trim(),
+          needs: String(fields.requirements || '').trim(),
           partnerLandingUrl:
-            String(formData.get('partnerLandingUrl') || (backdrop && backdrop.getAttribute('data-partner-landing-url')) || '').trim() ||
+            String(fields.partnerLandingUrl || (backdrop && backdrop.getAttribute('data-partner-landing-url')) || '').trim() ||
             null,
           source: 'The HR Stack Guide',
         };
