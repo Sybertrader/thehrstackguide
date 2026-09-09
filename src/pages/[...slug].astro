@@ -581,16 +581,17 @@ const richSnippetSchema = [
   }));
 
 /**
- * Document `<title>` is 50–60 characters: `[A] vs [B] (2026): [Category] Comparison`.
- * The single `<h1>` is `[A] vs [B] Comparison & Analysis` using the same
- * vendor names as the title so the core `A vs B` phrase matches 1:1.
+ * Hub `<title>`: `[A] vs [B] (2026): [Category] Comparison`.
+ * Hub `<h1>`: `[A] vs [B] Comparison & Analysis`.
+ * Persona child title/H1 both include `for [Segment]` so the core phrase matches 1:1.
  */
 const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
 const pairName = `${comparison.tool_a_name} vs ${comparison.tool_b_name}`;
 const { title: pageTitle, heading: pageHeading } = comparisonSeo(
   { id: comparison.tool_a_id, name: comparison.tool_a_name },
   { id: comparison.tool_b_id, name: comparison.tool_b_name },
-  hubFamily
+  hubFamily,
+  isChildRoute ? modifierLabel : undefined
 );
 const pageDescription = isHub
   ? `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for technology buyers, startups, and scaleups. Feature matrix, pricing nuance, and specialized use-case evaluations.`

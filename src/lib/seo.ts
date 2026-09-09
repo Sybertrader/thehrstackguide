@@ -28,6 +28,13 @@ const COMPARISON_CATEGORY_LABELS: Record<Exclude<SeoFamily, null>, string[]> = {
   pm: ['Performance Mgmt', 'Performance', 'HR', 'PM'],
 };
 
+/** Longer-first closers so short pairs still land in the 50–60 character title band. */
+const PERSONA_GUIDE_LABELS: Record<Exclude<SeoFamily, null>, string[]> = {
+  payroll: ['Payroll & EOR Guide', 'Global Payroll Guide', 'Payroll Guide', 'EOR Guide', 'Guide'],
+  ats: ['ATS Hiring Guide', 'Recruiting Guide', 'ATS Guide', 'Hiring Guide', 'Guide'],
+  pm: ['Performance Guide', 'Perf Mgmt Guide', 'PM Guide', 'HR Guide', 'Guide'],
+};
+
 function firstInRange(candidates: string[]): string {
   const inRange = candidates.filter((title) => title.length >= SEO_TITLE_MIN && title.length <= SEO_TITLE_MAX);
   if (inRange.length > 0) return inRange[0];
@@ -37,20 +44,50 @@ function firstInRange(candidates: string[]): string {
 }
 
 /**
- * 1-vs-1 pattern: `[Vendor A] vs [Vendor B] (2026): [Category] Comparison`
+ * 1-vs-1 hub: `[Vendor A] vs [Vendor B] (2026): [Category] Comparison`
+ * Persona child: `[Vendor A] vs [Vendor B] for [Segment] (2026): [Category] Guide`
  */
-export function comparisonPageTitle(vendorA: string, vendorB: string, family: SeoFamily): string {
+export function comparisonPageTitle(
+  vendorA: string,
+  vendorB: string,
+  family: SeoFamily,
+  personaLabel?: string | null
+): string {
+  const pair = `${vendorA} vs ${vendorB}`;
+  const year = `(${SEO_TITLE_YEAR})`;
+
+  if (personaLabel) {
+    const segment = `for ${personaLabel}`;
+    const labels = family ? PERSONA_GUIDE_LABELS[family] : ['Guide'];
+    const candidates = [
+      ...labels.map((label) => `${pair} ${segment} ${year}: ${label}`),
+      `${pair} ${segment} ${year} Guide`,
+      `${pair} ${segment} ${year}`,
+    ];
+    return firstInRange(candidates);
+  }
+
   const labels = family ? COMPARISON_CATEGORY_LABELS[family] : ['HR', 'Software'];
   const candidates = [
-    ...labels.map((label) => `${vendorA} vs ${vendorB} (${SEO_TITLE_YEAR}): ${label} Comparison`),
-    `${vendorA} vs ${vendorB} (${SEO_TITLE_YEAR}) Comparison`,
+    ...labels.map((label) => `${pair} ${year}: ${label} Comparison`),
+    `${pair} ${year} Comparison`,
   ];
   return firstInRange(candidates);
 }
 
-/** Exact-match H1 for 1-vs-1 pages. Uses the same vendor names as `<title>`. */
-export function comparisonPageHeading(vendorA: string, vendorB: string): string {
-  return `${vendorA} vs ${vendorB} Comparison & Analysis`;
+/**
+ * Hub H1: `[A] vs [B] Comparison & Analysis`
+ * Persona H1: `[A] vs [B] for [Segment]: Comparison & Analysis`
+ * Uses the same vendor names (and persona phrase) as `<title>`.
+ */
+export function comparisonPageHeading(
+  vendorA: string,
+  vendorB: string,
+  personaLabel?: string | null
+): string {
+  const pair = `${vendorA} vs ${vendorB}`;
+  if (personaLabel) return `${pair} for ${personaLabel}: Comparison & Analysis`;
+  return `${pair} Comparison & Analysis`;
 }
 
 /**
@@ -75,12 +112,13 @@ export function categoryHubHeading(title: string): string {
 export function comparisonSeo(
   toolA: { id: string; name: string },
   toolB: { id: string; name: string },
-  family: SeoFamily
+  family: SeoFamily,
+  personaLabel?: string | null
 ): { title: string; heading: string } {
   const nameA = titleVendorName(toolA.id, toolA.name);
   const nameB = titleVendorName(toolB.id, toolB.name);
   return {
-    title: comparisonPageTitle(nameA, nameB, family),
-    heading: comparisonPageHeading(nameA, nameB),
+    title: comparisonPageTitle(nameA, nameB, family, personaLabel),
+    heading: comparisonPageHeading(nameA, nameB, personaLabel),
   };
 }
