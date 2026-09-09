@@ -200,16 +200,27 @@ export function vendorCtaDestinationType(href: string, opensModal = false): Vend
 }
 
 /** Inline `onclick` body for the unified GA4 `vendor_cta_click` event. */
-export function vendorCtaOnclick(vendorId: string, destinationType: VendorCtaDestination): string {
-  return `if(typeof window.gtag==='function'){window.gtag('event','vendor_cta_click',{'vendor_id':${JSON.stringify(vendorId)},'destination_type':${JSON.stringify(destinationType)},'page_location':window.location.pathname});}`;
+export function vendorCtaOnclick(
+  vendorId: string,
+  destinationType: VendorCtaDestination,
+  extras: { vendorName?: string; ctaLocation?: string } = {},
+): string {
+  return `if(typeof window.gtag==='function'){window.gtag('event','vendor_cta_click',{'vendor_id':${JSON.stringify(vendorId)},'vendor_name':${JSON.stringify(extras.vendorName ?? '')},'cta_location':${JSON.stringify(extras.ctaLocation ?? '')},'destination_type':${JSON.stringify(destinationType)},'page_location':window.location.pathname});}`;
 }
 
 /** Inline `onclick` for outbound affiliate / UTM CTAs. */
-export function vendorOutboundOnclick(vendorId: string, destinationType: VendorCtaDestination = 'direct_outbound'): string {
-  return vendorCtaOnclick(vendorId, destinationType);
+export function vendorOutboundOnclick(
+  vendorId: string,
+  destinationType: VendorCtaDestination = 'direct_outbound',
+  extras: { vendorName?: string; ctaLocation?: string } = {},
+): string {
+  return vendorCtaOnclick(vendorId, destinationType, extras);
 }
 
 /** Inline `onclick` for lead-capture CTAs that open the intro modal. */
-export function vendorLeadModalOnclick(vendorId: string): string {
-  return vendorCtaOnclick(vendorId, 'lead_modal');
+export function vendorLeadModalOnclick(
+  vendorId: string,
+  extras: { vendorName?: string; ctaLocation?: string } = {},
+): string {
+  return vendorCtaOnclick(vendorId, 'lead_modal', extras);
 }

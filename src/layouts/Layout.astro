@@ -222,10 +222,17 @@ const organizationSchema = {
         const cta = target.closest('.js-affiliate-cta');
         if (!cta || typeof window.gtag !== 'function') return;
 
+        const vendorId = cta.getAttribute('data-vendor-id') || '';
+        const vendorName =
+          cta.getAttribute('data-vendor-name') || cta.getAttribute('data-track-vendor') || '';
+        const ctaLocation =
+          cta.getAttribute('data-cta-location') || cta.getAttribute('data-track-location') || '';
+        if (!vendorName || !ctaLocation) return;
+
         window.gtag('event', 'vendor_cta_click', {
-          vendor_id: cta.getAttribute('data-vendor-id') || '',
-          vendor_name: cta.getAttribute('data-track-vendor') || '',
-          cta_location: cta.getAttribute('data-track-location') || '',
+          vendor_id: vendorId,
+          vendor_name: vendorName,
+          cta_location: ctaLocation,
           destination_type: cta.getAttribute('data-destination-type') || '',
           link_url: cta.getAttribute('href') || '',
           page_location: window.location.pathname,

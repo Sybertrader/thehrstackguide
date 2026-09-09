@@ -18,9 +18,11 @@ interface Props {
   href?: string;
   /** When set, the CTA opens the lead-capture modal instead of leaving the site. */
   modalId?: string;
+  /** Optional inline click handler (used on `/go/` shells that do not load Layout). */
+  onclick?: string;
 }
 
-const { href = '', vendorName, vendorId = '', location = 'body_link', class: className = '', modalId = '' } = Astro.props;
+const { href = '', vendorName, vendorId = '', location = 'body_link', class: className = '', modalId = '', onclick = '' } = Astro.props;
 const opensModal = Boolean(modalId);
 const resolvedVendorId = vendorId || vendorName.toLowerCase().replace(/\s+/g, '-');
 const resolvedHref = ensureAffiliateGoTrailingSlash(href);
@@ -39,9 +41,11 @@ const vendorHomeUrl = nonAffiliateVendorHomeUrl(resolvedVendorId);
       data-vendor-id={resolvedVendorId}
       data-vendor-name={vendorName}
       data-vendor-url={vendorHomeUrl || undefined}
+      data-cta-location={location}
       data-track-vendor={vendorName}
       data-track-location={location}
       data-destination-type={destinationType}
+      onclick={onclick || undefined}
     >
       <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
     </button>
@@ -53,11 +57,13 @@ const vendorHomeUrl = nonAffiliateVendorHomeUrl(resolvedVendorId);
       class:list={['js-affiliate-cta', className]}
       data-vendor-id={resolvedVendorId}
       data-vendor-name={vendorName}
+      data-cta-location={location}
       data-track-vendor={vendorName}
       data-track-location={location}
       data-destination-type={destinationType}
       data-vendor-outbound
       data-astro-prefetch={isAffiliateRedirect(resolvedHref) ? 'false' : undefined}
+      onclick={onclick || undefined}
     >
       <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
     </a>

@@ -1451,10 +1451,14 @@ const heroLogoPreloads = (
       import { track } from '@vercel/analytics';
 
       if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-        document.querySelectorAll('.js-affiliate-cta[data-track-vendor]').forEach((link) => {
+        document.querySelectorAll('.js-affiliate-cta[data-track-vendor], .js-affiliate-cta[data-vendor-name]').forEach((link) => {
           link.addEventListener('click', () => {
-            const vendor = link.getAttribute('data-track-vendor');
-            const location = link.getAttribute('data-track-location') ?? 'unknown';
+            const vendor =
+              link.getAttribute('data-vendor-name') || link.getAttribute('data-track-vendor');
+            const location =
+              link.getAttribute('data-cta-location') ||
+              link.getAttribute('data-track-location') ||
+              'unknown';
             const url = link.getAttribute('href');
 
             if (!vendor || !url) return;

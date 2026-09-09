@@ -1,6 +1,8 @@
 ---
+import VendorButton from '../../components/VendorButton.astro';
 import { affiliateLinks } from '../../config/affiliates';
-import { VENDOR_OUTBOUND_REL, vendorOutboundOnclick } from '../../lib/outbound';
+import { vendorOutboundOnclick } from '../../lib/outbound';
+import { loadComparisons } from '../../lib/comparisons';
 import { isLiveVendorId } from '../../lib/tools';
 
 export function getStaticPaths() {
@@ -14,6 +16,18 @@ export function getStaticPaths() {
 
 const { slug } = Astro.params;
 const { targetUrl } = Astro.props;
+const vendorId = slug ?? '';
+
+const match = loadComparisons().find(
+  (row) => row.tool_a_id === vendorId || row.tool_b_id === vendorId,
+);
+const vendorName =
+  match?.tool_a_id === vendorId
+    ? match.tool_a_name
+    : match?.tool_b_id === vendorId
+      ? match.tool_b_name
+      : vendorId;
+const ctaLocation = 'go_redirect_fallback';
 
 Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 ---
@@ -39,19 +53,17 @@ Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
   <div class="text-center p-6">
     <p class="text-lg font-medium mb-2">Redirecting to partner site...</p>
     <p class="text-sm text-slate-500">
-      If you are not redirected automatically, 
-      <a
+      If you are not redirected automatically,
+      <VendorButton
         href={targetUrl}
-        rel={VENDOR_OUTBOUND_REL}
-        target="_blank"
-        data-astro-prefetch="false"
-        class="js-affiliate-cta text-blue-600 underline hover:text-blue-800"
-        data-vendor-id={slug ?? ''}
-        data-track-vendor={slug ?? ''}
-        data-track-location="go_redirect_fallback"
-        data-destination-type="direct_outbound"
-        onclick={vendorOutboundOnclick(slug ?? '', 'direct_outbound')}
-      >click here</a>.
+        vendorId={vendorId}
+        vendorName={vendorName}
+        location={ctaLocation}
+        class="text-blue-600 underline hover:text-blue-800"
+        onclick={vendorOutboundOnclick(vendorId, 'direct_outbound', { vendorName, ctaLocation })}
+      >
+        click here
+      </VendorButton>.
     </p>
   </div>
 </body>
