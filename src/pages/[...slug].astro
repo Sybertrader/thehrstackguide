@@ -51,9 +51,10 @@ import {
  * Vendors whose CTAs open the lead capture modal (see
  * src/components/ManualLeadModal.astro) instead of linking out.
  * `isManualLeadBrand` in src/lib/outbound.ts is the allowlist.
- * EMAIL_SEND_VENDORS in the modal (Lever, JazzHR, Culture Amp, PerformYard)
- * is a separate Web3Forms path — the nine non-affiliate brands post to
- * /api/leads. Zapier is PerformYard-only.
+ * EMAIL_SEND_VENDORS in the modal covers Lever, JazzHR, Culture Amp,
+ * PerformYard, and the nine non-affiliate brands (Web3Forms). The nine
+ * then also POST /api/leads and redirect to data-vendor-url.
+ * Zapier is PerformYard-only.
  */
 
 interface ComparisonPageProps {

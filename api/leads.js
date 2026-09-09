@@ -33,7 +33,6 @@ export default async function handler(req, res) {
     const web3formsKey =
       process.env.WEB3FORMS_ACCESS_KEY || '9e3cce58-b062-4436-9834-24ba34373412';
 
-    // Standard email fallback / internal record (Web3Forms).
     const emailPayload = {
       access_key: web3formsKey,
       subject: `New Referral Inquiry: ${brandName} via The HR Stack Guide`,
@@ -52,16 +51,20 @@ export default async function handler(req, res) {
       source: 'The HR Stack Guide',
     };
 
-    const emailRes = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(emailPayload),
-    });
+    // Client-side modal already emailed when clientNotified is set, so skip
+    // a duplicate inbox alert and still accept the log.
+    if (!body.clientNotified) {
+      const emailRes = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(emailPayload),
+      });
 
-    if (!emailRes.ok) {
-      const detail = await emailRes.text().catch(() => '');
-      console.error('Web3Forms error', emailRes.status, detail);
-      return res.status(502).json({ error: 'Failed to record lead email notification' });
+      if (!emailRes.ok) {
+        const detail = await emailRes.text().catch(() => '');
+        console.error('Web3Forms error', emailRes.status, detail);
+        return res.status(502).json({ error: 'Failed to record lead email notification' });
+      }
     }
 
     // PerformYard → Zapier → Salesforce (optional env-configured webhook).

@@ -245,11 +245,25 @@ const WEB3FORMS_KEY =
     var PERFORMYARD_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/17923801/46vtmid/';
     var PERFORMYARD_REDIRECT_URL = 'https://www.performyard.com/';
 
-    // Client-side Web3Forms path for existing partner brands. The nine
-    // non-affiliate vendors (plane, rippling, greenhouse, workable, 15five,
-    // leapsome, peoplefluent, clearcompany, oyster-hr) are NOT listed here
-    // so they post to /api/leads. Zapier is gated on vendorId === 'performyard'.
-    var EMAIL_SEND_VENDORS = ['lever', 'jazzhr', 'culture-amp', 'performyard'];
+    // Client-side Web3Forms (same payload as Lever / JazzHR / Culture Amp).
+    // PerformYard is also listed so it can send the email after Zapier.
+    // The nine non-affiliate vendors use this path too, then POST /api/leads
+    // and redirect. Zapier stays gated on vendorId === 'performyard'.
+    var EMAIL_SEND_VENDORS = [
+      'lever',
+      'jazzhr',
+      'culture-amp',
+      'performyard',
+      'plane',
+      'rippling',
+      'greenhouse',
+      'workable',
+      '15five',
+      'leapsome',
+      'peoplefluent',
+      'clearcompany',
+      'oyster-hr',
+    ];
     var REQUEST_DEMO_VENDORS = [
       'plane',
       'rippling',
@@ -486,9 +500,17 @@ const WEB3FORMS_KEY =
           return;
         }
 
-        // lever / jazzhr / culture-amp: email only, no webhook and no redirect.
+        var isNonAffiliateLead = REQUEST_DEMO_VENDORS.indexOf(vendor) !== -1;
+        var targetVendorUrl =
+          (backdrop && backdrop.getAttribute('data-vendor-url')) ||
+          NON_AFFILIATE_HOME_URLS[vendor] ||
+          '';
+
+        // Lever / JazzHR / Culture Amp / the nine non-affiliate vendors:
+        // identical Web3Forms payload. Non-affiliate leads then log to
+        // /api/leads and redirect; the original three stay on the success UI.
         try {
-          var emailResponse = await sendWeb3FormsEmail(emailPayload, false);
+          var emailResponse = await sendWeb3FormsEmail(emailPayload, isNonAffiliateLead);
           if (!emailResponse.ok) {
             console.error('Web3Forms notification rejected', emailResponse.status);
           }
@@ -498,7 +520,43 @@ const WEB3FORMS_KEY =
           console.error('Web3Forms notification failed', err);
         }
 
-        trackGenerateLead(vendor);
+        if (isNonAffiliateLead) {
+          try {
+            await fetch(form.action || '/api/leads', {
+              method: 'POST',
+              headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                vendorId: vendorId,
+                brandName: String(fields.brandName || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
+                firstName: firstName,
+                lastName: lastName,
+                fullName: (firstName + ' ' + lastName).trim(),
+                workEmail: String(fields.email || '').trim(),
+                companyName: company,
+                jobTitle: String(fields.jobTitle || '').trim(),
+                headcount: String(fields.employeeCount || '').trim(),
+                region: String(fields.region || '').trim(),
+                phone: String(fields.phone || '').trim(),
+                needs: String(fields.requirements || '').trim(),
+                partnerLandingUrl: targetVendorUrl || null,
+                clientNotified: true,
+                source: 'The HR Stack Guide',
+              }),
+              keepalive: true,
+            });
+          } catch (logErr) {
+            console.error('Lead API log failed', logErr);
+          }
+
+          trackGenerateLead(vendor);
+          if (targetVendorUrl) {
+            window.location.href = targetVendorUrl;
+            return;
+          }
+        } else {
+          trackGenerateLead(vendor);
+        }
+
         form.classList.add('hidden');
         if (successMessage) successMessage.classList.remove('hidden');
         if (submitBtn) submitBtn.disabled = false;
@@ -542,16 +600,6 @@ const WEB3FORMS_KEY =
 
         if (response.ok) {
           trackGenerateLead(vendorId);
-          var targetVendorUrl =
-            (backdrop && backdrop.getAttribute('data-vendor-url')) ||
-            NON_AFFILIATE_HOME_URLS[vendor] ||
-            '';
-          // Nine non-affiliate vendors: redirect to the official homepage after
-          // /api/leads succeeds. PerformYard / Web3Forms paths never reach here.
-          if (REQUEST_DEMO_VENDORS.indexOf(vendor) !== -1 && targetVendorUrl) {
-            window.location.href = targetVendorUrl;
-            return;
-          }
           var redirectUrl = result && result.redirectUrl ? String(result.redirectUrl) : '';
           if (redirectUrl) {
             window.location.href = redirectUrl;
