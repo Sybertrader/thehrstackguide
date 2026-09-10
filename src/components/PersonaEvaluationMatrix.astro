@@ -19,9 +19,9 @@ const { toolAName, toolBName, modifierLabel, rows } = Astro.props;
 {rows.length > 0 && (
   <section class="mb-12" aria-label={`Persona evaluation matrix for ${modifierLabel}`}>
     <h2 class="mb-2 text-2xl font-bold text-slate-900">
-      {modifierLabel} capability matrix
+      {modifierLabel} Capability Matrix
     </h2>
-    <p class="mb-6 max-w-3xl text-sm text-slate-500">
+    <p class="mb-6 w-full max-w-none text-sm text-slate-500">
       Detailed capability breakdown tailored for {modifierLabel}. Checkmarks indicate native platform support, while crosses highlight functional gaps or required third-party integrations.
     </p>
     <div class="overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-sm">
