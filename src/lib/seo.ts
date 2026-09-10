@@ -102,15 +102,15 @@ export function categoryHubTitle(categoryName: string, audience: string): string
   return firstInRange(candidates);
 }
 
-/** Category hub `<title>` and `<h1>` are 1:1 and stay under 60 characters. */
+/** Category hub `<title>` keeps the brand suffix; on-page `<h1>` is the action headline. */
 export const ATS_HUB_TITLE = 'Applicant Tracking Systems (ATS) — The HR Stack Guide';
-export const ATS_HUB_HEADING = ATS_HUB_TITLE;
+export const ATS_HUB_HEADING = 'Compare Applicant Tracking Systems (ATS)';
 
 export const PAYROLL_HUB_TITLE = 'Global Payroll & EOR Platforms — The HR Stack Guide';
-export const PAYROLL_HUB_HEADING = PAYROLL_HUB_TITLE;
+export const PAYROLL_HUB_HEADING = 'Compare Global Payroll & EOR Platforms';
 
 export const PM_HUB_TITLE = 'Performance Management Software — The HR Stack Guide';
-export const PM_HUB_HEADING = PM_HUB_TITLE;
+export const PM_HUB_HEADING = 'Compare Performance Management Software';
 
 /** H1 keeps the title keyword phrase without the year suffix. */
 export function categoryHubHeading(title: string): string {
