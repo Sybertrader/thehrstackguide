@@ -12,7 +12,7 @@ const ashbyBase: AtsFeatures = {
   careerSiteAndJobBoards: spec(false, 'No one-click 200-board syndication like Workable. Career site is first-party; job boards are integrations.'),
   complianceAndEeoc: spec(true, 'GDPR tools shipped; OFCCP/EEO reporting is lighter than Greenhouse’s dedicated DEI compliance suite.'),
   reportingAndAnalytics: spec(true, 'Recruiting analytics are the product: funnel conversion, source ROI, and pipeline velocity in-product.'),
-  integrations: spec(true, 'Modern HRIS/assessment connectors; Checkr is not a native matrix item—background checks are partner/integration, not Greenhouse-deep.'),
+  integrations: spec(true, 'Modern HRIS/assessment connectors; Checkr is not a native matrix item; background checks are partner/integration, not Greenhouse-deep.'),
   seatOrUsagePricing: spec(true, '$400/month Foundations flat fee to 100 employees, unlimited recruiter seats, no published free trial.'),
 };
 
@@ -68,7 +68,7 @@ const jazzhrBase: AtsFeatures = {
   complianceAndEeoc: spec(true, 'Published OFCCP/EEOC reporting for US SMB federal-contractor-lite needs; GDPR is not a Recruitee-grade EU story.'),
   reportingAndAnalytics: spec(false, 'Standard ATS reports; not a recruiting analytics product.'),
   integrations: spec(false, 'Narrow integration catalog; background checks are not a native Greenhouse/Checkr-level matrix win.'),
-  seatOrUsagePricing: spec(true, 'From $75/month with unlimited interviewer seats and a free trial—the price leader.'),
+  seatOrUsagePricing: spec(true, 'From $75/month with unlimited interviewer seats and a free trial, the price leader.'),
 };
 
 const recruiteeBase: AtsFeatures = {

@@ -72,7 +72,7 @@ const peoplefluentBase: PerformanceMgmtFeatures = {
 };
 
 const clearcompanyBase: PerformanceMgmtFeatures = {
-  okrsAndGoals: spec(true, 'Goal alignment inside the talent suite that also includes ATS/onboarding—not a specialist OKR product.'),
+  okrsAndGoals: spec(true, 'Goal alignment inside the talent suite that also includes ATS/onboarding, not a specialist OKR product.'),
   continuousFeedback: spec(true, 'Feedback exists; depth trails 15Five weekly check-ins and Lattice continuous feedback.'),
   structuredReviews: spec(true, 'Configurable reviews connected to the same suite as hiring/onboarding handoff.'),
   calibration: spec(false, 'No Lattice-style compensation calibration. Talent reviews are suite-adjacent, not a talent-day OS.'),

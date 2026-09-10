@@ -2,9 +2,9 @@
  * Single source of truth for the `rel` attribute on vendor CTAs.
  *
  * `noopener sponsored nofollow` is for off-site destinations only
- * (`deel.com`, Impact partners, etc.). Same-host hrefs — `/`, category
+ * (`deel.com`, Impact partners, etc.). Same-host hrefs (`/`, category
  * hubs, comparison slugs, and `thehrstackguide.com` URLs, including
- * cloaked `/go/{id}/` redirects — omit `rel` so internal equity is not
+ * cloaked `/go/{id}/` redirects) omit `rel` so internal equity is not
  * tagged nofollow/sponsored.
  */
 

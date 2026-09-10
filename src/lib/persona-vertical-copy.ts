@@ -1,7 +1,7 @@
 type WorkflowBottleneck = { title: string; body: string };
 type FaqItem = { question: string; answer: string };
 
-/** ATS child-page bottlenecks: pipeline, scorecards, offer chain — unique per persona. */
+/** ATS child-page bottlenecks: pipeline, scorecards, offer chain: unique per persona. */
 export const ATS_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
   startups: [
     {
@@ -14,7 +14,7 @@ export const ATS_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
     },
     {
       title: 'Founder-Slack requisition approvals & offer letter workflows for {PERSONA}',
-      body: 'For {PERSONA}, there is no formal offer approval chain—just a founder Slack thumbs-up. {A} vs {B} should generate a same-day offer letter with equity language without routing through three budget owners {PERSONA} does not have yet. A cap-table offer draft that needs Finance sign-off will stall the first AE.',
+      body: 'For {PERSONA}, there is no formal offer approval chain, just a founder Slack thumbs-up. {A} vs {B} should generate a same-day offer letter with equity language without routing through three budget owners {PERSONA} does not have yet. A cap-table offer draft that needs Finance sign-off will stall the first AE.',
     },
   ],
   scaleups: [
@@ -80,7 +80,7 @@ export const PM_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
   startups: [
     {
       title: 'Seed-stage 360-degree peer review calibration for {PERSONA}',
-      body: 'For {PERSONA}, a full 360-degree peer review calibration is premature—there is no 9-box talent matrix to populate yet. {A} vs {B} should allow a lightweight peer ping without launching calibration sessions {PERSONA} cannot staff. Skip forced ranking until a founding-manager cadence exists.',
+      body: 'For {PERSONA}, a full 360-degree peer review calibration is premature: there is no 9-box talent matrix to populate yet. {A} vs {B} should allow a lightweight peer ping without launching calibration sessions {PERSONA} cannot staff. Skip forced ranking until a founding-manager cadence exists.',
     },
     {
       title: 'Founder-cascade OKR & goal tracking alignment for {PERSONA}',
@@ -136,7 +136,7 @@ export const PM_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
   agencies: [
     {
       title: 'Studio-scoped 360-degree peer review calibration for {PERSONA}',
-      body: 'For {PERSONA}, 360-degree peer review calibration collides with client confidentiality—peers on a billable team should not see another account’s notes. {A} vs {B} must scope calibration sessions and any 9-box talent matrix by a studio-scoped talent ladder, not a fake company-wide ladder {PERSONA} does not run.',
+      body: 'For {PERSONA}, 360-degree peer review calibration collides with client confidentiality: peers on a billable team should not see another account’s notes. {A} vs {B} must scope calibration sessions and any 9-box talent matrix by a studio-scoped talent ladder, not a fake company-wide ladder {PERSONA} does not run.',
     },
     {
       title: 'Utilization OKR & goal tracking alignment for {PERSONA}',

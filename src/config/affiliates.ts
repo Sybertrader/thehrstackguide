@@ -1,6 +1,6 @@
 /**
  * Centralized affiliate link registry. Keys MUST match vendor ids in
- * `src/data/tools.json` — `/go/[slug]` only emits routes for live catalog
+ * `src/data/tools.json`: `/go/[slug]` only emits routes for live catalog
  * vendors. Do not add alias keys that are not tools.json ids.
  */
 export const affiliateLinks: Record<string, string> = {

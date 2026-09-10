@@ -146,7 +146,7 @@ export function startupAliasForPair(rows: Comparison[]): Comparison | null {
 const ATS_BUYER_ITEMS: Record<string, string[]> = {
   startups: [
     'Confirm structured scorecards can run without a dedicated recruiting-ops hire.',
-    'Price year-one cost at hiring volume—seats versus a flat fee—including job-board and background-check add-ons.',
+    'Price year-one cost at hiring volume (seats versus a flat fee), including job-board and background-check add-ons.',
     'Test self-scheduling across the time zones you actually interview in.',
     'Skip enterprise EEO/OFCCP packaging unless you will become a federal contractor this year.',
   ],
@@ -278,7 +278,7 @@ const PAYROLL_BOTTLENECKS: Record<string, WorkflowBottleneck[]> = {
     },
     {
       title: 'DAO contributor agreements & token grant vesting schedules for {PERSONA}',
-      body: 'For {PERSONA}, the worker file has to hold DAO contributor agreements next to token grant vesting schedules—not a USD 1099 with a Side Letter in Notion. If {A} or {B} cannot attach cliff, unlock, and revocation terms to the same record {PERSONA} uses for the fiat remainder, legal will split the bench and the cap table will drift.',
+      body: 'For {PERSONA}, the worker file has to hold DAO contributor agreements next to token grant vesting schedules, not a USD 1099 with a Side Letter in Notion. If {A} or {B} cannot attach cliff, unlock, and revocation terms to the same record {PERSONA} uses for the fiat remainder, legal will split the bench and the cap table will drift.',
     },
     {
       title: 'Gas fee reconciliation on the crypto bench for {PERSONA}',
@@ -381,7 +381,7 @@ function clipSpec(spec: string, maxWords = 24): string {
 const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
   'tech-startups': [
     'Confirm you can run first international hires without hiring a specialist payroll or HR admin.',
-    'Price the first 12 months including EOR, contractor seats, and any IT or device modules—not just the headline rate.',
+    'Price the first 12 months including EOR, contractor seats, and any IT or device modules, not just the headline rate.',
     'Check the real onboarding SLA in the countries you will hire, not the homepage coverage map.',
     'Decide now whether you need owned-entity employment for IP and contracts, or whether a partner-network EOR is acceptable.',
   ],
@@ -394,7 +394,7 @@ const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
   scaleups: [
     'List every country and worker type (W-2, EOR, contractor) you will run over the next 18 months.',
     'Require one system of record for People and Finance so month-end is not a spreadsheet merge.',
-    'Quote payroll, SSO, reporting, and workflow automation as a package—not à la carte surprises after kickoff.',
+    'Quote payroll, SSO, reporting, and workflow automation as a package, not à la carte surprises after kickoff.',
     'Pilot onboarding and approvals with one team before you rip out the incumbent stack.',
   ],
   agencies: [
@@ -410,7 +410,7 @@ const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
     'Accrue 13th-month aguinaldo rules, FGTS, and social charges into the Brazil/Mexico fully loaded offer before {PERSONA} signs.',
   ],
   'web3-crypto': [
-    'For {PERSONA}, confirm native USDC/USDT stablecoin settlement—do not assume a fiat HRIS can run treasury rails on {A} or {B}.',
+    'For {PERSONA}, confirm native USDC/USDT stablecoin settlement. Do not assume a fiat HRIS can run treasury rails on {A} or {B}.',
     'Attach DAO contributor agreements to the same worker record {PERSONA} uses for the fiat remainder of the bench.',
     'Keep token grant vesting schedules on-file (cliff, unlock, revocation) instead of a Side Letter in Notion.',
     'Require non-custodial wallet payouts plus gas fee reconciliation so {PERSONA} can close the crypto month.',
@@ -607,10 +607,10 @@ function needPhrase(need: string): string {
 
 function payrollCorridorTest(comparison: Comparison, modifierLabel: string): string {
   if (comparison.niche_id === 'us-latam') {
-    return `For ${modifierLabel}, the corridor test is RFC tax ID validation, monotributista invoice auditing, MXN/COP/BRL local payout rails, cross-border contractor withholding, and 13th-month aguinaldo rules—not a generic EOR brochure.`;
+    return `For ${modifierLabel}, the corridor test is RFC tax ID validation, monotributista invoice auditing, MXN/COP/BRL local payout rails, cross-border contractor withholding, and 13th-month aguinaldo rules, not a generic EOR brochure.`;
   }
   if (comparison.niche_id === 'web3-crypto') {
-    return `For ${modifierLabel}, the corridor test is USDC/USDT stablecoin settlement, DAO contributor agreements, token grant vesting schedules, non-custodial wallet payouts, and gas fee reconciliation—not a fiat-only HRIS.`;
+    return `For ${modifierLabel}, the corridor test is USDC/USDT stablecoin settlement, DAO contributor agreements, token grant vesting schedules, non-custodial wallet payouts, and gas fee reconciliation, not a fiat-only HRIS.`;
   }
   return '';
 }

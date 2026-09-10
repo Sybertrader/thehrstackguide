@@ -72,7 +72,7 @@ const papayaBase: GlobalPayrollFeatures = {
 };
 
 const multiplierBase: GlobalPayrollFeatures = {
-  ownedLocalEntities: spec(true, 'Owned-entity coverage is strongest in APAC hiring hubs; other corridors may use partners—confirm the vehicle per country.'),
+  ownedLocalEntities: spec(true, 'Owned-entity coverage is strongest in APAC hiring hubs; other corridors may use partners. Confirm the vehicle per country.'),
   eorCountryCoverage: spec(true, 'EOR plus contractor coverage with an APAC-weighted network versus Deel’s 150+ owned-entity footprint.'),
   contractorPayments: spec(true, 'Contractor auto-pay for distributed APAC/US teams; not a USDC-native payout rail.'),
   nativePayrollFilings: spec(true, 'Localized payroll filings in coverage markets; US 50-state native payroll is not the headline product.'),

@@ -3,13 +3,14 @@ import Layout from '../layouts/Layout.astro';
 
 const lastUpdated = 'September 2026';
 const pageTitle = 'Terms of Service — The HR Stack Guide';
+const pageHeading = 'Terms of Service';
 const pageDescription =
   'Terms of Service for The HR Stack Guide, operated by Stack Guide Media. These terms cover informational use of comparison content, affiliate links, intellectual property, and limitation of liability.';
 ---
 
 <Layout
   title={pageTitle}
-  heading={pageTitle}
+  heading={pageHeading}
   description={pageDescription}
 >
   <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
@@ -22,7 +23,7 @@ const pageDescription =
         </ol>
       </nav>
       <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-        {pageTitle}
+        {pageHeading}
       </h1>
       <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
     </header>
@@ -39,8 +40,8 @@ const pageDescription =
       <section>
         <h2 class="text-lg font-semibold text-slate-900">1. Informational Purpose Only</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          Content on the Site—including vendor comparisons, ratings, pricing breakdowns, and feature
-          matrices—is provided for general informational purposes only. It does not constitute legal,
+          Content on the Site, including vendor comparisons, ratings, pricing breakdowns, and feature
+          matrices, is provided for general informational purposes only. It does not constitute legal,
           financial, tax, or HR compliance advice. Vendor pricing, capabilities, and contract terms change
           frequently; always verify current details directly with the vendor before making purchasing
           decisions.

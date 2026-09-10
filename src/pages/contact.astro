@@ -4,11 +4,12 @@ import Layout from '../layouts/Layout.astro';
 const category = Astro.url.searchParams.get('category');
 const target = category ? `/recommendation/?category=${encodeURIComponent(category)}` : '/recommendation/';
 const pageTitle = 'Get an HR Tech Recommendation (2026) | The HR Stack Guide';
+const pageHeading = 'Get an HR Tech Recommendation (2026)';
 ---
 
 <Layout
   title={pageTitle}
-  heading={pageTitle}
+  heading={pageHeading}
   description="Answer three quick questions about your category, headcount, and budget to get an instant unbiased HR tech stack recommendation."
   noindex
 >
@@ -16,7 +17,7 @@ const pageTitle = 'Get an HR Tech Recommendation (2026) | The HR Stack Guide';
     <meta http-equiv="refresh" content={`0;url=${target}`} />
   </Fragment>
   <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-    <h1 class="text-3xl font-bold tracking-tight text-slate-900">{pageTitle}</h1>
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">{pageHeading}</h1>
     <p class="mt-4 text-lg text-slate-600">
       Redirecting you to the recommendation tool…
     </p>

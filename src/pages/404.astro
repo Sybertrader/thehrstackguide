@@ -2,11 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 
 const pageTitle = 'Page Not Found — The HR Stack Guide';
+const pageHeading = 'Page Not Found';
 ---
 
 <Layout
   title={pageTitle}
-  heading={pageTitle}
+  heading={pageHeading}
   description="The page you're looking for doesn't exist. Browse our HR, payroll, and EOR software comparisons instead."
   noindex
 >
@@ -16,7 +17,7 @@ const pageTitle = 'Page Not Found — The HR Stack Guide';
     </span>
 
     <h1 class="mt-6 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
-      {pageTitle}
+      {pageHeading}
     </h1>
 
     <p class="mt-4 max-w-xl text-lg leading-relaxed text-slate-600">

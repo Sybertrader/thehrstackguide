@@ -3,13 +3,14 @@ import Layout from '../layouts/Layout.astro';
 
 const lastUpdated = 'September 2026';
 const pageTitle = 'Affiliate Disclosure — The HR Stack Guide';
+const pageHeading = 'Affiliate Disclosure';
 const pageDescription =
   'The HR Stack Guide is published by Stack Guide Media. In accordance with the Federal Trade Commission\'s (FTC) 16 CFR Part 255 guidelines on endorsements and testimonials, we are fully transparent about how this site generates revenue and maintains editorial independence.';
 ---
 
 <Layout
   title={pageTitle}
-  heading={pageTitle}
+  heading={pageHeading}
   description={pageDescription}
 >
   <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
@@ -22,7 +23,7 @@ const pageDescription =
         </ol>
       </nav>
       <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-        {pageTitle}
+        {pageHeading}
       </h1>
       <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
     </header>
@@ -39,8 +40,8 @@ const pageDescription =
       <section>
         <h2 class="text-lg font-semibold text-slate-900">How We Earn Revenue</h2>
         <p class="mt-2 text-base leading-relaxed text-slate-700">
-          Some links on The HR Stack Guide—including "Try [Vendor]" buttons, pricing links, and comparison
-          callouts—are affiliate links. If you click one of these links and subsequently sign up for or
+          Some links on The HR Stack Guide, including "Try [Vendor]" buttons, pricing links, and comparison
+          callouts, are affiliate links. If you click one of these links and subsequently sign up for or
           purchase a vendor's product, we may earn a referral commission. This occurs at no extra cost to
           you; vendor pricing remains identical whether you use our link or navigate directly to the vendor's
           site.

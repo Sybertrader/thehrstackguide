@@ -4,6 +4,7 @@ import { ORGANIZATION_SAME_AS } from '../lib/organization';
 
 const lastUpdated = 'September 2026';
 const pageTitle = 'About Us — The HR Stack Guide';
+const pageHeading = 'About Us';
 const pageDescription =
   'The HR Stack Guide is an independent buyer\'s guide for modern HR technology. We publish data-backed comparisons of Global Payroll & EOR, Applicant Tracking Systems (ATS), and Performance Management platforms so teams can choose software without relying on vendor sales pitches.';
 
@@ -57,7 +58,7 @@ const evaluationItems = [
 
 <Layout
   title={pageTitle}
-  heading={pageTitle}
+  heading={pageHeading}
   description={pageDescription}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(aboutSchema)} />
@@ -72,7 +73,7 @@ const evaluationItems = [
         </ol>
       </nav>
       <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-        {pageTitle}
+        {pageHeading}
       </h1>
       <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
     </header>
@@ -88,7 +89,7 @@ const evaluationItems = [
         </p>
         <p class="mt-3 text-base leading-relaxed text-slate-700">
           The site is published and operated by Stack Guide Media. We do not build, resell, or receive funding
-          from any HR software vendor—our sole focus is delivering accurate, well-sourced comparison data.
+          from any HR software vendor. Our sole focus is delivering accurate, well-sourced comparison data.
         </p>
       </section>
 

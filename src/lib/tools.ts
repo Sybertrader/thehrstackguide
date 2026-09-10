@@ -19,7 +19,7 @@ export interface EnterpriseAnalysis {
 
 /**
  * Enterprise-tier analysis topics. Only populated for Employer of Record and
- * Global Payroll vendors — these questions (cross-border IP transfer, 13th
+ * Global Payroll vendors: these questions (cross-border IP transfer, 13th
  * month salary, severance liability, EOR deposits) have no meaningful answer
  * for an ATS or performance management tool, so those profiles omit the key
  * entirely and the comparison template hides the section.

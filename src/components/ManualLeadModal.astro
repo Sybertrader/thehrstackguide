@@ -13,7 +13,7 @@ interface Props {
 const {
   brandName,
   vendorId = '',
-  // Must match [slug].astro / [...slug].astro manualLeadModalId() — spaces become hyphens.
+  // Must match [slug].astro / [...slug].astro manualLeadModalId() - spaces become hyphens.
   modalId = `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`,
   partnerLandingUrl = '',
   formActionUrl = '/api/leads',
@@ -360,7 +360,7 @@ const WEB3FORMS_KEY =
         var clickedVendorName = (openBtn.getAttribute('data-vendor-name') || '').trim();
         var clickedVendorUrl = (openBtn.getAttribute('data-vendor-url') || '').trim();
 
-        // Prefer explicit data attribute — avoid innerText (forces layout / hurts INP).
+        // Prefer explicit data attribute - avoid innerText (forces layout / hurts INP).
         var modalId = openBtn.getAttribute('data-modal-target');
         if (!modalId && clickedVendorName) {
           modalId = 'lead-modal-' + clickedVendorName.toLowerCase().replace(/\s+/g, '-');
@@ -449,7 +449,7 @@ const WEB3FORMS_KEY =
       if (EMAIL_SEND_VENDORS.indexOf(vendor) !== -1) {
         var accessKey = form.dataset.accessKey || '';
         if (!accessKey) {
-          console.error('Web3Forms access key missing — set PUBLIC_WEB3FORMS_KEY. Lead will not be emailed.');
+          console.error('Web3Forms access key missing - set PUBLIC_WEB3FORMS_KEY. Lead will not be emailed.');
         }
 
         var company = String(fields.company || '').trim();

@@ -173,7 +173,7 @@ const HeadingTag = headingLevel;
   const INVALID_CLASSES = ['border-red-500', 'ring-2', 'ring-red-100'];
 
   function markValidity(select: HTMLSelectElement, isValid: boolean) {
-    // Swap the resting border out entirely — leaving both colours on the
+    // Swap the resting border out entirely - leaving both colours on the
     // element would make the highlight depend on Tailwind's rule order.
     select.classList.toggle('border-slate-300', isValid);
     INVALID_CLASSES.forEach((className) => select.classList.toggle(className, !isValid));

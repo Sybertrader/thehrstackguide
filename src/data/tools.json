@@ -496,7 +496,7 @@
     "positioning": "An all-in-one workforce operations system uniting HR, global payroll, IT device management, and app provisioning in one dashboard.",
     "text_compliance": "Rippling automates compliance across US domestic payroll and global workforce expansions. Its engine automatically enforces local overtime laws, tax registration, mandatory sexual harassment training, and international labor standards based on worker location.",
     "text_global_reach": "Rippling supports global hiring via direct payroll, local entity management, and integrated EOR services. It allows companies to manage US W-2 employees, international EOR staff, and worldwide contractors within a single unified HR cloud.",
-    "text_pricing_truth": "Rippling's core platform commonly starts around $8/user/month, with payroll, benefits, IT, and global EOR sold as modular add-ons. Real total cost depends on which modules you activate—request an all-in quote for your headcount mix.",
+    "text_pricing_truth": "Rippling's core platform commonly starts around $8/user/month, with payroll, benefits, IT, and global EOR sold as modular add-ons. Real total cost depends on which modules you activate. Request an all-in quote for your headcount mix.",
     "choose_if": [
       "You want to manage IT assets (laptops, software app permissions, Google Workspace) alongside HR and payroll.",
       "You have complex workflow automation needs (e.g., auto-triggering custom onboarding flows based on job role).",
@@ -613,7 +613,7 @@
     "positioning": "The enterprise gold standard for structured hiring, auditable scorecard methodologies, and complex talent acquisition ecosystems.",
     "text_compliance": "Greenhouse enforces rigorous EEOC, GDPR, and CCPA compliance through structured interviewing rules, automated candidate consent workflows, and comprehensive DEI reporting tools designed for enterprise audits.",
     "text_global_reach": "Greenhouse connects with 400+ native integrations worldwide, supporting localized job board postings, multi-language application forms, and global background check providers like Checkr and Sterling.",
-    "text_pricing_truth": "Greenhouse uses custom annual contracts without a public sticker price. Mid-market and enterprise deals typically include implementation fees—budget for a sales-led quote rather than self-serve monthly pricing.",
+    "text_pricing_truth": "Greenhouse uses custom annual contracts without a public sticker price. Mid-market and enterprise deals typically include implementation fees. Budget for a sales-led quote rather than self-serve monthly pricing.",
     "choose_if": [
       "Your organization enforces strict, objective 'structured hiring' scorecards across all interview panels.",
       "You need an industry-leading integration ecosystem (400+ HRIS, assessment, and background check tools).",
@@ -885,7 +885,7 @@
     "text_global_reach": "15Five supports distributed and international teams with Slack/Teams-native check-ins, async feedback workflows, and multi-timezone 1:1 agendas so remote managers can run consistent performance cadences.",
     "text_pricing_truth": "Published pricing starts at $4/user/month on Engage, with Perform and Total Platform tiers adding reviews, OKRs, and coaching. Seat-based annual contracts are typical; confirm AI and coaching add-ons in your quote.",
     "choose_if": [
-      "You want weekly check-ins and manager coaching—not just annual review software.",
+      "You want weekly check-ins and manager coaching, not just annual review software.",
       "You need lightweight OKRs tied to continuous feedback without an enterprise sales cycle.",
       "You want transparent published pricing and a free trial before rolling out company-wide.",
       "Your managers need structured 1:1 agendas and coaching prompts baked into the workflow."
@@ -919,7 +919,7 @@
     "positioning": "A configurable mid-market performance platform focused on flexible review cycles, goals, and 360 feedback without heavyweight implementation.",
     "text_compliance": "PerformYard provides configurable review templates, role-based permissions, and retained review history suitable for HR audit trails, with standard SOC 2 and GDPR-oriented data practices for employee performance records.",
     "text_global_reach": "PerformYard works well for US and mid-market multi-location employers that need consistent review cycles across departments, with Slack integrations for feedback reminders rather than deep multi-language localization.",
-    "text_pricing_truth": "Plans typically start at $5/user/month depending on modules and review-cycle complexity. There is no published free trial—buyers should expect a demo-led sales motion. Implementation is lighter than enterprise suites; advanced compensation options may be quoted separately.",
+    "text_pricing_truth": "Plans typically start at $5/user/month depending on modules and review-cycle complexity. There is no published free trial. Buyers should expect a demo-led sales motion. Implementation is lighter than enterprise suites; advanced compensation options may be quoted separately.",
     "choose_if": [
       "You need highly configurable review templates without a six-month implementation project.",
       "You want 1:1 meeting tools, engagement surveys, career pathing, and AI performance insights without an enterprise Lattice/Culture Amp premium.",
@@ -958,7 +958,7 @@
     "positioning": "A modular people-enablement suite spanning performance reviews, OKRs, engagement, learning, and compensation for modern scaleups.",
     "text_compliance": "Leapsome emphasizes GDPR-ready data residency and consent controls suited to European and global employers, with structured review workflows, access permissions, and exportable audit history for performance and engagement data.",
     "text_global_reach": "Leapsome is especially strong for European and multi-national scaleups, supporting multi-language experiences, distributed team feedback, and integrations with Slack, Teams, and common HRIS platforms worldwide.",
-    "text_pricing_truth": "Modular pricing starts at $8/user/month per active module (Reviews, Goals, Engagement, Learning). Model your module mix carefully—full-suite rollouts stack seat costs versus lighter single-module buys.",
+    "text_pricing_truth": "Modular pricing starts at $8/user/month per active module (Reviews, Goals, Engagement, Learning). Model your module mix carefully. Full-suite rollouts stack seat costs versus lighter single-module buys.",
     "choose_if": [
       "You want one modular platform for reviews, learning paths, engagement, and goals.",
       "You operate in Europe or need strong GDPR and multi-language support.",
@@ -995,7 +995,7 @@
     "positioning": "An enterprise-ready performance, engagement, and compensation platform built for People teams running calibrated talent and pay cycles.",
     "text_compliance": "Lattice supports enterprise access controls, talent-review confidentiality, compensation-band governance, and audit-friendly performance history designed for regulated and large-employer review processes.",
     "text_global_reach": "Lattice serves global and multi-entity employers with multi-language support, HRIS integrations, and workflows for distributed talent calibration across regions and business units.",
-    "text_pricing_truth": "Performance modules commonly start around $10/user/month, with Goals & OKRs from $8/user/month and Engagement/Compensation sold as add-ons. Contracts are demo-led with a minimum annual spend—model total seat cost across modules before comparing to lighter tools.",
+    "text_pricing_truth": "Performance modules commonly start around $10/user/month, with Goals & OKRs from $8/user/month and Engagement/Compensation sold as add-ons. Contracts are demo-led with a minimum annual spend. Model total seat cost across modules before comparing to lighter tools.",
     "choose_if": [
       "You need compensation calibration tightly linked to performance and talent reviews.",
       "You run formal talent cycles with People partners and need mature analytics.",
@@ -1119,7 +1119,7 @@
     "positioning": "ClearCo (formerly ClearCompany) is a mid-market talent suite that connects performance reviews and goals with recruiting and onboarding for consolidated HR stacks.",
     "text_compliance": "ClearCo (formerly ClearCompany) supports configurable review permissions, documented performance history, and talent-suite audit trails that connect hiring-to-performance records for mid-market compliance workflows.",
     "text_global_reach": "ClearCo (formerly ClearCompany) is strongest for US mid-market employers consolidating ATS, onboarding, and performance; global multi-language depth is more limited than Lattice, Leapsome, or Culture Amp.",
-    "text_pricing_truth": "ClearCo (formerly ClearCompany) performance is custom-quoted as part of the broader talent suite (often with ATS/onboarding). Standalone list pricing is uncommon—request a bundle quote for mid-market consolidations.",
+    "text_pricing_truth": "ClearCo (formerly ClearCompany) performance is custom-quoted as part of the broader talent suite (often with ATS/onboarding). Standalone list pricing is uncommon. Request a bundle quote for mid-market consolidations.",
     "choose_if": [
       "You want performance tied to the same suite as recruiting and onboarding.",
       "You are a mid-market team consolidating multiple HR point solutions.",

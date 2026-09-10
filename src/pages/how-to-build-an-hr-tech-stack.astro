@@ -32,12 +32,12 @@ const stages = [
   {
     title: 'Stage 1: 1–20 Employees',
     subtitle: 'Lean & Scrappy',
-    body: 'Prioritize compliance and basic payroll accuracy over flashy dashboards. A clean payroll/EOR foundation, shared hiring docs, and lightweight performance check-ins beat a bloated HRIS you will never fully configure. Buy tools your team can adopt in a week—not a quarter.',
+    body: 'Prioritize compliance and basic payroll accuracy over flashy dashboards. A clean payroll/EOR foundation, shared hiring docs, and lightweight performance check-ins beat a bloated HRIS you will never fully configure. Buy tools your team can adopt in a week, not a quarter.',
   },
   {
     title: 'Stage 2: 20–100 Employees',
     subtitle: 'The Automation Stage',
-    body: 'This is when spreadsheets start breaking. An ATS becomes critical for structured hiring, and a performance platform replaces ad-hoc annual reviews. Focus on workflow automation, manager visibility, and clean handoffs from offer letter to onboarding—without stacking five overlapping products.',
+    body: 'This is when spreadsheets start breaking. An ATS becomes critical for structured hiring, and a performance platform replaces ad-hoc annual reviews. Focus on workflow automation, manager visibility, and clean handoffs from offer letter to onboarding, without stacking five overlapping products.',
   },
   {
     title: 'Stage 3: 100+ Employees',
@@ -49,7 +49,7 @@ const stages = [
 const pillars = [
   {
     title: '1. Recruitment & ATS',
-    body: 'Structured hiring is how you stop losing great candidates in email threads. A modern applicant tracking system centralizes pipelines, scorecards, and interview loops so hiring managers share one source of truth—and time-to-hire stops drifting toward 47 days.',
+    body: 'Structured hiring is how you stop losing great candidates in email threads. A modern applicant tracking system centralizes pipelines, scorecards, and interview loops so hiring managers share one source of truth, and time-to-hire stops drifting toward 47 days.',
     href: '/applicant-tracking-systems/',
     linkLabel: 'Browse ATS comparisons',
   },
@@ -61,7 +61,7 @@ const pillars = [
   },
   {
     title: '3. Performance Management',
-    body: 'The annual review is dead weight for most growing teams. Continuous feedback, clear goals, and manager cadence keep performance conversations useful—and give leadership signal before attrition shows up in exit interviews.',
+    body: 'The annual review is dead weight for most growing teams. Continuous feedback, clear goals, and manager cadence keep performance conversations useful, and give leadership signal before attrition shows up in exit interviews.',
     href: '/performance-management/',
     linkLabel: 'Browse Performance comparisons',
   },
@@ -70,7 +70,7 @@ const pillars = [
 const traps = [
   {
     title: '1. Integration Hell',
-    body: 'Tools that cannot talk to each other create shadow spreadsheets and double entry. Before you buy, map the critical syncs—ATS to HRIS, payroll to finance, performance to employee records—and reject vendors that treat integrations as a “phase 2” promise.',
+    body: 'Tools that cannot talk to each other create shadow spreadsheets and double entry. Before you buy, map the critical syncs (ATS to HRIS, payroll to finance, performance to employee records) and reject vendors that treat integrations as a “phase 2” promise.',
   },
   {
     title: '2. Year 2 Price Creep',
@@ -78,11 +78,11 @@ const traps = [
   },
   {
     title: '3. Adoption Failure',
-    body: 'Buying software is not the same as rolling it out. Managers need training, templates, and accountability—not a Slack announcement and a login link. Budget time for change management or expect shelfware.',
+    body: 'Buying software is not the same as rolling it out. Managers need training, templates, and accountability, not a Slack announcement and a login link. Budget time for change management or expect shelfware.',
   },
   {
     title: '4. Security Blindspots',
-    body: 'HR systems hold the most sensitive data in the company. SOC 2, GDPR readiness, SSO/SCIM, and clear data-processing terms are deal-breakers—not nice-to-haves. If security answers are vague, walk away.',
+    body: 'HR systems hold the most sensitive data in the company. SOC 2, GDPR readiness, SSO/SCIM, and clear data-processing terms are deal-breakers, not nice-to-haves. If security answers are vague, walk away.',
   },
   {
     title: '5. Tool Fatigue',
@@ -91,11 +91,12 @@ const traps = [
 ];
 
 const pageTitle = 'How to Build an HR Tech Stack (2026 Guide) | The HR Stack Guide';
+const pageHeading = 'How to Build an HR Tech Stack (2026 Guide)';
 ---
 
 <Layout
   title={pageTitle}
-  heading={pageTitle}
+  heading={pageHeading}
   description="A comprehensive guide to building a modern HR software stack. Learn how to choose ATS, Payroll, and Performance tools based on your headcount and budget."
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
@@ -110,7 +111,7 @@ const pageTitle = 'How to Build an HR Tech Stack (2026 Guide) | The HR Stack Gui
         </ol>
       </nav>
       <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-        {pageTitle}
+        {pageHeading}
       </h1>
       <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
     </header>
@@ -123,8 +124,8 @@ const pageTitle = 'How to Build an HR Tech Stack (2026 Guide) | The HR Stack Gui
           Most HR leaders are drowning in 7 logins and 5 dashboards, yet hiring still takes 47 days.
         </p>
         <p class="mt-4 text-base leading-relaxed text-slate-600">
-          The problem is rarely a missing feature. It is a stack built for a company you are not yet—or worse, a stack assembled from whichever vendor demoed last.
-          Stop solving for “modern” and start solving for “effective.” Here is how to build an HR tech stack that scales with your headcount and budget—without overpaying for shelfware.
+          The problem is rarely a missing feature. It is a stack built for a company you are not yet, or worse, a stack assembled from whichever vendor demoed last.
+          Stop solving for “modern” and start solving for “effective.” Here is how to build an HR tech stack that scales with your headcount and budget, without overpaying for shelfware.
         </p>
       </section>
 
@@ -134,7 +135,7 @@ const pageTitle = 'How to Build an HR Tech Stack (2026 Guide) | The HR Stack Gui
         </h2>
         <p class="mt-4 text-base leading-relaxed text-slate-600">
           An enterprise HRIS is a mistake for a 15-person team. You will pay for complexity you cannot staff, then blame the tool when nobody uses it.
-          Match the stack to the problems you have <em>this quarter</em>—and leave room to upgrade when process, not vanity, demands it.
+          Match the stack to the problems you have <em>this quarter</em>, and leave room to upgrade when process, not vanity, demands it.
         </p>
         <div class="mt-8 space-y-6">
           {stages.map((stage) => (
@@ -177,7 +178,7 @@ const pageTitle = 'How to Build an HR Tech Stack (2026 Guide) | The HR Stack Gui
           The 5 Hidden Traps No Vendor Warns You About
         </h2>
         <p class="mt-4 text-base leading-relaxed text-slate-600">
-          Sales decks skip the failure modes. Budget for these five traps before you sign—or you will pay for them in renewals, workarounds, and frustrated managers.
+          Sales decks skip the failure modes. Budget for these five traps before you sign, or you will pay for them in renewals, workarounds, and frustrated managers.
         </p>
         <ol class="mt-8 space-y-6">
           {traps.map((trap) => (
@@ -195,7 +196,7 @@ const pageTitle = 'How to Build an HR Tech Stack (2026 Guide) | The HR Stack Gui
         </h2>
         <p class="mt-4 text-base leading-relaxed text-slate-600">
           If you are unsure which ATS, payroll, or performance platform fits your stage, skip another week of vendor demos.
-          Answer three quick questions and get a shortlist matched to your category, headcount, and budget—so you buy what you will actually use.
+          Answer three quick questions and get a shortlist matched to your category, headcount, and budget, so you buy what you will actually use.
         </p>
         <div class="relative mt-8 overflow-hidden rounded-2xl border border-indigo-200 bg-indigo-50/70 p-6 sm:p-8">
           <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-indigo-500 to-violet-600" aria-hidden="true"></div>
@@ -203,7 +204,7 @@ const pageTitle = 'How to Build an HR Tech Stack (2026 Guide) | The HR Stack Gui
             Free Guidance
           </span>
           <p class="mt-4 text-base leading-relaxed text-slate-700">
-            Get an instant recommendation based on your headcount and budget—no email required.
+            Get an instant recommendation based on your headcount and budget, no email required.
           </p>
           <a
             href="/recommendation/"

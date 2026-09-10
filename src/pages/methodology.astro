@@ -3,13 +3,14 @@ import Layout from '../layouts/Layout.astro';
 
 const lastUpdated = 'September 2026';
 const pageTitle = 'Evaluation Framework & Editorial Methodology — The HR Stack Guide';
+const pageHeading = 'Evaluation Framework & Editorial Methodology';
 const pageDescription =
   'At The HR Stack Guide, we evaluate B2B HR software using a standardized 4-pillar framework. Every rating, data matrix, and comparison pair across Global Payroll & EOR, Applicant Tracking Systems (ATS), and Performance Management is scored against this rubric.';
 ---
 
 <Layout
   title={pageTitle}
-  heading={pageTitle}
+  heading={pageHeading}
   description={pageDescription}
 >
   <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
@@ -22,7 +23,7 @@ const pageDescription =
         </ol>
       </nav>
       <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-        {pageTitle}
+        {pageHeading}
       </h1>
       <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
     </header>

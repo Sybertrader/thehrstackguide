@@ -92,7 +92,7 @@ export function comparisonHubSlug(toolAId: string, toolBId: string): string {
 /**
  * Public `-for-{modifier}` token for live child URLs.
  * Payroll CSV still uses `tech-startups`; those pages are served at `-for-startups`.
- * Never emit `remote-first` — the live modifier is `remote-teams`.
+ * Never emit `remote-first` - the live modifier is `remote-teams`.
  */
 export function publicModifierSlug(nicheId: string): string {
   if (nicheId === 'tech-startups') return 'startups';

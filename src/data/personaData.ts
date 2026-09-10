@@ -5,7 +5,7 @@ import { globalPayrollPersonaByToolId } from './personaData.payroll';
 import { mergePersonaPack } from './personaSpec';
 
 /**
- * Stage 1 schema uses `startupFeatures` — not a `for-tech-startups` key.
+ * Stage 1 schema uses `startupFeatures`, not a `for-tech-startups` key.
  * Live CSV slugs may still end in `-for-tech-startups` (payroll) or
  * `-for-startups` (ATS/PM); those niche ids resolve to `startupFeatures`.
  */
