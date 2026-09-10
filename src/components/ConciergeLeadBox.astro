@@ -4,9 +4,12 @@ interface Props {
   /** Accent theme aligned to each category hub. */
   theme?: 'indigo' | 'teal' | 'sky';
   ctaHref?: string;
+  /** Optional full H2. Defaults to “Unsure which {categoryName} platform fits your team?” */
+  headline?: string;
 }
 
-const { categoryName, theme = 'indigo', ctaHref = '/recommendation/' } = Astro.props;
+const { categoryName, theme = 'indigo', ctaHref = '/recommendation/', headline } = Astro.props;
+const resolvedHeadline = headline ?? `Unsure which ${categoryName} platform fits your team?`;
 
 const themes = {
   indigo: {
@@ -39,10 +42,10 @@ const styles = themes[theme];
       Free Guidance
     </span>
     <h2 class="mt-4 text-2xl font-bold tracking-tight text-slate-900">
-      Unsure which {categoryName} platform fits your team?
+      {resolvedHeadline}
     </h2>
     <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
-      Skip hours of demo calls. Answer 3 quick questions and get our unbiased recommendation based on your headcount and budget.
+      Skip hours of demo calls. Answer 4 quick questions to get an unbiased recommendation tailored to your specific requirements.
     </p>
     <a
       href={ctaHref}

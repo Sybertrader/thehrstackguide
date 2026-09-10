@@ -243,7 +243,12 @@ const collectionSchema = {
       <CategoryComparisonBrowser comparisons={categoryComparisons} theme="emerald" idPrefix="ats" />
     </section>
 
-    <ConciergeLeadBox categoryName="Applicant Tracking Systems (ATS)" theme="teal" ctaHref="/recommendation/?category=ats" />
+    <ConciergeLeadBox
+      categoryName="Applicant Tracking Systems (ATS)"
+      headline="Unsure which Applicant Tracking System fits your team?"
+      theme="teal"
+      ctaHref="/recommendation/?category=ats"
+    />
 
     {toolRoster
       .filter((tool) => isManualLeadBrand(tool.id))
