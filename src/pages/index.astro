@@ -102,24 +102,6 @@ const eeatPillars = [
   },
 ];
 
-const useCaseGuides = [
-  {
-    label: 'Best for Startups (1–20)',
-    description: 'Lean hiring and payroll picks for early teams.',
-    href: '/rippling-vs-gusto/',
-  },
-  {
-    label: 'Best for Scaleups (50–250)',
-    description: 'Reviews, OKRs, and people ops for growing orgs.',
-    href: '/ashby-vs-greenhouse-for-scaleups/',
-  },
-  {
-    label: 'Best for Global / Multi-Country Teams',
-    description: 'EOR, compliance, and multi-country payroll guides.',
-    href: '/deel-vs-remote/',
-  },
-];
-
 const proofStats = [
   { value: '500+', label: 'Head-to-Head Comparisons' },
   { value: '24+', label: 'Vetted HR Platforms' },
@@ -297,32 +279,6 @@ const homepageSchema = {
     </section>
 
     <RecommendationTeaser ctaHref="/recommendation/" />
-
-    <!-- Popular Use Cases & Buyer Guides -->
-    <section class="mt-16" aria-label="Popular use cases and buyer guides">
-      <h2 class="mb-6 text-center text-2xl font-bold text-slate-900 sm:text-left">
-        Popular Use Cases &amp; Buyer Guides
-      </h2>
-      <div class="grid gap-4 sm:grid-cols-3">
-        {useCaseGuides.map((guide) => (
-          <a
-            href={guide.href}
-            class="group flex flex-col rounded-2xl border border-slate-200 bg-white px-5 py-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <span class="inline-flex w-fit items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700 transition-colors duration-200 group-hover:border-indigo-200 group-hover:bg-indigo-50 group-hover:text-indigo-700">
-              {guide.label}
-            </span>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600">{guide.description}</p>
-            <span class="mt-4 inline-flex items-center text-sm font-semibold text-indigo-600">
-              Compare platforms
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1 h-4 w-4" aria-hidden="true">
-                <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-              </svg>
-            </span>
-          </a>
-        ))}
-      </div>
-    </section>
 
     <!-- Popular Comparisons -->
     {featuredComparisons.length > 0 && (
