@@ -85,6 +85,23 @@ export function parseComparisonSlug(slug: string): { hubSlug: string; modifier: 
   return { hubSlug: `${toolA}-vs-${toolB}`, modifier: modifier || null };
 }
 
+/**
+ * Swap `vendor-a-vs-vendor-b` (and an optional `-for-{modifier}`) to the
+ * reverse vendor order. Returns null when the slug has no `-vs-` pair.
+ */
+export function invertComparisonSlug(slug: string): string | null {
+  const { hubSlug, modifier } = parseComparisonSlug(slug);
+  const vsIndex = hubSlug.indexOf('-vs-');
+  if (vsIndex === -1) return null;
+
+  const toolA = hubSlug.slice(0, vsIndex);
+  const toolB = hubSlug.slice(vsIndex + 4);
+  if (!toolA || !toolB) return null;
+
+  const invertedHub = `${toolB}-vs-${toolA}`;
+  return modifier ? `${invertedHub}-for-${modifier}` : invertedHub;
+}
+
 export function comparisonHubSlug(toolAId: string, toolBId: string): string {
   return `${toolAId}-vs-${toolBId}`;
 }

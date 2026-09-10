@@ -3,6 +3,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
+import { reverseSlugRedirects } from './src/lib/reverse-slug-redirects';
+
+const reverseRedirects = reverseSlugRedirects();
 
 /**
  * Keep noindex / operational URLs out of sitemap-index.xml.
@@ -23,6 +26,8 @@ function includeInSitemap(page) {
   if (pathname === '/thank-you' || pathname === '/thank-you/') return false;
   if (pathname === '/contact' || pathname === '/contact/') return false;
   if (pathname.includes('-for-tech-startups')) return false;
+  const withSlash = pathname.endsWith('/') ? pathname : `${pathname}/`;
+  if (reverseRedirects[withSlash]) return false;
   return true;
 }
 
@@ -35,6 +40,7 @@ function withTrailingSlash(url) {
 export default defineConfig({
   site: 'https://www.thehrstackguide.com',
   trailingSlash: 'always',
+  redirects: reverseRedirects,
   prefetch: {
     prefetchAll: false,
     defaultStrategy: 'tap',
