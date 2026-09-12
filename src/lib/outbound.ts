@@ -66,7 +66,7 @@ export function vendorCtaLabel(_toolId: string, vendorName: string): string {
 }
 
 export function vendorLeadModalHeading(vendorName: string): string {
-  return `Request ${vendorName} Pricing & Demo`;
+  return `Get Custom ${vendorName} Pricing`;
 }
 
 /**

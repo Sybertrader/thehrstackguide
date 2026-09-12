@@ -1,5 +1,5 @@
 ---
-import { isNonAffiliateLeadBrand, nonAffiliateVendorHomeUrl, vendorLeadModalHeading } from '../lib/outbound';
+import { nonAffiliateVendorHomeUrl, vendorLeadModalHeading } from '../lib/outbound';
 
 interface Props {
   brandName: string;
@@ -20,9 +20,7 @@ const {
 } = Astro.props;
 
 const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-');
-const headingText = isNonAffiliateLeadBrand(resolvedVendorId)
-  ? vendorLeadModalHeading(brandName)
-  : `Connect with ${brandName}`;
+const headingText = vendorLeadModalHeading(brandName);
 const vendorHomeUrl = nonAffiliateVendorHomeUrl(resolvedVendorId);
 
 // Needs the PUBLIC_ prefix to survive into the browser bundle. Falls back to the
@@ -48,7 +46,7 @@ const WEB3FORMS_KEY =
     <div class="bg-slate-900 px-6 py-5 text-white flex justify-between items-center">
       <div>
         <h3 class="lead-modal-heading text-xl font-bold tracking-tight">{headingText}</h3>
-        <p class="text-xs text-slate-300 mt-1">Get custom pricing & priority onboarding support</p>
+        <p class="text-xs text-slate-300 mt-1">Skip the general sales queue for custom pricing &amp; direct team access.</p>
       </div>
       <button
         type="button"
@@ -73,30 +71,20 @@ const WEB3FORMS_KEY =
         <input type="hidden" name="target_software" value={brandName} />
         <input type="hidden" name="partnerLandingUrl" value={partnerLandingUrl} />
 
-        <!-- First & Last Name -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label for={`fname-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">First Name *</label>
-            <input
-              type="text"
-              id={`fname-${modalId}`}
-              name="firstName"
-              required
-              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
-              placeholder="Sarah"
-            />
-          </div>
-          <div>
-            <label for={`lname-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Last Name *</label>
-            <input
-              type="text"
-              id={`lname-${modalId}`}
-              name="lastName"
-              required
-              class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
-              placeholder="Jenkins"
-            />
-          </div>
+        <!-- Full Name -->
+        <div>
+          <label for={`fullname-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Full Name *</label>
+          <input
+            type="text"
+            id={`fullname-${modalId}`}
+            name="fullName"
+            required
+            autocomplete="name"
+            minlength="2"
+            class="full-name-input w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
+            placeholder="Sarah Jenkins"
+          />
+          <p class="fullname-error text-xs text-red-600 mt-1 hidden">Please enter your full name.</p>
         </div>
 
         <!-- Work Email -->
@@ -107,9 +95,11 @@ const WEB3FORMS_KEY =
             id={`email-${modalId}`}
             name="email"
             required
+            autocomplete="email"
             class="work-email-input w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
             placeholder="sarah@company.com"
           />
+          <p class="mt-1 text-[11px] leading-relaxed text-slate-500">Used strictly to send your custom pricing breakdown. Zero newsletter spam.</p>
           <p class="email-error text-xs text-red-600 mt-1 hidden">Please enter a valid work email address (no personal webmail).</p>
         </div>
 
@@ -178,33 +168,40 @@ const WEB3FORMS_KEY =
 
         <!-- Phone -->
         <div>
-          <label for={`phone-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone Number</label>
+          <label for={`phone-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Phone Number (Optional)</label>
           <input
             type="tel"
             id={`phone-${modalId}`}
             name="phone"
+            autocomplete="tel"
             class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition"
             placeholder="+1 (555) 000-0000"
           />
+          <p class="mt-1 text-[11px] leading-relaxed text-slate-500">Optional. Only used if you request a callback—no automated sales harassment.</p>
         </div>
 
-        <!-- Requirements Notes -->
+        <!-- Timeline -->
         <div>
-          <label for={`notes-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Primary Requirements / Timeline</label>
-          <textarea
+          <label for={`notes-${modalId}`} class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Primary Requirements / Timeline *</label>
+          <select
             id={`notes-${modalId}`}
             name="requirements"
-            rows="2"
-            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none transition resize-none"
-            placeholder="Looking to switch within 30 days..."
-          ></textarea>
+            required
+            class="timeline-select w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm outline-none bg-white transition"
+          >
+            <option value="">Select timeline...</option>
+            <option value="Evaluating (0–30 days)">Evaluating (0–30 days)</option>
+            <option value="Exploring (1–3 months)">Exploring (1–3 months)</option>
+            <option value="Just Researching / Comparing">Just Researching / Comparing</option>
+          </select>
+          <p class="timeline-error text-xs text-red-600 mt-1 hidden">Please select your evaluation timeline.</p>
         </div>
 
         <button
           type="submit"
           class="submit-btn w-full mt-2 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-200 flex items-center justify-center cursor-pointer"
         >
-          <span class="btn-text">Submit Intro Request</span>
+          <span class="btn-text">Get Custom Pricing &amp; Intro →</span>
           <svg class="spinner hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -212,7 +209,7 @@ const WEB3FORMS_KEY =
         </button>
 
         <p class="text-[11px] text-slate-400 text-center mt-3 leading-relaxed">
-          By submitting, you agree to allow <em>The HR Stack Guide</em> to connect your business directly with an authorized representative at <span class="lead-modal-brand">{brandName}</span>.
+          We respect your privacy. Your information is encrypted and shared exclusively with an authorized <span class="lead-modal-brand">{brandName}</span> representative to prepare your quote.
         </p>
       </form>
 
@@ -317,6 +314,14 @@ const WEB3FORMS_KEY =
       return Object.fromEntries(formData.entries());
     }
 
+    function splitFullName(value) {
+      var parts = String(value || '').replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
+      return {
+        firstName: parts[0] || '',
+        lastName: parts.slice(1).join(' '),
+      };
+    }
+
     function applyClickedVendorToModal(modal, vendorId, vendorName, vendorUrl) {
       if (vendorId) {
         modal.setAttribute('data-vendor-id', vendorId);
@@ -333,10 +338,8 @@ const WEB3FORMS_KEY =
         for (var i = 0; i < brandEls.length; i++) {
           brandEls[i].textContent = vendorName;
         }
-        if (REQUEST_DEMO_VENDORS.indexOf(vendorId) !== -1) {
-          var heading = modal.querySelector('.lead-modal-heading');
-          if (heading) heading.textContent = 'Request ' + vendorName + ' Pricing & Demo';
-        }
+        var heading = modal.querySelector('.lead-modal-heading');
+        if (heading) heading.textContent = 'Get Custom ' + vendorName + ' Pricing';
       }
       if (vendorUrl) {
         modal.setAttribute('data-vendor-url', vendorUrl);
@@ -413,11 +416,40 @@ const WEB3FORMS_KEY =
 
       var emailInput = form.querySelector('.work-email-input');
       var emailError = form.querySelector('.email-error');
+      var fullNameInput = form.querySelector('.full-name-input');
+      var fullNameError = form.querySelector('.fullname-error');
+      var timelineSelect = form.querySelector('.timeline-select');
+      var timelineError = form.querySelector('.timeline-error');
       var submitBtn = form.querySelector('.submit-btn');
       var btnText = form.querySelector('.btn-text');
       var spinner = form.querySelector('.spinner');
       var successMessage = form.closest('.p-6') ? form.closest('.p-6').querySelector('.success-message') : null;
       var backdrop = form.closest('.modal-backdrop');
+
+      var fullName = fullNameInput ? String(fullNameInput.value || '').replace(/\s+/g, ' ').trim() : '';
+      if (fullNameInput) fullNameInput.value = fullName;
+      if (!fullName || fullName.length < 2) {
+        if (fullNameError) fullNameError.classList.remove('hidden');
+        if (fullNameInput) {
+          fullNameInput.classList.add('border-red-500');
+          fullNameInput.focus();
+        }
+        return;
+      }
+      if (fullNameError) fullNameError.classList.add('hidden');
+      if (fullNameInput) fullNameInput.classList.remove('border-red-500');
+
+      var timeline = timelineSelect ? String(timelineSelect.value || '').trim() : '';
+      if (!timeline) {
+        if (timelineError) timelineError.classList.remove('hidden');
+        if (timelineSelect) {
+          timelineSelect.classList.add('border-red-500');
+          timelineSelect.focus();
+        }
+        return;
+      }
+      if (timelineError) timelineError.classList.add('hidden');
+      if (timelineSelect) timelineSelect.classList.remove('border-red-500');
 
       if (emailInput) {
         var emailValue = emailInput.value.toLowerCase().trim();
@@ -441,8 +473,10 @@ const WEB3FORMS_KEY =
       // render two modal instances, so a document-wide id lookup could pick up
       // the other vendor's fields.
       var fields = payloadFromForm(form);
-      var firstName = String(fields.firstName || '').trim();
-      var lastName = String(fields.lastName || '').trim();
+      var fullNameValue = String(fields.fullName || fullName || '').replace(/\s+/g, ' ').trim();
+      var nameParts = splitFullName(fullNameValue);
+      var firstName = nameParts.firstName;
+      var lastName = nameParts.lastName;
       var vendorId = String(fields.vendorId || (backdrop && backdrop.getAttribute('data-vendor-id')) || '').trim();
       var vendor = vendorId.toLowerCase();
 
@@ -459,6 +493,7 @@ const WEB3FORMS_KEY =
           from_name: 'The HR Stack Guide',
           firstName: firstName,
           lastName: lastName,
+          fullName: fullNameValue,
           email: String(fields.email || '').trim(),
           company: company,
           jobTitle: String(fields.jobTitle || '').trim(),
@@ -481,7 +516,11 @@ const WEB3FORMS_KEY =
               headers: {
                 'Content-Type': 'text/plain;charset=utf-8',
               },
-              body: JSON.stringify(cleanPayload),
+              body: JSON.stringify(Object.assign({}, cleanPayload, {
+                firstName: firstName,
+                lastName: lastName,
+                fullName: fullNameValue,
+              })),
             });
 
             sendWeb3FormsEmail(emailPayload, true).catch(function (err) {
@@ -530,7 +569,7 @@ const WEB3FORMS_KEY =
                 brandName: String(fields.brandName || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
                 firstName: firstName,
                 lastName: lastName,
-                fullName: (firstName + ' ' + lastName).trim(),
+                fullName: fullNameValue,
                 workEmail: String(fields.email || '').trim(),
                 companyName: company,
                 jobTitle: String(fields.jobTitle || '').trim(),
@@ -571,7 +610,7 @@ const WEB3FORMS_KEY =
           brandName: String(fields.brandName || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
           firstName: firstName,
           lastName: lastName,
-          fullName: (firstName + ' ' + lastName).trim(),
+          fullName: fullNameValue,
           workEmail: String(fields.email || '').trim(),
           companyName: String(fields.company || '').trim(),
           jobTitle: String(fields.jobTitle || '').trim(),
