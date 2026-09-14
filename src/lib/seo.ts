@@ -1,6 +1,7 @@
 /**
  * Programmatic `<title>` and `<h1>` strings for comparison and category routes.
- * Titles are clamped to 50–60 characters to avoid SERP truncation.
+ * Comparison titles use intent-driven segment/category closers (soft max 72
+ * characters). Category hub titles still target the 50–60 SERP band.
  */
 
 export const SEO_TITLE_YEAR = 2026;
@@ -20,18 +21,47 @@ export function titleVendorName(toolId: string, displayName: string): string {
   return TITLE_NAME_BY_ID[toolId] ?? displayName;
 }
 
-const COMPARISON_CATEGORY_LABELS: Record<Exclude<SeoFamily, null>, string[]> = {
-  payroll: ['HRIS & Payroll', 'Payroll & EOR', 'Global EOR & Payroll', 'Global Payroll', 'EOR', 'Payroll'],
-  ats: ['ATS Hiring Software', 'Recruiting Software', 'ATS & Hiring', 'ATS', 'Hiring', 'Recruiting'],
-  pm: ['Performance Mgmt', 'Performance', 'HR', 'PM'],
+/** Short category noun interpolated into comparison titles and H1s. */
+const CATEGORY_NOUN: Record<Exclude<SeoFamily, null>, string> = {
+  payroll: 'Payroll',
+  ats: 'ATS',
+  pm: 'Performance',
 };
 
-/** Longer-first closers so short pairs still land in the 50–60 character title band. */
-const PERSONA_GUIDE_LABELS: Record<Exclude<SeoFamily, null>, string[]> = {
-  payroll: ['Payroll & EOR Guide', 'Global Payroll Guide', 'Payroll Guide', 'EOR Guide', 'Guide'],
-  ats: ['ATS Hiring Guide', 'Recruiting Guide', 'ATS Guide', 'Hiring Guide', 'Guide'],
-  pm: ['Performance Guide', 'Perf Mgmt Guide', 'PM Guide', 'HR Guide', 'Guide'],
+/**
+ * Intent-driven `<title>` closers for persona child routes. Keys match
+ * `niche_id` (and `tech-startups` aliases to `startups`).
+ */
+export const SEGMENT_TITLE_MODIFIERS: Record<string, string> = {
+  enterprise: 'Security, Scale & Pricing',
+  startups: 'Pricing, Features & Onboarding',
+  'tech-startups': 'Pricing, Features & Onboarding',
+  'remote-teams': 'Async Workflows & Compliance',
+  'people-ops': 'HRIS Integration & UX',
+  scaleups: 'Growth Plans & Feature Set',
+  agencies: 'Client Management & Billing',
+  'us-latam': 'Coverage, FX & Local Payroll',
+  'web3-crypto': 'Contractor Payouts & Compliance',
 };
+
+/** Hub `<title>` closers so payroll / ATS / PM pairs do not share one formula. */
+const HUB_TITLE_CLOSERS: Record<Exclude<SeoFamily, null>, string> = {
+  payroll: 'Features, Pricing & Review',
+  ats: 'Hiring Features & Pricing',
+  pm: 'Reviews, OKRs & Pricing',
+};
+
+const TITLE_SOFT_MAX = 72;
+
+function categoryNoun(family: SeoFamily): string {
+  return family ? CATEGORY_NOUN[family] : 'HR';
+}
+
+function segmentTitleModifier(nicheId: string | null | undefined, family: SeoFamily): string {
+  const key = nicheId === 'tech-startups' ? 'startups' : nicheId || '';
+  if (key && SEGMENT_TITLE_MODIFIERS[key]) return SEGMENT_TITLE_MODIFIERS[key];
+  return `${categoryNoun(family)} Features & ${SEO_TITLE_YEAR} Pricing`;
+}
 
 function firstInRange(candidates: string[]): string {
   const inRange = candidates.filter((title) => title.length >= SEO_TITLE_MIN && title.length <= SEO_TITLE_MAX);
@@ -41,51 +71,61 @@ function firstInRange(candidates: string[]): string {
   );
 }
 
+/** Prefer the intent-led candidate; only shorten when the string is too long for SERPs. */
+function preferIntentTitle(candidates: string[]): string {
+  const unique = [...new Set(candidates.filter(Boolean))];
+  const fit = unique.find((title) => title.length <= TITLE_SOFT_MAX);
+  return fit ?? unique.reduce((shortest, title) => (title.length < shortest.length ? title : shortest));
+}
+
 /**
- * 1-vs-1 hub: `[Vendor A] vs [Vendor B] (2026): [Category] Comparison`
- * Persona child: `[Vendor A] vs [Vendor B] for [Segment] (2026): [Category] Guide`
+ * Persona child: `[A] vs [B] for [Segment] (2026): [Intent closer]`
+ * Hub: `[A] vs [B] ([Category] 2026): [Family closer]`
  */
 export function comparisonPageTitle(
+  vendorA: string,
+  vendorB: string,
+  family: SeoFamily,
+  personaLabel?: string | null,
+  nicheId?: string | null
+): string {
+  const pair = `${vendorA} vs ${vendorB}`;
+  const year = SEO_TITLE_YEAR;
+  const category = categoryNoun(family);
+
+  if (personaLabel) {
+    const modifier = segmentTitleModifier(nicheId, family);
+    return preferIntentTitle([
+      `${pair} for ${personaLabel} (${year}): ${modifier}`,
+      `${pair} for ${personaLabel}: ${modifier}`,
+      `${pair} (${personaLabel} ${year}): ${modifier}`,
+      `${pair} for ${personaLabel} (${year})`,
+    ]);
+  }
+
+  const closer = family ? HUB_TITLE_CLOSERS[family] : `Features, Pricing & Review`;
+  return preferIntentTitle([
+    `${pair} (${category} ${year}): ${closer}`,
+    `${pair} ${year}: ${closer}`,
+    `${pair} (${category} ${year})`,
+  ]);
+}
+
+/**
+ * Hub H1: `[A] vs [B] Review: Global [Category] Breakdown`
+ * Persona H1: `[A] vs [B]: Which [Category] Tool Wins for [Segment]?`
+ * Never appends “Comparison & Analysis”. Never copies `<title>` verbatim.
+ */
+export function comparisonPageHeading(
   vendorA: string,
   vendorB: string,
   family: SeoFamily,
   personaLabel?: string | null
 ): string {
   const pair = `${vendorA} vs ${vendorB}`;
-  const year = `(${SEO_TITLE_YEAR})`;
-
-  if (personaLabel) {
-    const segment = `for ${personaLabel}`;
-    const labels = family ? PERSONA_GUIDE_LABELS[family] : ['Guide'];
-    const candidates = [
-      ...labels.map((label) => `${pair} ${segment} ${year}: ${label}`),
-      `${pair} ${segment} ${year} Guide`,
-      `${pair} ${segment} ${year}`,
-    ];
-    return firstInRange(candidates);
-  }
-
-  const labels = family ? COMPARISON_CATEGORY_LABELS[family] : ['HR', 'Software'];
-  const candidates = [
-    ...labels.map((label) => `${pair} ${year}: ${label} Comparison`),
-    `${pair} ${year} Comparison`,
-  ];
-  return firstInRange(candidates);
-}
-
-/**
- * Hub H1: `[A] vs [B] Comparison & Analysis`
- * Persona H1: `[A] vs [B] for [Segment]: Comparison & Analysis`
- * Uses the same vendor names (and persona phrase) as `<title>`.
- */
-export function comparisonPageHeading(
-  vendorA: string,
-  vendorB: string,
-  personaLabel?: string | null
-): string {
-  const pair = `${vendorA} vs ${vendorB}`;
-  if (personaLabel) return `${pair} for ${personaLabel}: Comparison & Analysis`;
-  return `${pair} Comparison & Analysis`;
+  const category = categoryNoun(family);
+  if (personaLabel) return `${pair}: Which ${category} Tool Wins for ${personaLabel}?`;
+  return `${pair} Review: Global ${category} Breakdown`;
 }
 
 /**
@@ -121,12 +161,17 @@ export function comparisonSeo(
   toolA: { id: string; name: string },
   toolB: { id: string; name: string },
   family: SeoFamily,
-  personaLabel?: string | null
+  personaLabel?: string | null,
+  nicheId?: string | null
 ): { title: string; heading: string } {
   const nameA = titleVendorName(toolA.id, toolA.name);
   const nameB = titleVendorName(toolB.id, toolB.name);
-  return {
-    title: comparisonPageTitle(nameA, nameB, family, personaLabel),
-    heading: comparisonPageHeading(nameA, nameB, personaLabel),
-  };
+  const title = comparisonPageTitle(nameA, nameB, family, personaLabel, nicheId);
+  let heading = comparisonPageHeading(nameA, nameB, family, personaLabel);
+  if (heading === title) {
+    heading = personaLabel
+      ? `${nameA} vs ${nameB}: Best ${categoryNoun(family)} Fit for ${personaLabel}`
+      : `${nameA} vs ${nameB}: ${categoryNoun(family)} Side-by-Side Review`;
+  }
+  return { title, heading };
 }

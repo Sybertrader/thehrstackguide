@@ -8,8 +8,8 @@
  * comparison routes, and static content (about, methodology, etc.).
  *
  * Checks per page:
- *   1) Title / H1 alignment (not exact-string equality — H1 is allowed to
- *      drop the year suffix and use a "Comparison & Analysis" closer)
+ *   1) Title / H1 alignment (not exact-string equality — H1s use a review
+ *      or “which tool wins” closer while titles use year + intent modifiers)
  *   2) Valid JSON-LD (parses, schema.org @context, known @type)
  *   3) Coverage of 30 B2B HR contextual terms
  *
@@ -250,14 +250,14 @@ function normalizePhrase(value) {
 }
 
 function vsCore(value) {
-  const match = normalizePhrase(value).match(/^(.+? vs .+?)(?: comparison| analysis|$)/);
+  const match = normalizePhrase(value).match(/^(.+? vs .+?)(?: comparison| analysis| review| which|$)/);
   return match ? match[1].trim() : '';
 }
 
 /**
  * Title and H1 are aligned when they share the same primary keyword phrase.
- * Exact equality is not required: 1-vs-1 titles include "(2026): [Category]
- * Comparison" while H1s use "Comparison & Analysis".
+ * Exact equality is not required: titles include "(2026): [Intent closer]"
+ * while H1s use a review or “which tool wins” question.
  */
 function scoreTitleH1(title, h1s) {
   const hasTitle = Boolean(title);
