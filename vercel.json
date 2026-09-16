@@ -93,6 +93,16 @@
       "permanent": true
     },
     {
+      "source": "/performyard-vs-reflektive-for-enterprise",
+      "destination": "/performyard-vs-peoplefluent-for-enterprise/",
+      "permanent": true
+    },
+    {
+      "source": "/leapsome-vs-reflektive-for-scaleups",
+      "destination": "/leapsome-vs-peoplefluent-for-scaleups/",
+      "permanent": true
+    },
+    {
       "source": "/reflektive-vs-:rest*",
       "destination": "/peoplefluent-vs-:rest*/",
       "permanent": true
