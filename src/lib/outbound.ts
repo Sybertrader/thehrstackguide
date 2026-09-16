@@ -18,7 +18,6 @@ export const UTM_MEDIUM = 'referral';
 /** Non-affiliate vendors whose CTAs open the lead modal (not an outbound URL). */
 export const NON_AFFILIATE_LEAD_BRANDS = [
   'plane',
-  'rippling',
   'greenhouse',
   'workable',
   '15five',
@@ -40,7 +39,6 @@ export const MANUAL_LEAD_BRANDS = [
 /** Official homepages used for post-submit redirects (not affiliate/UTM URLs). */
 export const NON_AFFILIATE_VENDOR_HOME_URLS: Record<(typeof NON_AFFILIATE_LEAD_BRANDS)[number], string> = {
   plane: 'https://plane.com',
-  rippling: 'https://www.rippling.com',
   greenhouse: 'https://www.greenhouse.com',
   workable: 'https://www.workable.com',
   '15five': 'https://www.15five.com',
@@ -109,6 +107,7 @@ const AFFILIATE_HOST_MARKERS = [
   'get.deel.com',
   'get.gusto.com',
   'get.papayaglobal.com',
+  'try.rippling.com',
   'join.tellent.com',
   'sales.ashbyhq.com',
 ];

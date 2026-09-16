@@ -505,6 +505,9 @@
     ],
     "starting_price": "$8/user/mo",
     "free_trial": false,
+    "affiliate_url": "https://try.rippling.com/qwo7272syugx-02q7tm",
+    "has_active_affiliate": true,
+    "is_partner": true,
     "target_segment": "Scaleups 50–250",
     "countries": "Global via modular payroll/EOR",
     "enterprise_analysis": {

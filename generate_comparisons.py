@@ -43,7 +43,7 @@ TOOLS = {
         "starting_price": "$8/user/mo",
         "pricing_model": "Core platform from $8/user/mo; payroll and EOR are modular add-ons",
         "free_trial": False,
-        "affiliate_url": "https://www.rippling.com",
+        "affiliate_url": "https://try.rippling.com/qwo7272syugx-02q7tm",
         "key_features": ["Unified HR & IT", "US & Global Payroll", "Device Management", "App Provisioning"],
         "pros": ["Automates IT device setup alongside HR", "Powerful custom workflow engine", "Native US payroll integration"],
         "cons": ["Payroll, IT, and global EOR modules are add-ons—core $8/user pricing rarely equals all-in cost.", "EOR feature set is secondary to HRIS"],
