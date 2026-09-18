@@ -1,18 +1,33 @@
 ---
+import VendorLogo from './VendorLogo.astro';
+
 interface Props {
   toolAName: string;
   toolBName: string;
+  toolALogo?: string | null;
+  toolBLogo?: string | null;
+  toolABadgeColor: string;
+  toolBBadgeColor: string;
   toolANuance?: string;
   toolBNuance?: string;
 }
 
-const { toolAName, toolBName, toolANuance = '', toolBNuance = '' } = Astro.props;
+const {
+  toolAName,
+  toolBName,
+  toolALogo = '',
+  toolBLogo = '',
+  toolABadgeColor,
+  toolBBadgeColor,
+  toolANuance = '',
+  toolBNuance = '',
+} = Astro.props;
 const hasNuance = Boolean(toolANuance || toolBNuance);
 ---
 
 {hasNuance && (
   <section class="mb-12" aria-label="Pricing nuance and hidden fees">
-    <h3 class="mb-2 text-xl font-bold text-slate-900">Pricing Nuance &amp; Hidden Fees</h3>
+    <h2 class="mb-2 text-xl font-bold text-slate-900">Pricing Nuance &amp; Hidden Fees</h2>
     <p class="mb-4 max-w-3xl text-sm text-slate-500">
       The headline prices above rarely survive contact with a real quote. Here is what each vendor bills on top.
     </p>
@@ -20,7 +35,13 @@ const hasNuance = Boolean(toolANuance || toolBNuance);
       <ul class="space-y-5">
         {toolANuance && (
           <li class="flex items-start gap-3">
-            <span aria-hidden="true" class="shrink-0 text-base leading-6">💡</span>
+            <VendorLogo
+              src={toolALogo}
+              alt=""
+              name={toolAName}
+              badgeColor={toolABadgeColor}
+              size={24}
+            />
             <p class="text-sm leading-relaxed text-slate-700">
               <strong class="font-semibold text-slate-900">
                 Pricing Nuance: {toolAName}:
@@ -31,7 +52,13 @@ const hasNuance = Boolean(toolANuance || toolBNuance);
         )}
         {toolBNuance && (
           <li class="flex items-start gap-3">
-            <span aria-hidden="true" class="shrink-0 text-base leading-6">💡</span>
+            <VendorLogo
+              src={toolBLogo}
+              alt=""
+              name={toolBName}
+              badgeColor={toolBBadgeColor}
+              size={24}
+            />
             <p class="text-sm leading-relaxed text-slate-700">
               <strong class="font-semibold text-slate-900">
                 Pricing Nuance: {toolBName}:

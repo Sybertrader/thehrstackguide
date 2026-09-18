@@ -8,6 +8,7 @@ import ManualLeadModal from '../../components/ManualLeadModal.astro';
 import { loadComparisons } from '../../lib/comparisons';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../../lib/outbound';
 import { getToolsByCategory } from '../../lib/tools';
+import { comparisonHubSlug } from '../../lib/comparison-routes';
 import { PM_HUB_HEADING, PM_HUB_TITLE } from '../../lib/seo';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
@@ -28,6 +29,9 @@ const toolIds = new Set(toolProfiles.map((tool) => tool.id));
 const categoryComparisons = allComparisons.filter(
   (comparison) => toolIds.has(comparison.tool_a_id) && toolIds.has(comparison.tool_b_id)
 );
+const masterComparisonCount = new Set(
+  categoryComparisons.map((row) => comparisonHubSlug(row.tool_a_id, row.tool_b_id))
+).size;
 
 // Look up display name, logo, and the high-signal "best fit" badge from the
 // comparisons data source itself (those richer fields aren't duplicated in
@@ -60,12 +64,12 @@ const buyerGuide = [
   {
     title: 'Continuous Feedback vs. Annual Reviews',
     description:
-      'Tools like 15Five and PeopleFluent emphasize weekly check-ins and real-time feedback, while Lattice and PerformYard still excel at structured review cycles and calibration. Decide whether your culture needs ongoing manager coaching first, or audit-ready annual/semiannual cycles with compensation handoff.',
+      'Tools like Lattice and PerformYard emphasize structured review cycles and calibration, while Culture Amp leads on engagement science. Decide whether your culture needs audit-ready annual or semiannual cycles with compensation handoff first, or org-wide survey insight that feeds manager action planning.',
   },
   {
     title: 'OKRs Tied to Development & Pay',
     description:
-      'If goals only live in a slide deck, adoption dies. Prioritize platforms that cascade OKRs into 1:1s and reviews (Lattice, Leapsome, 15Five). Add compensation calibration only when People Ops actually runs pay bands from performance data, otherwise you are paying for an unused module.',
+      'If goals only live in a slide deck, adoption dies. Prioritize platforms that cascade OKRs into 1:1s and reviews (Lattice, PerformYard). Add compensation calibration only when People Ops actually runs pay bands from performance data, otherwise you are paying for an unused module.',
   },
   {
     title: 'Engagement Science vs. Lightweight Pulses',
@@ -145,7 +149,7 @@ const collectionSchema = {
 <Layout
   title={pageTitle}
   heading={pageHeading}
-  description={`Independent ${currentMonthYear} performance management software comparisons. Compare Lattice, 15Five, Leapsome, Culture Amp, and more on OKRs, reviews, and pricing.`}
+  description={`Independent ${currentMonthYear} performance management software comparisons. Compare Lattice, PerformYard, Culture Amp, and more on OKRs, reviews, and pricing.`}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
 
@@ -161,7 +165,7 @@ const collectionSchema = {
       </nav>
 
       <span class="mt-4 inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3.5 py-1.5 text-sm font-semibold text-sky-700">
-        {toolRoster.length} Platforms Evaluated · {categoryComparisons.length} Comparisons
+        {toolRoster.length} Tools · {masterComparisonCount} Comparisons
       </span>
 
       <h1 class="mt-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
@@ -239,8 +243,12 @@ const collectionSchema = {
 
     <!-- Comparison Directory -->
     <section id="browse-comparisons" class="scroll-mt-24" aria-label="Comparison directory">
-      <h2 class="mb-2 text-2xl font-bold text-slate-900">Browse All Comparisons</h2>
-      <CategoryComparisonBrowser comparisons={categoryComparisons} theme="sky" idPrefix="pm" />
+      <CategoryComparisonBrowser
+        comparisons={categoryComparisons}
+        theme="sky"
+        idPrefix="pm"
+        gridTitle="All Performance Management Head-to-Head Comparisons"
+      />
     </section>
 
     <ConciergeLeadBox categoryName="Performance Management" theme="sky" ctaHref="/recommendation/?category=performance" />

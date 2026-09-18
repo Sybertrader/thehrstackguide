@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.thehrstackguide.com/schemas/tools.schema.json",
+  "title": "HR Stack Guide vendor profiles",
+  "description": "Keyed by stable vendor ids that are also comparison route parameters. Do not rename keys. Category values are frozen to payroll-eor, ats, and performance-management.",
+  "type": "object",
+  "additionalProperties": false,
+  "propertyNames": {
+    "enum": [
+      "gusto",
+      "multiplier",
+      "deel",
+      "remote",
+      "papaya-global",
+      "payoneer-workforce-management",
+      "rippling",
+      "oyster-hr",
+      "breezy-hr",
+      "bamboohr-ats",
+      "ashby",
+      "lever",
+      "workable",
+      "jazzhr",
+      "recruitee",
+      "performyard",
+      "lattice",
+      "culture-amp"
+    ]
+  },
+  "minProperties": 18,
+  "maxProperties": 18,
+  "required": [
+    "gusto",
+    "multiplier",
+    "deel",
+    "remote",
+    "papaya-global",
+    "payoneer-workforce-management",
+    "rippling",
+    "oyster-hr",
+    "breezy-hr",
+    "bamboohr-ats",
+    "ashby",
+    "lever",
+    "workable",
+    "jazzhr",
+    "recruitee",
+    "performyard",
+    "lattice",
+    "culture-amp"
+  ],
+  "properties": {
+    "gusto": { "$ref": "#/$defs/toolProfile" },
+    "multiplier": { "$ref": "#/$defs/toolProfile" },
+    "deel": { "$ref": "#/$defs/toolProfile" },
+    "remote": { "$ref": "#/$defs/toolProfile" },
+    "papaya-global": { "$ref": "#/$defs/toolProfile" },
+    "payoneer-workforce-management": { "$ref": "#/$defs/toolProfile" },
+    "rippling": { "$ref": "#/$defs/toolProfile" },
+    "oyster-hr": { "$ref": "#/$defs/toolProfile" },
+    "breezy-hr": { "$ref": "#/$defs/toolProfile" },
+    "bamboohr-ats": { "$ref": "#/$defs/toolProfile" },
+    "ashby": { "$ref": "#/$defs/toolProfile" },
+    "lever": { "$ref": "#/$defs/toolProfile" },
+    "workable": { "$ref": "#/$defs/toolProfile" },
+    "jazzhr": { "$ref": "#/$defs/toolProfile" },
+    "recruitee": { "$ref": "#/$defs/toolProfile" },
+    "performyard": { "$ref": "#/$defs/toolProfile" },
+    "lattice": { "$ref": "#/$defs/toolProfile" },
+    "culture-amp": { "$ref": "#/$defs/toolProfile" }
+  },
+  "$defs": {
+    "vendorCategory": {
+      "type": "string",
+      "enum": ["payroll-eor", "ats", "performance-management"]
+    },
+    "enterpriseAnalysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "bullets"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "bullets": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "toolProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "category",
+        "positioning",
+        "text_compliance",
+        "text_global_reach",
+        "text_pricing_truth",
+        "choose_if",
+        "compliance",
+        "integrations",
+        "supportSLA",
+        "deploymentType",
+        "idealHeadcount"
+      ],
+      "properties": {
+        "category": { "$ref": "#/$defs/vendorCategory" },
+        "name": { "type": "string" },
+        "displayName": { "type": "string" },
+        "badge": { "type": "string" },
+        "logo": { "type": "string" },
+        "rating": { "type": "string" },
+        "review_count": { "type": "string" },
+        "rating_source": { "type": "string" },
+        "starting_price": { "type": "string" },
+        "free_trial": { "type": "boolean" },
+        "hasFreeTrial": { "type": "boolean" },
+        "isManualLead": { "type": "boolean" },
+        "partner_landing_url": { "type": "string" },
+        "domain": { "type": "string" },
+        "website": { "type": "string" },
+        "affiliate_url": { "type": "string" },
+        "has_active_affiliate": { "type": "boolean" },
+        "is_partner": { "type": "boolean" },
+        "contractor_price": { "type": "number" },
+        "eor_price": { "type": "number" },
+        "countries": { "type": "string" },
+        "target_segment": { "type": "string" },
+        "positioning": { "type": "string", "minLength": 1 },
+        "text_compliance": { "type": "string", "minLength": 1 },
+        "text_global_reach": { "type": "string", "minLength": 1 },
+        "text_pricing_truth": { "type": "string", "minLength": 1 },
+        "choose_if": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "enterprise_analysis": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ip_assignment": { "$ref": "#/$defs/enterpriseAnalysis" },
+            "tax_withholding": { "$ref": "#/$defs/enterpriseAnalysis" },
+            "statutory_benefits": { "$ref": "#/$defs/enterpriseAnalysis" },
+            "fee_structure": { "$ref": "#/$defs/enterpriseAnalysis" }
+          }
+        },
+        "compliance": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "integrations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "supportSLA": { "type": "string" },
+        "deploymentType": { "type": "string" },
+        "idealHeadcount": { "type": "string" }
+      }
+    }
+  }
+}

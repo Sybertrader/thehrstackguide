@@ -2,20 +2,16 @@
 /**
  * 1-on-1 B2B HR comparison catch-all.
  *
- * Scoped to flat `brand-a-vs-brand-b` and `brand-a-vs-brand-b-for-modifier`
- * slugs via getStaticPaths + `isComparisonRouteSlug`. Do not nest these under
- * category prefixes (`/performance-management/...`). Static utility routes
- * (`recommendation.astro`, `about.astro`, `contact.astro`, `thank-you.astro`,
- * category hubs) and `go/[slug].astro` take file-based precedence; Vercel
- * `api/leads.js` remains the lead-capture endpoint under `/api/leads`.
+ * Scoped to master `brand-a-vs-brand-b` slugs via getStaticPaths +
+ * `isComparisonHubSlug`. Segment URLs (`-for-startups`, etc.) are not built;
+ * they 308 to the hub. Do not nest these under category prefixes. Static
+ * utility routes and `go/[slug].astro` take file-based precedence.
  */
 import Layout from '../layouts/Layout.astro';
 import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublished } from '../lib/comparisons';
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
-import { isComparisonRouteSlug, comparisonHubSlug, isLegacyTechStartupsSlug, categoryHubNav } from '../lib/comparison-routes';
+import { isComparisonHubSlug, comparisonHubSlug, categoryHubNav } from '../lib/comparison-routes';
 import { comparisonVendorsAreLive, getToolProfile } from '../lib/tools';
-import type { EnterpriseAnalysis, ToolProfile } from '../lib/tools';
-import TechnicalComplianceMatrix from '../components/TechnicalComplianceMatrix.astro';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../lib/outbound';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
@@ -24,27 +20,23 @@ import DemoQuestions from '../components/DemoQuestions.astro';
 import AtAGlance from '../components/AtAGlance.astro';
 import PricingNuance from '../components/PricingNuance.astro';
 import VerdictCallout from '../components/VerdictCallout.astro';
-import TailoredEvaluationsSection from '../components/TailoredEvaluationsSection.astro';
+import SegmentTabEngine from '../components/SegmentTabEngine.astro';
 import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
 import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
-import ComparisonFaq from '../components/ComparisonFaq.astro';
 import VendorButton from '../components/VendorButton.astro';
 import VendorLogo from '../components/VendorLogo.astro';
 import { vendorLogoPreloadHref } from '../lib/vendor-logo';
 import { comparisonSeo } from '../lib/seo';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
+  buildMasterSegmentPanels,
   buildPersonaEvaluation,
-  buildPersonaFaqItems,
   buildWorkflowBottlenecks,
   comparisonFamily,
   modifierTitleSuffix,
   personaRowsForComparison,
   pickHubComparison,
-  startupAliasForPair,
-  variantsForPair,
-  type ComparisonVariantLink,
 } from '../lib/persona-evaluation';
 
 /**
@@ -64,7 +56,7 @@ interface ComparisonPageProps {
   firstPublishedIso: string;
   isHub: boolean;
   hubSlug: string;
-  variants: ComparisonVariantLink[];
+  pairRows: Comparison[];
 }
 
 export function getStaticPaths() {
@@ -97,13 +89,6 @@ export function getStaticPaths() {
     pairGroups.set(key, list);
   }
 
-  function relatedChildren(current: Comparison): Comparison[] {
-    return liveComparisons
-      .filter((candidate) => candidate.niche_id === current.niche_id && candidate.slug !== current.slug)
-      .sort((a, b) => relatedScore(b, current) - relatedScore(a, current))
-      .slice(0, 3);
-  }
-
   function relatedHubs(current: Comparison): Comparison[] {
     const currentKey = comparisonHubSlug(current.tool_a_id, current.tool_b_id);
     const seen = new Set<string>([currentKey]);
@@ -119,34 +104,8 @@ export function getStaticPaths() {
     return scored.sort((a, b) => b.score - a.score).slice(0, 3).map((entry) => entry.row);
   }
 
-  // Static files (recommendation, about, contact, category hubs) and
-  // `src/pages/go/[slug].astro` / Vercel `api/*` already outrank this
-  // rest-parameter route. Still skip any CSV slug that is not a 1-on-1
-  // `brand-vs-brand` comparison so the catch-all cannot steal those paths.
-  // Legacy `-for-tech-startups` CSV slugs 301 to the master hub via vercel.json.
-  // Active startup children are the `for-startups` alias paths below.
-  const childPaths = liveComparisons
-    .filter((comparison) => isComparisonRouteSlug(comparison.slug))
-    .filter((comparison) => !isLegacyTechStartupsSlug(comparison.slug))
-    .map((comparison) => {
-      const hubSlug = comparisonHubSlug(comparison.tool_a_id, comparison.tool_b_id);
-      const variants = variantsForPair(pairGroups.get(hubSlug) ?? [comparison]);
-      return {
-        params: { slug: comparison.slug },
-        props: {
-          comparison,
-          related: relatedChildren(comparison),
-          lastUpdatedIso,
-          firstPublishedIso,
-          isHub: false,
-          hubSlug,
-          variants,
-        } satisfies ComparisonPageProps,
-      };
-    });
-
   const hubPaths = [...pairGroups.entries()]
-    .filter(([hubSlug]) => isComparisonRouteSlug(hubSlug))
+    .filter(([hubSlug]) => isComparisonHubSlug(hubSlug))
     .filter(([, rows]) => {
       const comparison = pickHubComparison(rows);
       return comparisonVendorsAreLive(comparison.tool_a_id, comparison.tool_b_id);
@@ -162,36 +121,15 @@ export function getStaticPaths() {
           firstPublishedIso,
           isHub: true,
           hubSlug,
-          variants: variantsForPair(rows),
+          pairRows: rows,
         } satisfies ComparisonPageProps,
       };
     });
 
-  const startupAliasPaths = [...pairGroups.values()].flatMap((rows) => {
-    const alias = startupAliasForPair(rows);
-    if (!alias || !isComparisonRouteSlug(alias.slug)) return [];
-    if (!comparisonVendorsAreLive(alias.tool_a_id, alias.tool_b_id)) return [];
-    const hubSlug = comparisonHubSlug(alias.tool_a_id, alias.tool_b_id);
-    return [
-      {
-        params: { slug: alias.slug },
-        props: {
-          comparison: alias,
-          related: relatedChildren(alias),
-          lastUpdatedIso,
-          firstPublishedIso,
-          isHub: false,
-          hubSlug,
-          variants: variantsForPair(rows),
-        } satisfies ComparisonPageProps,
-      },
-    ];
-  });
-
-  return [...childPaths, ...hubPaths, ...startupAliasPaths];
+  return hubPaths;
 }
 
-const { comparison, related, lastUpdatedIso, firstPublishedIso, isHub, hubSlug, variants } =
+const { comparison, related, lastUpdatedIso, firstPublishedIso, isHub, hubSlug, pairRows } =
   Astro.props as ComparisonPageProps;
 const isChildRoute = !isHub;
 const hubFamily = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
@@ -236,11 +174,6 @@ function logoBadgeColor(name: string): string {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
   }
   return colors[Math.abs(hash) % colors.length];
-}
-
-interface FaqItem {
-  question: string;
-  answer: string;
 }
 
 interface ToolNarrative {
@@ -312,7 +245,6 @@ function buildSchemaGraph(
   comparison: Comparison,
   pageUrl: string,
   siteRootUrl: string,
-  faqItems: FaqItem[],
   toolARating: string,
   toolBRating: string,
   toolAReviewCount: number | null,
@@ -331,7 +263,6 @@ function buildSchemaGraph(
   }
 ) {
   const pageId = `${pageUrl}#webpage`;
-  const faqId = `${pageUrl}#faq`;
   const breadcrumbId = `${pageUrl}#breadcrumb`;
   const toolAId = `${pageUrl}#${comparison.tool_a_id}`;
   const toolBId = `${pageUrl}#${comparison.tool_b_id}`;
@@ -449,18 +380,6 @@ function buildSchemaGraph(
           },
         },
       },
-      {
-        '@type': 'FAQPage',
-        '@id': faqId,
-        mainEntity: faqItems.map((item) => ({
-          '@type': 'Question',
-          name: item.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: item.answer,
-          },
-        })),
-      },
     ],
   };
 }
@@ -491,80 +410,13 @@ const toolBNarrative = resolveToolNarrative(
   comparison.tool_b_rating
 );
 
-/**
- * Enterprise-tier analysis blocks rendered inside a collapsed <details>
- * accordion so human buyers skip the legal fine print while LLM crawlers
- * still read the full DOM.
- *
- * These four topics only have a meaningful answer for Employer of Record and
- * Global Payroll vendors, so `enterprise_analysis` is populated exclusively on
- * `payroll-eor` profiles in tools.json. ATS and performance management
- * comparisons resolve to zero columns and the whole block is skipped, which is
- * why the gating lives in the data rather than in a niche allowlist here.
- */
-const ENTERPRISE_SECTION_META = [
-  {
-    key: 'ip_assignment',
-    title: 'Intellectual Property & Work Product Assignment',
-    intro:
-      'How work product created abroad actually transfers to your company, and whether the assignment runs through a directly owned local entity or an intermediary sub-licensing chain.',
-  },
-  {
-    key: 'tax_withholding',
-    title: 'Localized Tax Withholding & Statutory Payroll',
-    intro:
-      'Employer tax contributions, social security deductions, and income tax withholding handled on your behalf, including mandatory 13th and 14th month salary in markets such as Brazil, Italy, and the Philippines.',
-  },
-  {
-    key: 'statutory_benefits',
-    title: 'Statutory Benefits & Local Labor Law Compliance',
-    intro:
-      'Statutory health insurance, pension contributions, and mandatory paid time off across tier-1 markets, plus severance, notice period enforcement, and who carries unlawful termination liability.',
-  },
-  {
-    key: 'fee_structure',
-    title: 'Fine-Print EOR Fee Structures & Hidden Costs',
-    intro:
-      'What reaches the invoice beyond the headline per-employee-per-month rate: FX conversion spread, security deposit requirements, offboarding fees, and per-country add-ons.',
-  },
-] as const;
-
-interface EnterpriseColumn {
-  name: string;
-  summary: string;
-  bullets: string[];
-}
-
-interface EnterpriseSection {
-  title: string;
-  intro: string;
-  columns: EnterpriseColumn[];
-}
-
 const toolAProfile = getToolProfile(comparison.tool_a_id);
 const toolBProfile = getToolProfile(comparison.tool_b_id);
-
-function techMatrixColumn(name: string, profile: ToolProfile | null) {
-  return {
-    name,
-    compliance: profile?.compliance ?? [],
-    integrations: profile?.integrations ?? [],
-    supportSLA: profile?.supportSLA ?? '',
-    deploymentType: profile?.deploymentType ?? '',
-    idealHeadcount: profile?.idealHeadcount ?? '',
-  };
-}
-
-const enterpriseSections: EnterpriseSection[] = ENTERPRISE_SECTION_META.map((meta) => {
-  const columns = [
-    { name: comparison.tool_a_name, entry: toolAProfile?.enterprise_analysis?.[meta.key] },
-    { name: comparison.tool_b_name, entry: toolBProfile?.enterprise_analysis?.[meta.key] },
-  ]
-    .filter((column): column is { name: string; entry: EnterpriseAnalysis } => Boolean(column.entry))
-    .map(({ name, entry }) => ({ name, summary: entry.summary, bullets: entry.bullets }));
-
-  return { title: meta.title, intro: meta.intro, columns };
-}).filter((section) => section.columns.length > 0);
+const toolAIntegrations = toolAProfile?.integrations ?? [];
+const toolBIntegrations = toolBProfile?.integrations ?? [];
+const hasNativeIntegrations = toolAIntegrations.length > 0 || toolBIntegrations.length > 0;
+const showFeatureTable = isHub && (featureMatrixRows.length > 0 || hasNativeIntegrations);
+const segmentPanels = isHub ? buildMasterSegmentPanels(pairRows ?? []) : [];
 
 const richSnippetSchema = [
   {
@@ -625,14 +477,6 @@ const personaEvaluation =
   isChildRoute && personaRows.length > 0 ? buildPersonaEvaluation(comparison, personaRows) : null;
 const workflowBottlenecks = isChildRoute ? buildWorkflowBottlenecks(comparison) : [];
 
-
-const winnerName =
-  comparison.winner_id === comparison.tool_a_id
-    ? comparison.tool_a_name
-    : comparison.winner_id === comparison.tool_b_id
-      ? comparison.tool_b_name
-      : comparison.winner_id;
-
 const toolAIsWinner = comparison.winner_id === comparison.tool_a_id;
 const toolBIsWinner = comparison.winner_id === comparison.tool_b_id;
 const toolAAffiliateHref = resolveVendorOutboundHref(comparison.tool_a_id, comparison.tool_a_affiliate_url);
@@ -653,116 +497,7 @@ const toolBDisplayRating = comparison.tool_b_rating;
 // Contractor Management, SMB Usability) rather than a blanket "better overall"
 // claim. Other comparisons fall back to the generic overall-winner framing.
 const isUseCaseVerdict = comparison.winner_category && comparison.winner_category !== 'Overall Fit';
-const winnerBullets = parsePipeList(comparison.winner_bullets ?? '');
 const winnerBadgeText = isUseCaseVerdict ? `Winner: ${comparison.winner_category}` : 'Winner';
-
-function extractMonthlyPrice(price: string): number | null {
-  const match = price.match(/\$([\d.]+)/);
-  return match ? parseFloat(match[1]) : null;
-}
-
-/** Card badges may use "From $25/mo"; FAQ copy already says "starts at". */
-function startingPriceForCopy(price: string): string {
-  return price.replace(/^from\s+/i, '').trim();
-}
-
-function contractorPaymentAnswer(current: Comparison, matrix: Record<string, FeatureMatrixEntry>): string {
-  const relevantKeys = ['Contractor Auto-Pay', 'Native Legal Entities', 'Zero FX Rate Markup', 'Global Tax Filings'];
-  const key = relevantKeys.find((candidate) => matrix[candidate]);
-
-  if (!key) {
-    return cleanCopy(
-      `Both ${current.tool_a_name} and ${current.tool_b_name} support paying international contractors, though coverage and payout speed can vary by country, so confirm details with each vendor for your specific markets.`
-    );
-  }
-
-  const entry = matrix[key];
-  if (entry.a && entry.b) {
-    return cleanCopy(
-      `Yes, both ${current.tool_a_name} and ${current.tool_b_name} support ${key.toLowerCase()} for paying international contractors.`
-    );
-  }
-  if (entry.a || entry.b) {
-    const supporter = entry.a ? current.tool_a_name : current.tool_b_name;
-    const other = entry.a ? current.tool_b_name : current.tool_a_name;
-    return cleanCopy(
-      `${supporter} offers ${key.toLowerCase()}, giving it the edge over ${other} for paying international contractors.`
-    );
-  }
-  return cleanCopy(
-    `Neither ${current.tool_a_name} nor ${current.tool_b_name} lists ${key.toLowerCase()} in this comparison, so confirm contractor payout coverage with each vendor directly.`
-  );
-}
-
-const priceA = extractMonthlyPrice(comparison.tool_a_starting_price);
-const priceB = extractMonthlyPrice(comparison.tool_b_starting_price);
-const priceDiffSentence =
-  priceA !== null && priceB !== null
-    ? ` That's a difference of $${Math.abs(priceA - priceB).toFixed(2).replace(/\.00$/, '')} at the entry tier.`
-    : '';
-
-// The pricing fine print (add-ons, FX spreads, per-module gating) is the most
-// citable detail on the page, so it is folded into the pricing FAQ answer as
-// well as the on-page callout: `faqItems` feeds the FAQPage JSON-LD, which is
-// where answer engines read pricing claims from. Each nuance is prefixed with
-// its vendor name because the strings themselves lead with a price rather than
-// a brand, and attribution has to survive being read out of context.
-const pricingNuanceAttributions = [
-  comparison.tool_a_pricing_nuance
-    ? `${comparison.tool_a_name}: ${comparison.tool_a_pricing_nuance}`
-    : '',
-  comparison.tool_b_pricing_nuance
-    ? `${comparison.tool_b_name}: ${comparison.tool_b_pricing_nuance}`
-    : '',
-].filter(Boolean);
-
-const pricingNuanceClause = pricingNuanceAttributions.length
-  ? ` Beyond the headline rates, here is the fine print. ${pricingNuanceAttributions.join(' ')}`
-  : '';
-
-const faqIntro = isHub
-  ? `${winnerName} is the better overall fit for technology buyers, startups, and scaleups. `
-  : isUseCaseVerdict
-    ? `${comparison.winner_label}. `
-    : `${winnerName} is the better fit for ${comparison.niche_audience_phrase}. `;
-
-const pricingFaqAnswer = cleanCopy(
-  `${comparison.tool_a_name} starts at ${startingPriceForCopy(comparison.tool_a_starting_price)}; ${comparison.tool_a_pricing_model}. ${comparison.tool_b_name} starts at ${startingPriceForCopy(comparison.tool_b_starting_price)}; ${comparison.tool_b_pricing_model}.${priceDiffSentence}${pricingNuanceClause}`
-);
-
-const hubFaq3 =
-  hubFamily === 'ats'
-    ? {
-        question: 'Do these ATS platforms integrate with job boards and HRIS tools?',
-        answer:
-          'Yes, both platforms support multi-board job posting syndication and two-way worker record syncing with major HRIS platforms like BambooHR, Rippling, and Gusto.',
-      }
-    : hubFamily === 'pm'
-      ? {
-          question: 'Do these performance tools integrate with core HRIS systems?',
-          answer:
-            'Yes, both platforms sync employee organization charts directly with core HRIS platforms to automate review cycle participant rosters.',
-        }
-      : {
-          question: `Does ${comparison.tool_a_name} or ${comparison.tool_b_name} handle international contractor payments?`,
-          answer: contractorPaymentAnswer(comparison, featureMatrix),
-        };
-
-const hubFaqItems: FaqItem[] = [
-  {
-    question: `Is ${comparison.tool_a_name} or ${comparison.tool_b_name} better for technology buyers, startups, and scaleups?`,
-    answer: cleanCopy(`${faqIntro}${comparison.winner_reason}`),
-  },
-  {
-    question: `What is the starting price difference between ${comparison.tool_a_name} and ${comparison.tool_b_name}?`,
-    answer: pricingFaqAnswer,
-  },
-  hubFaq3,
-];
-
-const faqItems: FaqItem[] = isHub
-  ? hubFaqItems
-  : buildPersonaFaqItems(comparison, personaRows, modifierLabel, pricingFaqAnswer);
 
 const slugParam = Astro.params.slug;
 const pagePath = `/${(Array.isArray(slugParam) ? slugParam.filter(Boolean) : String(slugParam ?? '').split('/').filter(Boolean)).join('/')}/`;
@@ -775,7 +510,6 @@ const schemaGraph = buildSchemaGraph(
   comparison,
   pageUrl,
   siteRootUrl,
-  faqItems,
   toolADisplayRating,
   toolBDisplayRating,
   toolANarrative.reviewCountNumeric,
@@ -971,6 +705,10 @@ const heroLogoPreloads = (
         <PricingNuance
           toolAName={comparison.tool_a_name}
           toolBName={comparison.tool_b_name}
+          toolALogo={comparison.tool_a_logo_url}
+          toolBLogo={comparison.tool_b_logo_url}
+          toolABadgeColor={toolABadgeColor}
+          toolBBadgeColor={toolBBadgeColor}
           toolANuance={comparison.tool_a_pricing_nuance ? cleanCopy(comparison.tool_a_pricing_nuance) : ''}
           toolBNuance={comparison.tool_b_pricing_nuance ? cleanCopy(comparison.tool_b_pricing_nuance) : ''}
         />
@@ -980,13 +718,20 @@ const heroLogoPreloads = (
         <VerdictCallout take={cleanCopy(comparison.hr_stack_take)} />
       )}
 
-      {isHub && variants.length > 0 && (
-        <TailoredEvaluationsSection variants={variants} family={hubFamily} />
+      {isHub && (
+        <SegmentTabEngine panels={segmentPanels} />
       )}
 
-      {isHub && featureMatrixRows.length > 0 && (
-        <section class="mb-12" aria-label="Feature comparison matrix">
-          <h3 class="mb-6 text-xl font-bold text-slate-900">Feature Comparison</h3>
+      {isHub && (
+        <aside class="mb-12" aria-label="Add as a Google preferred source">
+          <p class="text-sm font-medium text-slate-700">Enjoying benchmarks from The HR Stack Guide?</p>
+          <PreferredSourceButton theme="light" align="left" />
+        </aside>
+      )}
+
+      {showFeatureTable && (
+        <section class="mb-12" aria-label="Feature and integration comparison">
+          <h2 class="mb-6 text-2xl font-bold text-slate-900">Feature &amp; Integration Comparison</h2>
           <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div class="overflow-x-auto">
               <table class="w-full min-w-[480px] text-left text-sm">
@@ -994,27 +739,35 @@ const heroLogoPreloads = (
                   <tr class="border-b border-slate-200 bg-slate-50">
                     <th scope="col" class="px-6 py-4 align-bottom font-semibold text-slate-700">Feature</th>
                     <th scope="col" class="px-6 py-4 align-bottom font-semibold text-slate-700">
-                      {comparison.tool_a_badge && (
-                        <span class="mb-1.5 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                          {comparison.tool_a_badge}
-                        </span>
-                      )}
-                      <span class="block">{comparison.tool_a_name}</span>
+                      <span class="flex items-center gap-2.5">
+                        <VendorLogo
+                          src={comparison.tool_a_logo_url}
+                          alt=""
+                          name={comparison.tool_a_name}
+                          badgeColor={toolABadgeColor}
+                          size={36}
+                        />
+                        <span>{comparison.tool_a_name}</span>
+                      </span>
                     </th>
                     <th scope="col" class="px-6 py-4 align-bottom font-semibold text-slate-700">
-                      {comparison.tool_b_badge && (
-                        <span class="mb-1.5 inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                          {comparison.tool_b_badge}
-                        </span>
-                      )}
-                      <span class="block">{comparison.tool_b_name}</span>
+                      <span class="flex items-center gap-2.5">
+                        <VendorLogo
+                          src={comparison.tool_b_logo_url}
+                          alt=""
+                          name={comparison.tool_b_name}
+                          badgeColor={toolBBadgeColor}
+                          size={36}
+                        />
+                        <span>{comparison.tool_b_name}</span>
+                      </span>
                     </th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                   {featureMatrixRows.map(([feature, value]) => (
                     <tr class="transition hover:bg-slate-50/80">
-                      <td class="px-6 py-4 font-medium text-slate-900">{feature}</td>
+                      <th scope="row" class="px-6 py-4 font-medium text-slate-900">{feature}</th>
                       <td class="px-6 py-4">
                         {value.a ? (
                           <span class="inline-flex items-center rounded-full bg-emerald-50 p-0.5 text-emerald-600" aria-label="Yes">
@@ -1047,6 +800,26 @@ const heroLogoPreloads = (
                       </td>
                     </tr>
                   ))}
+                  {hasNativeIntegrations && (
+                    <tr class="align-top transition hover:bg-slate-50/80">
+                      <th scope="row" class="px-6 py-4 font-medium text-slate-900">Native Integrations</th>
+                      {[toolAIntegrations, toolBIntegrations].map((integrations) => (
+                        <td class="px-6 py-4 text-slate-700">
+                          {integrations.length > 0 ? (
+                            <ul class="flex flex-wrap gap-1.5">
+                              {integrations.map((item) => (
+                                <li class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p class="text-sm text-slate-500">Not published</p>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  )}
                 </tbody>
                 <tfoot>
                   <tr class="border-t border-slate-200 bg-slate-50">
@@ -1083,11 +856,6 @@ const heroLogoPreloads = (
         </section>
       )}
 
-      <TechnicalComplianceMatrix
-        toolA={techMatrixColumn(comparison.tool_a_name, toolAProfile)}
-        toolB={techMatrixColumn(comparison.tool_b_name, toolBProfile)}
-      />
-
       {isChildRoute && personaEvaluation && (
         <PersonaEvaluation evaluation={personaEvaluation} />
       )}
@@ -1105,33 +873,25 @@ const heroLogoPreloads = (
         <WorkflowBottlenecks modifierLabel={modifierLabel} items={workflowBottlenecks} />
       )}
 
-      {isChildRoute && (
-        <ComparisonFaq
-          heading={`Frequently Asked Questions for ${modifierLabel}`}
-          ariaLabel={`Frequently asked questions for ${modifierLabel}`}
-          items={faqItems}
-        />
-      )}
-
-      {isHub && (
-      <aside class="mb-12" aria-label="Add as a Google preferred source">
-        <p class="text-sm font-medium text-slate-700">Enjoying benchmarks from The HR Stack Guide?</p>
-        <PreferredSourceButton theme="light" align="left" />
-      </aside>
-      )}
-
       {isHub && (
       <>
-      <!-- Pros & Cons Section -->
       <section class="mb-12" aria-label="Pros and cons comparison">
-        <h3 class="mb-6 text-xl font-bold text-slate-900">Pros &amp; Cons</h3>
+        <h2 class="mb-6 text-2xl font-bold text-slate-900">Pros &amp; Cons</h2>
         <div class="grid gap-6 lg:grid-cols-2">
-          <!-- Tool A Pros/Cons -->
           <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h4 class="text-lg font-semibold text-slate-900">{comparison.tool_a_name}</h4>
+            <h3 class="flex items-center gap-3 text-lg font-semibold text-slate-900">
+              <VendorLogo
+                src={comparison.tool_a_logo_url}
+                alt=""
+                name={comparison.tool_a_name}
+                badgeColor={toolABadgeColor}
+                size={32}
+              />
+              <span>{comparison.tool_a_name}</span>
+            </h3>
             <div class="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
-                <h5 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h5>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
                 <ul class="space-y-3">
                   {toolAPros.map((pro) => (
                     <li class="flex items-start gap-2.5 text-sm text-slate-700">
@@ -1146,7 +906,7 @@ const heroLogoPreloads = (
                 </ul>
               </div>
               <div>
-                <h5 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h5>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
                 <ul class="space-y-3">
                   {toolACons.map((con) => (
                     <li class="flex items-start gap-2.5 text-sm text-slate-700">
@@ -1161,14 +921,37 @@ const heroLogoPreloads = (
                 </ul>
               </div>
             </div>
+            {toolANarrative.chooseIf.length > 0 && (
+              <div class="mt-8 border-t border-slate-100 pt-6">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">Choose {comparison.tool_a_name} if...</h4>
+                <ul class="mt-4 space-y-3">
+                  {toolANarrative.chooseIf.map((reason) => (
+                    <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-5 w-5 shrink-0 text-indigo-600" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                      </svg>
+                      <span>{reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
 
-          <!-- Tool B Pros/Cons -->
           <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h4 class="text-lg font-semibold text-slate-900">{comparison.tool_b_name}</h4>
+            <h3 class="flex items-center gap-3 text-lg font-semibold text-slate-900">
+              <VendorLogo
+                src={comparison.tool_b_logo_url}
+                alt=""
+                name={comparison.tool_b_name}
+                badgeColor={toolBBadgeColor}
+                size={32}
+              />
+              <span>{comparison.tool_b_name}</span>
+            </h3>
             <div class="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
-                <h5 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h5>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
                 <ul class="space-y-3">
                   {toolBPros.map((pro) => (
                     <li class="flex items-start gap-2.5 text-sm text-slate-700">
@@ -1183,7 +966,7 @@ const heroLogoPreloads = (
                 </ul>
               </div>
               <div>
-                <h5 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h5>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
                 <ul class="space-y-3">
                   {toolBCons.map((con) => (
                     <li class="flex items-start gap-2.5 text-sm text-slate-700">
@@ -1198,60 +981,21 @@ const heroLogoPreloads = (
                 </ul>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SECTION 4: Decision Checklist -->
-      <section class="mb-12" aria-label="Buyer decision checklist">
-        <h2 class="mb-6 text-2xl font-bold text-slate-900">The Decision Checklist</h2>
-        <div class="grid gap-6 lg:grid-cols-2">
-          <div class="rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:p-8">
-            <h3 class="text-lg font-bold text-indigo-900">Choose {comparison.tool_a_name} If...</h3>
-            <ul class="mt-4 space-y-3">
-              {toolANarrative.chooseIf.map((reason) => (
-                <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-5 w-5 shrink-0 text-indigo-600" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                  </svg>
-                  <span><span class="font-semibold text-slate-900">{reason}</span></span>
-                </li>
-              ))}
-            </ul>
-            <VendorButton
-              href={toolAAffiliateHref}
-              modalId={toolAIsManualLead ? toolAModalId : undefined}
-              vendorId={comparison.tool_a_id}
-              vendorName={comparison.tool_a_name}
-              location="decision_checklist"
-              class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-            >
-              {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}
-            </VendorButton>
-          </div>
-
-          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
-            <h3 class="text-lg font-bold text-slate-900">Choose {comparison.tool_b_name} If...</h3>
-            <ul class="mt-4 space-y-3">
-              {toolBNarrative.chooseIf.map((reason) => (
-                <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-5 w-5 shrink-0 text-slate-500" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                  </svg>
-                  <span><span class="font-semibold text-slate-900">{reason}</span></span>
-                </li>
-              ))}
-            </ul>
-            <VendorButton
-              href={toolBAffiliateHref}
-              modalId={toolBIsManualLead ? toolBModalId : undefined}
-              vendorId={comparison.tool_b_id}
-              vendorName={comparison.tool_b_name}
-              location="decision_checklist"
-              class="mt-6 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-            >
-              {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}
-            </VendorButton>
+            {toolBNarrative.chooseIf.length > 0 && (
+              <div class="mt-8 border-t border-slate-100 pt-6">
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">Choose {comparison.tool_b_name} if...</h4>
+                <ul class="mt-4 space-y-3">
+                  {toolBNarrative.chooseIf.map((reason) => (
+                    <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-5 w-5 shrink-0 text-indigo-600" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                      </svg>
+                      <span>{reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -1260,166 +1004,21 @@ const heroLogoPreloads = (
       </>
       )}
 
-      <!-- SECTION 5: Final Verdict & Primary CTAs -->
-      {isHub && (
-      <section class="mb-12" aria-label="Final verdict">
-        <h2 class="mb-6 text-2xl font-bold text-slate-900">
-          {isHub ? 'Final Verdict' : `Final Verdict for ${modifierLabel}`}
-        </h2>
-
-        <!-- Winner Banner -->
-        <div class="mb-6 overflow-hidden rounded-2xl border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-slate-50 shadow-sm">
-          <div class="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-            <div class="flex items-start gap-4">
-              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <div>
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="inline-flex items-center rounded-full bg-emerald-600 px-2.5 py-0.5 text-xs font-semibold text-white">
-                    {isUseCaseVerdict ? `Best for ${comparison.winner_category}` : 'Recommended Choice'}
-                  </span>
-                </div>
-                <h3 class="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">
-                  {isUseCaseVerdict ? comparison.winner_label : `${winnerName} is the winner`}
-                </h3>
-                {winnerBullets.length > 0 && (
-                  <ul class="mt-3 max-w-2xl space-y-1.5">
-                    {winnerBullets.map((bullet) => (
-                      <li class="flex items-start gap-2 text-sm text-slate-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                        </svg>
-                        {bullet}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Final Primary CTAs -->
-        <div class="mt-6 flex flex-col items-start gap-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:flex-row sm:items-center sm:justify-end sm:p-8">
-          <div class="flex flex-wrap gap-3">
-            <VendorButton
-              href={toolAAffiliateHref}
-              modalId={toolAIsManualLead ? toolAModalId : undefined}
-              vendorId={comparison.tool_a_id}
-              vendorName={comparison.tool_a_name}
-              location="final_verdict"
-              class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-            >
-              {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}
-            </VendorButton>
-            <VendorButton
-              href={toolBAffiliateHref}
-              modalId={toolBIsManualLead ? toolBModalId : undefined}
-              vendorId={comparison.tool_b_id}
-              vendorName={comparison.tool_b_name}
-              location="final_verdict"
-              class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-            >
-              {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}
-            </VendorButton>
-          </div>
-        </div>
-      </section>
-      )}
-
-      {isChildRoute && (
-        <section class="mb-12" aria-label={`${modifierLabel} next steps`}>
-          <div class="flex flex-col items-start gap-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-            <p class="text-sm font-medium text-slate-800">
-              Ready to act on this {modifierLabel} evaluation of {pairName}?
-            </p>
-            <div class="flex flex-wrap gap-3">
-              <VendorButton
-                href={toolAAffiliateHref}
-                modalId={toolAIsManualLead ? toolAModalId : undefined}
-                vendorId={comparison.tool_a_id}
-                vendorName={comparison.tool_a_name}
-                location="persona_next_step"
-                class="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
-              >
-                {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}
-              </VendorButton>
-              <VendorButton
-                href={toolBAffiliateHref}
-                modalId={toolBIsManualLead ? toolBModalId : undefined}
-                vendorId={comparison.tool_b_id}
-                vendorName={comparison.tool_b_name}
-                location="persona_next_step"
-                class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 hover:shadow-md"
-              >
-                {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}
-              </VendorButton>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {isHub && (
-        <ComparisonFaq
-          heading="Frequently Asked Questions"
-          ariaLabel="Frequently asked questions"
-          items={faqItems}
-        />
-      )}
-
-      {isHub && enterpriseSections.length > 0 && (
-        <details class="legal-deep-dive group mb-12">
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 px-6 py-5 text-base font-bold text-slate-900 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-900 group-open:border-indigo-200 group-open:bg-indigo-50/80 [&::-webkit-details-marker]:hidden">
-            <span>Deep-Dive Legal, IP &amp; Tax Analysis</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              class="h-5 w-5 shrink-0 text-indigo-600 transition group-open:rotate-180"
-              aria-hidden="true"
-            >
-              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z" clip-rule="evenodd" />
-            </svg>
-          </summary>
-          <div class="legal-deep-dive-body mt-4 space-y-6 text-sm leading-relaxed text-slate-700">
-            <p class="max-w-3xl text-sm text-slate-500">
-              The four questions that decide an EOR contract once legal and procurement get involved: who owns the work product, who files the payroll taxes, who carries the termination liability, and what the invoice actually looks like.
-            </p>
-            {enterpriseSections.map((section) => (
-              <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-                <h3 class="text-lg font-bold text-slate-900">{section.title}</h3>
-                <p class="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500">{section.intro}</p>
-                <div class:list={['mt-5 grid gap-6', section.columns.length > 1 && 'sm:grid-cols-2']}>
-                  {section.columns.map((column) => (
-                    <div class="rounded-xl bg-slate-50 p-5">
-                      <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">{column.name}</h4>
-                      <p class="mt-2 text-sm leading-relaxed text-slate-700">{column.summary}</p>
-                      <ul class="mt-4 space-y-2.5">
-                        {column.bullets.map((bullet) => (
-                          <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
-                            <span aria-hidden="true" class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400"></span>
-                            <span>{bullet}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </div>
-        </details>
-      )}
-
       <!-- Related Comparisons -->
       {related.length > 0 && (
         <section class="mt-16" aria-label="Related comparisons">
-          <h2 class="mb-6 text-2xl font-bold text-slate-900">
+          <h2 class="mb-2 text-2xl font-bold text-slate-900">
             {isHub ? 'Related Comparisons' : `Related Comparisons for ${modifierLabel}`}
           </h2>
+          <p class="mb-6 text-sm text-slate-600">
+            More head-to-head guides, plus the
+            {' '}
+            <a href={categoryHub.href} class="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900">
+              {categoryHub.label}
+            </a>
+            {' '}
+            category hub.
+          </p>
           <div class="grid gap-6 sm:grid-cols-3">
             {related.map((item) => (
               <a
@@ -1443,6 +1042,7 @@ const heroLogoPreloads = (
           </div>
         </section>
       )}
+
     </main>
 
     <script>

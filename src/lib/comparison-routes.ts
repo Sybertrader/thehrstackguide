@@ -38,6 +38,10 @@ export type ReservedRouteSegment = (typeof RESERVED_ROUTE_SEGMENTS)[number];
 export const COMPARISON_SLUG_PATTERN =
   /^[a-z0-9]+(?:-[a-z0-9]+)*-vs-[a-z0-9]+(?:-[a-z0-9]+)*(?:-for-[a-z0-9]+(?:-[a-z0-9]+)*)?$/;
 
+/** Master 1-1 slug only: `brand-a-vs-brand-b` with no `-for-{segment}` suffix. */
+export const MASTER_COMPARISON_SLUG_PATTERN =
+  /^[a-z0-9]+(?:-[a-z0-9]+)*-vs-[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 const RESERVED_SEGMENT_SET = new Set<string>(RESERVED_ROUTE_SEGMENTS);
 
 /**
@@ -62,6 +66,13 @@ export function isReservedRouteSegment(segment: string): boolean {
  */
 export function isComparisonRouteSlug(slug: string): boolean {
   if (!COMPARISON_SLUG_PATTERN.test(slug)) return false;
+  const firstSegment = slug.split('/')[0] ?? '';
+  return !isReservedRouteSegment(firstSegment);
+}
+
+/** True for a live HTML comparison hub (`deel-vs-remote`), never a `-for-` child. */
+export function isComparisonHubSlug(slug: string): boolean {
+  if (!MASTER_COMPARISON_SLUG_PATTERN.test(slug)) return false;
   const firstSegment = slug.split('/')[0] ?? '';
   return !isReservedRouteSegment(firstSegment);
 }
@@ -107,17 +118,17 @@ export function comparisonHubSlug(toolAId: string, toolBId: string): string {
 }
 
 /**
- * Public `-for-{modifier}` token for live child URLs.
- * Payroll CSV still uses `tech-startups`; those pages are served at `-for-startups`.
- * Never emit `remote-first` - the live modifier is `remote-teams`.
+ * Public `-for-{modifier}` token used only when parsing legacy URLs.
+ * Payroll CSV still uses `tech-startups`; those requests 308 to the pair hub.
+ * Never emit `remote-first` - the historical modifier is `remote-teams`.
  */
 export function publicModifierSlug(nicheId: string): string {
   if (nicheId === 'tech-startups') return 'startups';
   return nicheId;
 }
 
-export function childComparisonHref(toolAId: string, toolBId: string, nicheId: string): string {
-  return `/${comparisonHubSlug(toolAId, toolBId)}-for-${publicModifierSlug(nicheId)}/`;
+export function childComparisonHref(toolAId: string, toolBId: string, _nicheId?: string): string {
+  return `/${comparisonHubSlug(toolAId, toolBId)}/`;
 }
 
 /** True for pruned payroll slugs that 301 to the pair's master hub. */

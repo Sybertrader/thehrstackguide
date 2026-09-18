@@ -16,17 +16,6 @@ const ashbyBase: AtsFeatures = {
   seatOrUsagePricing: spec(true, '$400/month Foundations flat fee to 100 employees, unlimited recruiter seats, no published free trial.'),
 };
 
-const greenhouseBase: AtsFeatures = {
-  structuredScorecards: spec(true, 'Structured Hiring scorecards are the methodology: every interview stage is auditable for later OFCCP review.'),
-  sourcingCrm: spec(false, 'CRM is not the core Greenhouse motion; outbound nurture trails Lever/Ashby.'),
-  interviewScheduling: spec(true, 'Self-scheduling plus interview kit enforcement; global language support on career sites.'),
-  careerSiteAndJobBoards: spec(true, 'Global job-board postings and branded career site as a first-class enterprise module.'),
-  complianceAndEeoc: spec(true, 'Best-in-class EEO/OFCCP and DEI reporting for US federal contractors and audit-ready hiring files.'),
-  reportingAndAnalytics: spec(true, 'Standard recruiting reports plus compliance dashboards; less “productized analytics” than Ashby.'),
-  integrations: spec(true, '400+ native integrations including Checkr background checks, HRIS, and assessments.'),
-  seatOrUsagePricing: spec(true, 'Quote-only annual contracts; no unlimited-seat Foundations SKU and no self-serve free trial.'),
-};
-
 const leverBase: AtsFeatures = {
   structuredScorecards: spec(true, 'Scorecards exist but are secondary to CRM nurture; less audit-rigid than Greenhouse Structured Hiring.'),
   sourcingCrm: spec(true, 'Candidate CRM, silver-medalist rediscovery, and automated nurture campaigns are the Lever differentiator.'),
@@ -112,26 +101,6 @@ export const atsPersonaByToolId: Record<string, AtsPersonaData> = {
     }),
     enterpriseFeatures: ats(ashbyBase, {
       complianceAndEeoc: spec(true, 'GDPR plus analytics for enterprise talent ops; OFCCP audit files still trail Greenhouse Structured Hiring.'),
-    }),
-  },
-  greenhouse: {
-    startupFeatures: ats(greenhouseBase, {
-      seatOrUsagePricing: spec(false, 'Quote-only annual contracts and implementation weight make Greenhouse a poor first ATS under ~25 reqs/year.'),
-    }),
-    scaleupFeatures: ats(greenhouseBase, {
-      structuredScorecards: spec(true, 'Structured Hiring becomes the scaleup control system once interview panels need auditability.'),
-    }),
-    agencyFeatures: ats(greenhouseBase, {
-      sourcingCrm: spec(false, 'No staffing client portal. Greenhouse is an in-house enterprise ATS, not a submission ATS for agencies.'),
-    }),
-    remoteFeatures: ats(greenhouseBase, {
-      careerSiteAndJobBoards: spec(true, 'Multi-language career sites and global job boards for distributed employer brands.'),
-    }),
-    hourlyFeatures: ats(greenhouseBase, {
-      integrations: spec(true, 'Checkr (and similar) background-check integrations; SMS candidate texting is not a Workable-style native add-on.'),
-    }),
-    enterpriseFeatures: ats(greenhouseBase, {
-      complianceAndEeoc: spec(true, 'EEO/OFCCP reporting plus SAML 2.0 SSO and 400+ integrations for federal contractors and global HRIS stacks.'),
     }),
   },
   lever: {

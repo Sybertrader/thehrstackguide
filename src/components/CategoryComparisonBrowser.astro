@@ -1,239 +1,253 @@
 ---
 import type { Comparison } from '../types/comparison';
-import { buildCategoryBrowser, childHref } from '../lib/category-browser';
+import { buildCategoryBrowser } from '../lib/category-browser';
 
 interface Props {
   comparisons: Comparison[];
   theme: 'emerald' | 'indigo' | 'sky';
   idPrefix: string;
+  gridTitle: string;
 }
 
-const { comparisons, theme, idPrefix } = Astro.props;
-const { pills, pairings } = buildCategoryBrowser(comparisons);
-const defaultPill = pills[0] ?? null;
+const { comparisons, theme, idPrefix, gridTitle } = Astro.props;
+const { vendors, pairings, canonicalByPair } = buildCategoryBrowser(comparisons);
+const canonicalMapJson = JSON.stringify(canonicalByPair);
 
 const themeClasses = {
   emerald: {
-    active: 'border-emerald-600 bg-emerald-600 text-white shadow-sm',
-    inactive: 'border-slate-200 bg-white text-slate-600 hover:border-emerald-300 hover:text-emerald-700',
     cardHover: 'hover:border-emerald-300',
     titleHover: 'group-hover:text-emerald-600',
     iconHover: 'group-hover:text-emerald-600',
+    button: 'bg-emerald-600 hover:bg-emerald-700 focus:ring-emerald-500',
+    vs: 'bg-emerald-600',
+    ring: 'focus:border-emerald-500 focus:ring-emerald-500',
   },
   indigo: {
-    active: 'border-indigo-600 bg-indigo-600 text-white shadow-sm',
-    inactive: 'border-slate-200 bg-white text-slate-600 hover:border-indigo-300 hover:text-indigo-700',
     cardHover: 'hover:border-indigo-300',
     titleHover: 'group-hover:text-indigo-600',
     iconHover: 'group-hover:text-indigo-600',
+    button: 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500',
+    vs: 'bg-indigo-600',
+    ring: 'focus:border-indigo-500 focus:ring-indigo-500',
   },
   sky: {
-    active: 'border-sky-600 bg-sky-600 text-white shadow-sm',
-    inactive: 'border-slate-200 bg-white text-slate-600 hover:border-sky-300 hover:text-sky-700',
     cardHover: 'hover:border-sky-300',
     titleHover: 'group-hover:text-sky-600',
     iconHover: 'group-hover:text-sky-600',
+    button: 'bg-sky-600 hover:bg-sky-700 focus:ring-sky-500',
+    vs: 'bg-sky-600',
+    ring: 'focus:border-sky-500 focus:ring-sky-500',
   },
 } as const;
 
 const palette = themeClasses[theme];
+const vendorAId = `${idPrefix}-vendor-a`;
+const vendorBId = `${idPrefix}-vendor-b`;
 ---
 
 {
-  pills.length > 0 && pairings.length > 0 && defaultPill && (
-    <div data-comparison-browser data-theme={theme}>
-      <p class="mb-6 w-full max-w-none text-sm text-slate-500">
-        Compare leading tools side by side. Select your company stage below to see breakdowns and recommendations tailored to your team.
-      </p>
+  vendors.length > 1 && pairings.length > 0 && (
+    <div class="mb-16" data-matchup-selector data-canonical-map={canonicalMapJson}>
+      <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Build Your Comparison</h2>
+        <p class="mt-2 max-w-2xl text-base leading-relaxed text-slate-600">
+          Select two vendors below to generate an instant head-to-head analysis.
+        </p>
 
-      <p
-        data-vendor-filter-banner
-        class="mb-6 hidden rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600"
-      >
-        Showing head-to-head guides that include <span data-vendor-filter-name class="font-semibold text-slate-900"></span>
-        <a data-vendor-clear href="./" class="font-semibold text-indigo-600 hover:text-indigo-700">
-          View all comparisons
-        </a>
-      </p>
+        <form data-matchup-form class="mt-6" novalidate>
+          <div class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-end">
+            <div class="min-w-0 flex-1">
+              <label for={vendorAId} class="mb-1.5 block text-sm font-semibold text-slate-700">
+                Vendor A
+              </label>
+              <select
+                id={vendorAId}
+                name="vendorA"
+                data-vendor-a
+                required
+                class:list={[
+                  'w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm font-medium text-slate-900 shadow-sm transition',
+                  'focus:outline-none focus:ring-2',
+                  palette.ring,
+                ]}
+              >
+                <option value="">Select a platform</option>
+                {vendors.map((vendor) => (
+                  <option value={vendor.id}>{vendor.name}</option>
+                ))}
+              </select>
+            </div>
 
-      <div class="mb-8 flex flex-wrap gap-2" role="tablist" aria-label="Filter comparisons by use case">
-        {pills.map((pill, index) => (
-          <button
-            type="button"
-            role="tab"
-            id={`${idPrefix}-tab-${pill.slug}`}
-            data-persona-pill={pill.slug}
-            data-persona-label={pill.label}
-            aria-selected={index === 0 ? 'true' : 'false'}
-            class:list={[
-              'inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold transition',
-              index === 0 ? palette.active : palette.inactive,
-            ]}
-          >
-            {pill.label}
-          </button>
-        ))}
-      </div>
+            <div class="flex shrink-0 items-center justify-center sm:pb-1">
+              <span
+                class:list={[
+                  'inline-flex h-10 w-10 items-center justify-center rounded-full text-xs font-bold tracking-wider text-white',
+                  palette.vs,
+                ]}
+              >
+                VS
+              </span>
+            </div>
 
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" id={`${idPrefix}-comparison-grid`}>
-        {pairings.map((pairing) => {
-          const hasDefault = pairing.modifiers.includes(defaultPill.slug);
-          return (
-            <a
-              href={childHref(pairing.baseSlug, defaultPill.slug)}
-              data-base-slug={pairing.baseSlug}
-              data-modifiers={pairing.modifiers.join(',')}
-              data-tool-a-id={pairing.toolAId}
-              data-tool-b-id={pairing.toolBId}
-              data-tool-a-name={pairing.toolAName}
-              data-tool-b-name={pairing.toolBName}
+            <div class="min-w-0 flex-1">
+              <label for={vendorBId} class="mb-1.5 block text-sm font-semibold text-slate-700">
+                Vendor B
+              </label>
+              <select
+                id={vendorBId}
+                name="vendorB"
+                data-vendor-b
+                required
+                class:list={[
+                  'w-full rounded-xl border border-slate-300 bg-white px-3.5 py-3 text-sm font-medium text-slate-900 shadow-sm transition',
+                  'focus:outline-none focus:ring-2',
+                  palette.ring,
+                ]}
+              >
+                <option value="">Select a platform</option>
+                {vendors.map((vendor) => (
+                  <option value={vendor.id}>{vendor.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              data-compare-cta
+              disabled
               class:list={[
-                'comparison-card group flex flex-col gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:shadow-md',
-                palette.cardHover,
-                hasDefault ? '' : 'hidden opacity-0',
+                'inline-flex w-full items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-sm transition sm:w-auto sm:whitespace-nowrap',
+                'focus:outline-none focus:ring-2 focus:ring-offset-2',
+                'disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none',
+                palette.button,
               ]}
             >
-              <span
-                data-persona-badge
-                class="inline-flex w-fit items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500"
+              Compare Now
+              <span aria-hidden="true" class="ml-1.5">→</span>
+            </button>
+          </div>
+
+          <p data-matchup-error class="mt-3 hidden text-sm font-medium text-red-600" role="alert"></p>
+        </form>
+      </div>
+
+      <div class="mt-10">
+        <h3 class="mb-4 text-lg font-bold text-slate-900">{gridTitle}</h3>
+        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {pairings.map((pairing) => (
+            <li>
+              <a
+                href={pairing.href}
+                class:list={[
+                  'group flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:shadow-md',
+                  palette.cardHover,
+                ]}
               >
-                {defaultPill.label}
-              </span>
-              <span class="flex items-center justify-between gap-3">
                 <span class:list={['font-semibold text-slate-800 transition', palette.titleHover]}>
                   {pairing.toolAName} vs {pairing.toolBName}
                 </span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class:list={['h-4 w-4 shrink-0 text-slate-400 transition', palette.iconHover]} aria-hidden="true">
-                  <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  class:list={['h-4 w-4 shrink-0 text-slate-400 transition', palette.iconHover]}
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z"
+                    clip-rule="evenodd"
+                  />
                 </svg>
-              </span>
-            </a>
-          );
-        })}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
-
-      <p data-comparison-empty-state class="hidden mt-10 text-center text-sm text-slate-500">
-        No comparisons found for this use case yet.
-      </p>
     </div>
   )
 }
 
 <script>
-  const THEME_CLASSES = {
-    emerald: {
-      active: ['border-emerald-600', 'bg-emerald-600', 'text-white', 'shadow-sm'],
-      inactive: ['border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-emerald-300', 'hover:text-emerald-700'],
-    },
-    indigo: {
-      active: ['border-indigo-600', 'bg-indigo-600', 'text-white', 'shadow-sm'],
-      inactive: ['border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-indigo-300', 'hover:text-indigo-700'],
-    },
-    sky: {
-      active: ['border-sky-600', 'bg-sky-600', 'text-white', 'shadow-sm'],
-      inactive: ['border-slate-200', 'bg-white', 'text-slate-600', 'hover:border-sky-300', 'hover:text-sky-700'],
-    },
-  } as const;
+  function canonicalHref(
+    map: Record<string, string>,
+    vendorA: string,
+    vendorB: string,
+  ): string | null {
+    return map[`${vendorA}|${vendorB}`] ?? map[`${vendorB}|${vendorA}`] ?? `/${vendorA}-vs-${vendorB}/`;
+  }
 
-  function initComparisonBrowsers() {
-    const roots = Array.from(document.querySelectorAll<HTMLElement>('[data-comparison-browser]'));
+  function syncDisabledOptions(selectA: HTMLSelectElement, selectB: HTMLSelectElement) {
+    const a = selectA.value;
+    const b = selectB.value;
+    for (const option of Array.from(selectA.options)) {
+      if (!option.value) continue;
+      option.disabled = option.value === b;
+    }
+    for (const option of Array.from(selectB.options)) {
+      if (!option.value) continue;
+      option.disabled = option.value === a;
+    }
+  }
+
+  function initMatchupSelectors() {
+    const roots = Array.from(document.querySelectorAll<HTMLElement>('[data-matchup-selector]'));
 
     for (const root of roots) {
-      const theme = (root.dataset.theme ?? 'emerald') as keyof typeof THEME_CLASSES;
-      const palette = THEME_CLASSES[theme] ?? THEME_CLASSES.emerald;
-      const tabButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-persona-pill]'));
-      const cards = Array.from(root.querySelectorAll<HTMLAnchorElement>('.comparison-card'));
-      const emptyState = root.querySelector<HTMLElement>('[data-comparison-empty-state]');
-      const vendorBanner = root.querySelector<HTMLElement>('[data-vendor-filter-banner]');
-      const vendorNameEl = root.querySelector<HTMLElement>('[data-vendor-filter-name]');
-      const vendorClear = root.querySelector<HTMLAnchorElement>('[data-vendor-clear]');
-      if (!tabButtons.length || !cards.length) continue;
+      const form = root.querySelector<HTMLFormElement>('[data-matchup-form]');
+      const selectA = root.querySelector<HTMLSelectElement>('[data-vendor-a]');
+      const selectB = root.querySelector<HTMLSelectElement>('[data-vendor-b]');
+      const cta = root.querySelector<HTMLButtonElement>('[data-compare-cta]');
+      const error = root.querySelector<HTMLElement>('[data-matchup-error]');
+      if (!form || !selectA || !selectB || !cta) continue;
 
-      const vendor = (new URLSearchParams(window.location.search).get('vendor') ?? '').trim().toLowerCase();
-
-      function cardMatchesVendor(card: HTMLAnchorElement): boolean {
-        if (!vendor) return true;
-        return card.dataset.toolAId === vendor || card.dataset.toolBId === vendor;
+      let canonicalMap: Record<string, string> = {};
+      try {
+        canonicalMap = JSON.parse(root.dataset.canonicalMap || '{}') as Record<string, string>;
+      } catch {
+        canonicalMap = {};
       }
 
-      function vendorDisplayName(): string {
-        for (const card of cards) {
-          if (card.dataset.toolAId === vendor) return card.dataset.toolAName || vendor;
-          if (card.dataset.toolBId === vendor) return card.dataset.toolBName || vendor;
+      function updateCta() {
+        const ready = Boolean(selectA!.value && selectB!.value && selectA!.value !== selectB!.value);
+        cta!.disabled = !ready;
+        if (error) {
+          error.classList.add('hidden');
+          error.textContent = '';
         }
-        return vendor;
       }
 
-      if (vendor && vendorBanner && vendorNameEl) {
-        vendorNameEl.textContent = `${vendorDisplayName().trim()}.`;
-        vendorBanner.classList.remove('hidden');
-        if (vendorClear) vendorClear.href = window.location.pathname;
+      function onChange() {
+        if (selectA!.value && selectA!.value === selectB!.value) {
+          selectB!.value = '';
+        }
+        syncDisabledOptions(selectA!, selectB!);
+        updateCta();
       }
 
-      function applyPersona(personaSlug: string, label: string) {
-        let visibleCount = 0;
-        for (const card of cards) {
-          const baseSlug = card.dataset.baseSlug;
-          const modifiers = (card.dataset.modifiers ?? '').split(',').filter(Boolean);
-          const matches =
-            Boolean(baseSlug) && modifiers.includes(personaSlug) && cardMatchesVendor(card);
-          if (matches && baseSlug) {
-            visibleCount += 1;
-            card.href = `/${baseSlug}-for-${personaSlug}/`;
-            card.classList.remove('hidden', 'opacity-0');
-            const badge = card.querySelector('[data-persona-badge]');
-            if (badge) badge.textContent = label;
-          } else {
-            card.classList.add('hidden', 'opacity-0');
+      selectA.addEventListener('change', onChange);
+      selectB.addEventListener('change', onChange);
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const vendorA = selectA.value;
+        const vendorB = selectB.value;
+        if (!vendorA || !vendorB || vendorA === vendorB) {
+          if (error) {
+            error.textContent = 'Select two different platforms to compare.';
+            error.classList.remove('hidden');
           }
+          return;
         }
-        emptyState?.classList.toggle('hidden', visibleCount > 0);
-      }
+        window.location.href = canonicalHref(canonicalMap, vendorA, vendorB);
+      });
 
-      function setActiveTab(button: HTMLButtonElement) {
-        for (const btn of tabButtons) {
-          const isActive = btn === button;
-          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
-          btn.classList.remove(...palette.active, ...palette.inactive);
-          btn.classList.add(...(isActive ? palette.active : palette.inactive));
-        }
-      }
-
-      function personaHasVendorMatches(personaSlug: string): boolean {
-        return cards.some((card) => {
-          const modifiers = (card.dataset.modifiers ?? '').split(',').filter(Boolean);
-          return modifiers.includes(personaSlug) && cardMatchesVendor(card);
-        });
-      }
-
-      if (vendor) {
-        const current = tabButtons.find((button) => button.getAttribute('aria-selected') === 'true');
-        const fallback =
-          (current && personaHasVendorMatches(current.dataset.personaPill ?? '')
-            ? current
-            : tabButtons.find((button) => personaHasVendorMatches(button.dataset.personaPill ?? ''))) ??
-          current ??
-          tabButtons[0];
-        if (fallback) {
-          setActiveTab(fallback);
-          applyPersona(fallback.dataset.personaPill ?? '', fallback.dataset.personaLabel ?? '');
-        }
-      }
-
-      for (const button of tabButtons) {
-        button.addEventListener('click', () => {
-          const personaSlug = button.dataset.personaPill;
-          const label = button.dataset.personaLabel ?? personaSlug ?? '';
-          if (!personaSlug) return;
-
-          setActiveTab(button);
-          requestAnimationFrame(() => applyPersona(personaSlug, label));
-        });
-      }
+      syncDisabledOptions(selectA, selectB);
+      updateCta();
     }
   }
 
   if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-    initComparisonBrowsers();
+    initMatchupSelectors();
   }
 </script>

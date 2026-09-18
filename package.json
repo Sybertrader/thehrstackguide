@@ -5,10 +5,12 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs && astro build",
+    "sync-redirects": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs",
     "preview": "astro preview",
     "astro": "astro",
-    "seo-audit": "node scripts/seo-audit.mjs"
+    "seo-audit": "node scripts/seo-audit.mjs",
+    "purge-vendors": "node scripts/purge-vendors.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",

@@ -1,0 +1,60 @@
+{
+  "$schema": "./vendor-catalog.schema.json",
+  "version": 1,
+  "notes": "Vendor ids are route parameters. Never rename a keep id. Categories are frozen: payroll-eor, ats, performance-management.",
+  "categories": [
+    {
+      "id": "payroll-eor",
+      "label": "Global Payroll & EOR",
+      "hubPath": "/global-payroll-eor/"
+    },
+    {
+      "id": "ats",
+      "label": "Applicant Tracking Systems",
+      "hubPath": "/applicant-tracking-systems/"
+    },
+    {
+      "id": "performance-management",
+      "label": "Performance Management",
+      "hubPath": "/performance-management/"
+    }
+  ],
+  "keepVendors": [
+    { "id": "gusto", "name": "Gusto", "category": "payroll-eor" },
+    { "id": "multiplier", "name": "Multiplier", "category": "payroll-eor" },
+    { "id": "deel", "name": "Deel", "category": "payroll-eor" },
+    { "id": "remote", "name": "Remote", "category": "payroll-eor" },
+    { "id": "papaya-global", "name": "Papaya Global", "category": "payroll-eor" },
+    { "id": "payoneer-workforce-management", "name": "Payoneer", "category": "payroll-eor" },
+    { "id": "rippling", "name": "Rippling", "category": "payroll-eor" },
+    { "id": "oyster-hr", "name": "Oyster", "category": "payroll-eor" },
+    { "id": "breezy-hr", "name": "Breezy HR", "category": "ats" },
+    { "id": "bamboohr-ats", "name": "BambooHR", "category": "ats" },
+    { "id": "ashby", "name": "Ashby", "category": "ats" },
+    { "id": "lever", "name": "Lever", "category": "ats" },
+    { "id": "workable", "name": "Workable", "category": "ats" },
+    { "id": "jazzhr", "name": "JazzHR", "category": "ats" },
+    { "id": "recruitee", "name": "Recruitee", "category": "ats" },
+    { "id": "performyard", "name": "PerformYard", "category": "performance-management" },
+    { "id": "lattice", "name": "Lattice", "category": "performance-management" },
+    { "id": "culture-amp", "name": "Culture Amp", "category": "performance-management" }
+  ],
+  "purgeVendors": [
+    { "id": "greenhouse", "name": "Greenhouse", "category": "ats" },
+    { "id": "clearcompany", "name": "ClearCo", "category": "performance-management" },
+    { "id": "peoplefluent", "name": "PeopleFluent", "category": "performance-management" },
+    { "id": "15five", "name": "15Five", "category": "performance-management" },
+    { "id": "leapsome", "name": "Leapsome", "category": "performance-management" },
+    { "id": "plane", "name": "Plane", "category": "payroll-eor" }
+  ],
+  "stableIdAliases": {
+    "oyster": "oyster-hr",
+    "papaya": "papaya-global",
+    "payoneer": "payoneer-workforce-management",
+    "bamboohr": "bamboohr-ats",
+    "breezy": "breezy-hr",
+    "cultureamp": "culture-amp",
+    "clearco": "clearcompany",
+    "clear-co": "clearcompany"
+  }
+}

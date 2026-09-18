@@ -3,153 +3,1992 @@
   "trailingSlash": true,
   "redirects": [
     {
-      "source": "/:slug*-for-tech-startups",
-      "destination": "/:slug*/",
-      "permanent": true
+      "source": "/greenhouse-vs-:rest*",
+      "destination": "/applicant-tracking-systems/",
+      "statusCode": 308
     },
     {
-      "source": "/:slug*-for-tech-startups/",
-      "destination": "/:slug*/",
-      "permanent": true
+      "source": "/greenhouse-vs-:rest*/",
+      "destination": "/applicant-tracking-systems/",
+      "statusCode": 308
     },
     {
-      "source": "/oyster-vs-:rest*",
-      "destination": "/oyster-hr-vs-:rest*/",
-      "permanent": true
+      "source": "/:pair*-vs-greenhouse-for-:mod*",
+      "destination": "/applicant-tracking-systems/",
+      "statusCode": 308
     },
     {
-      "source": "/oyster-vs-:rest*/",
-      "destination": "/oyster-hr-vs-:rest*/",
-      "permanent": true
+      "source": "/:pair*-vs-greenhouse-for-:mod*/",
+      "destination": "/applicant-tracking-systems/",
+      "statusCode": 308
     },
     {
-      "source": "/:pair*-vs-oyster-for-:mod*",
-      "destination": "/:pair*-vs-oyster-hr-for-:mod*/",
-      "permanent": true
+      "source": "/:pair*-vs-greenhouse",
+      "destination": "/applicant-tracking-systems/",
+      "statusCode": 308
     },
     {
-      "source": "/:pair*-vs-oyster-for-:mod*/",
-      "destination": "/:pair*-vs-oyster-hr-for-:mod*/",
-      "permanent": true
+      "source": "/:pair*-vs-greenhouse/",
+      "destination": "/applicant-tracking-systems/",
+      "statusCode": 308
     },
     {
-      "source": "/:pair*-vs-oyster",
-      "destination": "/:pair*-vs-oyster-hr/",
-      "permanent": true
+      "source": "/go/greenhouse",
+      "destination": "/applicant-tracking-systems/",
+      "statusCode": 308
     },
     {
-      "source": "/:pair*-vs-oyster/",
-      "destination": "/:pair*-vs-oyster-hr/",
-      "permanent": true
+      "source": "/go/greenhouse/",
+      "destination": "/applicant-tracking-systems/",
+      "statusCode": 308
     },
     {
-      "source": "/papaya-vs-:rest*",
-      "destination": "/papaya-global-vs-:rest*/",
-      "permanent": true
+      "source": "/clearcompany-vs-:rest*",
+      "destination": "/performance-management/",
+      "statusCode": 308
     },
     {
-      "source": "/papaya-vs-:rest*/",
-      "destination": "/papaya-global-vs-:rest*/",
-      "permanent": true
+      "source": "/clearcompany-vs-:rest*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
     },
     {
-      "source": "/:pair*-vs-papaya-for-:mod*",
-      "destination": "/:pair*-vs-papaya-global-for-:mod*/",
-      "permanent": true
+      "source": "/:pair*-vs-clearcompany-for-:mod*",
+      "destination": "/performance-management/",
+      "statusCode": 308
     },
     {
-      "source": "/:pair*-vs-papaya-for-:mod*/",
-      "destination": "/:pair*-vs-papaya-global-for-:mod*/",
-      "permanent": true
+      "source": "/:pair*-vs-clearcompany-for-:mod*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
     },
     {
-      "source": "/:pair*-vs-papaya",
-      "destination": "/:pair*-vs-papaya-global/",
-      "permanent": true
+      "source": "/:pair*-vs-clearcompany",
+      "destination": "/performance-management/",
+      "statusCode": 308
     },
     {
-      "source": "/:pair*-vs-papaya/",
-      "destination": "/:pair*-vs-papaya-global/",
-      "permanent": true
+      "source": "/:pair*-vs-clearcompany/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/clearcompany",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/clearcompany/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/peoplefluent-vs-:rest*",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/peoplefluent-vs-:rest*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-peoplefluent-for-:mod*",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-peoplefluent-for-:mod*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-peoplefluent",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-peoplefluent/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/peoplefluent",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/peoplefluent/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/15five-vs-:rest*",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/15five-vs-:rest*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-15five-for-:mod*",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-15five-for-:mod*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-15five",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-15five/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/15five",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/15five/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/leapsome-vs-:rest*",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/leapsome-vs-:rest*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-leapsome-for-:mod*",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-leapsome-for-:mod*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-leapsome",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-leapsome/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/leapsome",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/leapsome/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/plane-vs-:rest*",
+      "destination": "/global-payroll-eor/",
+      "statusCode": 308
+    },
+    {
+      "source": "/plane-vs-:rest*/",
+      "destination": "/global-payroll-eor/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-plane-for-:mod*",
+      "destination": "/global-payroll-eor/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-plane-for-:mod*/",
+      "destination": "/global-payroll-eor/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-plane",
+      "destination": "/global-payroll-eor/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-plane/",
+      "destination": "/global-payroll-eor/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/plane",
+      "destination": "/global-payroll-eor/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/plane/",
+      "destination": "/global-payroll-eor/",
+      "statusCode": 308
+    },
+    {
+      "source": "/reflektive-vs-:rest*",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/reflektive-vs-:rest*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-reflektive-for-:mod*",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-reflektive-for-:mod*/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-reflektive",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:pair*-vs-reflektive/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/reflektive",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/go/reflektive/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/performyard-vs-reflektive-for-enterprise",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/performyard-vs-reflektive-for-enterprise/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/leapsome-vs-reflektive-for-scaleups",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/leapsome-vs-reflektive-for-scaleups/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-ashby",
+      "destination": "/ashby-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-ashby/",
+      "destination": "/ashby-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-ashby-for-:mod*",
+      "destination": "/ashby-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-ashby-for-:mod*/",
+      "destination": "/ashby-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-ashby",
+      "destination": "/ashby-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-ashby/",
+      "destination": "/ashby-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-ashby-for-:mod*",
+      "destination": "/ashby-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-ashby-for-:mod*/",
+      "destination": "/ashby-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-ashby",
+      "destination": "/ashby-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-ashby/",
+      "destination": "/ashby-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-ashby-for-:mod*",
+      "destination": "/ashby-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-ashby-for-:mod*/",
+      "destination": "/ashby-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lever-vs-ashby",
+      "destination": "/ashby-vs-lever/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lever-vs-ashby/",
+      "destination": "/ashby-vs-lever/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lever-vs-ashby-for-:mod*",
+      "destination": "/ashby-vs-lever/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lever-vs-ashby-for-:mod*/",
+      "destination": "/ashby-vs-lever/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-ashby",
+      "destination": "/ashby-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-ashby/",
+      "destination": "/ashby-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-ashby-for-:mod*",
+      "destination": "/ashby-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-ashby-for-:mod*/",
+      "destination": "/ashby-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-ashby",
+      "destination": "/ashby-vs-workable/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-ashby/",
+      "destination": "/ashby-vs-workable/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-ashby-for-:mod*",
+      "destination": "/ashby-vs-workable/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-ashby-for-:mod*/",
+      "destination": "/ashby-vs-workable/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-breezy-hr",
+      "destination": "/breezy-hr-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-breezy-hr/",
+      "destination": "/breezy-hr-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-breezy-hr-for-:mod*",
+      "destination": "/breezy-hr-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-breezy-hr-for-:mod*/",
+      "destination": "/breezy-hr-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-breezy-hr",
+      "destination": "/breezy-hr-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-breezy-hr/",
+      "destination": "/breezy-hr-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-breezy-hr-for-:mod*",
+      "destination": "/breezy-hr-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-breezy-hr-for-:mod*/",
+      "destination": "/breezy-hr-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-breezy-hr",
+      "destination": "/breezy-hr-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-breezy-hr/",
+      "destination": "/breezy-hr-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-breezy-hr-for-:mod*",
+      "destination": "/breezy-hr-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-breezy-hr-for-:mod*/",
+      "destination": "/breezy-hr-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-deel",
+      "destination": "/deel-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-deel/",
+      "destination": "/deel-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-deel-for-:mod*",
+      "destination": "/deel-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-deel",
+      "destination": "/deel-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-deel/",
+      "destination": "/deel-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-deel-for-:mod*",
+      "destination": "/deel-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-deel",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-deel/",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-deel-for-:mod*",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/deel-vs-oyster",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/deel-vs-oyster/",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/deel-vs-oyster-for-:mod*",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/deel-vs-oyster-for-:mod*/",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-deel",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-deel/",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-deel-for-:mod*",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-deel",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-deel/",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-deel-for-:mod*",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/deel-vs-papaya",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/deel-vs-papaya/",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/deel-vs-papaya-for-:mod*",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/deel-vs-papaya-for-:mod*/",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-deel",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-deel/",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-deel-for-:mod*",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-deel",
+      "destination": "/deel-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-deel/",
+      "destination": "/deel-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-deel-for-:mod*",
+      "destination": "/deel-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-deel",
+      "destination": "/deel-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-deel/",
+      "destination": "/deel-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-deel-for-:mod*",
+      "destination": "/deel-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-deel",
+      "destination": "/deel-vs-rippling/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-deel/",
+      "destination": "/deel-vs-rippling/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-deel-for-:mod*",
+      "destination": "/deel-vs-rippling/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-rippling/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-gusto",
+      "destination": "/gusto-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-gusto/",
+      "destination": "/gusto-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-gusto-for-:mod*",
+      "destination": "/gusto-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-gusto-for-:mod*/",
+      "destination": "/gusto-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-gusto",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-gusto/",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-gusto-for-:mod*",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-gusto-for-:mod*/",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-papaya",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-papaya/",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-papaya-for-:mod*",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-papaya-for-:mod*/",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-gusto",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-gusto/",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-gusto-for-:mod*",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-gusto-for-:mod*/",
+      "destination": "/gusto-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-gusto",
+      "destination": "/gusto-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-gusto/",
+      "destination": "/gusto-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-gusto-for-:mod*",
+      "destination": "/gusto-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-gusto-for-:mod*/",
+      "destination": "/gusto-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-jazzhr",
+      "destination": "/jazzhr-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-jazzhr/",
+      "destination": "/jazzhr-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-jazzhr-for-:mod*",
+      "destination": "/jazzhr-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-jazzhr-for-:mod*/",
+      "destination": "/jazzhr-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-jazzhr",
+      "destination": "/jazzhr-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-jazzhr/",
+      "destination": "/jazzhr-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-jazzhr-for-:mod*",
+      "destination": "/jazzhr-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-jazzhr-for-:mod*/",
+      "destination": "/jazzhr-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/culture-amp-vs-lattice",
+      "destination": "/lattice-vs-culture-amp/",
+      "statusCode": 308
+    },
+    {
+      "source": "/culture-amp-vs-lattice/",
+      "destination": "/lattice-vs-culture-amp/",
+      "statusCode": 308
+    },
+    {
+      "source": "/culture-amp-vs-lattice-for-:mod*",
+      "destination": "/lattice-vs-culture-amp/",
+      "statusCode": 308
+    },
+    {
+      "source": "/culture-amp-vs-lattice-for-:mod*/",
+      "destination": "/lattice-vs-culture-amp/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-lever",
+      "destination": "/lever-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-lever/",
+      "destination": "/lever-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-lever-for-:mod*",
+      "destination": "/lever-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-lever-for-:mod*/",
+      "destination": "/lever-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-lever",
+      "destination": "/lever-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-lever/",
+      "destination": "/lever-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-lever-for-:mod*",
+      "destination": "/lever-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-lever-for-:mod*/",
+      "destination": "/lever-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-lever",
+      "destination": "/lever-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-lever/",
+      "destination": "/lever-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-lever-for-:mod*",
+      "destination": "/lever-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-lever-for-:mod*/",
+      "destination": "/lever-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-lever",
+      "destination": "/lever-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-lever/",
+      "destination": "/lever-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-lever-for-:mod*",
+      "destination": "/lever-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-lever-for-:mod*/",
+      "destination": "/lever-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-lever",
+      "destination": "/lever-vs-workable/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-lever/",
+      "destination": "/lever-vs-workable/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-lever-for-:mod*",
+      "destination": "/lever-vs-workable/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-lever-for-:mod*/",
+      "destination": "/lever-vs-workable/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-multiplier",
+      "destination": "/multiplier-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-multiplier/",
+      "destination": "/multiplier-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-multiplier-for-:mod*",
+      "destination": "/multiplier-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-multiplier-for-:mod*/",
+      "destination": "/multiplier-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-oyster-hr",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-oyster-hr/",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-oyster-hr-for-:mod*",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-oyster-hr-for-:mod*/",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-gusto",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-gusto/",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-gusto-for-:mod*",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-gusto-for-:mod*/",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-oyster",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-oyster/",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-oyster-for-:mod*",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-oyster-for-:mod*/",
+      "destination": "/oyster-hr-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-oyster-hr",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-oyster-hr/",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-oyster-hr-for-:mod*",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-oyster-hr-for-:mod*/",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-multiplier",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-multiplier/",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-multiplier-for-:mod*",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-multiplier-for-:mod*/",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-oyster",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-oyster/",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-oyster-for-:mod*",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-oyster-for-:mod*/",
+      "destination": "/oyster-hr-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-oyster-hr",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-oyster-hr/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-oyster-hr-for-:mod*",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-oyster-hr-for-:mod*/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-papaya",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-papaya/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-papaya-for-:mod*",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-papaya-for-:mod*/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-oyster-hr",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-oyster-hr/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-oyster-hr-for-:mod*",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-oyster-hr-for-:mod*/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-papaya-global",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-papaya-global/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-papaya-global-for-:mod*",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-papaya-global-for-:mod*/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-oyster",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-oyster/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-oyster-for-:mod*",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-oyster-for-:mod*/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-papaya",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-papaya/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-papaya-for-:mod*",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-papaya-for-:mod*/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-oyster",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-oyster/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-oyster-for-:mod*",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-oyster-for-:mod*/",
+      "destination": "/oyster-hr-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-oyster-hr",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-oyster-hr/",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-oyster-hr-for-:mod*",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-oyster-hr-for-:mod*/",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-payoneer-workforce-management",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-payoneer-workforce-management/",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-payoneer-workforce-management-for-:mod*",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-payoneer-workforce-management-for-:mod*/",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-oyster",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-oyster/",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-oyster-for-:mod*",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-oyster-for-:mod*/",
+      "destination": "/oyster-hr-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-papaya-global",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-papaya-global/",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-papaya-global-for-:mod*",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-papaya-global-for-:mod*/",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-multiplier",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-multiplier/",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-multiplier-for-:mod*",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-multiplier-for-:mod*/",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-papaya",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-papaya/",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-papaya-for-:mod*",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-papaya-for-:mod*/",
+      "destination": "/papaya-global-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-papaya-global",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-papaya-global/",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-papaya-global-for-:mod*",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-papaya-global-for-:mod*/",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-payoneer-workforce-management",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-payoneer-workforce-management/",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-payoneer-workforce-management-for-:mod*",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-payoneer-workforce-management-for-:mod*/",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-papaya",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-papaya/",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-papaya-for-:mod*",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-papaya-for-:mod*/",
+      "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/culture-amp-vs-performyard",
+      "destination": "/performyard-vs-culture-amp/",
+      "statusCode": 308
+    },
+    {
+      "source": "/culture-amp-vs-performyard/",
+      "destination": "/performyard-vs-culture-amp/",
+      "statusCode": 308
+    },
+    {
+      "source": "/culture-amp-vs-performyard-for-:mod*",
+      "destination": "/performyard-vs-culture-amp/",
+      "statusCode": 308
+    },
+    {
+      "source": "/culture-amp-vs-performyard-for-:mod*/",
+      "destination": "/performyard-vs-culture-amp/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lattice-vs-performyard",
+      "destination": "/performyard-vs-lattice/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lattice-vs-performyard/",
+      "destination": "/performyard-vs-lattice/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lattice-vs-performyard-for-:mod*",
+      "destination": "/performyard-vs-lattice/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lattice-vs-performyard-for-:mod*/",
+      "destination": "/performyard-vs-lattice/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-recruitee",
+      "destination": "/recruitee-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-recruitee/",
+      "destination": "/recruitee-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-recruitee-for-:mod*",
+      "destination": "/recruitee-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-recruitee-for-:mod*/",
+      "destination": "/recruitee-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-remote",
+      "destination": "/remote-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-remote/",
+      "destination": "/remote-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-remote-for-:mod*",
+      "destination": "/remote-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-remote-for-:mod*/",
+      "destination": "/remote-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-remote",
+      "destination": "/remote-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-remote/",
+      "destination": "/remote-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-remote-for-:mod*",
+      "destination": "/remote-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-remote-for-:mod*/",
+      "destination": "/remote-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-remote",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-remote/",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-remote-for-:mod*",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-remote-for-:mod*/",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-oyster",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-oyster/",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-oyster-for-:mod*",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-oyster-for-:mod*/",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-remote",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-remote/",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-remote-for-:mod*",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-remote-for-:mod*/",
+      "destination": "/remote-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-remote",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-remote/",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-remote-for-:mod*",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-remote-for-:mod*/",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-papaya",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-papaya/",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-papaya-for-:mod*",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-papaya-for-:mod*/",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-remote",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-remote/",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-remote-for-:mod*",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-remote-for-:mod*/",
+      "destination": "/remote-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-remote",
+      "destination": "/remote-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-remote/",
+      "destination": "/remote-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-remote-for-:mod*",
+      "destination": "/remote-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-remote-for-:mod*/",
+      "destination": "/remote-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-rippling",
+      "destination": "/rippling-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-rippling/",
+      "destination": "/rippling-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/gusto-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-gusto/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-rippling",
+      "destination": "/rippling-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-rippling/",
+      "destination": "/rippling-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/multiplier-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-multiplier/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-rippling",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-rippling/",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-hr-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-oyster",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-oyster/",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-oyster-for-:mod*",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-oyster-for-:mod*/",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-rippling",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-rippling/",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-oyster-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-rippling",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-rippling/",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-global-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-papaya",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-papaya/",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-papaya-for-:mod*",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/rippling-vs-papaya-for-:mod*/",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-rippling",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-rippling/",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-papaya-global/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-rippling",
+      "destination": "/rippling-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-rippling/",
+      "destination": "/rippling-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/payoneer-workforce-management-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-rippling",
+      "destination": "/rippling-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-rippling/",
+      "destination": "/rippling-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-workable",
+      "destination": "/workable-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-workable/",
+      "destination": "/workable-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-workable-for-:mod*",
+      "destination": "/workable-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-ats-vs-workable-for-:mod*/",
+      "destination": "/workable-vs-bamboohr-ats/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-workable",
+      "destination": "/workable-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-workable/",
+      "destination": "/workable-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-workable-for-:mod*",
+      "destination": "/workable-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-workable-for-:mod*/",
+      "destination": "/workable-vs-breezy-hr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-workable",
+      "destination": "/workable-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-workable/",
+      "destination": "/workable-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-workable-for-:mod*",
+      "destination": "/workable-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-workable-for-:mod*/",
+      "destination": "/workable-vs-jazzhr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-workable",
+      "destination": "/workable-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-workable/",
+      "destination": "/workable-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-workable-for-:mod*",
+      "destination": "/workable-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-workable-for-:mod*/",
+      "destination": "/workable-vs-recruitee/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:hub(.*-vs-.*)-for-:mod*",
+      "destination": "/:hub/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:hub(.*-vs-.*)-for-:mod*/",
+      "destination": "/:hub/",
+      "statusCode": 308
     },
     {
       "source": "/go/oyster",
       "destination": "/go/oyster-hr/",
-      "permanent": true
+      "statusCode": 308
     },
     {
       "source": "/go/oyster/",
       "destination": "/go/oyster-hr/",
-      "permanent": true
+      "statusCode": 308
     },
     {
       "source": "/go/papaya",
       "destination": "/go/papaya-global/",
-      "permanent": true
+      "statusCode": 308
     },
     {
       "source": "/go/papaya/",
       "destination": "/go/papaya-global/",
-      "permanent": true
-    },
-    {
-      "source": "/performyard-vs-reflektive-for-enterprise",
-      "destination": "/performyard-vs-peoplefluent-for-enterprise/",
-      "permanent": true
-    },
-    {
-      "source": "/performyard-vs-reflektive-for-enterprise/",
-      "destination": "/performyard-vs-peoplefluent-for-enterprise/",
-      "permanent": true
-    },
-    {
-      "source": "/leapsome-vs-reflektive-for-scaleups",
-      "destination": "/leapsome-vs-peoplefluent-for-scaleups/",
-      "permanent": true
-    },
-    {
-      "source": "/leapsome-vs-reflektive-for-scaleups/",
-      "destination": "/leapsome-vs-peoplefluent-for-scaleups/",
-      "permanent": true
-    },
-    {
-      "source": "/reflektive-vs-:rest*",
-      "destination": "/peoplefluent-vs-:rest*/",
-      "permanent": true
-    },
-    {
-      "source": "/reflektive-vs-:rest*/",
-      "destination": "/peoplefluent-vs-:rest*/",
-      "permanent": true
-    },
-    {
-      "source": "/:pair*-vs-reflektive-for-:mod*",
-      "destination": "/:pair*-vs-peoplefluent-for-:mod*/",
-      "permanent": true
-    },
-    {
-      "source": "/:pair*-vs-reflektive-for-:mod*/",
-      "destination": "/:pair*-vs-peoplefluent-for-:mod*/",
-      "permanent": true
-    },
-    {
-      "source": "/:pair*-vs-reflektive",
-      "destination": "/:pair*-vs-peoplefluent/",
-      "permanent": true
-    },
-    {
-      "source": "/:pair*-vs-reflektive/",
-      "destination": "/:pair*-vs-peoplefluent/",
-      "permanent": true
+      "statusCode": 308
     }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     },
     {

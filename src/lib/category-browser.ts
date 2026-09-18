@@ -1,97 +1,68 @@
 import type { Comparison } from '../types/comparison';
-import { comparisonHubSlug, publicModifierSlug } from './comparison-routes';
+import { comparisonHubSlug } from './comparison-routes';
 
-/** Short pill labels. Keys are live URL modifiers, never CSV aliases. */
-export const CATEGORY_PILL_LABELS: Record<string, string> = {
-  startups: 'Startups',
-  scaleups: 'Scaleups',
-  agencies: 'Agencies',
-  enterprise: 'Enterprise',
-  'remote-teams': 'Remote Teams',
-  'us-latam': 'US & LATAM',
-  'web3-crypto': 'Web3 & Crypto',
-  'people-ops': 'People Ops',
-};
-
-/** Sort order only. A pill is emitted only when the category has that child modifier. */
-const PILL_ORDER = [
-  'startups',
-  'scaleups',
-  'enterprise',
-  'agencies',
-  'people-ops',
-  'remote-teams',
-  'us-latam',
-  'web3-crypto',
-] as const;
-
-export interface CategoryPersonaPill {
-  slug: string;
-  label: string;
+export interface CategoryVendorOption {
+  id: string;
+  name: string;
 }
 
 export interface CategoryPairingCard {
   baseSlug: string;
+  href: string;
   toolAId: string;
   toolBId: string;
   toolAName: string;
   toolBName: string;
-  modifiers: string[];
 }
 
-export function childHref(baseSlug: string, personaSlug: string): string {
-  return `/${baseSlug}-for-${personaSlug}/`;
+export function masterHref(baseSlug: string): string {
+  return `/${baseSlug}/`;
 }
 
-function titleCaseSlug(slug: string): string {
-  return slug
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
+/** @deprecated Use masterHref. Kept so older call sites keep compiling. */
+export function childHref(baseSlug: string, _personaSlug?: string): string {
+  return masterHref(baseSlug);
 }
 
 export function buildCategoryBrowser(comparisons: Comparison[]): {
-  pills: CategoryPersonaPill[];
+  vendors: CategoryVendorOption[];
   pairings: CategoryPairingCard[];
+  canonicalByPair: Record<string, string>;
 } {
   const pairingsByHub = new Map<string, CategoryPairingCard>();
-  const modifiers = new Set<string>();
+  const vendorsById = new Map<string, string>();
 
   for (const row of comparisons) {
-    const personaSlug = publicModifierSlug(row.niche_id);
-    modifiers.add(personaSlug);
-
     const baseSlug = comparisonHubSlug(row.tool_a_id, row.tool_b_id);
-    let pairing = pairingsByHub.get(baseSlug);
-    if (!pairing) {
-      pairing = {
+    vendorsById.set(row.tool_a_id, row.tool_a_name);
+    vendorsById.set(row.tool_b_id, row.tool_b_name);
+
+    if (!pairingsByHub.has(baseSlug)) {
+      pairingsByHub.set(baseSlug, {
         baseSlug,
+        href: masterHref(baseSlug),
         toolAId: row.tool_a_id,
         toolBId: row.tool_b_id,
         toolAName: row.tool_a_name,
         toolBName: row.tool_b_name,
-        modifiers: [],
-      };
-      pairingsByHub.set(baseSlug, pairing);
-    }
-    if (!pairing.modifiers.includes(personaSlug)) {
-      pairing.modifiers.push(personaSlug);
+      });
     }
   }
 
-  const pills = [...modifiers]
-    .sort((left, right) => {
-      const leftRank = PILL_ORDER.indexOf(left as (typeof PILL_ORDER)[number]);
-      const rightRank = PILL_ORDER.indexOf(right as (typeof PILL_ORDER)[number]);
-      return (leftRank === -1 ? PILL_ORDER.length : leftRank) - (rightRank === -1 ? PILL_ORDER.length : rightRank);
-    })
-    .map((slug) => ({
-      slug,
-      label: CATEGORY_PILL_LABELS[slug] ?? titleCaseSlug(slug),
-    }));
+  const pairings = [...pairingsByHub.values()].sort((left, right) => {
+    const byA = left.toolAName.localeCompare(right.toolAName);
+    return byA !== 0 ? byA : left.toolBName.localeCompare(right.toolBName);
+  });
 
-  return {
-    pills,
-    pairings: [...pairingsByHub.values()],
-  };
+  const canonicalByPair: Record<string, string> = {};
+  for (const pairing of pairings) {
+    canonicalByPair[`${pairing.toolAId}|${pairing.toolBId}`] = pairing.href;
+    canonicalByPair[`${pairing.toolBId}|${pairing.toolAId}`] = pairing.href;
+  }
+
+  const vendors = [...vendorsById.entries()]
+    .map(([id, name]) => ({ id, name }))
+    .sort((left, right) => left.name.localeCompare(right.name));
+
+  return { vendors, pairings, canonicalByPair };
 }

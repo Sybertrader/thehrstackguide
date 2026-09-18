@@ -5,17 +5,6 @@ function pm(base: PerformanceMgmtFeatures, patch: Partial<PerformanceMgmtFeature
   return { ...base, ...patch };
 }
 
-const fifteenBase: PerformanceMgmtFeatures = {
-  okrsAndGoals: spec(true, 'OKR cascading on Perform/Total Platform tiers with lightweight reviews rather than Lattice-grade talent calibration.'),
-  continuousFeedback: spec(true, 'Weekly check-ins are the core cadence; manager coaching prompts sit in the same loop.'),
-  structuredReviews: spec(true, '360 reviews exist; the product is still check-in-led rather than a compensation-tied review OS.'),
-  calibration: spec(false, 'No Lattice-style compensation calibration. Talent reviews are lighter than enterprise talent-day workflows.'),
-  engagementSurveys: spec(true, 'Engagement pulses ship; scientific benchmark depth trails Culture Amp.'),
-  compensation: spec(false, 'Compensation bands and merit calibration are not a 15Five system of record.'),
-  managerCadence: spec(true, '1:1 agendas plus manager coaching are the buying reason for first-time People teams.'),
-  ssoAndHrisIntegrations: spec(true, 'Slack/Teams check-ins plus HRIS connectors; SAML SSO on higher tiers. GitHub/Jira are not native review sources.'),
-};
-
 const performyardBase: PerformanceMgmtFeatures = {
   okrsAndGoals: spec(true, 'Goals exist inside configurable review cycles; OKR cascading is less opinionated than Lattice or 15Five.'),
   continuousFeedback: spec(true, 'Continuous feedback plus 1:1 agendas without a heavy implementation project.'),
@@ -25,17 +14,6 @@ const performyardBase: PerformanceMgmtFeatures = {
   compensation: spec(true, 'Compensation modules are available; depth still trails Lattice compensation bands for large enterprises.'),
   managerCadence: spec(true, '1:1 meeting tools plus AI review-writing assists for HR admins running custom cycles.'),
   ssoAndHrisIntegrations: spec(true, 'Slack/Teams plus HRIS; SAML on mid-market/enterprise. GitHub/Jira are not first-party engineering review sources.'),
-};
-
-const leapsomeBase: PerformanceMgmtFeatures = {
-  okrsAndGoals: spec(true, 'Goals/OKRs as a paid module alongside Reviews, Engagement, and Learning.'),
-  continuousFeedback: spec(true, 'Continuous feedback plus AI writing assist for reviews and goal drafts.'),
-  structuredReviews: spec(true, 'Modular reviews with 360 support and learning paths in the same suite.'),
-  calibration: spec(true, 'Calibration and compensation modules exist; packaging is per-module so full-suite cost stacks.'),
-  engagementSurveys: spec(true, 'Engagement surveys with a strong EU GDPR posture versus US-only survey tools.'),
-  compensation: spec(true, 'Compensation calibration is a module, not the Lattice-only reason to buy, but it is in-suite.'),
-  managerCadence: spec(true, '1:1s plus learning paths give managers a development loop, not only a review form.'),
-  ssoAndHrisIntegrations: spec(true, 'Slack/Teams, SAML, and EU data handling. GitHub/Jira via integrations rather than native eng performance graphs.'),
 };
 
 const latticeBase: PerformanceMgmtFeatures = {
@@ -60,52 +38,7 @@ const cultureAmpBase: PerformanceMgmtFeatures = {
   ssoAndHrisIntegrations: spec(true, 'SAML SSO, HRIS, Slack/Teams. HRBP analytics dashboards are the integration story, not GitHub/Jira reviews.'),
 };
 
-const peoplefluentBase: PerformanceMgmtFeatures = {
-  okrsAndGoals: spec(true, 'Goals and review cycles in the PeopleFluent/Workday-era packaging; lighter than Lattice OKR suites.'),
-  continuousFeedback: spec(true, 'Real-time feedback and recognition feed, including Slack-native loops from the PeopleFluent UX.'),
-  structuredReviews: spec(true, 'Review cycles exist; 360 is supported. Implementation feels legacy versus Leapsome/Lattice.'),
-  calibration: spec(false, 'No modern compensation calibration module comparable to Lattice Compensation.'),
-  engagementSurveys: spec(false, 'Not a Culture Amp engagement platform. Recognition ≠ engagement science.'),
-  compensation: spec(false, 'No compensation-band product. Comp stays in HRIS/Workday.'),
-  managerCadence: spec(false, 'No 15Five-style 1:1 agenda OS. Cadence is feedback/recognition rather than weekly check-ins.'),
-  ssoAndHrisIntegrations: spec(true, 'Slack-native feedback plus enterprise SSO in PeopleFluent packaging. GitHub/Jira are not native.'),
-};
-
-const clearcompanyBase: PerformanceMgmtFeatures = {
-  okrsAndGoals: spec(true, 'Goal alignment inside the talent suite that also includes ATS/onboarding, not a specialist OKR product.'),
-  continuousFeedback: spec(true, 'Feedback exists; depth trails 15Five weekly check-ins and Lattice continuous feedback.'),
-  structuredReviews: spec(true, 'Configurable reviews connected to the same suite as hiring/onboarding handoff.'),
-  calibration: spec(false, 'No Lattice-style compensation calibration. Talent reviews are suite-adjacent, not a talent-day OS.'),
-  engagementSurveys: spec(true, 'Engagement surveys in-suite; people-science benchmarks trail Culture Amp.'),
-  compensation: spec(false, 'Compensation is not a first-class module. Best value only when buying the broader talent suite.'),
-  managerCadence: spec(false, 'No dedicated 1:1 coaching product. Manager tools are review-workflow, not weekly cadence.'),
-  ssoAndHrisIntegrations: spec(true, 'SSO on suite contracts; Slack/Teams present. GitHub/Jira are not engineering-native. ATS handoff is the integration win.'),
-};
-
 export const performancePersonaByToolId: Record<string, PerformanceMgmtPersonaData> = {
-  '15five': {
-    startupFeatures: pm(fifteenBase, {
-      managerCadence: spec(true, 'Weekly check-ins and published ~$4/user pricing with a free trial for a first People process.'),
-    }),
-    scaleupFeatures: pm(fifteenBase, {
-      okrsAndGoals: spec(true, 'OKR cascading on Perform once the company outgrows Google Docs goals but is not ready for Lattice Compensation.'),
-    }),
-    peopleOpsFeatures: pm(fifteenBase, {
-      managerCadence: spec(true, 'Manager coaching prompts give People Ops a lightweight enablement layer without Culture Amp survey science.'),
-    }),
-    remoteFeatures: pm(fifteenBase, {
-      ssoAndHrisIntegrations: spec(true, 'Slack/Teams check-in workflows for distributed teams; async updates replace hallway 1:1s.'),
-    }),
-    engineeringFeatures: pm(fifteenBase, {
-      ssoAndHrisIntegrations: spec(false, 'No native GitHub/Jira contribution graph in reviews. Eng performance is manager check-ins, not PR telemetry.'),
-    }),
-    agencyFeatures: pm(fifteenBase, {
-      structuredReviews: spec(false, 'No client-project billable review object. Agencies use check-ins, not utilization-tied reviews.'),
-    }),
-    enterpriseFeatures: pm(fifteenBase, {
-      calibration: spec(false, 'SAML SSO on higher tiers; compensation calibration and talent reviews still trail Lattice for global enterprises.'),
-    }),
-  },
   performyard: {
     startupFeatures: pm(performyardBase, {
       structuredReviews: spec(true, '$5/user configurable reviews without a sales-heavy Lattice implementation; no free trial.'),
@@ -127,29 +60,6 @@ export const performancePersonaByToolId: Record<string, PerformanceMgmtPersonaDa
     }),
     enterpriseFeatures: pm(performyardBase, {
       compensation: spec(true, 'SAML plus mid-market compensation modules; still not Lattice Compensation for 1,000+ employee calibration.'),
-    }),
-  },
-  leapsome: {
-    startupFeatures: pm(leapsomeBase, {
-      okrsAndGoals: spec(true, 'Modular $8/user starting point with a free trial; full Reviews+Goals+Engagement+Learning stack costs more than 15Five.'),
-    }),
-    scaleupFeatures: pm(leapsomeBase, {
-      structuredReviews: spec(true, 'Reviews plus learning paths for scaleups professionalizing manager quality without a Lattice-only purchase.'),
-    }),
-    peopleOpsFeatures: pm(leapsomeBase, {
-      engagementSurveys: spec(true, 'Engagement plus learning in one GDPR-friendly suite for European People Ops teams.'),
-    }),
-    remoteFeatures: pm(leapsomeBase, {
-      ssoAndHrisIntegrations: spec(true, 'Slack/Teams plus EU data residency for remote-first EU/UK companies.'),
-    }),
-    engineeringFeatures: pm(leapsomeBase, {
-      ssoAndHrisIntegrations: spec(true, 'Competency frameworks suit eng orgs; GitHub/Jira remain integrations, not native PR-based reviews.'),
-    }),
-    agencyFeatures: pm(leapsomeBase, {
-      structuredReviews: spec(false, 'No billable client-project review module. Agencies buy reviews/learning, not utilization reviews.'),
-    }),
-    enterpriseFeatures: pm(leapsomeBase, {
-      ssoAndHrisIntegrations: spec(true, 'SAML 2.0 SSO, GDPR, and modular enterprise packaging; compensation exists but Lattice still wins large US calibration RFPs.'),
     }),
   },
   lattice: {
@@ -196,52 +106,6 @@ export const performancePersonaByToolId: Record<string, PerformanceMgmtPersonaDa
     }),
     enterpriseFeatures: pm(cultureAmpBase, {
       ssoAndHrisIntegrations: spec(true, 'SAML 2.0 SSO and people-science benchmarks for global HRBPs; Perform is secondary to Engage in most enterprise deals.'),
-    }),
-  },
-  peoplefluent: {
-    startupFeatures: pm(peoplefluentBase, {
-      continuousFeedback: spec(true, 'Lightweight Slack feedback if a team is already on a PeopleFluent footprint; not a greenfield startup pick.'),
-    }),
-    scaleupFeatures: pm(peoplefluentBase, {
-      continuousFeedback: spec(true, 'Recognition plus goals for mid-market teams already on PeopleFluent, not a Lattice displacement.'),
-    }),
-    peopleOpsFeatures: pm(peoplefluentBase, {
-      engagementSurveys: spec(false, 'People Ops looking for survey science should be on Culture Amp; this is a feedback/review remnant stack.'),
-    }),
-    remoteFeatures: pm(peoplefluentBase, {
-      ssoAndHrisIntegrations: spec(true, 'Slack-native feedback loops for distributed teams that already live in chat.'),
-    }),
-    engineeringFeatures: pm(peoplefluentBase, {
-      ssoAndHrisIntegrations: spec(false, 'No GitHub/Jira native reviews. Engineering feedback is Slack comments, not repo telemetry.'),
-    }),
-    agencyFeatures: pm(peoplefluentBase, {
-      structuredReviews: spec(false, 'No billable client-project review module.'),
-    }),
-    enterpriseFeatures: pm(peoplefluentBase, {
-      ssoAndHrisIntegrations: spec(true, 'Enterprise SSO inside PeopleFluent/Workday-era packaging; fewer AI and compensation modules than Lattice/Leapsome.'),
-    }),
-  },
-  clearcompany: {
-    startupFeatures: pm(clearcompanyBase, {
-      structuredReviews: spec(true, 'Makes sense only if the startup already bought the ClearCo talent suite (ATS + onboarding + reviews).'),
-    }),
-    scaleupFeatures: pm(clearcompanyBase, {
-      structuredReviews: spec(true, 'Hiring-to-performance handoff for scaleups standardizing on one talent suite rather than Lattice + Greenhouse.'),
-    }),
-    peopleOpsFeatures: pm(clearcompanyBase, {
-      structuredReviews: spec(true, 'People Ops gets ATS-to-review continuity; HRBP survey science still lives in Culture Amp if needed.'),
-    }),
-    remoteFeatures: pm(clearcompanyBase, {
-      ssoAndHrisIntegrations: spec(true, 'Slack/Teams on suite tenants; remote 1:1 cadence is weaker than 15Five.'),
-    }),
-    engineeringFeatures: pm(clearcompanyBase, {
-      ssoAndHrisIntegrations: spec(false, 'No GitHub/Jira-native engineering reviews. Performance is HR-suite, not eng-tooling.'),
-    }),
-    agencyFeatures: pm(clearcompanyBase, {
-      structuredReviews: spec(true, 'Talent-suite reviews can track delivery staff; true client-project billable reviews still need PSA/finance tools.'),
-    }),
-    enterpriseFeatures: pm(clearcompanyBase, {
-      ssoAndHrisIntegrations: spec(true, 'SSO on enterprise suite deals; performance depth still trails dedicated Lattice/Leapsome RFPs.'),
     }),
   },
 };

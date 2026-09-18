@@ -106,22 +106,23 @@ export function variantsForPair(rows: Comparison[]): ComparisonVariantLink[] {
   for (const row of rows) {
     if (row.niche_id === 'tech-startups' || row.slug.endsWith('-for-tech-startups')) continue;
     const titleSuffix = modifierTitleSuffix(row.niche_id, row.niche_id === 'startups' ? 'Startups' : row.niche_name);
+    const hubSlug = comparisonHubSlug(row.tool_a_id, row.tool_b_id);
     links.push({
-      slug: row.slug,
+      slug: hubSlug,
       nicheId: row.niche_id,
       nicheName: titleSuffix,
-      href: `/${row.slug}/`,
+      href: `/${hubSlug}/`,
       titleSuffix,
     });
   }
 
   if (techStartups && !hasStartupsNiche) {
-    const slug = `${comparisonHubSlug(techStartups.tool_a_id, techStartups.tool_b_id)}-for-startups`;
+    const hubSlug = comparisonHubSlug(techStartups.tool_a_id, techStartups.tool_b_id);
     links.unshift({
-      slug,
+      slug: hubSlug,
       nicheId: 'startups',
       nicheName: 'Startups',
-      href: `/${slug}/`,
+      href: `/${hubSlug}/`,
       titleSuffix: 'Startups',
     });
   }
@@ -225,6 +226,9 @@ export function comparisonFamily(toolAId: string, toolBId: string): ComparisonFa
 }
 
 function buyerItemsFor(comparison: Comparison): string[] {
+  const editorial = pipeList(comparison.verdict_summary);
+  if (editorial.length >= 3) return editorial.slice(0, 3);
+
   const family = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
   const table =
     family === 'ats' ? ATS_BUYER_ITEMS : family === 'pm' ? PM_BUYER_ITEMS : BUYER_WORKFLOW_ITEMS;
@@ -401,19 +405,19 @@ const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
     'Confirm the vendor can batch contractors and employees across client accounts, not a single in-house headcount plan.',
     'Keep payouts, submissions, and billable time auditable per client for invoice reconciliation.',
     'Check whether client-device and app access can sit on the same worker record as payroll.',
-    'Model cost at peak bench size (holiday and campaign spikes), not last month’s average roster.',
+    'Model cost at your busiest month (holiday and campaign spikes), not last month’s average roster.',
   ],
   'us-latam': [
-    'For {PERSONA}, require RFC tax ID validation on Mexican hires before MXN/COP/BRL local payout rails go live on {A} or {B}.',
-    'Run monotributista invoice auditing on Argentina contractors so factura packets match what {PERSONA} booked.',
-    'Confirm cross-border contractor withholding on the US→LATAM 1099/W-8BEN path, not a USD wire with no local tax file.',
-    'Accrue 13th-month aguinaldo rules, FGTS, and social charges into the Brazil/Mexico fully loaded offer before {PERSONA} signs.',
+    'Do not pay with a US dollar wire and a country flag. Confirm tax-ID checks before local payouts in Mexico, Colombia, or Brazil, or the bank can reject the deposit while you still owe the contractor.',
+    'Argentina contractor files fail on local invoices and US-to-LATAM withholding, not on currency conversion. Keep invoice evidence in the workflow or you are buying a year-end audit.',
+    'Build 13th-month pay, FGTS, and social charges into the Brazil/Mexico offer before the letter goes out. If it is not in the quote, you will reopen compensation at month twelve.',
+    'Confirm whether {A} or {B} employs through their own local company in those markets or through a partner—deposits, IP assignment, and 13th-month pay change with the setup.',
   ],
   'web3-crypto': [
-    'For {PERSONA}, confirm native USDC/USDT stablecoin settlement. Do not assume a fiat HRIS can run treasury rails on {A} or {B}.',
-    'Attach DAO contributor agreements to the same worker record {PERSONA} uses for the fiat remainder of the bench.',
-    'Keep token grant vesting schedules on-file (cliff, unlock, revocation) instead of a Side Letter in Notion.',
-    'Require non-custodial wallet payouts plus gas fee reconciliation so {PERSONA} can close the crypto month.',
+    'A regular HR system with a separate treasury tab is not payroll. Confirm native USDC or USDT payouts on {A} or {B} before you mix contributors with W-2 staff.',
+    'Contributor agreements and token vesting (cliff, unlock, revocation) must attach to the same worker record as the cash portion of pay. A side letter in Notion splits legal and finance.',
+    'Require wallet payouts you control and a per-wallet network-fee line so finance can close the month.',
+    'Paying in stablecoins does not remove currency conversion fees on the bank-transfer portion. Quote both.',
   ],
   enterprise: [
     'Require SAML 2.0 SSO and SCIM in the security questionnaire before procurement starts.',
@@ -672,6 +676,13 @@ function payrollEvaluationOverlays(
   return { a: [], b: [] };
 }
 
+/** Pair-specific tab verdicts live in CSV `winner_reason` (not the generated "Based on…" template). */
+function editorialBottomLine(comparison: Comparison, modifierLabel: string): string {
+  const reason = comparison.winner_reason?.trim() ?? '';
+  if (reason && !/^Based on The HR Stack Guide/i.test(reason)) return reason;
+  return buildBottomLine(comparison, modifierLabel);
+}
+
 function buildBottomLine(comparison: Comparison, modifierLabel: string): string {
   const winner = winnerNameOf(comparison);
   const lead = `${winner} is the top-recommended platform for ${modifierLabel}.`;
@@ -696,24 +707,210 @@ export function buildPersonaEvaluation(
   comparison: Comparison,
   rows: PersonaMatrixRow[]
 ): PersonaEvaluationContent | null {
-  if (rows.length === 0) return null;
-
   const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
-  const wins = whereTheyWin(comparison, rows);
-  const overlays = payrollEvaluationOverlays(comparison, modifierLabel);
   const workflowItems = buyerItemsFor(comparison);
+  const buyerConsiderations = workflowItems
+    .slice(0, 4)
+    .map((item) => fillPersonaCopy(item, comparison, modifierLabel));
+
+  if (rows.length === 0 && buyerConsiderations.length === 0) return null;
+
+  const wins = rows.length > 0 ? whereTheyWin(comparison, rows) : { a: [], b: [] };
+  const overlays = payrollEvaluationOverlays(comparison, modifierLabel);
 
   return {
     modifierLabel,
     toolAName: comparison.tool_a_name,
     toolBName: comparison.tool_b_name,
-    bottomLine: buildBottomLine(comparison, modifierLabel),
+    bottomLine: editorialBottomLine(comparison, modifierLabel),
     whereAWins: [...overlays.a, ...wins.a].slice(0, 4),
     whereBWins: [...overlays.b, ...wins.b].slice(0, 4),
-    buyerConsiderations: workflowItems
-      .slice(0, 4)
-      .map((item) => fillPersonaCopy(item, comparison, modifierLabel)),
+    buyerConsiderations,
   };
+}
+
+export interface MasterSegmentPanel {
+  id: string;
+  label: string;
+  verdict: string;
+  key_factors: string[];
+}
+
+/** Five on-page segment tabs for each vertical. Payroll uses the public buyer labels. */
+export const MASTER_SEGMENT_ORDER: Record<ComparisonFamily, string[]> = {
+  payroll: ['startups', 'scaleups', 'agencies', 'us-latam', 'web3-crypto'],
+  ats: ['startups', 'scaleups', 'agencies', 'enterprise', 'remote-teams'],
+  pm: ['startups', 'scaleups', 'enterprise', 'people-ops', 'remote-teams'],
+};
+
+function fillVendorNames(template: string, comparison: Comparison): string {
+  return template.replaceAll('{A}', comparison.tool_a_name).replaceAll('{B}', comparison.tool_b_name);
+}
+
+/** Drop bolted-on “for Startups” / “for {label}” tails from generated copy. */
+function stripSegmentConcat(text: string, label: string): string {
+  if (!text || !label) return text;
+  const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return text
+    .replace(new RegExp(`\\s+for\\s+${escaped}(?=[\\s.,;:!?]|$)`, 'gi'), '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+function uniqueSupportClause(reason: string): string | null {
+  const match = reason.match(/strong support for\s+([^.]*)/i);
+  const clause = match?.[1]?.replace(/[.,;:]+$/, '').trim() ?? '';
+  if (!clause || /\bsuperior score\b/i.test(clause)) return null;
+  const first = clause.split(/\s+/)[0] ?? '';
+  if (/^[A-Z0-9]{2,}(?:[A-Z0-9/-]*)$/.test(first)) return clause;
+  return `${clause.charAt(0).toLowerCase()}${clause.slice(1)}`;
+}
+
+function asNounPhrase(value: string): string {
+  const trimmed = value.replace(/[.,;:]+$/, '').trim();
+  if (!trimmed) return trimmed;
+  const first = trimmed.split(/\s+/)[0] ?? '';
+  if (/^[A-Z0-9]{2,}(?:[A-Z0-9/-]*)$/.test(first)) return trimmed;
+  return `${trimmed.charAt(0).toLowerCase()}${trimmed.slice(1)}`;
+}
+
+const OTHER_PICK_CLAUSE: Record<ComparisonFamily, Record<string, string>> = {
+  payroll: {
+    startups: 'your team is mostly US-based and you just need fast starter payroll',
+    scaleups: 'you run a multi-state US workforce and need custom HR workflows',
+    agencies: 'your agency only hires US-based 1099 contractors',
+    'us-latam': 'you only need standard US payroll',
+    'web3-crypto': 'your payroll is 100% traditional bank transfers',
+  },
+  ats: {
+    startups: 'you only need a simple pipeline and job-board posting',
+    scaleups: 'hiring volume is still low and a basic applicant tracker is enough',
+    agencies: 'you do not need client portals or multi-account pipelines',
+    enterprise: 'you are not a federal contractor and do not need OFCCP reporting',
+    'remote-teams': 'your interviewers share the same working hours',
+  },
+  pm: {
+    startups: 'you just need weekly check-ins without extra review modules',
+    scaleups: 'you are not ready to run calibration and compensation in one system',
+    enterprise: 'legal does not need to sign off on compensation calibration',
+    'people-ops': 'managers can run reviews without a People Ops console',
+    'remote-teams': 'the whole team shares one office and one working day',
+  },
+};
+
+function otherPickSentence(family: ComparisonFamily, nicheId: string, otherName: string): string {
+  const need = OTHER_PICK_CLAUSE[family]?.[nicheId];
+  if (!need) return `Pick ${otherName} if it is a better match for how this team actually works.`;
+  const verb = nicheId === 'startups' ? 'Choose' : 'Pick';
+  return `${verb} ${otherName} if ${need}.`;
+}
+
+/** Standalone Pick A / Pick B copy. Never reuse a badge-based runner-up suffix. */
+function formatStandaloneVerdict(
+  family: ComparisonFamily,
+  nicheId: string,
+  winner: string,
+  otherName: string | null,
+  payload: string
+): string {
+  const p = asNounPhrase(payload);
+  const order = MASTER_SEGMENT_ORDER[family];
+  const index = Math.max(0, order.indexOf(nicheId));
+
+  let first: string;
+  if (index === 0) {
+    first = `Pick ${winner} if you need ${p}.`;
+  } else if (index === 1) {
+    first =
+      family === 'ats'
+        ? `Pick ${winner} when hiring volume requires ${p}.`
+        : family === 'pm'
+          ? `Pick ${winner} when calibration cycles require ${p}.`
+          : `Pick ${winner} when Finance needs ${p}.`;
+  } else if (index === 2) {
+    if (nicheId === 'agencies') {
+      first =
+        family === 'payroll'
+          ? `Pick ${winner} if you manage a large pool of international freelancers and need ${p}.`
+          : `Pick ${winner} if you run client accounts and need ${p}.`;
+    } else {
+      first = `Pick ${winner} if enterprise talent programs need ${p}.`;
+    }
+  } else if (index === 3) {
+    first =
+      nicheId === 'us-latam'
+        ? `Pick ${winner} for hiring full-time staff in Mexico, Brazil, or Argentina when you need ${p}.`
+        : nicheId === 'people-ops'
+          ? `Pick ${winner} if People Ops needs ${p}.`
+          : `Pick ${winner} if structured hiring needs ${p}.`;
+  } else {
+    first = `Pick ${winner} if you need ${p}.`;
+  }
+
+  const second = otherName ? otherPickSentence(family, nicheId, otherName) : '';
+  return [first, second].filter(Boolean).join(' ');
+}
+
+function isEditorialTabVerdict(reason: string): boolean {
+  if (!reason || /^Based on The HR Stack Guide/i.test(reason)) return false;
+  return /^(Pick |Choose )/i.test(reason);
+}
+
+function segmentTabVerdict(comparison: Comparison, label: string, family: ComparisonFamily): string {
+  const reason = comparison.winner_reason?.trim() ?? '';
+  if (isEditorialTabVerdict(reason)) {
+    return stripSegmentConcat(reason, label);
+  }
+
+  const winner = winnerNameOf(comparison);
+  const other = contrastNeed(comparison);
+  const payload =
+    uniqueSupportClause(reason) ||
+    pipeList(comparison.winner_bullets)[0] ||
+    reason.match(/strength in\s+(.+?)(?:, and strong support|\.|$)/i)?.[1]?.trim() ||
+    fillVendorNames(buyerItemsFor(comparison)[0] ?? '', comparison) ||
+    'this workflow';
+
+  const nicheId = comparison.niche_id === 'tech-startups' ? 'startups' : comparison.niche_id;
+  return stripSegmentConcat(
+    formatStandaloneVerdict(family, nicheId, winner, other?.name ?? null, payload),
+    label
+  );
+}
+
+function segmentKeyFactors(comparison: Comparison, label: string): string[] {
+  return buyerItemsFor(comparison)
+    .slice(0, 4)
+    .map((item) => stripSegmentConcat(fillVendorNames(item, comparison), label))
+    .filter(Boolean);
+}
+
+export function buildMasterSegmentPanels(rows: Comparison[] = []): MasterSegmentPanel[] {
+  const first = rows[0];
+  if (!first) return [];
+  const family = comparisonFamily(first.tool_a_id, first.tool_b_id);
+  if (!family) return [];
+
+  const byNiche = new Map<string, Comparison>();
+  for (const row of rows) {
+    const nicheId = row.niche_id === 'tech-startups' ? 'startups' : row.niche_id;
+    if (byNiche.has(nicheId)) continue;
+    byNiche.set(nicheId, {
+      ...row,
+      niche_id: nicheId,
+      niche_name: MODIFIER_TITLE_SUFFIX[nicheId] ?? row.niche_name,
+    });
+  }
+
+  return MASTER_SEGMENT_ORDER[family].flatMap((nicheId) => {
+    const row = byNiche.get(nicheId);
+    if (!row) return [];
+    const label = modifierTitleSuffix(nicheId, row.niche_name);
+    const verdict = segmentTabVerdict(row, label, family);
+    const key_factors = segmentKeyFactors(row, label);
+    if (!verdict && key_factors.length === 0) return [];
+    return [{ id: nicheId, label, verdict, key_factors }];
+  });
 }
 
 export interface FaqItem {

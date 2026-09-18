@@ -244,40 +244,22 @@ const WEB3FORMS_KEY =
 
     // Client-side Web3Forms (same payload as Lever / JazzHR / Culture Amp).
     // PerformYard is also listed so it can send the email after Zapier.
-    // The nine non-affiliate vendors use this path too, then POST /api/leads
+    // Remaining non-affiliate vendors use this path too, then POST /api/leads
     // and redirect. Zapier stays gated on vendorId === 'performyard'.
     var EMAIL_SEND_VENDORS = [
       'lever',
       'jazzhr',
       'culture-amp',
       'performyard',
-      'plane',
-      'greenhouse',
       'workable',
-      '15five',
-      'leapsome',
-      'peoplefluent',
-      'clearcompany',
       'oyster-hr',
     ];
     var REQUEST_DEMO_VENDORS = [
-      'plane',
-      'greenhouse',
       'workable',
-      '15five',
-      'leapsome',
-      'peoplefluent',
-      'clearcompany',
       'oyster-hr',
     ];
     var NON_AFFILIATE_HOME_URLS = {
-      plane: 'https://plane.com',
-      greenhouse: 'https://www.greenhouse.com',
       workable: 'https://www.workable.com',
-      '15five': 'https://www.15five.com',
-      leapsome: 'https://www.leapsome.com',
-      peoplefluent: 'https://www.peoplefluent.com',
-      clearcompany: 'https://www.clearcompany.com',
       'oyster-hr': 'https://www.oysterhr.com',
     };
     var WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';

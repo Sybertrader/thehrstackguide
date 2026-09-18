@@ -9,7 +9,7 @@ interface Props {
   name: string;
   badgeColor: string;
   /** Display size in CSS pixels. Matches the reserved layout box. */
-  size?: 36 | 40;
+  size?: 24 | 32 | 36 | 40;
   loading?: 'lazy' | 'eager';
   /** Above-the-fold LCP logos: `fetchpriority="high"` + `loading="eager"`. */
   priority?: boolean;
@@ -28,8 +28,13 @@ const {
 const local = vendorLogoAsset(src);
 const remote = /^https?:\/\//i.test(src.trim()) ? src.trim() : undefined;
 const imageSrc: ImageMetadata | string | undefined = local ?? remote;
-const boxClass = size === 36 ? 'h-9 w-9' : 'h-10 w-10';
-const letterClass = size === 36 ? 'text-xs' : 'text-sm';
+const sizeClasses: Record<24 | 32 | 36 | 40, { box: string; letter: string }> = {
+  24: { box: 'h-6 w-6', letter: 'text-[10px]' },
+  32: { box: 'h-8 w-8', letter: 'text-xs' },
+  36: { box: 'h-9 w-9', letter: 'text-xs' },
+  40: { box: 'h-10 w-10', letter: 'text-sm' },
+};
+const { box: boxClass, letter: letterClass } = sizeClasses[size];
 const isLcp = priority || loading === 'eager';
 ---
 

@@ -1,0 +1,156 @@
+---
+/**
+ * Master-page segment advice. All panels ship in the HTML so crawlers index
+ * every buyer-profile block on the canonical 1-1 URL. JS only toggles
+ * Tailwind `hidden` / `block` on click.
+ *
+ * Each panel is exactly two blocks: a segment verdict and unique decision
+ * factors. Baseline vendor win-grids do not repeat across tabs.
+ */
+import type { MasterSegmentPanel } from '../lib/persona-evaluation';
+
+interface Props {
+  panels: MasterSegmentPanel[];
+}
+
+const { panels = [] } = Astro.props;
+---
+
+{
+  panels.length > 0 && (
+    <section class="mb-12" aria-label="Team-specific evaluation" data-segment-tabs>
+      <h2 class="text-2xl font-bold tracking-tight text-slate-900">Which type of business is closest to yours?</h2>
+      <p class="mt-2 max-w-3xl text-base leading-relaxed text-slate-600">
+        Select your setup below to see how these platforms compare for your specific team size and workflow.
+      </p>
+
+      <div
+        role="tablist"
+        aria-label="Buyer profiles"
+        class="mt-6 flex flex-wrap gap-2"
+      >
+        {panels.map((panel, index) => (
+          <button
+            type="button"
+            role="tab"
+            id={`segment-tab-${panel.id}`}
+            data-segment={panel.id}
+            aria-controls={`segment-panel-${panel.id}`}
+            aria-selected={index === 0 ? 'true' : 'false'}
+            tabindex={index === 0 ? 0 : -1}
+            class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-indigo-300 hover:text-indigo-700 aria-selected:border-indigo-600 aria-selected:bg-indigo-600 aria-selected:text-white aria-selected:hover:border-indigo-600 aria-selected:hover:text-white"
+          >
+            {panel.label}
+          </button>
+        ))}
+      </div>
+
+      {panels.map((panel, index) => (
+        <div
+          role="tabpanel"
+          id={`segment-panel-${panel.id}`}
+          data-segment={panel.id}
+          aria-labelledby={`segment-tab-${panel.id}`}
+          class:list={[index === 0 ? 'block' : 'hidden', 'mt-6']}
+        >
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div class="border-l-4 border-indigo-600 bg-indigo-50/50 p-5 sm:p-6">
+              <p class="mb-3">
+                <span class="inline-flex rounded-full bg-indigo-600 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-white">
+                  The Verdict for {panel.label}
+                </span>
+              </p>
+              <p class="text-base leading-relaxed text-slate-800">{panel.verdict}</p>
+            </div>
+
+            {panel.key_factors.length > 0 && (
+              <div class="mt-8 rounded-xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
+                <h3 class="mb-4 text-lg font-semibold text-slate-900">
+                  Key {panel.label} Decision Factors
+                </h3>
+                <ul class="space-y-3">
+                  {panel.key_factors.map((item) => (
+                    <li class="flex items-start gap-3 text-sm leading-relaxed text-slate-700">
+                      <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-indigo-100 text-indigo-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </article>
+        </div>
+      ))}
+    </section>
+  )
+}
+
+<script>
+  function activateSegment(root: HTMLElement, segmentId: string) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    for (const tab of tabs) {
+      const on = tab.dataset.segment === segmentId;
+      tab.setAttribute('aria-selected', on ? 'true' : 'false');
+      tab.tabIndex = on ? 0 : -1;
+    }
+    for (const panel of panels) {
+      const on = panel.dataset.segment === segmentId;
+      panel.classList.toggle('hidden', !on);
+      panel.classList.toggle('block', on);
+    }
+  }
+
+  function initSegmentTabs() {
+    const roots = Array.from(document.querySelectorAll<HTMLElement>('[data-segment-tabs]'));
+
+    for (const root of roots) {
+      const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+      if (tabs.length === 0) continue;
+
+      const ids = tabs.map((tab) => tab.dataset.segment).filter((id): id is string => Boolean(id));
+
+      root.addEventListener('click', (event) => {
+        const tab = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>('[role="tab"]');
+        if (!tab || !root.contains(tab) || !tab.dataset.segment) return;
+        activateSegment(root, tab.dataset.segment);
+        if (tab.dataset.segment) {
+          history.replaceState(null, '', `#${tab.dataset.segment}`);
+        }
+      });
+
+      root.addEventListener('keydown', (event) => {
+        const current = document.activeElement;
+        if (!(current instanceof HTMLButtonElement) || current.getAttribute('role') !== 'tab') return;
+        if (!root.contains(current)) return;
+        const index = tabs.indexOf(current);
+        if (index < 0) return;
+        let next = index;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = (index + 1) % tabs.length;
+        else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = (index - 1 + tabs.length) % tabs.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = tabs.length - 1;
+        else return;
+        event.preventDefault();
+        const target = tabs[next];
+        if (!target?.dataset.segment) return;
+        target.focus();
+        activateSegment(root, target.dataset.segment);
+        history.replaceState(null, '', `#${target.dataset.segment}`);
+      });
+
+      const hash = window.location.hash.replace(/^#/, '');
+      if (hash && ids.includes(hash)) {
+        activateSegment(root, hash);
+      }
+    }
+  }
+
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    initSegmentTabs();
+  }
+</script>

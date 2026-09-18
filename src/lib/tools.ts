@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { isCatalogVendorId } from './vendor-catalog';
 
 /**
  * Tool-level narrative content used to power the SEO deep-dive sections on
@@ -42,7 +43,7 @@ export interface ToolProfile {
   hasFreeTrial?: boolean;
   isManualLead?: boolean;
   partner_landing_url?: string;
-  /** First-party marketing host, e.g. `plane.com`. Used for UTM fallbacks. */
+  /** First-party marketing host, e.g. `deel.com`. Used for UTM fallbacks. */
   domain?: string;
   website?: string;
   affiliate_url?: string;
@@ -72,11 +73,21 @@ export interface ToolProfile {
 
 let cache: Record<string, ToolProfile> | null = null;
 
+/** Reads `src/data/tools.json`. Module reload (dev HMR) drops this cache. */
 export function loadToolProfiles(): Record<string, ToolProfile> {
   if (cache) return cache;
   const dataPath = path.join(process.cwd(), 'src/data/tools.json');
   const content = fs.readFileSync(dataPath, 'utf-8');
-  cache = JSON.parse(content) as Record<string, ToolProfile>;
+  const parsed = JSON.parse(content) as Record<string, ToolProfile>;
+  const profiles: Record<string, ToolProfile> = {};
+  for (const [id, profile] of Object.entries(parsed)) {
+    if (id.startsWith('$')) continue;
+    if (!isCatalogVendorId(id)) {
+      throw new Error(`tools.json vendor "${id}" is outside the keep allowlist`);
+    }
+    profiles[id] = profile;
+  }
+  cache = profiles;
   return cache;
 }
 

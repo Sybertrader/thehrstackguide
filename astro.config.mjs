@@ -3,44 +3,11 @@ import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
-import { reverseSlugRedirects } from './src/lib/reverse-slug-redirects';
-
-const reverseRedirects = reverseSlugRedirects();
-
-/**
- * Keep noindex / operational URLs out of sitemap-index.xml.
- * Comparison hubs and child modifiers are emitted by getStaticPaths and
- * stay included. Legacy `-for-tech-startups` pages are no longer built;
- * the extra path check is a safety net.
- */
-function includeInSitemap(page) {
-  let pathname = page;
-  try {
-    pathname = new URL(page).pathname;
-  } catch {
-    /* page is already a path */
-  }
-
-  if (pathname.startsWith('/go/')) return false;
-  if (pathname.startsWith('/api/')) return false;
-  if (pathname === '/thank-you' || pathname === '/thank-you/') return false;
-  if (pathname === '/contact' || pathname === '/contact/') return false;
-  if (pathname.includes('-for-tech-startups')) return false;
-  const withSlash = pathname.endsWith('/') ? pathname : `${pathname}/`;
-  if (reverseRedirects[withSlash]) return false;
-  return true;
-}
-
-function withTrailingSlash(url) {
-  if (!url || url.endsWith('/')) return url;
-  if (/\.[a-z0-9]+$/i.test(url)) return url;
-  return `${url}/`;
-}
+import { includeInSitemap, withTrailingSlash } from './src/lib/master-redirects';
 
 export default defineConfig({
   site: 'https://www.thehrstackguide.com',
   trailingSlash: 'always',
-  redirects: reverseRedirects,
   prefetch: {
     prefetchAll: false,
     defaultStrategy: 'tap',
@@ -59,7 +26,7 @@ export default defineConfig({
       },
     }),
     sitemap({
-      filter: (page) => !page.includes('/go/') && includeInSitemap(page),
+      filter: (page) => includeInSitemap(page),
       serialize(item) {
         item.url = withTrailingSlash(item.url);
         item.lastmod = new Date().toISOString();

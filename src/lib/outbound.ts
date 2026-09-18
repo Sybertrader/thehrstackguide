@@ -17,13 +17,7 @@ export const UTM_MEDIUM = 'referral';
 
 /** Non-affiliate vendors whose CTAs open the lead modal (not an outbound URL). */
 export const NON_AFFILIATE_LEAD_BRANDS = [
-  'plane',
-  'greenhouse',
   'workable',
-  '15five',
-  'leapsome',
-  'peoplefluent',
-  'clearcompany',
   'oyster-hr',
 ] as const;
 
@@ -38,13 +32,7 @@ export const MANUAL_LEAD_BRANDS = [
 
 /** Official homepages used for post-submit redirects (not affiliate/UTM URLs). */
 export const NON_AFFILIATE_VENDOR_HOME_URLS: Record<(typeof NON_AFFILIATE_LEAD_BRANDS)[number], string> = {
-  plane: 'https://plane.com',
-  greenhouse: 'https://www.greenhouse.com',
   workable: 'https://www.workable.com',
-  '15five': 'https://www.15five.com',
-  leapsome: 'https://www.leapsome.com',
-  peoplefluent: 'https://www.peoplefluent.com',
-  clearcompany: 'https://www.clearcompany.com',
   'oyster-hr': 'https://www.oysterhr.com',
 };
 
@@ -73,27 +61,21 @@ export function vendorLeadModalHeading(vendorName: string): string {
  * Keys must match live `src/data/tools.json` vendor ids.
  */
 export const VENDOR_DOMAINS: Record<string, string> = {
-  '15five': '15five.com',
   ashby: 'ashbyhq.com',
   'bamboohr-ats': 'bamboohr.com',
   'breezy-hr': 'breezyhr.com',
-  clearcompany: 'clearcompany.com',
   'culture-amp': 'cultureamp.com',
   deel: 'deel.com',
-  greenhouse: 'greenhouse.io',
   gusto: 'gusto.com',
   jazzhr: 'jazzhr.com',
   lattice: 'lattice.com',
-  leapsome: 'leapsome.com',
   lever: 'lever.co',
   multiplier: 'usemultiplier.com',
   'oyster-hr': 'oysterhr.com',
   'papaya-global': 'papayaglobal.com',
   'payoneer-workforce-management': 'payoneer.com',
   performyard: 'performyard.com',
-  plane: 'plane.com',
   recruitee: 'recruitee.com',
-  peoplefluent: 'peoplefluent.com',
   remote: 'remote.com',
   rippling: 'rippling.com',
   workable: 'workable.com',

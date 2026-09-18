@@ -8,6 +8,7 @@ import ManualLeadModal from '../../components/ManualLeadModal.astro';
 import { loadComparisons } from '../../lib/comparisons';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../../lib/outbound';
 import { getToolsByCategory } from '../../lib/tools';
+import { comparisonHubSlug } from '../../lib/comparison-routes';
 import { PAYROLL_HUB_HEADING, PAYROLL_HUB_TITLE } from '../../lib/seo';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
@@ -28,6 +29,9 @@ const toolIds = new Set(toolProfiles.map((tool) => tool.id));
 const categoryComparisons = allComparisons.filter(
   (comparison) => toolIds.has(comparison.tool_a_id) && toolIds.has(comparison.tool_b_id)
 );
+const masterComparisonCount = new Set(
+  categoryComparisons.map((row) => comparisonHubSlug(row.tool_a_id, row.tool_b_id))
+).size;
 
 // Look up display name, logo, and the high-signal "best fit" badge from the
 // comparisons data source itself (those richer fields aren't duplicated in
@@ -166,7 +170,7 @@ const collectionSchema = {
       </nav>
 
       <span class="mt-4 inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold text-indigo-700">
-        {toolRoster.length} Platforms Evaluated · {categoryComparisons.length} Comparisons
+        {toolRoster.length} Tools · {masterComparisonCount} Comparisons
       </span>
 
       <h1 class="mt-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
@@ -244,8 +248,12 @@ const collectionSchema = {
 
     <!-- Comparison Directory -->
     <section id="browse-comparisons" class="scroll-mt-24" aria-label="Comparison directory">
-      <h2 class="mb-2 text-2xl font-bold text-slate-900">Browse All Comparisons</h2>
-      <CategoryComparisonBrowser comparisons={categoryComparisons} theme="indigo" idPrefix="eor" />
+      <CategoryComparisonBrowser
+        comparisons={categoryComparisons}
+        theme="indigo"
+        idPrefix="eor"
+        gridTitle="All Global Payroll & EOR Head-to-Head Comparisons"
+      />
     </section>
 
     <ConciergeLeadBox categoryName="Global Payroll & EOR" theme="indigo" ctaHref="/recommendation/?category=payroll" />

@@ -82,17 +82,6 @@ const multiplierBase: GlobalPayrollFeatures = {
   onboardingSla: spec(true, 'APAC onboarding is competitive; global SLA is country-dependent rather than a uniform 24-hour promise.'),
 };
 
-const planeBase: GlobalPayrollFeatures = {
-  ownedLocalEntities: spec(true, 'Owned-entity EOR aimed at tech companies; coverage is narrower than Deel’s 150+ country owned network.'),
-  eorCountryCoverage: spec(true, 'EOR plus contractor product with published low-FX positioning versus spread-heavy wallets.'),
-  contractorPayments: spec(true, 'Contractor payments for remote engineering teams; crypto/USDC is not the native payout method.'),
-  nativePayrollFilings: spec(true, 'Local payroll filings through Plane entities in coverage markets; not a US-only Gusto replacement.'),
-  fxAndMultiCurrency: spec(true, 'Low FX markup is the commercial hook; still confirm corridor rates rather than assuming Remote-style zero markup.'),
-  statutoryBenefits: spec(true, 'Statutory benefits on EOR employment; supplemental perks are quote-dependent.'),
-  ipAndWorkProductAssignment: spec(true, 'Tech-startup IP assignment via owned-entity employment contracts in live markets.'),
-  onboardingSla: spec(true, 'Faster than enterprise payroll suites; slower and narrower than Deel’s 24-hour, 150-country motion.'),
-};
-
 const payoneerBase: GlobalPayrollFeatures = {
   ownedLocalEntities: spec(false, 'Payoneer Workforce Management is a cross-border payout and contractor platform, not an owned-entity EOR employer.'),
   eorCountryCoverage: spec(false, 'No full-time EOR employment network. Coverage is contractor payouts to 190+ countries, not local employment.'),
@@ -285,32 +274,6 @@ export const globalPayrollPersonaByToolId: Record<string, GlobalPayrollPersonaDa
     }),
     enterpriseFeatures: gp(multiplierBase, {
       ownedLocalEntities: spec(true, 'SSO on enterprise contracts; APAC owned-entity story is the procurement angle versus a 150-country Deel RFP.'),
-    }),
-  },
-  plane: {
-    startupFeatures: gp(planeBase, {
-      fxAndMultiCurrency: spec(true, 'Low-FX EOR positioning for venture-backed engineering teams that want owned entities without Deel’s product surface area.'),
-    }),
-    scaleupFeatures: gp(planeBase, {
-      eorCountryCoverage: spec(true, 'Fits scaleups whose country list sits inside Plane’s owned-entity map; overflow countries need a second EOR.'),
-    }),
-    agencyFeatures: gp(planeBase, {
-      contractorPayments: spec(true, 'Contractor payments for studio/agency talent; not a high-volume Payoneer wallet replacement.'),
-    }),
-    latamFeatures: gp(planeBase, {
-      ownedLocalEntities: spec(true, 'LATAM coverage exists where Plane has entities; verify Brazil CLT and Mexico IMSS on the current country list.'),
-    }),
-    web3Features: gp(planeBase, {
-      fxAndMultiCurrency: spec(false, 'Low fiat FX, not USDC payroll. Token compensation remains a separate cap table/custody problem.'),
-    }),
-    contractorFeatures: gp(planeBase, {
-      contractorPayments: spec(true, 'Contractor onboarding for remote ICs; 1099/W-8BEN automation is lighter than Payoneer’s payout-tax workflow.'),
-    }),
-    ukEuropeFeatures: gp(planeBase, {
-      ipAndWorkProductAssignment: spec(true, 'UK/EU owned-entity IP assignment for software teams; confirm works-council markets before promising a go-live date.'),
-    }),
-    enterpriseFeatures: gp(planeBase, {
-      onboardingSla: spec(false, 'SSO is quote-based. Plane is not the SAML/ERP payroll fabric Papaya Global sells to global finance.'),
     }),
   },
   'payoneer-workforce-management': {

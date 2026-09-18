@@ -4,8 +4,7 @@ import RecommendationTeaser from '../components/RecommendationTeaser.astro';
 import VendorLogo from '../components/VendorLogo.astro';
 import { loadComparisons } from '../lib/comparisons';
 import { comparisonHubSlug } from '../lib/comparison-routes';
-import { loadToolProfiles } from '../lib/tools';
-import { modifierTitleSuffix } from '../lib/persona-evaluation';
+import { getToolsByCategory, loadToolProfiles } from '../lib/tools';
 import { ORGANIZATION_SAME_AS } from '../lib/organization';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
@@ -17,28 +16,45 @@ const currentYear = String(new Date().getFullYear());
 const comparisons = loadComparisons();
 const bySlug = new Map(comparisons.map((c) => [c.slug, c]));
 
+function categoryStats(category: string): { tools: number; comparisons: number } {
+  const ids = new Set(getToolsByCategory(category).map((tool) => tool.id));
+  const hubs = new Set(
+    comparisons
+      .filter((row) => ids.has(row.tool_a_id) && ids.has(row.tool_b_id))
+      .map((row) => comparisonHubSlug(row.tool_a_id, row.tool_b_id))
+  );
+  return {
+    tools: ids.size,
+    comparisons: hubs.size,
+  };
+}
+
+const payrollStats = categoryStats('payroll-eor');
+const atsStats = categoryStats('ats');
+const pmStats = categoryStats('performance-management');
+
 const categoryCards = [
   {
     title: 'Global Payroll & EOR',
     href: '/global-payroll-eor/',
     description: 'Deel, Rippling, Remote, Oyster HR, Gusto, Payoneer, and more, compared on compliance, global reach, and real pricing.',
-    badge: '9 tools · 180 comparisons',
+    badge: `${payrollStats.tools} tools · ${payrollStats.comparisons} comparisons`,
     accent: 'from-indigo-500 to-violet-600',
     titleHover: 'transition-colors duration-200 text-gray-900 group-hover:text-indigo-600',
   },
   {
     title: 'Applicant Tracking Systems (ATS)',
     href: '/applicant-tracking-systems/',
-    description: 'Ashby, Greenhouse, Lever, Workable, and more, compared on structured hiring, sourcing, and pricing.',
-    badge: '8 tools · 140 comparisons',
+    description: 'Ashby, Lever, Workable, JazzHR, and more, compared on structured hiring, sourcing, and pricing.',
+    badge: `${atsStats.tools} tools · ${atsStats.comparisons} comparisons`,
     accent: 'from-emerald-500 to-teal-600',
     titleHover: 'transition-colors duration-200 text-gray-900 group-hover:text-teal-600',
   },
   {
     title: 'Performance Management',
     href: '/performance-management/',
-    description: 'Lattice, 15Five, Leapsome, Culture Amp, and more, compared on OKRs, reviews, engagement, and pricing.',
-    badge: '7 tools · 105 comparisons',
+    description: 'Lattice, PerformYard, and Culture Amp, compared on OKRs, reviews, engagement, and pricing.',
+    badge: `${pmStats.tools} tools · ${pmStats.comparisons} comparisons`,
     accent: 'from-sky-500 to-cyan-600',
     titleHover: 'transition-colors duration-200 text-gray-900 group-hover:text-blue-500',
   },
@@ -47,11 +63,11 @@ const categoryCards = [
 // A curated mix of high-intent comparisons spanning all sub-verticals.
 const featuredSlugs = [
   'deel-vs-remote',
-  'ashby-vs-greenhouse-for-scaleups',
-  '15five-vs-lattice-for-scaleups',
-  'rippling-vs-gusto-for-scaleups',
-  'leapsome-vs-culture-amp-for-people-ops',
-  'greenhouse-vs-lever-for-enterprise',
+  'ashby-vs-lever',
+  'performyard-vs-lattice',
+  'rippling-vs-gusto',
+  'papaya-global-vs-multiplier',
+  'breezy-hr-vs-bamboohr-ats',
 ];
 
 const featuredComparisons = featuredSlugs
@@ -109,8 +125,8 @@ const eeatPillars = [
 ];
 
 const proofStats = [
-  { value: '500+', label: 'Head-to-Head Comparisons' },
-  { value: '24+', label: 'Vetted HR Platforms' },
+  { value: '50+', label: 'Head-to-Head Comparisons' },
+  { value: '18', label: 'Vetted HR Platforms' },
   { value: '100%', label: 'Independent Methodology' },
   { value: currentYear, label: 'Verified Pricing' },
 ];
@@ -315,10 +331,7 @@ const homepageSchema = {
                   size={36}
                 />
               </div>
-              <span class="mt-4 inline-flex w-fit items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-slate-600">
-                {modifierTitleSuffix(comparison.niche_id, comparison.niche_name)}
-              </span>
-              <h3 class="mt-3 text-lg font-semibold text-slate-900 transition group-hover:text-indigo-600">
+              <h3 class="mt-4 text-lg font-semibold text-slate-900 transition group-hover:text-indigo-600">
                 {comparison.tool_a_name} vs {comparison.tool_b_name}
               </h3>
               <span class="mt-4 inline-flex items-center text-sm font-semibold text-indigo-600">

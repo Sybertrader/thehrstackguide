@@ -2,10 +2,9 @@
  * Recommendation wizard destination matrix.
  *
  * Pair slugs are the live comparison hubs (Papaya Global is `deel-vs-papaya-global`,
- * Breezy is `workable-vs-breezy-hr`, ClearCompany is `leapsome-vs-clearcompany`).
- * Persona tokens match Question 2 values and the public `-for-{persona}`
- * child URLs, including payroll startups at `-for-startups` (never the
- * legacy `-for-tech-startups` redirect).
+ * Breezy is `workable-vs-breezy-hr`, BambooHR is `ashby-vs-bamboohr-ats`).
+ * Persona tokens still gate which pair is chosen; the public URL is always
+ * the master hub (`/deel-vs-remote/`), never a `-for-{persona}` child.
  */
 
 export const LEGACY_CATEGORY_VALUES: Record<string, string> = { payroll: 'global_eor' };
@@ -30,8 +29,8 @@ export function normalizeCategory(category: string): string {
   return LEGACY_CATEGORY_VALUES[category] ?? category;
 }
 
-function comparisonHref(pair: string, persona: string): string {
-  return `/${pair}-for-${persona}/`;
+function comparisonHref(pair: string, _persona: string): string {
+  return `/${pair}/`;
 }
 
 function isHighBudget(budget: string): boolean {
@@ -57,7 +56,7 @@ function isUsOnly(location: string): boolean {
  */
 function resolveAtsPair(persona: string, budget: string, location: string): string {
   if (persona === 'enterprise' || isHighBudget(budget)) {
-    return 'greenhouse-vs-lever';
+    return 'ashby-vs-lever';
   }
   if (persona === 'startups' && isLowBudget(budget)) {
     return isUsOnly(location) ? 'workable-vs-jazzhr' : 'workable-vs-breezy-hr';
@@ -66,7 +65,7 @@ function resolveAtsPair(persona: string, budget: string, location: string): stri
     return 'ashby-vs-lever';
   }
   if (persona === 'scaleups' || isMidBudget(budget)) {
-    return persona === 'scaleups' ? 'ashby-vs-greenhouse' : 'ashby-vs-lever';
+    return persona === 'scaleups' ? 'ashby-vs-workable' : 'ashby-vs-lever';
   }
   return 'ashby-vs-lever';
 }
@@ -93,23 +92,23 @@ function resolvePayrollPair(persona: string, budget: string, location: string): 
 
 /**
  * Performance: enterprise / high-budget Lattice vs Culture Amp, then
- * People Ops Leapsome pairs, then lean startups, then scaleups, then the
- * generic 15Five vs PerformYard hub.
+ * People Ops Lattice pairs, then lean startups, then scaleups, then the
+ * generic PerformYard vs Lattice hub.
  */
 function resolvePmPair(persona: string, budget: string, location: string): string {
   if (persona === 'enterprise' || isHighBudget(budget)) {
     return 'lattice-vs-culture-amp';
   }
   if (persona === 'people-ops') {
-    return isUsOnly(location) ? 'leapsome-vs-clearcompany' : 'leapsome-vs-culture-amp';
+    return isUsOnly(location) ? 'performyard-vs-lattice' : 'lattice-vs-culture-amp';
   }
   if (persona === 'startups' && isLowBudget(budget)) {
-    return '15five-vs-performyard';
+    return 'performyard-vs-lattice';
   }
   if (persona === 'scaleups') {
-    return isUsOnly(location) ? '15five-vs-lattice' : 'leapsome-vs-lattice';
+    return isUsOnly(location) ? 'performyard-vs-lattice' : 'lattice-vs-culture-amp';
   }
-  return '15five-vs-performyard';
+  return 'performyard-vs-lattice';
 }
 
 export function resolveRecommendationUrl(

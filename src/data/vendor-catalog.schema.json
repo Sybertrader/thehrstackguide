@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.thehrstackguide.com/schemas/vendor-catalog.schema.json",
+  "title": "HR Stack Guide vendor allowlist",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "categories", "keepVendors", "purgeVendors"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "type": "integer", "minimum": 1 },
+    "notes": { "type": "string" },
+    "categories": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "hubPath"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": ["payroll-eor", "ats", "performance-management"]
+          },
+          "label": { "type": "string", "minLength": 1 },
+          "hubPath": { "type": "string", "pattern": "^/[a-z0-9-]+/$" }
+        }
+      }
+    },
+    "keepVendors": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/vendorEntry" }
+    },
+    "purgeVendors": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/vendorEntry" }
+    },
+    "stableIdAliases": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "minLength": 1 },
+      "description": "Legacy display slugs that resolve to an existing vendor id. Never invent a new tools.json key from an alias."
+    }
+  },
+  "$defs": {
+    "vendorEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "category"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "name": { "type": "string", "minLength": 1 },
+        "category": {
+          "type": "string",
+          "enum": ["payroll-eor", "ats", "performance-management"]
+        }
+      }
+    }
+  }
+}

@@ -8,12 +8,10 @@
     "positioning": "The market leader for global workforce expansion, contractor hiring, and EOR compliance across 150+ countries.",
     "text_compliance": "Deel handles compliance in 150+ countries using a vast network of fully-owned local entities and in-house legal experts. They automate misclassification protection, localized contract generation, tax withholdings, and statutory benefits compliance, backing their contracts with misclassification insurance guarantees.",
     "text_global_reach": "Deel provides unmatched international coverage across 150+ countries with direct payroll and owned EOR entities in key tech and hiring hubs globally. They support multi-currency payouts, localized benefits administration, and fast local onboarding.",
-    "text_pricing_truth": "Contractor management starts at $49/month per contractor, while EOR hiring is $599/month per employee. Optional add-ons (e.g. Deel Shield, equipment shipping) and FX spreads on currency transfers can increase effective cost.",
+    "text_pricing_truth": "The $49/contractor and $599/employee figures are platform fees only. Deel Shield, equipment shipping, and background checks are separate SKUs. FX conversion spread hits every fiat payout corridor. Some markets also require a security deposit or payroll prefund (often ~1 month of salary).",
     "choose_if": [
-      "You need to hire full-time remote employees or contractors across 150+ countries rapidly.",
-      "You want an EOR that owns its local legal entities rather than leasing third-party partners.",
-      "You need built-in misclassification guarantees (Deel Shield) to protect against worker audits.",
-      "You want an all-in-one platform for international payroll, background checks, and hardware shipping."
+      "You will employ full-time staff in several countries this year and want Deel—not a partner agency—as the local legal employer.",
+      "You need USDC or multi-currency contractor wallets on the same platform as EOR, not a treasury tab in another app."
     ],
     "starting_price": "$49/mo",
     "free_trial": false,
@@ -324,88 +322,6 @@
     "deploymentType": "Cloud / SaaS / Mobile Native",
     "idealHeadcount": "5–250 contractor seats"
   },
-  "plane": {
-    "category": "payroll-eor",
-    "logo": "/plane.jpeg",
-    "rating": "4.6",
-    "review_count": "200",
-    "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A streamlined, startup-first payroll and EOR platform designed for tech companies seeking transparent, low-fee international hiring.",
-    "text_compliance": "Plane (formerly Pilot) enforces compliant hiring across 100+ countries with standardized employment contracts, local tax withholding, and IP assignment protection. They streamline misclassification protection for hybrid remote engineering teams.",
-    "text_global_reach": "Plane provides coverage across major technology hiring markets worldwide. It excels at helping US and European tech startups quickly deploy global contractors and full-time remote developers without administrative bloat.",
-    "text_pricing_truth": "Contractor management starts at $39/active contractor/month with transparent flat fees and a free HRIS. EOR pricing is $499/month per employee; Plane emphasizes low FX markup on direct bank payouts for tech-heavy contractor fleets.",
-    "choose_if": [
-      "You run an early-stage or venture-backed tech startup looking for low per-employee EOR overhead.",
-      "You want transparent, mid-market FX rates without hidden bank transfer markups.",
-      "You primarily hire software developers and tech contractors across Latin America and Eastern Europe.",
-      "You prefer a lean, fast interface over bloated enterprise HR suites."
-    ],
-    "starting_price": "$39/mo",
-    "free_trial": true,
-    "domain": "plane.com",
-    "website": "https://plane.com/?utm_source=hrstackguide.com&utm_medium=referral",
-    "affiliate_url": "https://plane.com/?utm_source=hrstackguide.com&utm_medium=referral",
-    "has_active_affiliate": true,
-    "contractor_price": 39,
-    "eor_price": 499,
-    "countries": "100+ EOR / 240+ contractor",
-    "target_segment": "Startups 1–20",
-    "enterprise_analysis": {
-      "ip_assignment": {
-        "summary": "Plane enforces IP assignment protection as part of its standardized employment contracts across 100+ EOR countries, aimed squarely at US and European tech startups deploying remote engineering teams.",
-        "bullets": [
-          "Standardized employment contracts carry local tax withholding and IP assignment together rather than treating assignment as a separate legal workstream.",
-          "The startup-first design means contracts are templated for speed, so review the assignment wording if you are hiring senior R&D staff in a civil-law jurisdiction.",
-          "EOR coverage spans 100+ countries against 240+ contractor countries. Contractors fall outside employment-grade assignment, so check which vehicle applies.",
-          "Misclassification protection for hybrid remote engineering teams indirectly supports the IP chain, since reclassification can unsettle the original transfer."
-        ]
-      },
-      "tax_withholding": {
-        "summary": "Plane handles local tax withholding as part of compliant hiring across its EOR footprint, with a deliberately lightweight administrative model built for smaller technical teams.",
-        "bullets": [
-          "Local tax withholding and statutory contributions are built into the standardized employment contract rather than configured per hire.",
-          "13th-month obligations in the markets that mandate them form part of statutory employment cost on EOR hires.",
-          "Contractor payouts at $39/month per active contractor carry no withholding, leaving tax responsibility with the contractor.",
-          "The free bundled HRIS keeps worker records in one place, which matters when you need to evidence filings during an audit."
-        ]
-      },
-      "statutory_benefits": {
-        "summary": "Plane administers statutory entitlements on EOR hires across 100+ countries, though its product focus is administrative simplicity for smaller teams rather than the depth of benefit configuration enterprises expect.",
-        "bullets": [
-          "Statutory health cover, pension, and mandatory leave follow each hiring country's legal floor.",
-          "Severance and notice periods are enforced to local statute, with Plane as legal employer on EOR hires.",
-          "Unlawful termination liability sits with Plane's local arrangement rather than your company, which is the point of using an EOR at startup scale.",
-          "Supplemental benefit depth is thinner than enterprise-oriented platforms. Verify what is available if you are competing for senior talent locally."
-        ]
-      },
-      "fee_structure": {
-        "summary": "Plane prices EOR at $499/month per employee and contractors at $39/month with transparent flat fees, and makes low FX markup on direct bank payouts an explicit selling point rather than a hidden line.",
-        "bullets": [
-          "The $499 EOR rate undercuts Deel and Remote at $599 and Oyster HR at $699, with a free HRIS bundled rather than upsold.",
-          "Low FX markup on direct bank payouts is a stated differentiator, which matters most for contractor-heavy engineering fleets.",
-          "Employer taxes and statutory contributions still sit on top of the platform fee, as with every EOR.",
-          "Confirm deposit, prefunding, and offboarding terms in writing, since transparent monthly pricing does not by itself tell you the working-capital requirement."
-        ]
-      }
-    },
-    "compliance": [
-      "SOC2 Type II",
-      "GDPR",
-      "CCPA",
-      "HMRC RTI"
-    ],
-    "integrations": [
-      "Slack",
-      "Google Workspace",
-      "QuickBooks",
-      "Zapier",
-      "Okta",
-      "REST API"
-    ],
-    "supportSLA": "Live Chat, Dedicated CSM (Growth+), Knowledge Base",
-    "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "1–50 seats"
-  },
   "remote": {
     "category": "payroll-eor",
     "logo": "/remote.jpeg",
@@ -496,12 +412,10 @@
     "positioning": "An all-in-one workforce operations system uniting HR, global payroll, IT device management, and app provisioning in one dashboard.",
     "text_compliance": "Rippling automates compliance across US domestic payroll and global workforce expansions. Its engine automatically enforces local overtime laws, tax registration, mandatory sexual harassment training, and international labor standards based on worker location.",
     "text_global_reach": "Rippling supports global hiring via direct payroll, local entity management, and integrated EOR services. It allows companies to manage US W-2 employees, international EOR staff, and worldwide contractors within a single unified HR cloud.",
-    "text_pricing_truth": "Rippling's core platform commonly starts around $8/user/month, with payroll, benefits, IT, and global EOR sold as modular add-ons. Real total cost depends on which modules you activate. Request an all-in quote for your headcount mix.",
+    "text_pricing_truth": "The $8/user/month rate buys the core workforce graph only. US payroll, benefits, device management, and global EOR are à la carte modules. An all-in quote for payroll plus IT typically lands at several multiples of the published seat. Comparing $8/user to a $599 EOR rate is not like-for-like.",
     "choose_if": [
-      "You want to manage IT assets (laptops, software app permissions, Google Workspace) alongside HR and payroll.",
-      "You have complex workflow automation needs (e.g., auto-triggering custom onboarding flows based on job role).",
-      "You manage both US domestic employees and international team members on one single platform.",
-      "You want a fully modular platform where you only pay for the specific HR and IT apps you activate."
+      "Your system of record is US W-2 plus IT (devices, Google Workspace, Okta-class app access) and international EOR is a minority of headcount.",
+      "You will not sign a bundled EOR price until Finance sees module-level line items for payroll, benefits, and devices."
     ],
     "starting_price": "$8/user/mo",
     "free_trial": false,
@@ -606,45 +520,6 @@
     "supportSLA": "Dedicated CSM, Ticketed support, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
     "idealHeadcount": "50–250 seats"
-  },
-  "greenhouse": {
-    "category": "ats",
-    "logo": "/Greenhouse.jpeg",
-    "rating": "4.4",
-    "review_count": "2,000",
-    "rating_source": "G2 & Industry Benchmark",
-    "positioning": "The enterprise gold standard for structured hiring, auditable scorecard methodologies, and complex talent acquisition ecosystems.",
-    "text_compliance": "Greenhouse enforces rigorous EEOC, GDPR, and CCPA compliance through structured interviewing rules, automated candidate consent workflows, and comprehensive DEI reporting tools designed for enterprise audits.",
-    "text_global_reach": "Greenhouse connects with 400+ native integrations worldwide, supporting localized job board postings, multi-language application forms, and global background check providers like Checkr and Sterling.",
-    "text_pricing_truth": "Greenhouse uses custom annual contracts without a public sticker price. Mid-market and enterprise deals typically include implementation fees. Budget for a sales-led quote rather than self-serve monthly pricing.",
-    "choose_if": [
-      "Your organization enforces strict, objective 'structured hiring' scorecards across all interview panels.",
-      "You need an industry-leading integration ecosystem (400+ HRIS, assessment, and background check tools).",
-      "You hire 25+ roles per year and require granular recruiter activity and DEI conversion metrics.",
-      "You operate a mature talent team with dedicated recruiting operations support."
-    ],
-    "starting_price": "Custom quote",
-    "free_trial": false,
-    "target_segment": "Global/Enterprise",
-    "compliance": [
-      "SOC2 Type II",
-      "ISO 27001",
-      "GDPR",
-      "CCPA",
-      "EEOC / OFCCP"
-    ],
-    "integrations": [
-      "Slack",
-      "Workday",
-      "SAP SuccessFactors",
-      "Okta",
-      "LinkedIn",
-      "Checkr",
-      "REST API"
-    ],
-    "supportSLA": "24/7 Enterprise Support, Dedicated CSM, Knowledge Base",
-    "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "250–1000+ enterprise"
   },
   "lever": {
     "category": "ats",
@@ -877,42 +752,6 @@
     "deploymentType": "Cloud / SaaS / Mobile Native",
     "idealHeadcount": "50–250 seats"
   },
-  "15five": {
-    "category": "performance-management",
-    "logo": "/15five.png",
-    "rating": "4.6",
-    "review_count": "1,900",
-    "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A manager-effectiveness platform combining weekly check-ins, OKRs, lightweight reviews, and coaching tools for high-growth teams.",
-    "text_compliance": "15Five supports structured review cycles with configurable access controls, audit-friendly review history, and GDPR-ready data handling for employee feedback records across Engage and Perform modules.",
-    "text_global_reach": "15Five supports distributed and international teams with Slack/Teams-native check-ins, async feedback workflows, and multi-timezone 1:1 agendas so remote managers can run consistent performance cadences.",
-    "text_pricing_truth": "Published pricing starts at $4/user/month on Engage, with Perform and Total Platform tiers adding reviews, OKRs, and coaching. Seat-based annual contracts are typical; confirm AI and coaching add-ons in your quote.",
-    "choose_if": [
-      "You want weekly check-ins and manager coaching, not just annual review software.",
-      "You need lightweight OKRs tied to continuous feedback without an enterprise sales cycle.",
-      "You want transparent published pricing and a free trial before rolling out company-wide.",
-      "Your managers need structured 1:1 agendas and coaching prompts baked into the workflow."
-    ],
-    "starting_price": "$4/user/mo",
-    "free_trial": true,
-    "target_segment": "Scaleups 50–250",
-    "compliance": [
-      "SOC2 Type II",
-      "GDPR",
-      "CCPA"
-    ],
-    "integrations": [
-      "Slack",
-      "Microsoft Teams",
-      "Google Workspace",
-      "Okta",
-      "Zapier",
-      "REST API"
-    ],
-    "supportSLA": "Live Chat, Dedicated CSM (higher tiers), Knowledge Base",
-    "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "50–250 seats"
-  },
   "performyard": {
     "category": "performance-management",
     "logo": "/PerformYard.jpeg",
@@ -949,43 +788,6 @@
       "REST API"
     ],
     "supportSLA": "Dedicated CSM, Ticketed SLA, Knowledge Base",
-    "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "50–250 seats"
-  },
-  "leapsome": {
-    "category": "performance-management",
-    "logo": "/leapsome.jpeg",
-    "rating": "4.8",
-    "review_count": "2,500",
-    "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A modular people-enablement suite spanning performance reviews, OKRs, engagement, learning, and compensation for modern scaleups.",
-    "text_compliance": "Leapsome emphasizes GDPR-ready data residency and consent controls suited to European and global employers, with structured review workflows, access permissions, and exportable audit history for performance and engagement data.",
-    "text_global_reach": "Leapsome is especially strong for European and multi-national scaleups, supporting multi-language experiences, distributed team feedback, and integrations with Slack, Teams, and common HRIS platforms worldwide.",
-    "text_pricing_truth": "Modular pricing starts at $8/user/month per active module (Reviews, Goals, Engagement, Learning). Model your module mix carefully. Full-suite rollouts stack seat costs versus lighter single-module buys.",
-    "choose_if": [
-      "You want one modular platform for reviews, learning paths, engagement, and goals.",
-      "You operate in Europe or need strong GDPR and multi-language support.",
-      "You value AI assists for writing reviews and drafting goals at scale.",
-      "You want compensation calibration connected to performance without buying a separate comp tool."
-    ],
-    "starting_price": "$8/user/mo",
-    "free_trial": true,
-    "target_segment": "Scaleups 50–250",
-    "compliance": [
-      "SOC2 Type II",
-      "ISO 27001",
-      "GDPR",
-      "CCPA"
-    ],
-    "integrations": [
-      "Slack",
-      "Microsoft Teams",
-      "Personio",
-      "DATEV",
-      "Okta",
-      "REST API"
-    ],
-    "supportSLA": "Live Chat, Dedicated CSM, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
     "idealHeadcount": "50–250 seats"
   },
@@ -1066,88 +868,6 @@
     "supportSLA": "Dedicated CSM, Enterprise SLA, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
     "idealHeadcount": "250–1000+ enterprise"
-  },
-  "peoplefluent": {
-    "category": "performance-management",
-    "logo": "/people fluent.jpeg",
-    "rating": "4.2",
-    "review_count": "300",
-    "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A continuous-feedback and goals platform under the PeopleFluent talent suite, known for real-time recognition feeds, agile performance reviews, and lightweight review cycles.",
-    "text_compliance": "PeopleFluent provides role-based review access and retained feedback history suitable for standard HR performance records; buyers should validate current security, data-processing terms, and admin controls during procurement.",
-    "text_global_reach": "PeopleFluent's Slack-native feedback loops suit distributed US and global teams; multi-region localization and modern benchmarking depth trail Culture Amp and Leapsome.",
-    "text_pricing_truth": "PeopleFluent packaging is custom-quoted. Treat legacy seat assumptions as directional and confirm active modules, implementation scope, and support tiers before renewal or migration.",
-    "choose_if": [
-      "Your team runs incumbent PeopleFluent workflows and wants continuity inside the PeopleFluent talent suite.",
-      "You prioritize lightweight real-time recognition and Slack feedback over deep compensation tooling.",
-      "You need basic goals and agile review cycles without a full Lattice-style suite.",
-      "You are evaluating migration or consolidation paths in the PeopleFluent ecosystem."
-    ],
-    "starting_price": "Custom quote",
-    "free_trial": false,
-    "name": "PeopleFluent",
-    "displayName": "PeopleFluent",
-    "badge": "PeopleFluent",
-    "website": "https://www.peoplefluent.com/",
-    "affiliate_url": "https://www.peoplefluent.com/",
-    "target_segment": "Scaleups 50–250",
-    "compliance": [
-      "SOC2 Type II",
-      "GDPR",
-      "CCPA"
-    ],
-    "integrations": [
-      "Slack",
-      "Microsoft Teams",
-      "Workday",
-      "SAP SuccessFactors",
-      "Okta",
-      "REST API"
-    ],
-    "supportSLA": "Dedicated CSM, Ticketed SLA, Knowledge Base",
-    "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "250–1000+ enterprise"
-  },
-  "clearcompany": {
-    "name": "ClearCo",
-    "displayName": "ClearCo",
-    "badge": "ClearCo",
-    "logo": "/ClearCo.jpeg",
-    "website": "https://www.clearcompany.com/",
-    "affiliate_url": "https://www.clearcompany.com/",
-    "category": "performance-management",
-    "rating": "4.5",
-    "review_count": "600",
-    "rating_source": "G2 & Industry Benchmark",
-    "positioning": "ClearCo (formerly ClearCompany) is a mid-market talent suite that connects performance reviews and goals with recruiting and onboarding for consolidated HR stacks.",
-    "text_compliance": "ClearCo (formerly ClearCompany) supports configurable review permissions, documented performance history, and talent-suite audit trails that connect hiring-to-performance records for mid-market compliance workflows.",
-    "text_global_reach": "ClearCo (formerly ClearCompany) is strongest for US mid-market employers consolidating ATS, onboarding, and performance; global multi-language depth is more limited than Lattice, Leapsome, or Culture Amp.",
-    "text_pricing_truth": "ClearCo (formerly ClearCompany) performance is custom-quoted as part of the broader talent suite (often with ATS/onboarding). Standalone list pricing is uncommon. Request a bundle quote for mid-market consolidations.",
-    "choose_if": [
-      "You want performance tied to the same suite as recruiting and onboarding.",
-      "You are a mid-market team consolidating multiple HR point solutions.",
-      "You need configurable review cycles without enterprise People-science complexity.",
-      "You prefer a lighter mid-market sales motion than Lattice or Culture Amp, without needing enterprise people-science depth."
-    ],
-    "starting_price": "Custom quote",
-    "free_trial": false,
-    "target_segment": "Scaleups 50–250",
-    "compliance": [
-      "SOC2 Type II",
-      "GDPR",
-      "CCPA"
-    ],
-    "integrations": [
-      "Slack",
-      "Google Workspace",
-      "ADP",
-      "Okta",
-      "Zapier",
-      "REST API"
-    ],
-    "supportSLA": "Dedicated CSM, Ticketed SLA, Knowledge Base",
-    "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "50–250 seats"
   },
   "oyster-hr": {
     "name": "Oyster HR",

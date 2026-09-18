@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.thehrstackguide.com/schemas/segment-tab-panel.schema.json",
+  "title": "Master 1-1 segment tab panels",
+  "description": "Five on-page buyer-profile panels for a canonical brand-a-vs-brand-b hub. Do not append the segment label to generic vendor copy. Each panel is a verdict plus unique decision factors only.",
+  "type": "array",
+  "minItems": 1,
+  "maxItems": 5,
+  "items": { "$ref": "#/$defs/panel" },
+  "$defs": {
+    "panel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "verdict", "key_factors"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "enum": [
+            "startups",
+            "scaleups",
+            "agencies",
+            "us-latam",
+            "web3-crypto",
+            "enterprise",
+            "people-ops",
+            "remote-teams"
+          ]
+        },
+        "label": { "type": "string", "minLength": 1 },
+        "verdict": {
+          "type": "string",
+          "minLength": 1,
+          "description": "1–2 standalone Pick A / Pick B sentences for this buyer profile only. Do not append a fixed runner-up suffix, a bolted-on “for [Segment]” clause, or jargon such as benches, corridors, headcount traps, or liquidity."
+        },
+        "key_factors": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 4,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Insight unique to this segment. No repeated baseline features (owned-entity counts, generic tax filings) and no mechanical segment-name concatenation."
+          }
+        }
+      }
+    }
+  }
+}
