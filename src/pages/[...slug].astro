@@ -210,13 +210,13 @@ function resolveToolNarrative(
     profile?.positioning ??
     cleanCopy(
       `${toolName} is built for ${nicheAudiencePhrase.toLowerCase()} that want ${
-        features[0] ? features[0].toLowerCase() : 'a modern, all-in-one HR platform'
+        features[0] ? features[0].toLowerCase() : 'payroll, hiring, or reviews in one place'
       }.`
     );
 
   const chooseIf =
     profile?.choose_if && profile.choose_if.length > 0
-      ? profile.choose_if
+      ? [...profile.choose_if, ...(profile.skip_if ? [profile.skip_if] : [])]
       : pros.slice(0, 4).map((pro) => `You want ${pro.toLowerCase()}`);
 
   return {
@@ -724,7 +724,7 @@ const heroLogoPreloads = (
 
       {isHub && (
         <aside class="mb-12" aria-label="Add as a Google preferred source">
-          <p class="text-sm font-medium text-slate-700">Enjoying benchmarks from The HR Stack Guide?</p>
+          <p class="text-sm font-medium text-slate-700">Save this comparison in Google Preferred Sources.</p>
           <PreferredSourceButton theme="light" align="left" />
         </aside>
       )}
@@ -823,7 +823,7 @@ const heroLogoPreloads = (
                 </tbody>
                 <tfoot>
                   <tr class="border-t border-slate-200 bg-slate-50">
-                    <td class="px-6 py-4 text-sm font-medium text-slate-500">Ready to get started?</td>
+                    <td class="px-6 py-4 text-sm font-medium text-slate-500">Get a quote</td>
                     <td class="px-6 py-4">
                       <VendorButton
                         href={toolAAffiliateHref}
@@ -923,7 +923,7 @@ const heroLogoPreloads = (
             </div>
             {toolANarrative.chooseIf.length > 0 && (
               <div class="mt-8 border-t border-slate-100 pt-6">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">Choose {comparison.tool_a_name} if...</h4>
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">Buy or skip {comparison.tool_a_name}</h4>
                 <ul class="mt-4 space-y-3">
                   {toolANarrative.chooseIf.map((reason) => (
                     <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
@@ -983,7 +983,7 @@ const heroLogoPreloads = (
             </div>
             {toolBNarrative.chooseIf.length > 0 && (
               <div class="mt-8 border-t border-slate-100 pt-6">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">Choose {comparison.tool_b_name} if...</h4>
+                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">Buy or skip {comparison.tool_b_name}</h4>
                 <ul class="mt-4 space-y-3">
                   {toolBNarrative.chooseIf.map((reason) => (
                     <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
@@ -1011,7 +1011,7 @@ const heroLogoPreloads = (
             {isHub ? 'Related Comparisons' : `Related Comparisons for ${modifierLabel}`}
           </h2>
           <p class="mb-6 text-sm text-slate-600">
-            More head-to-head guides, plus the
+            Same category. Different pair. Read these next, or go back to the
             {' '}
             <a href={categoryHub.href} class="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900">
               {categoryHub.label}

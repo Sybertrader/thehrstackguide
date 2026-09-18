@@ -594,14 +594,15 @@ function punchySupport(comparison: Comparison): string {
   return 'It is the stronger overall fit for this workflow.';
 }
 
-function contrastNeed(comparison: Comparison): { name: string; need: string } | null {
+function contrastNeed(comparison: Comparison): { id: string; name: string; need: string } | null {
   const winnerIsA = comparison.winner_id === comparison.tool_a_id;
+  const id = winnerIsA ? comparison.tool_b_id : comparison.tool_a_id;
   const name = winnerIsA ? comparison.tool_b_name : comparison.tool_a_name;
   const badge = winnerIsA ? comparison.tool_b_badge : comparison.tool_a_badge;
   const pro = pipeList(winnerIsA ? comparison.tool_b_pros : comparison.tool_a_pros)[0];
   const need = (badge.replace(/^Best for\s+/i, '').trim() || pro || '').replace(/\s*\([^)]*\)\s*$/, '');
-  if (!need) return null;
-  return { name, need };
+  if (!need && !name) return null;
+  return { id, name, need };
 }
 
 function needPhrase(need: string): string {
@@ -757,103 +758,43 @@ function stripSegmentConcat(text: string, label: string): string {
     .trim();
 }
 
-function uniqueSupportClause(reason: string): string | null {
-  const match = reason.match(/strong support for\s+([^.]*)/i);
-  const clause = match?.[1]?.replace(/[.,;:]+$/, '').trim() ?? '';
-  if (!clause || /\bsuperior score\b/i.test(clause)) return null;
-  const first = clause.split(/\s+/)[0] ?? '';
-  if (/^[A-Z0-9]{2,}(?:[A-Z0-9/-]*)$/.test(first)) return clause;
-  return `${clause.charAt(0).toLowerCase()}${clause.slice(1)}`;
-}
-
-function asNounPhrase(value: string): string {
-  const trimmed = value.replace(/[.,;:]+$/, '').trim();
-  if (!trimmed) return trimmed;
-  const first = trimmed.split(/\s+/)[0] ?? '';
-  if (/^[A-Z0-9]{2,}(?:[A-Z0-9/-]*)$/.test(first)) return trimmed;
-  return `${trimmed.charAt(0).toLowerCase()}${trimmed.slice(1)}`;
-}
-
-const OTHER_PICK_CLAUSE: Record<ComparisonFamily, Record<string, string>> = {
-  payroll: {
-    startups: 'your team is mostly US-based and you just need fast starter payroll',
-    scaleups: 'you run a multi-state US workforce and need custom HR workflows',
-    agencies: 'your agency only hires US-based 1099 contractors',
-    'us-latam': 'you only need standard US payroll',
-    'web3-crypto': 'your payroll is 100% traditional bank transfers',
-  },
-  ats: {
-    startups: 'you only need a simple pipeline and job-board posting',
-    scaleups: 'hiring volume is still low and a basic applicant tracker is enough',
-    agencies: 'you do not need client portals or multi-account pipelines',
-    enterprise: 'you are not a federal contractor and do not need OFCCP reporting',
-    'remote-teams': 'your interviewers share the same working hours',
-  },
-  pm: {
-    startups: 'you just need weekly check-ins without extra review modules',
-    scaleups: 'you are not ready to run calibration and compensation in one system',
-    enterprise: 'legal does not need to sign off on compensation calibration',
-    'people-ops': 'managers can run reviews without a People Ops console',
-    'remote-teams': 'the whole team shares one office and one working day',
-  },
-};
-
-function otherPickSentence(family: ComparisonFamily, nicheId: string, otherName: string): string {
-  const need = OTHER_PICK_CLAUSE[family]?.[nicheId];
-  if (!need) return `Pick ${otherName} if it is a better match for how this team actually works.`;
-  const verb = nicheId === 'startups' ? 'Choose' : 'Pick';
-  return `${verb} ${otherName} if ${need}.`;
-}
-
-/** Standalone Pick A / Pick B copy. Never reuse a badge-based runner-up suffix. */
 function formatStandaloneVerdict(
   family: ComparisonFamily,
   nicheId: string,
   winner: string,
-  otherName: string | null,
-  payload: string
+  otherName: string | null
 ): string {
-  const p = asNounPhrase(payload);
-  const order = MASTER_SEGMENT_ORDER[family];
-  const index = Math.max(0, order.indexOf(nicheId));
+  const other = otherName ?? 'the other vendor';
+  const table: Record<ComparisonFamily, Record<string, string>> = {
+    payroll: {
+      startups: `Buy ${winner} if you can hire without a payroll specialist in month one. Don't buy ${other} if go-live needs a six-week implementation you cannot staff.`,
+      scaleups: `Buy ${winner} if People and Finance close the month in one system. Don't buy ${other} if month-end still means a spreadsheet merge.`,
+      agencies: `Buy ${winner} if freelancer payouts are tagged per client. Don't buy ${other} if the quote is priced on last month's average roster.`,
+      'us-latam': `Buy ${winner} if 13th-month pay is in the Mexico or Brazil offer before you send it. Don't buy ${other} if they treat those countries like a US dollar wire.`,
+      'web3-crypto': `Buy ${winner} if USDC can sit on the same worker file as bank transfers. Don't buy ${other} if crypto payouts live in treasury's spreadsheet.`,
+    },
+    ats: {
+      startups: `Buy ${winner} if founders can run scorecards without a recruiting-ops hire. Don't buy ${other} if the first job still needs an implementation manager.`,
+      scaleups: `Buy ${winner} if interview kits stay auditable as hiring volume doubles. Don't buy ${other} if conversion reporting still lives in a spreadsheet.`,
+      agencies: `Buy ${winner} if client portals and per-account pipelines are native. Don't buy ${other} if every retainer shares one requisition list.`,
+      enterprise: `Buy ${winner} if OFCCP reporting and SSO are in the contract, not the slide deck. Don't buy ${other} if legal gets a PDF and a promise.`,
+      'remote-teams': `Buy ${winner} if interviewers who never share a working day can still leave a score. Don't buy ${other} if scheduling assumes one office calendar.`,
+    },
+    pm: {
+      startups: `Buy ${winner} if weekly 1:1s run without a People Ops specialist. Don't buy ${other} if the first cycle needs a six-month implementation.`,
+      scaleups: `Buy ${winner} if OKRs and reviews live in one system before a third survey tool shows up. Don't buy ${other} if calibration is a sandbox demo with fake data.`,
+      enterprise: `Buy ${winner} if compensation calibration survives legal review. Don't buy ${other} if pay bands still live in a side spreadsheet.`,
+      'people-ops': `Buy ${winner} if engagement, calibration, and reviews sit in one console. Don't buy ${other} if every cycle starts with a CSV export.`,
+      'remote-teams': `Buy ${winner} if reviews work across time zones with no hallway context. Don't buy ${other} if the product assumes one shared working day.`,
+    },
+  };
 
-  let first: string;
-  if (index === 0) {
-    first = `Pick ${winner} if you need ${p}.`;
-  } else if (index === 1) {
-    first =
-      family === 'ats'
-        ? `Pick ${winner} when hiring volume requires ${p}.`
-        : family === 'pm'
-          ? `Pick ${winner} when calibration cycles require ${p}.`
-          : `Pick ${winner} when Finance needs ${p}.`;
-  } else if (index === 2) {
-    if (nicheId === 'agencies') {
-      first =
-        family === 'payroll'
-          ? `Pick ${winner} if you manage a large pool of international freelancers and need ${p}.`
-          : `Pick ${winner} if you run client accounts and need ${p}.`;
-    } else {
-      first = `Pick ${winner} if enterprise talent programs need ${p}.`;
-    }
-  } else if (index === 3) {
-    first =
-      nicheId === 'us-latam'
-        ? `Pick ${winner} for hiring full-time staff in Mexico, Brazil, or Argentina when you need ${p}.`
-        : nicheId === 'people-ops'
-          ? `Pick ${winner} if People Ops needs ${p}.`
-          : `Pick ${winner} if structured hiring needs ${p}.`;
-  } else {
-    first = `Pick ${winner} if you need ${p}.`;
-  }
-
-  const second = otherName ? otherPickSentence(family, nicheId, otherName) : '';
-  return [first, second].filter(Boolean).join(' ');
+  return table[family]?.[nicheId] ?? `Buy ${winner}. Don't buy ${other} unless this is the job they were built for.`;
 }
 
 function isEditorialTabVerdict(reason: string): boolean {
   if (!reason || /^Based on The HR Stack Guide/i.test(reason)) return false;
-  return /^(Pick |Choose )/i.test(reason);
+  return /^(Pick |Choose |Buy |Don't |Skip )/i.test(reason);
 }
 
 function segmentTabVerdict(comparison: Comparison, label: string, family: ComparisonFamily): string {
@@ -864,18 +805,8 @@ function segmentTabVerdict(comparison: Comparison, label: string, family: Compar
 
   const winner = winnerNameOf(comparison);
   const other = contrastNeed(comparison);
-  const payload =
-    uniqueSupportClause(reason) ||
-    pipeList(comparison.winner_bullets)[0] ||
-    reason.match(/strength in\s+(.+?)(?:, and strong support|\.|$)/i)?.[1]?.trim() ||
-    fillVendorNames(buyerItemsFor(comparison)[0] ?? '', comparison) ||
-    'this workflow';
-
   const nicheId = comparison.niche_id === 'tech-startups' ? 'startups' : comparison.niche_id;
-  return stripSegmentConcat(
-    formatStandaloneVerdict(family, nicheId, winner, other?.name ?? null, payload),
-    label
-  );
+  return stripSegmentConcat(formatStandaloneVerdict(family, nicheId, winner, other?.name ?? null), label);
 }
 
 function segmentKeyFactors(comparison: Comparison, label: string): string[] {

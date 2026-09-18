@@ -9,14 +9,14 @@
 
 export const BUYER_GROUP_SUBTITLES = {
   'tech-startups':
-    'High-growth technology startups and distributed teams scaling global payroll, compliance, and remote operations.',
+    'Startups hiring globally who need payroll, compliance, and contractor payouts without a specialist in month one.',
   enterprise:
-    'Global enterprise organizations requiring multi-entity payroll, custom HRIS integrations, and strict compliance security.',
+    'Companies that need multi-entity payroll, SSO, and contracts legal will actually sign.',
   scaleups:
-    'Fast-scaling companies expanding headcount across multiple regions while streamlining core HR workflows.',
-  smb: 'Lean businesses and growing teams looking for automated domestic payroll, benefits administration, and simple HR operations.',
+    'Teams adding headcount across countries and trying to stop month-end from living in a spreadsheet.',
+  smb: 'US-first companies that need payroll, benefits, and tax filings without an HR department.',
   'global-remote':
-    'Distributed companies managing cross-border contractors, international EOR employees, and foreign currency payouts.',
+    'Distributed companies paying contractors or EOR employees across borders, including local currency and crypto rails.',
 } as const;
 
 export type BuyerGroupId = keyof typeof BUYER_GROUP_SUBTITLES;
@@ -103,7 +103,7 @@ export function resolveHubHeroSubtitle(
   toolBName: string
 ): string {
   const categoryLabel = (family && HUB_CATEGORY_LABELS[family]) || 'HR software';
-  return `Independent comparison of ${toolAName} and ${toolBName} for teams evaluating ${categoryLabel}.`;
+  return `Who to buy between ${toolAName} and ${toolBName}. Who to skip. What the quote hides on ${categoryLabel}.`;
 }
 
 /** Child-page hero subheads: one description per vertical × persona. */

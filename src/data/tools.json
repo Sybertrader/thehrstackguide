@@ -5,13 +5,13 @@
     "rating": "4.8",
     "review_count": "6,000",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "The market leader for global workforce expansion, contractor hiring, and EOR compliance across 150+ countries.",
+    "positioning": "Owned-entity EOR and contractor payroll in 150+ countries. Deel is the local legal employer.",
     "text_compliance": "Deel handles compliance in 150+ countries using a vast network of fully-owned local entities and in-house legal experts. They automate misclassification protection, localized contract generation, tax withholdings, and statutory benefits compliance, backing their contracts with misclassification insurance guarantees.",
     "text_global_reach": "Deel provides unmatched international coverage across 150+ countries with direct payroll and owned EOR entities in key tech and hiring hubs globally. They support multi-currency payouts, localized benefits administration, and fast local onboarding.",
     "text_pricing_truth": "The $49/contractor and $599/employee figures are platform fees only. Deel Shield, equipment shipping, and background checks are separate SKUs. FX conversion spread hits every fiat payout corridor. Some markets also require a security deposit or payroll prefund (often ~1 month of salary).",
     "choose_if": [
-      "You will employ full-time staff in several countries this year and want Deel—not a partner agency—as the local legal employer.",
-      "You need USDC or multi-currency contractor wallets on the same platform as EOR, not a treasury tab in another app."
+      "You will hire full-time staff in several countries this year and Deel issues the local employment contract.",
+      "Contractors need USDC or local-currency wallets on the same worker file as employees."
     ],
     "starting_price": "$49/mo",
     "free_trial": false,
@@ -80,7 +80,8 @@
     ],
     "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
     "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "50–1000+ enterprise"
+    "idealHeadcount": "50–1000+ enterprise",
+    "skip_if": "Don't buy Deel if your team is still US W-2 and you wanted laptops plus payroll on day one. You will fund country coverage you are not using."
   },
   "gusto": {
     "category": "payroll-eor",
@@ -88,15 +89,13 @@
     "rating": "4.6",
     "review_count": "13,000",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "The premier automated payroll, tax, and HR suite built specifically for US-based small-to-medium businesses.",
+    "positioning": "US payroll, tax filings, and benefits for companies whose people actually sit in the United States.",
     "text_compliance": "Gusto automates local, state, and federal US payroll taxes, including automated filings for 940/941 forms, W-2s, and 1099s. They ensure automated compliance with state-specific overtime laws, workers' compensation requirements, and ACA reporting for domestic teams.",
     "text_global_reach": "Gusto is built primarily for US domestic hiring across all 50 states. While they offer international contractor payments to 120+ countries, they do not provide direct global EOR services for full-time international employees without third-party integrations.",
     "text_pricing_truth": "Published Simple-plan pricing starts at $49/month plus $6/user/month, with higher tiers adding benefits and HR features. International contractor payments carry separate per-transfer costs; confirm FX conversion fees on your payout corridors.",
     "choose_if": [
-      "Your workforce is primarily based in the US across multiple states and you want automated tax filings.",
-      "You need an intuitive, easy-to-use platform combining US payroll, health insurance, and 401(k) benefits.",
-      "You hire international contractors alongside US W-2 employees but don't need international EOR services.",
-      "You want affordable entry-level pricing tailored for small startups and growing US businesses."
+      "Your roster is US W-2 across multiple states and you want federal, state, and local filings without a payroll clerk.",
+      "You pay a few overseas contractors. You do not need a foreign employer of record."
     ],
     "starting_price": "$49/mo + $6/user",
     "free_trial": true,
@@ -157,7 +156,8 @@
     ],
     "supportSLA": "Business-hours Live Chat, Dedicated CSM (Plus+), Knowledge Base",
     "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "1–50 seats"
+    "idealHeadcount": "1–50 seats",
+    "skip_if": "Don't buy Gusto if you need a full-time employee in another country. It can pay contractors. It cannot employ them."
   },
   "multiplier": {
     "category": "payroll-eor",
@@ -165,15 +165,13 @@
     "rating": "4.7",
     "review_count": "800",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "High-value, cost-effective global EOR optimized for rapidly scaling teams across Asia-Pacific and EMEA.",
+    "positioning": "Mid-market EOR priced for APAC and EMEA hiring, starting at $400 per employee per month.",
     "text_compliance": "Multiplier manages compliance across 150+ countries with automated employment contracts built around local labor laws. They assume employer liability, ensuring statutory benefit contributions, severance policies, and localized tax withholdings meet strict jurisdictional standards.",
     "text_global_reach": "Multiplier has an exceptionally strong infrastructure footprint across the Asia-Pacific region and emerging markets, providing direct entity support in key tech hubs like India, Singapore, Vietnam, and the UAE alongside broader global coverage.",
     "text_pricing_truth": "Contractor management starts at $40/month per active contractor. EOR services start at $400/month per employee, positioning Multiplier as one of the more aggressive mid-market EOR price points. Local benefit package add-ons and admin fees should be reviewed country-by-country.",
     "choose_if": [
-      "You are hiring heavily in APAC or EMEA markets and want competitive regional pricing.",
-      "You need a full EOR solution starting under $500/month per employee.",
-      "You want fast local contract generation with pre-vetted compliance templates.",
-      "You require integrated health and statutory benefits administration across multiple countries."
+      "Most of the next 18 months of hiring is APAC or EMEA and $400/employee beats a $599 sticker.",
+      "You need local contracts generated from templates counsel has already seen."
     ],
     "starting_price": "$40/mo",
     "free_trial": false,
@@ -240,7 +238,8 @@
     ],
     "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "50–250 seats"
+    "idealHeadcount": "50–250 seats",
+    "skip_if": "Don't buy Multiplier if US multi-state payroll and device identity are the real system of record. This is an EOR, not an IT directory."
   },
   "payoneer-workforce-management": {
     "category": "payroll-eor",
@@ -248,15 +247,13 @@
     "rating": "4.5",
     "review_count": "2,000",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A cross-border contractor payout and workforce management layer built on Payoneer's multi-currency wallet network across 190+ countries.",
+    "positioning": "Contractor payouts across 190+ countries on Payoneer wallets. No monthly seat. They earn on the transfer.",
     "text_compliance": "Payoneer Workforce Management automates the contractor-side paperwork most payout tools leave manual: onboarding flows, W-8BEN and W-9 tax form collection, and invoice approval trails are handled in-platform so you keep audit-ready records for every international contractor. It is a contractor management and payments layer rather than an Employer of Record, so it does not assume employer liability, file statutory payroll taxes, or administer localized benefits on your behalf.",
     "text_global_reach": "Payoneer moves money into 190+ countries from multi-currency wallets, with batch payouts so finance teams can settle an entire contractor roster in one run. Contractors choose how they get paid, via local bank transfer in their own currency, the Payoneer card, or wire, and can hold balances in multiple currencies instead of converting on every invoice.",
     "text_pricing_truth": "There is no subscription: contractor receiving and management accounts are $0/month, and Payoneer earns on the transfer instead. Cross-border payout fees typically land between 0% and 1% depending on the payout method and corridor, with contractor-to-contractor and wallet transfers at the low end and card or wire withdrawals at the high end. Model your actual currency corridors, since the FX conversion spread, not the headline fee, is where the real cost sits.",
     "choose_if": [
-      "Your global workforce is contractors and freelancers rather than full-time international employees needing an EOR.",
-      "You pay 5–250 people across many countries and want batch payouts from one multi-currency wallet instead of per-country bank rails.",
-      "You want contractors to receive funds fee-free in their local currency and pick their own payout method.",
-      "You need automated onboarding, W-8BEN/W-9 collection, and invoice management without paying a per-contractor monthly platform fee."
+      "You pay 5 to 250 contractors, not EOR employees, and you want batch payouts from one wallet.",
+      "You need W-8BEN or W-9 collection without a per-contractor SaaS fee."
     ],
     "starting_price": "$0/mo",
     "free_trial": true,
@@ -320,7 +317,8 @@
     ],
     "supportSLA": "Business-hours Live Chat, Ticketed support, Knowledge Base",
     "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "5–250 contractor seats"
+    "idealHeadcount": "5–250 contractor seats",
+    "skip_if": "Don't buy Payoneer Workforce Management if you need a local legal employer. There is no EOR here. Payouts are not employment."
   },
   "remote": {
     "category": "payroll-eor",
@@ -328,15 +326,13 @@
     "rating": "4.6",
     "review_count": "2,500",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "The gold standard for global compliance purity, utilizing 100% owned legal entities to eliminate third-party EOR risks.",
-    "text_compliance": "Unlike platforms relying on third-party agencies, Remote owns its legal entities in every supported market. This guarantees end-to-end legal compliance, direct IP protection, bulletproof misclassification defense, and zero third-party data risk.",
+    "positioning": "EOR through companies Remote owns in each market. Partner agencies are not in the chain.",
+    "text_compliance": "Remote owns the legal entity in every market it supports. The employment contract, IP assignment, and misclassification defense sit with Remote, not a third-party agency. If a vendor cannot show the local company name on the contract, you are buying a partner network.",
     "text_global_reach": "Remote operates owned-entity EOR infrastructure across 100+ countries while serving global contractor management and payouts in 180+ countries. Their owned-entity model ensures direct control over employee contracts, local payroll, and government tax filings.",
     "text_pricing_truth": "Contractor management starts at $29/month per worker, with EOR at $599/month per employee on typical annual commitments ($699 month-to-month). IP protection and owned-entity compliance are included in the base EOR fee.",
     "choose_if": [
-      "Maximum IP security and compliance purity are non-negotiable for your board.",
-      "You prefer working with a provider that owns its local legal entities rather than leasing third-party agencies.",
-      "You hire in key remote hubs like Western Europe, Canada, Latin America, and APAC.",
-      "You want transparent $599/month EOR pricing with no unexpected third-party markup fees."
+      "Board and counsel want IP assigned by Remote's own local entity, not a partner agency.",
+      "You will pay $599/employee on an annual term and you want that fee to include the entity, not a markup later."
     ],
     "starting_price": "$29/mo",
     "free_trial": true,
@@ -401,7 +397,8 @@
     ],
     "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
     "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "50–1000+ enterprise"
+    "idealHeadcount": "50–1000+ enterprise",
+    "skip_if": "Don't buy Remote if you need same-week coverage in a country they have not built yet. Owned entities move slower than a partner network."
   },
   "rippling": {
     "category": "payroll-eor",
@@ -409,13 +406,13 @@
     "rating": "4.8",
     "review_count": "12,000",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "An all-in-one workforce operations system uniting HR, global payroll, IT device management, and app provisioning in one dashboard.",
+    "positioning": "US HR, payroll, laptops, and app access on one employee record. Global EOR is a paid module on top.",
     "text_compliance": "Rippling automates compliance across US domestic payroll and global workforce expansions. Its engine automatically enforces local overtime laws, tax registration, mandatory sexual harassment training, and international labor standards based on worker location.",
     "text_global_reach": "Rippling supports global hiring via direct payroll, local entity management, and integrated EOR services. It allows companies to manage US W-2 employees, international EOR staff, and worldwide contractors within a single unified HR cloud.",
     "text_pricing_truth": "The $8/user/month rate buys the core workforce graph only. US payroll, benefits, device management, and global EOR are à la carte modules. An all-in quote for payroll plus IT typically lands at several multiples of the published seat. Comparing $8/user to a $599 EOR rate is not like-for-like.",
     "choose_if": [
-      "Your system of record is US W-2 plus IT (devices, Google Workspace, Okta-class app access) and international EOR is a minority of headcount.",
-      "You will not sign a bundled EOR price until Finance sees module-level line items for payroll, benefits, and devices."
+      "Your system of record is US W-2 plus Google Workspace, laptops, and app access. International EOR is the minority of the roster.",
+      "Finance will not sign until payroll, benefits, and devices are separate line items. The $8 seat is not the quote."
     ],
     "starting_price": "$8/user/mo",
     "free_trial": false,
@@ -481,7 +478,8 @@
     ],
     "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
     "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "50–1000+ enterprise"
+    "idealHeadcount": "50–1000+ enterprise",
+    "skip_if": "Don't buy Rippling if you only hire international contractors. You'll pay for a US HRIS suite you will not touch."
   },
   "ashby": {
     "category": "ats",
@@ -489,15 +487,13 @@
     "rating": "4.7",
     "review_count": "400",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "Analytics-first, all-in-one recruiting platform combining ATS, sourcing CRM, interview scheduling, and AI-driven pipeline intelligence.",
+    "positioning": "ATS, sourcing CRM, and interview scheduling with funnel conversion reporting in the same product. Flat-tier price. No recruiter seats.",
     "text_compliance": "Ashby automates GDPR compliance, candidate data privacy consent workflows, and structured EEOC/OFCCP survey collection. It enforces standardized scorecard criteria across hiring panels to eliminate interviewer bias and ensure auditable hiring records.",
     "text_global_reach": "Ashby supports international recruitment with automated multi-time-zone interview scheduling, multi-currency compensation benchmarking, and localized offer letter workflows across worldwide tech hiring hubs.",
     "text_pricing_truth": "Published Foundations pricing starts at $400/month for companies up to 100 employees, scaling with headcount. There is no free trial; pricing is flat-tier rather than per hiring-manager seat.",
     "choose_if": [
-      "You need deep recruiting analytics and funnel conversion reporting built directly into your ATS.",
-      "You want ATS, candidate CRM sourcing, and complex interview scheduling in a single unified tool.",
-      "You are a fast-scaling tech startup or growth company seeking predictable, flat-tier pricing.",
-      "You want native AI features for candidate summaries, automated scheduling, and pipeline velocity tracking."
+      "You need stage-to-offer conversion reporting inside the ATS, not a Looker export.",
+      "You want unlimited interviewer seats. Ashby bills by company size, not by hiring manager."
     ],
     "starting_price": "$400/mo",
     "free_trial": false,
@@ -519,7 +515,8 @@
     ],
     "supportSLA": "Dedicated CSM, Ticketed support, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "50–250 seats"
+    "idealHeadcount": "50–250 seats",
+    "skip_if": "Don't buy Ashby if you still post two jobs a quarter. Skip it. The analytics package is overkill."
   },
   "lever": {
     "category": "ats",
@@ -527,15 +524,13 @@
     "rating": "4.4",
     "review_count": "1,800",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A candidate-relationship-first platform (LeverTRM) combining proactive talent sourcing with streamlined applicant tracking.",
+    "positioning": "Outbound sourcing and nurture (LeverTRM) sitting on the same pipeline as inbound applications.",
     "text_compliance": "Lever maintains GDPR compliance tools, automated candidate data retention policies, and built-in EEOC survey tracking across all candidate touchpoints and email nurture campaigns.",
-    "text_global_reach": "Lever excels at multi-channel sourcing across international talent pools, enabling nurture campaigns, automated candidate rediscovery, and personalized outreach for remote and global roles.",
+    "text_global_reach": "Lever supports multi-channel sourcing for remote and international roles: nurture campaigns, candidate rediscovery, and outreach templates. Confirm language support and data residency on the quote. Do not assume a US ATS is ready for EU hiring.",
     "text_pricing_truth": "Lever prices on custom annual contracts based on headcount and modules. There is no public self-serve tier; request a quote for Talent Relationship Management and analytics add-ons.",
     "choose_if": [
-      "You prioritize outbound candidate sourcing and talent relationship management (CRM) alongside inbound ATS tracking.",
-      "You want a clean, fast UI that hiring managers can adopt with minimal training.",
-      "You run automated email nurture sequences to keep silver-medalist candidates engaged for future roles.",
-      "Your team wants built-in e-signature and fast interview feedback loops."
+      "Hiring managers will live in the tool. The UI is the reason they leave feedback.",
+      "You run nurture sequences for silver medalists and you want that in the ATS, not Mailchimp."
     ],
     "starting_price": "Custom quote",
     "free_trial": false,
@@ -556,7 +551,8 @@
     ],
     "supportSLA": "Dedicated CSM, Ticketed support, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "50–250 seats"
+    "idealHeadcount": "50–250 seats",
+    "skip_if": "Don't buy Lever if you need public pricing and unlimited interviewer seats. Quotes are annual and seat-licensed."
   },
   "workable": {
     "category": "ats",
@@ -564,15 +560,13 @@
     "rating": "4.4",
     "review_count": "800",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "An intuitive, fast-deploying ATS featuring AI candidate sourcing, automated job board distribution, and flexible SMB pricing.",
+    "positioning": "SMB ATS with one-click posting to 200+ job boards and published monthly prices. Standard starts at $299/month for 1–20 employees.",
     "text_compliance": "Workable automates GDPR candidate rights management, EEOC/CCPA compliance collection, and background check integrations across 100+ countries with built-in audit trails.",
     "text_global_reach": "Workable posts jobs to 200+ global job boards in a single click and offers built-in AI sourcing (AI Recruiter) that searches a database of 400+ million global candidate profiles.",
     "text_pricing_truth": "Workable Standard starts at $299/month for teams of 1–20 employees (headcount-banded). Premier and Enterprise tiers and paid add-ons (texting, video, assessments) can raise total cost well above the Standard floor.",
     "choose_if": [
-      "You want one-click job syndication across 200+ international and local job boards.",
-      "You need built-in AI sourcing tools to uncover passive candidates without paying for separate CRM software.",
-      "You prefer transparent, published monthly/annual pricing over multi-week enterprise sales calls.",
-      "You want an all-in-one ATS with integrated background checks and basic HR onboarding tools."
+      "You want jobs on Indeed, LinkedIn, and local boards without a sourcer buying slots by hand.",
+      "You will not sit through a six-week enterprise RFP for a 15-person hiring team."
     ],
     "starting_price": "$299/mo",
     "free_trial": true,
@@ -593,7 +587,8 @@
     ],
     "supportSLA": "Live Chat, Dedicated CSM (Premier+), Knowledge Base",
     "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "1–50 seats"
+    "idealHeadcount": "1–50 seats",
+    "skip_if": "Don't buy Workable if OFCCP reporting and SSO are the RFP. That packaging lives on Premier and Enterprise, not Standard."
   },
   "breezy-hr": {
     "category": "ats",
@@ -601,15 +596,13 @@
     "rating": "4.4",
     "review_count": "700",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A visual, user-friendly ATS designed for SMBs with drag-and-drop pipelines, automated candidate messaging, and built-in video screening.",
+    "positioning": "Kanban hiring pipeline with built-in video screening. Paid plans commonly start near $189/month. There is a free tier.",
     "text_compliance": "Breezy HR handles GDPR consent prompts, candidate data deletion requests, and automated EEOC survey collection with minimal administrative setup.",
     "text_global_reach": "Breezy HR distributes job openings to major international job boards including Indeed, LinkedIn, and ZipRecruiter, supporting remote team recruiting workflows.",
     "text_pricing_truth": "Breezy HR offers a free tier for limited hiring volume, with paid plans commonly starting around $189/month for unlimited jobs and candidates. Confirm current free-tier limits before modeling SMB rollout cost.",
     "choose_if": [
-      "You want an intuitive, Trello-style drag-and-drop hiring pipeline that anyone on your team can master.",
-      "You need built-in asynchronous video screening and self-service interview scheduling.",
-      "You are an SMB looking for unlimited job postings and candidate tracking without steep contract minimums.",
-      "You want a free tier to test the platform before committing to a monthly plan."
+      "Your team will drag cards on a board. If they will not, skip every ATS.",
+      "You need async video screens and self-serve scheduling without buying a second tool."
     ],
     "starting_price": "Free tier / $157/mo",
     "free_trial": true,
@@ -632,7 +625,8 @@
     ],
     "supportSLA": "Live Chat (paid plans), Email support, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "1–50 seats"
+    "idealHeadcount": "1–50 seats",
+    "skip_if": "Don't buy Breezy HR if legal needs an OFCCP file. This is an SMB pipeline, not a federal-contractor audit system."
   },
   "jazzhr": {
     "category": "ats",
@@ -640,15 +634,13 @@
     "rating": "4.4",
     "review_count": "500",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "An ultra-affordable, SMB-focused applicant tracking system offering unlimited job postings, customizable hiring workflows, and direct job board syndication.",
+    "positioning": "SMB ATS starting near $75/month with unlimited interviewer seats and syndication to Indeed, ZipRecruiter, and Google for Jobs.",
     "text_compliance": "JazzHR ensures OFCCP and EEOC compliance with built-in reporting tools, automated candidate survey tracking, and secure document storage for audit preparation.",
     "text_global_reach": "JazzHR focuses primarily on US domestic and North American SMB hiring, syndicating openings across dozens of regional and national job boards with custom career page widgets.",
     "text_pricing_truth": "Published plans start around $75/month for entry-level job limits, scaling upward for unlimited postings. Unlimited user seats keep interviewer collaboration costs predictable for SMBs.",
     "choose_if": [
-      "You are a budget-conscious SMB looking for a high-value ATS starting under $100/month.",
-      "You want unlimited user seats so every hiring manager and interviewer can collaborate for free.",
-      "You need automated job posting to Google for Jobs, Indeed, ZipRecruiter, and Glassdoor.",
-      "You want simple, no-nonsense candidate tracking without complex enterprise software bloat."
+      "Budget is under $100/month and every hiring manager needs a login.",
+      "You want jobs on Indeed and ZipRecruiter without a second job-board contract."
     ],
     "starting_price": "$75/mo",
     "free_trial": true,
@@ -669,7 +661,8 @@
     ],
     "supportSLA": "Email support, Ticketed SLA, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "1–50 seats"
+    "idealHeadcount": "1–50 seats",
+    "skip_if": "Don't buy JazzHR if you need a sourcing CRM and structured scorecards that block advancing a candidate. This is tracking, not recruiting ops."
   },
   "recruitee": {
     "category": "ats",
@@ -677,15 +670,13 @@
     "rating": "4.5",
     "review_count": "600",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A collaborative hiring platform featuring multi-language careers site builders, visual pipeline management, and strong European compliance infrastructure.",
+    "positioning": "European hiring platform with a multi-language careers site and GDPR as a default, not an add-on.",
     "text_compliance": "Recruitee provides enterprise-grade GDPR compliance automation, strict candidate consent timers, and localized data residency in European data centers.",
     "text_global_reach": "Recruitee excels for European and multi-national teams with multi-language careers page localization, localized job board syndication, and multi-currency tracking.",
     "text_pricing_truth": "Pricing starts at $199/month on the Launch tier (job-slot based) with unlimited team members, scaling to Scale and custom enterprise quotes for high-volume hiring.",
     "choose_if": [
-      "You operate or hire heavily in Europe and require strict GDPR data privacy compliance.",
-      "You want a beautiful, custom-branded careers site builder that supports multiple languages.",
-      "You value team-based collaborative hiring with easy evaluation notes and interview sharing.",
-      "You want transparent pricing with unlimited user access across all departments."
+      "You hire in the EU and candidate consent has to survive a DPA review.",
+      "You need a branded careers site in more than one language without a web team."
     ],
     "starting_price": "$199/mo",
     "free_trial": true,
@@ -709,7 +700,8 @@
     ],
     "supportSLA": "Live Chat, Dedicated CSM (Scale+), Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "1–50 seats"
+    "idealHeadcount": "1–50 seats",
+    "skip_if": "Don't buy Recruitee if the only office is US and you wanted OFCCP reporting. Buy a US-first ATS."
   },
   "bamboohr-ats": {
     "name": "BambooHR",
@@ -718,15 +710,13 @@
     "rating": "4.4",
     "review_count": "5,600",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "An integrated applicant tracking module seamlessly built into the popular BambooHR HRIS ecosystem for small and mid-market teams.",
+    "positioning": "The hiring module inside BambooHR. Candidate records become employee files. There is no standalone ATS price list.",
     "text_compliance": "BambooHR connects directly with the core HRIS database to ensure EEOC compliance, secure e-signatures, and seamless candidate-to-employee onboarding records.",
     "text_global_reach": "BambooHR supports international applicant tracking for organizations expanding across multiple country locations using the primary BambooHR platform.",
     "text_pricing_truth": "BambooHR ATS capabilities are sold as part of custom-quoted Advantage/Pro HRIS packages rather than a standalone public price list. Expect implementation and per-employee HRIS fees to dominate total cost versus a point ATS.",
     "choose_if": [
-      "You already use (or plan to adopt) BambooHR as your core HRIS database.",
-      "You want candidate data to convert instantly into employee W-4/onboarding files with zero manual data entry.",
-      "You want a single unified mobile app for both HR administration and recruiting approvals.",
-      "You prefer a simple, streamlined hiring pipeline that integrates natively with employee reporting."
+      "BambooHR is already the HRIS, or it will be. Hired candidates should become employees without a CSV.",
+      "Recruiting approvals happen in the same mobile app as time off."
     ],
     "starting_price": "Custom quote",
     "free_trial": true,
@@ -750,7 +740,8 @@
     ],
     "supportSLA": "Phone + Live Chat, Dedicated CSM (Pro), Knowledge Base",
     "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "50–250 seats"
+    "idealHeadcount": "50–250 seats",
+    "skip_if": "Don't buy BambooHR ATS if you do not run BambooHR. You will pay for an HRIS to get a pipeline."
   },
   "performyard": {
     "category": "performance-management",
@@ -758,15 +749,13 @@
     "rating": "4.7",
     "review_count": "1,200",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A configurable mid-market performance platform focused on flexible review cycles, goals, and 360 feedback without heavyweight implementation.",
+    "positioning": "Review cycles, goals, and 360 feedback you can configure without a six-month implementation. About $5/user/month.",
     "text_compliance": "PerformYard provides configurable review templates, role-based permissions, and retained review history suitable for HR audit trails, with standard SOC 2 and GDPR-oriented data practices for employee performance records.",
     "text_global_reach": "PerformYard works well for US and mid-market multi-location employers that need consistent review cycles across departments, with Slack integrations for feedback reminders rather than deep multi-language localization.",
     "text_pricing_truth": "Plans typically start at $5/user/month depending on modules and review-cycle complexity. There is no published free trial. Buyers should expect a demo-led sales motion. Implementation is lighter than enterprise suites; advanced compensation options may be quoted separately.",
     "choose_if": [
-      "You need highly configurable review templates without a six-month implementation project.",
-      "You want 1:1 meeting tools, engagement surveys, career pathing, and AI performance insights without an enterprise Lattice/Culture Amp premium.",
-      "You are a mid-market HR team replacing spreadsheets and Google Docs reviews.",
-      "You want strong customer support for admins running custom performance cycles."
+      "You are replacing Google Docs reviews and you need templates live this quarter.",
+      "You want 1:1s and 360s without paying Lattice or Culture Amp enterprise rates."
     ],
     "starting_price": "$5/user/mo",
     "free_trial": false,
@@ -789,7 +778,8 @@
     ],
     "supportSLA": "Dedicated CSM, Ticketed SLA, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "50–250 seats"
+    "idealHeadcount": "50–250 seats",
+    "skip_if": "Don't buy PerformYard if compensation calibration is the buying reason. That module is quoted later, and Lattice still owns that fight."
   },
   "lattice": {
     "category": "performance-management",
@@ -797,15 +787,13 @@
     "rating": "4.7",
     "review_count": "4,000",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "An enterprise-ready performance, engagement, and compensation platform built for People teams running calibrated talent and pay cycles.",
+    "positioning": "Reviews, OKRs, engagement, and compensation calibration for companies that actually run a talent cycle.",
     "text_compliance": "Lattice supports enterprise access controls, talent-review confidentiality, compensation-band governance, and audit-friendly performance history designed for regulated and large-employer review processes.",
     "text_global_reach": "Lattice serves global and multi-entity employers with multi-language support, HRIS integrations, and workflows for distributed talent calibration across regions and business units.",
     "text_pricing_truth": "Performance modules commonly start around $10/user/month, with Goals & OKRs from $8/user/month and Engagement/Compensation sold as add-ons. Contracts are demo-led with a minimum annual spend. Model total seat cost across modules before comparing to lighter tools.",
     "choose_if": [
-      "You need compensation calibration tightly linked to performance and talent reviews.",
-      "You run formal talent cycles with People partners and need mature analytics.",
-      "You want OKRs, reviews, engagement, and career pathing in one premium suite.",
-      "Your organization can support a demo-led enterprise sales and implementation process."
+      "Pay decisions have to sit on the same calibration table as performance ratings.",
+      "People partners run a formal cycle and need analytics, not a spreadsheet export."
     ],
     "starting_price": "$10/user/mo",
     "free_trial": false,
@@ -830,7 +818,8 @@
     ],
     "supportSLA": "Dedicated CSM, Enterprise SLA, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "250–1000+ enterprise"
+    "idealHeadcount": "250–1000+ enterprise",
+    "skip_if": "Don't buy Lattice if you wanted weekly 1:1s and nothing else. You will fund engagement and compensation modules you will not turn on."
   },
   "culture-amp": {
     "category": "performance-management",
@@ -838,15 +827,13 @@
     "rating": "4.5",
     "review_count": "1,600",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "A people-science platform led by engagement surveys and benchmarks, with performance and development modules for culture-driven organizations.",
+    "positioning": "Engagement surveys and external benchmarks first. Performance and development sit on that data.",
     "text_compliance": "Culture Amp provides enterprise-grade survey anonymity controls, GDPR-aligned data handling, and role-based access for sensitive engagement and performance insights used in People Ops decision-making.",
     "text_global_reach": "Culture Amp supports large global workforces with multi-language surveys, regional benchmarks, and distributed action-planning workflows for international People teams.",
     "text_pricing_truth": "Culture Amp uses custom quotes for Engage/Perform/Develop bundles based on headcount and module mix. Expect a demo-led enterprise sales motion rather than self-serve published pricing.",
     "choose_if": [
-      "Engagement survey science and external benchmarks are your primary buying reason.",
-      "You want performance and development plans connected to culture and engagement data.",
-      "Your People team relies on research-backed insights rather than lightweight pulse tools alone.",
-      "You are comfortable with an enterprise sales motion for platform-wide rollout."
+      "The buying reason is survey science and benchmarks, not a review form.",
+      "People Ops will act on org-wide results, not a three-question pulse in Slack."
     ],
     "starting_price": "Custom quote",
     "free_trial": false,
@@ -867,7 +854,8 @@
     ],
     "supportSLA": "Dedicated CSM, Enterprise SLA, Knowledge Base",
     "deploymentType": "Cloud / SaaS",
-    "idealHeadcount": "250–1000+ enterprise"
+    "idealHeadcount": "250–1000+ enterprise",
+    "skip_if": "Don't buy Culture Amp if you only needed a review cycle. You will sit through an enterprise survey rollout to get a performance module."
   },
   "oyster-hr": {
     "name": "Oyster HR",
@@ -877,15 +865,13 @@
     "rating": "4.5",
     "review_count": "800",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "An intuitive, designer-friendly global employment platform built for mid-market remote companies prioritising team experience.",
+    "positioning": "Global employment for mid-market remote companies. Contractor product at $29/month after a 30-day trial. EOR listed at $699/employee.",
     "text_compliance": "Oyster HR automates local employment agreements and statutory compliance in 180+ countries. They handle misclassification safeguards, localized IP assignments, and statutory benefit filings through a mix of owned infrastructure and local HR partners.",
-    "text_global_reach": "Oyster HR supports hiring across 180+ countries, offering robust international onboarding tools, local currency payouts, and localized benefits administration tailored to distributed tech and creative teams.",
+    "text_global_reach": "Oyster lists 180+ countries with local-currency payouts and local benefits admin. Some markets run through partner entities, not Oyster-owned companies. Get the owned-versus-partner list for the two countries you will hire next.",
     "text_pricing_truth": "Contractor management starts at $29/month after a 30-day free trial, with EOR listed at $699/month per employee on the public pricing page (volume/annual seat discounts may apply). Watch FX spreads and any required salary deposits when modeling total cost of ownership.",
     "choose_if": [
-      "You value an exceptionally clean, user-friendly UI for both admins and international hires.",
-      "You want a free contractor management tier to test hires before converting them to EOR.",
-      "Your company scales past 10+ employees where volume discounts significantly lower the $699 base rate.",
-      "You require dedicated remote work tools, such as country-by-country salary calculators."
+      "You will try contractors for 30 days before converting anyone to EOR.",
+      "You need a country cost calculator before the offer letter, not after."
     ],
     "starting_price": "$29/mo",
     "free_trial": true,
@@ -949,7 +935,8 @@
     ],
     "supportSLA": "24/7 Live Chat, Dedicated CSM, Knowledge Base",
     "deploymentType": "Cloud / SaaS / Mobile Native",
-    "idealHeadcount": "50–250 seats"
+    "idealHeadcount": "50–250 seats",
+    "skip_if": "Don't buy Oyster HR if the first hire is tomorrow and the country sits on a partner entity. Ask who the legal employer is before you sign."
   },
   "papaya-global": {
     "category": "payroll-eor",
@@ -957,15 +944,13 @@
     "rating": "4.5",
     "review_count": "500",
     "rating_source": "G2 & Industry Benchmark",
-    "positioning": "Enterprise-grade global workforce platform delivering deep payroll intelligence and consolidated multi-country financial analytics.",
+    "positioning": "Multi-country payroll reporting for finance teams running owned entities and EOR side by side. EOR from $650/employee.",
     "text_compliance": "Papaya Global uses AI-driven compliance engine checks paired with local in-country experts across 160+ jurisdictions. They oversee mandatory tax filings, worker classification risks, and legal contract amendments for complex corporate structures.",
     "text_global_reach": "Operating in over 160 countries, Papaya Global specializes in unifying fragmented international payroll networks. They allow multinational enterprises to manage localized EOR workers, direct payroll entities, and global contractors from a single business intelligence console.",
     "text_pricing_truth": "Contractor management and payments are $25–$30/month per contractor. Full-Service EOR starts at $650/month per employee, with Premium EOR at $770/month. Payroll-only / direct-entity global payroll is $12–$25/month per employee. Implementation fees, platform minimums, and country complexity can raise the all-in rate; complex benefit administration and deposits are quoted separately.",
     "choose_if": [
-      "Your finance department needs enterprise business intelligence and consolidated reporting across multiple foreign entities.",
-      "You operate a hybrid model of owned foreign subsidiaries alongside EOR employees.",
-      "You require white-glove corporate account management and custom legal review.",
-      "You manage large enterprise workforces across 20+ countries simultaneously."
+      "Finance needs one payroll file across owned subsidiaries and EOR workers.",
+      "You already have 20+ countries and an ERP. Implementation overhead is the point."
     ],
     "starting_price": "From $25/mo",
     "free_trial": false,
@@ -1035,6 +1020,7 @@
     "deploymentType": "Cloud / SaaS",
     "idealHeadcount": "250–1000+ enterprise",
     "name": "Papaya Global",
-    "displayName": "Papaya Global"
+    "displayName": "Papaya Global",
+    "skip_if": "Don't buy Papaya Global if you have 40 people and one country. You will fund an enterprise payroll rollout you cannot staff."
   }
 }

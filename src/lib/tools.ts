@@ -58,6 +58,8 @@ export interface ToolProfile {
   text_global_reach: string;
   text_pricing_truth: string;
   choose_if: string[];
+  /** Runner-up skip line: who should not buy this vendor, and why. */
+  skip_if?: string;
   enterprise_analysis?: EnterpriseAnalysisSet;
   /** Published security / compliance attestations (SOC 2, GDPR, HIPAA, etc.). */
   compliance: string[];
@@ -73,7 +75,7 @@ export interface ToolProfile {
 
 let cache: Record<string, ToolProfile> | null = null;
 
-/** Reads `src/data/tools.json`. Module reload (dev HMR) drops this cache. */
+/** Reads `src/data/tools.json`. Dev HMR drops this in-memory cache. */
 export function loadToolProfiles(): Record<string, ToolProfile> {
   if (cache) return cache;
   const dataPath = path.join(process.cwd(), 'src/data/tools.json');

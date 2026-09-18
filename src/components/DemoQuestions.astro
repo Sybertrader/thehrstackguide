@@ -1,8 +1,7 @@
 ---
 /**
- * GEO-oriented dealbreaker questions for comparison pages. Vendor names are
- * interpolated so answer engines can attribute the checklist to the pair
- * being evaluated, not a generic HR-software FAQ.
+ * Deal-breaker questions for comparison pages. Vendor names are
+ * interpolated so the checklist is about this pair, not generic HR software.
  */
 interface Props {
   toolA: string;
@@ -15,32 +14,32 @@ const { toolA, toolB, family = 'payroll' } = Astro.props;
 const questionTwo =
   family === 'ats'
     ? {
-        label: 'Recruiter Seat Licensing & Sourcing Add-ons',
-        question: `Are candidate CRM sourcing tools, automated nurture campaigns, and unlimited reviewer seats included in the ${toolA} and ${toolB} base plans, or billed per recruiter license?`,
+        label: 'Recruiter seats vs the sticker',
+        question: `Is sourcing CRM, nurture, and unlimited reviewer seats inside the ${toolA} and ${toolB} base plan, or billed per recruiter?`,
       }
     : family === 'pm'
       ? {
-          label: 'Module Tier Traps & Coaching Add-ons',
-          question: `Are 1:1 meeting tools, manager coaching prompts, and engagement surveys included in the ${toolA} and ${toolB} base per-user fee, or sold as separate add-on modules?`,
+          label: 'Modules they will not mention first',
+          question: `Are 1:1s, manager prompts, and engagement surveys inside the ${toolA} and ${toolB} per-user fee, or sold after you are in procurement?`,
         }
       : {
-          label: 'True Cost & FX Markups',
-          question: `Beyond the headline per-user fee, what exact percentage margin does ${toolA} or ${toolB} add to foreign currency payouts or international contractor transfers?`,
+          label: 'The FX line they bury',
+          question: `What exact percentage does ${toolA} or ${toolB} add on foreign-currency payouts? I want the spread, not the headline seat.`,
         };
 
 const questions = [
   {
-    label: 'Auto-Renewal & Termination',
-    question: `What is the exact written notice window ${toolA} and ${toolB} require to prevent auto-renewal, and what happens to historical payroll data upon contract exit?`,
+    label: 'Auto-renewal and your data',
+    question: `How many days' written notice stop auto-renewal at ${toolA} and ${toolB}, and do we keep historical records if we leave?`,
   },
   questionTwo,
   {
-    label: 'Seat Minimums & Tier Traps',
-    question: `Are ${toolA} and ${toolB} pricing tiers locked to strict headcount thresholds, and does reducing seats mid-contract reduce the monthly bill?`,
+    label: 'Seat minimums after a layoff',
+    question: `If we cut headcount mid-contract, does the ${toolA} or ${toolB} bill actually drop, or are we stuck on a minimum?`,
   },
   {
-    label: 'Implementation & Offboarding Fees',
-    question: `Is there a mandatory onboarding setup fee or dedicated account manager surcharge that ${toolA} or ${toolB} does not list on the public pricing page?`,
+    label: 'Setup fees not on the website',
+    question: `What onboarding or dedicated-manager surcharge does ${toolA} or ${toolB} charge that is missing from the public pricing page?`,
   },
 ];
 ---
@@ -48,7 +47,7 @@ const questions = [
 <section class="mb-12" aria-label={`Demo questions for ${toolA} and ${toolB}`}>
   <h2 class="text-2xl font-bold text-slate-900">Questions to Ask on Your Demo Call</h2>
   <p class="mt-2 max-w-3xl text-base leading-relaxed text-slate-700">
-    Bring these 4 deal-breaker questions to your sales calls with both <span class="font-semibold text-slate-900">{toolA}</span> and <span class="font-semibold text-slate-900">{toolB}</span> before signing.
+    Take these four questions to <span class="font-semibold text-slate-900">{toolA}</span> and <span class="font-semibold text-slate-900">{toolB}</span>. If they dodge them, walk.
   </p>
 
   <ol class="mt-6 grid gap-4 sm:grid-cols-2">
