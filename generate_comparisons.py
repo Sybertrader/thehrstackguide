@@ -355,8 +355,8 @@ ATS_TOOLS = {
         "free_trial": True,
         "affiliate_url": "https://breezyhr.partnerlinks.io/ahid34bxoa2w",
         "key_features": ["Drag-and-Drop Pipelines", "Async Video Screening", "Self-Service Interview Scheduling", "Automated Candidate Messaging"],
-        "pros": ["Free tier available to test the platform", "Intuitive, Trello-style visual pipeline", "Built-in asynchronous video screening"],
-        "cons": ["Fewer enterprise-grade compliance tools", "Smaller third-party integration marketplace"],
+        "pros": ["Free tier available to test the platform", "Kanban pipeline hiring managers will actually drag", "Built-in asynchronous video screening"],
+        "cons": ["No OFCCP-grade compliance packaging", "Smaller third-party integration marketplace"],
         "matrix": {
             "Structured Scorecards": False,
             "Candidate Sourcing CRM": False,
@@ -379,7 +379,7 @@ ATS_TOOLS = {
         "free_trial": True,
         "affiliate_url": "https://www.jazzhr.com",
         "key_features": ["Unlimited User Seats", "Job Board Syndication", "Customizable Hiring Workflows", "OFCCP/EEOC Reporting"],
-        "pros": ["Ultra-affordable entry-level pricing", "Unlimited free user seats for every interviewer", "Simple, no-nonsense candidate tracking"],
+        "pros": ["Plans from $75/month", "Unlimited free user seats for every interviewer", "Candidate tracking without a sourcing CRM"],
         "cons": ["Primarily focused on US/North American hiring", "Fewer advanced sourcing or CRM tools"],
         "matrix": {
             "Structured Scorecards": False,
@@ -703,7 +703,7 @@ VENDOR_EDITORIAL = {
     },
     # --- Applicant Tracking Systems ---
     "ashby": {
-        "badge": "Best for All-in-One Recruiting Analytics",
+        "badge": "Best for Funnel Analytics Without Recruiter Seats",
         "pricing_nuance": "Flat-tier pricing from $400/month up to 100 employees means unlimited seats with no per-recruiter charge, which usually beats seat-based rivals once your interview panel grows. The catch is the step change: pricing rescales as headcount crosses tier boundaries, and there is no free trial, so budget for a paid pilot.",
         "take_fit": "you want funnel analytics and a sourcing CRM inside the ATS rather than bolted on afterwards",
         "take_edge": "its reporting depth and unlimited-seat flat tiers reward teams that actually instrument their hiring funnel",
@@ -722,7 +722,7 @@ VENDOR_EDITORIAL = {
     },
     "workable": {
         "badge": "Best for Built-in AI Candidate Sourcing",
-        "pricing_nuance": "Published pricing from $299/month is refreshingly transparent, but it is banded by headcount and the Standard plan caps active jobs. Video interviewing, candidate texting, and assessments are paid add-ons, so the AI sourcing database is the value driver at the base rate rather than the full toolkit.",
+        "pricing_nuance": "Published pricing from $299/month is public, but it is banded by headcount and the Standard plan caps active jobs. Video interviewing, candidate texting, and assessments are paid add-ons, so the AI sourcing database is the value driver at the base rate rather than the full toolkit.",
         "take_fit": "you want to post widely and source proactively without sitting through a sales call",
         "take_edge": "one-click syndication to 200+ job boards plus a 400M-profile sourcing database ships in the base product",
     },
@@ -928,7 +928,7 @@ ATS_NICHES = {
     "enterprise": {
         "name": "Enterprise",
         "audience": "Global enterprise organizations requiring multi-entity payroll, custom HRIS integrations, and strict compliance security.",
-        "focus_feature": "rigorous compliance reporting, deep integrations, and enterprise-grade structured hiring."
+        "focus_feature": "rigorous compliance reporting, deep integrations, and structured hiring legal can audit."
     },
     "agencies": {
         "name": "Staffing & Recruiting Agencies",

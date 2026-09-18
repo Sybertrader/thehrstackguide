@@ -462,8 +462,8 @@ const { title: pageTitle, heading: pageHeading } = comparisonSeo(
   isChildRoute ? comparison.niche_id : undefined
 );
 const pageDescription = isHub
-  ? `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for technology buyers, startups, and scaleups. Feature matrix, pricing nuance, and specialized use-case evaluations.`
-  : `Independent comparison of ${comparison.tool_a_name} and ${comparison.tool_b_name} for ${modifierLabel}. Tailored capability breakdown, workflow evaluation, and pricing nuance.`;
+  ? `${comparison.tool_a_name} vs ${comparison.tool_b_name}: who to buy, who to skip, what FX and seats add to the sticker, and which capabilities actually differ.`
+  : `${comparison.tool_a_name} vs ${comparison.tool_b_name} for ${modifierLabel}: the buying test, the skip, and the fees that do not make the pricing page.`;
 const heroSubtitle = isHub
   ? resolveHubHeroSubtitle(hubFamily, comparison.tool_a_name, comparison.tool_b_name)
   : resolveChildHeroSubtitle(

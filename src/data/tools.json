@@ -671,7 +671,7 @@
     "review_count": "600",
     "rating_source": "G2 & Industry Benchmark",
     "positioning": "European hiring platform with a multi-language careers site and GDPR as a default, not an add-on.",
-    "text_compliance": "Recruitee provides enterprise-grade GDPR compliance automation, strict candidate consent timers, and localized data residency in European data centers.",
+    "text_compliance": "Recruitee provides GDPR consent timers and EU data residency, strict candidate consent timers, and localized data residency in European data centers.",
     "text_global_reach": "Recruitee excels for European and multi-national teams with multi-language careers page localization, localized job board syndication, and multi-currency tracking.",
     "text_pricing_truth": "Pricing starts at $199/month on the Launch tier (job-slot based) with unlimited team members, scaling to Scale and custom enterprise quotes for high-volume hiring.",
     "choose_if": [
@@ -828,7 +828,7 @@
     "review_count": "1,600",
     "rating_source": "G2 & Industry Benchmark",
     "positioning": "Engagement surveys and external benchmarks first. Performance and development sit on that data.",
-    "text_compliance": "Culture Amp provides enterprise-grade survey anonymity controls, GDPR-aligned data handling, and role-based access for sensitive engagement and performance insights used in People Ops decision-making.",
+    "text_compliance": "Culture Amp provides survey anonymity controls, GDPR-aligned data handling, and role-based access for sensitive engagement and performance insights used in People Ops decision-making.",
     "text_global_reach": "Culture Amp supports large global workforces with multi-language surveys, regional benchmarks, and distributed action-planning workflows for international People teams.",
     "text_pricing_truth": "Culture Amp uses custom quotes for Engage/Perform/Develop bundles based on headcount and module mix. Expect a demo-led enterprise sales motion rather than self-serve published pricing.",
     "choose_if": [

@@ -110,39 +110,39 @@ export function resolveHubHeroSubtitle(
 export const CHILD_HERO_SUBTITLES: Record<HeroVertical, Record<string, string>> = {
   ats: {
     startups:
-      'Early-stage startups building structured candidate pipelines and scaling headcount without complex HR overhead.',
+      'Founders running the first hiring pipeline without a recruiting-ops hire.',
     scaleups:
-      'Fast-scaling companies expanding hiring teams, automating candidate scheduling, and optimizing funnel analytics.',
+      'Teams that need interview kits and conversion reporting as hiring volume doubles.',
     enterprise:
-      'Enterprise talent acquisition teams managing multi-department requisitions, offer approvals, and talent CRMs.',
+      'TA teams that need OFCCP files, offer chains, and SSO in the contract, not the deck.',
     agencies:
-      'Staffing and recruitment agencies managing multi-client candidate pipelines, requisitions, and placement tracking.',
+      'Agencies that need client portals and per-account pipelines, not one shared req list.',
     'remote-teams':
-      'Distributed teams sourcing international candidates and coordinating multi-time-zone interview loops.',
+      'Interviewers who never share a working day and still have to leave a score.',
   },
   payroll: {
     startups:
-      'Early-stage startups and distributed teams hiring global contractors and employees compliant across borders.',
+      'First overseas contractors or employees, without a payroll specialist in month one.',
     scaleups:
-      'High-growth scaleups consolidating international entities, multi-currency payroll, and local tax filings.',
+      'Finance wants one invoice. People wants one system of record. Spreadsheets are the failure mode.',
     agencies:
-      'Design, dev, and marketing agencies managing client-billable contractor payouts and international worker records.',
+      'Client-billable freelancer payouts that have to reconcile per account.',
     'us-latam':
-      'US technology companies expanding nearshore engineering and operations teams across Latin America.',
+      'US companies hiring full-time in Mexico, Brazil, or Argentina, including 13th-month pay.',
     'web3-crypto':
-      'Web3 protocols and DAOs managing global contributor payouts, stablecoin settlements, and token grant vesting.',
+      'Contributor payouts in USDC or USDT on the same file as bank transfers.',
   },
   pm: {
     startups:
-      'Startups implementing lightweight 1:1 check-in habits, goal alignment, and continuous manager feedback.',
+      'Weekly 1:1s and a first review cycle without a six-month implementation.',
     scaleups:
-      'Growing companies formalizing 360-degree review cycles, OKRs, and performance calibration sessions.',
+      'OKRs and reviews in one system before a third survey tool shows up.',
     enterprise:
-      'Enterprise People Ops teams running structured talent reviews, 9-box matrices, and compensation alignment.',
+      'Compensation calibration that has to survive legal, not a sandbox demo.',
     'people-ops':
-      'People Operations leads automating review cycle logistics, engagement surveys, and manager enablement.',
+      'Engagement, calibration, and reviews in one console. No CSV export to start the cycle.',
     'remote-teams':
-      'Remote-first companies building asynchronous feedback habits, virtual check-ins, and distributed engagement tracking.',
+      'Reviews across time zones with no hallway context and no shared working day.',
   },
 };
 
