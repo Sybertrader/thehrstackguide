@@ -97,7 +97,7 @@ TOOLS = {
         "starting_price": "$29/mo",
         "pricing_model": "EOR starts at $699/mo",
         "free_trial": True,
-        "affiliate_url": "https://www.oysterhr.com",
+        "affiliate_url": "https://oyster.partnerlinks.io/avj71cn1tift",
         "key_features": ["180+ Country Reach", "Oyster Academy", "Global Employment Cost Calculator", "Equity Admin"],
         "pros": ["Clean admin UX for first-time international contractor onboarding", "Global Employment Cost Calculator for founder budgeting", "180+ country contractor and EOR reach for distributed creative teams"],
         "cons": ["Relies on third-party local partners in select markets", "Higher published EOR list price ($699/mo) than Deel/Remote annual rates"],

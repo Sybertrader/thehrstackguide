@@ -3,10 +3,11 @@
  * Writes vercel.json 308 rules for the master 1-1 architecture.
  *
  * Order is load-bearing:
- *   1. Purged vendors → category hubs
- *   2. Reverse-order + alias hubs (and their -for-* variants) → canonical master
- *   3. Catch-all `-for-{segment}` → same-path hub (covers leftover modifiers)
- *   4. /go/oyster and /go/papaya aliases
+ *   1. Leapsome contains-path catch-all → /performance-management/
+ *   2. Purged vendors → category hubs
+ *   3. Reverse-order + alias hubs (and their -for-* variants) → canonical master
+ *   4. Catch-all `-for-{segment}` → same-path hub (covers leftover modifiers)
+ *   5. /go/oyster and /go/papaya aliases
  *
  * Every rule uses statusCode 308 and destinations already include a trailing
  * slash so Vercel trailingSlash cannot insert a second hop.

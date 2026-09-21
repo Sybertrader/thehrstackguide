@@ -173,6 +173,7 @@ export function resolveMasterRedirect(pathname) {
   }
 
   const raw = pathName.split('?')[0].split('#')[0] || '/';
+  if (raw.toLowerCase().includes('leapsome')) return '/performance-management/';
   if (raw.startsWith('/go') || raw.startsWith('/api/')) return null;
 
   const slug = stripTrailingSlash(raw).replace(/^\//, '');
@@ -203,6 +204,23 @@ function slashPair(sourcePath, destination) {
   return [
     { source: trimmed, destination, statusCode: REDIRECT_STATUS },
     { source: `${trimmed}/`, destination, statusCode: REDIRECT_STATUS },
+  ];
+}
+
+/**
+ * Any URL containing `leapsome` (purged vendor) 308s to the PM hub.
+ * Must sit first so leftover `/leapsome`, nested paths, and odd suffixes
+ * never fall through to Vercel ROUTER_CANNOT_MATCH.
+ *
+ * Do not use `/:path*leapsome:path*` — duplicate `:path*` names are invalid
+ * path-to-regexp and can 502 at the edge. Named regex `:path(.*leapsome.*)`
+ * is the legal equivalent of “contains leapsome”.
+ */
+export function buildLeapsomeCatchAllRedirects() {
+  const hub = '/performance-management/';
+  return [
+    { source: '/:path(.*leapsome.*)', destination: hub, statusCode: REDIRECT_STATUS },
+    { source: '/:path(.*leapsome.*)/', destination: hub, statusCode: REDIRECT_STATUS },
   ];
 }
 
@@ -307,6 +325,7 @@ export function buildGoAliasRedirects() {
 
 export function buildVercelRedirects() {
   return [
+    ...buildLeapsomeCatchAllRedirects(),
     ...buildPurgedVendorRedirects(),
     ...buildLiveMasterRedirects(),
     ...buildSegmentCatchAllRedirects(),

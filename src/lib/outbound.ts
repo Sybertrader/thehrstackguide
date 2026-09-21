@@ -18,7 +18,6 @@ export const UTM_MEDIUM = 'referral';
 /** Non-affiliate vendors whose CTAs open the lead modal (not an outbound URL). */
 export const NON_AFFILIATE_LEAD_BRANDS = [
   'workable',
-  'oyster-hr',
 ] as const;
 
 /** Brands that open the lead-capture modal instead of an outbound URL. */
@@ -33,7 +32,6 @@ export const MANUAL_LEAD_BRANDS = [
 /** Official homepages used for post-submit redirects (not affiliate/UTM URLs). */
 export const NON_AFFILIATE_VENDOR_HOME_URLS: Record<(typeof NON_AFFILIATE_LEAD_BRANDS)[number], string> = {
   workable: 'https://www.workable.com',
-  'oyster-hr': 'https://www.oysterhr.com',
 };
 
 export function isNonAffiliateLeadBrand(toolId: string): boolean {
