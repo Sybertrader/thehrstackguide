@@ -3,6 +3,16 @@
   "trailingSlash": true,
   "redirects": [
     {
+      "source": "/:path(.*leapsome.*)",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(.*leapsome.*)/",
+      "destination": "/performance-management/",
+      "statusCode": 308
+    },
+    {
       "source": "/greenhouse-vs-:rest*",
       "destination": "/applicant-tracking-systems/",
       "statusCode": 308
