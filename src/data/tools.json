@@ -1025,5 +1025,80 @@
     "name": "Papaya Global",
     "displayName": "Papaya Global",
     "skip_if": "Don't buy Papaya Global if you have 40 people and one country. You will fund an enterprise payroll rollout you cannot staff."
+  },
+  "remote-people": {
+    "category": "payroll-eor",
+    "name": "Remote People",
+    "displayName": "Remote People",
+    "logo": "/Remote People.jpeg",
+    "rating": "4.7",
+    "review_count": "400",
+    "rating_source": "G2",
+    "positioning": "EOR from $199 per employee per month in 150+ countries, with contractor management at $29 and in-house recruitment on the same account.",
+    "text_compliance": "Remote People employs staff as the legal employer in advertised coverage markets, issuing local contracts and running payroll, tax withholding, and statutory benefits so the customer does not open an entity first. They publish ISO 27001 and SOC 2 Type II. Owned-entity employment is part of the product claim; get the owned-versus-partner list for each country before you treat the chain as equivalent to a fully owned network.",
+    "text_global_reach": "Coverage is advertised at 150+ countries. The Flex EOR plan quotes local contracts in 24–48 hours. Recruitment is a separate desk: they advertise four candidates in 72 hours, priced at 2% of annual salary when it is bundled with EOR. Company registration is offered when you later want your own entity. Contractor pay is quoted in 150+ currencies.",
+    "text_pricing_truth": "EOR Flex is $199 per employee per month, billed monthly, with no minimum headcount and no setup fee on the published plan. EOR Plus is $399 per employee per month, billed annually, for five or more employees, and is the plan that advertises no deposit — ask what Flex holds upfront. Contractor management is $29 per month. Contractor of Record is $199 per month. Global payroll on your own entity is $25 per employee per month. US PEO is $99 per employee per month. Salary, employer taxes, and country benefits sit on top of every one of those fees. Recruitment at 2% of salary is not included in the EOR sticker.",
+    "choose_if": [
+      "You want a published EOR rate under $200 per employee and you will still get a country quote for deposits, employer taxes, and benefits.",
+      "You want contractor pay at $29 per month, with a Contractor of Record option when misclassification risk is the actual problem."
+    ],
+    "starting_price": "$199/mo",
+    "free_trial": false,
+    "website": "https://remotepeople.com/",
+    "affiliate_url": "https://remotepeople.partnerlinks.io/59hf8uxftbth",
+    "has_active_affiliate": true,
+    "is_partner": true,
+    "contractor_price": 29,
+    "eor_price": 199,
+    "countries": "150+",
+    "target_segment": "Startups and mid-market",
+    "enterprise_analysis": {
+      "ip_assignment": {
+        "summary": "IP assignment sits in the local employment contract Remote People issues as legal employer. Quality depends on whether that contract is written by an owned entity or a local partner.",
+        "bullets": [
+          "Ask for the employment vehicle, owned entity or partner, in each country before you rely on invention assignment.",
+          "Contractor agreements and Contractor of Record contracts are a different IP chain from EOR employment. Do not treat them as the same document.",
+          "Recruitment does not assign IP. The employment contract does.",
+          "Have counsel read the onward-assignment clause for any market where employee-invention compensation is statutory."
+        ]
+      },
+      "tax_withholding": {
+        "summary": "Remote People withholds and remits local employer and employee taxes as part of EOR. Global payroll at $25 per employee is the product for teams that already have an entity and only need the filing run.",
+        "bullets": [
+          "EOR tax filings are included in the platform relationship; they are not a reason the $199 fee equals total employment cost.",
+          "Employer social contributions, 13th-month accruals, and mandatory insurance remain on top of the platform fee.",
+          "US PEO at $99 per employee is a co-employment product, not a 50-state native payroll engine.",
+          "Get the deposit rule in writing. Plus advertises no deposit for 5+ employees on an annual plan. Flex does not make that claim."
+        ]
+      },
+      "statutory_benefits": {
+        "summary": "Statutory pension, health, leave, and severance follow the hiring country and are administered under the EOR employment, not priced into the $199 platform fee.",
+        "bullets": [
+          "Mandatory benefits and notice periods are local. HQ policy does not override them.",
+          "Optional benefits and visa support are separate from the published EOR rate.",
+          "Contractor management at $29 does not include statutory employee benefits. Those workers are not employees.",
+          "Use Contractor of Record at $199 when the risk is misclassification, not when you simply want a cheaper EOR seat."
+        ]
+      },
+      "fee_structure": {
+        "summary": "The $199 Flex rate is the entry EOR price. Plus, payroll-only, PEO, contractor, and recruitment are separate SKUs, and none of them include salary.",
+        "bullets": [
+          "EOR Flex is $199 per employee per month, monthly, no minimum. EOR Plus is $399 per employee per month, annual, five or more employees.",
+          "Contractor management is $29 per month. Contractor of Record is $199 per month. Zero wire fees on contractor pay is not the same as zero FX markup.",
+          "Global payroll on an existing entity is $25 per employee per month. US PEO is $99 per employee per month.",
+          "Recruitment bundled with EOR is quoted at 2% of annual salary. Model that on the offer, not on the platform invoice."
+        ]
+      }
+    },
+    "compliance": [
+      "ISO 27001",
+      "SOC 2 Type II",
+      "GDPR"
+    ],
+    "integrations": [],
+    "supportSLA": "Dedicated account manager, 24/5 HR and legal support",
+    "deploymentType": "Cloud / SaaS",
+    "idealHeadcount": "10–250 seats",
+    "skip_if": "Don't buy Remote People if you need US multi-state payroll as the system of record, or a country-by-country owned-entity audit before signature. The $199 rate is the platform fee, not the cost of employing someone."
   }
 }

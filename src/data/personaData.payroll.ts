@@ -82,6 +82,17 @@ const multiplierBase: GlobalPayrollFeatures = {
   onboardingSla: spec(true, 'APAC onboarding is competitive; global SLA is country-dependent rather than a uniform 24-hour promise.'),
 };
 
+const remotePeopleBase: GlobalPayrollFeatures = {
+  ownedLocalEntities: spec(true, 'Advertises owned-entity EOR employment. Confirm owned versus partner for each country before you treat the chain as fully owned.'),
+  eorCountryCoverage: spec(true, 'EOR Flex from $199/employee/month in 150+ countries; EOR Plus $399/employee/month on an annual plan for 5+ employees.'),
+  contractorPayments: spec(true, 'Contractor management from $29/month in 150+ currencies. Contractor of Record is a separate $199/month product for misclassification risk.'),
+  nativePayrollFilings: spec(true, 'EOR filings run through the local employment vehicle. Global payroll on your own entity is $25/employee/month. US PEO at $99 is co-employment, not a 50-state payroll engine.'),
+  fxAndMultiCurrency: spec(true, 'Contractor pay quotes zero wire fees. That is not a published zero-markup FX guarantee. Model the corridor.'),
+  statutoryBenefits: spec(true, 'Statutory benefits follow the hiring country and sit outside the $199 platform fee.'),
+  ipAndWorkProductAssignment: spec(true, 'IP assignment is in the local employment contract. Contractor and Contractor of Record agreements are a different chain.'),
+  onboardingSla: spec(true, 'Flex quotes local contracts in 24–48 hours. Recruitment is a separate desk, advertised as four candidates in 72 hours at 2% of salary when bundled with EOR.'),
+};
+
 const payoneerBase: GlobalPayrollFeatures = {
   ownedLocalEntities: spec(false, 'Payoneer Workforce Management is a cross-border payout and contractor platform, not an owned-entity EOR employer.'),
   eorCountryCoverage: spec(false, 'No full-time EOR employment network. Coverage is contractor payouts to 190+ countries, not local employment.'),
@@ -300,6 +311,32 @@ export const globalPayrollPersonaByToolId: Record<string, GlobalPayrollPersonaDa
     }),
     enterpriseFeatures: gp(payoneerBase, {
       contractorPayments: spec(true, 'SSO and batch payout controls for enterprise contractor programs; still not SAML-governed EOR employment.'),
+    }),
+  },
+  'remote-people': {
+    startupFeatures: gp(remotePeopleBase, {
+      eorCountryCoverage: spec(true, 'Flex has no minimum headcount at $199/employee/month, which is the relevant sticker for a first overseas hire. Employer taxes and any deposit are still extra.'),
+    }),
+    scaleupFeatures: gp(remotePeopleBase, {
+      eorCountryCoverage: spec(true, 'Plus at $399/employee/month is the annual plan for 5+ employees and the one that advertises no deposit. Flex does not make that claim.'),
+    }),
+    agencyFeatures: gp(remotePeopleBase, {
+      contractorPayments: spec(true, 'Agencies can park bench contractors at $29/month and move misclassification-sensitive roles onto Contractor of Record at $199/month.'),
+    }),
+    latamFeatures: gp(remotePeopleBase, {
+      statutoryBenefits: spec(true, '13th-month, social security, and mandatory leave in LATAM still accrue on top of the $199 fee. Get the country quote.'),
+    }),
+    web3Features: gp(remotePeopleBase, {
+      fxAndMultiCurrency: spec(true, 'Contractor pay is fiat in 150+ currencies. There is no published USDC payroll rail, and zero wire fees is not zero FX markup.'),
+    }),
+    contractorFeatures: gp(remotePeopleBase, {
+      contractorPayments: spec(true, 'Use the $29 contractor product for genuine contractors. Use Contractor of Record at $199 when the worker looks like an employee.'),
+    }),
+    ukEuropeFeatures: gp(remotePeopleBase, {
+      ownedLocalEntities: spec(true, 'UK and EU employment still needs the local vehicle confirmed. GDPR applies to employee data; works-council process follows the hiring country.'),
+    }),
+    enterpriseFeatures: gp(remotePeopleBase, {
+      nativePayrollFilings: spec(true, 'At enterprise volume, split EOR seats from the $25 payroll-only product on entities you already own. Do not pay $199 to file payroll you already control.'),
     }),
   },
 };

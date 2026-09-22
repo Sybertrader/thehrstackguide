@@ -15,6 +15,7 @@
       "payoneer-workforce-management",
       "rippling",
       "oyster-hr",
+      "remote-people",
       "breezy-hr",
       "bamboohr-ats",
       "ashby",
@@ -27,8 +28,8 @@
       "culture-amp"
     ]
   },
-  "minProperties": 18,
-  "maxProperties": 18,
+  "minProperties": 19,
+  "maxProperties": 19,
   "required": [
     "gusto",
     "multiplier",
@@ -38,6 +39,7 @@
     "payoneer-workforce-management",
     "rippling",
     "oyster-hr",
+    "remote-people",
     "breezy-hr",
     "bamboohr-ats",
     "ashby",
@@ -58,6 +60,7 @@
     "payoneer-workforce-management": { "$ref": "#/$defs/toolProfile" },
     "rippling": { "$ref": "#/$defs/toolProfile" },
     "oyster-hr": { "$ref": "#/$defs/toolProfile" },
+    "remote-people": { "$ref": "#/$defs/toolProfile" },
     "breezy-hr": { "$ref": "#/$defs/toolProfile" },
     "bamboohr-ats": { "$ref": "#/$defs/toolProfile" },
     "ashby": { "$ref": "#/$defs/toolProfile" },

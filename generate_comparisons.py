@@ -247,6 +247,41 @@ TOOLS = {
             "Free Trial Available": True
         }
     },
+    "remote-people": {
+        "name": "Remote People",
+        "logo": "/Remote People.jpeg",
+        "rating": 4.7,
+        "contractor_price": 29,
+        "eor_price": 199,
+        "starting_price": "$199/mo",
+        "pricing_model": "EOR Flex from $199/mo",
+        "free_trial": False,
+        "affiliate_url": "https://remotepeople.partnerlinks.io/59hf8uxftbth",
+        "key_features": ["EOR from $199/mo", "Contractor Management $29/mo", "In-house Recruitment", "150+ Countries"],
+        "pros": [
+            "Published EOR Flex at $199/employee/month with no minimum headcount",
+            "Contractor management at $29/month, with Contractor of Record at $199/month when misclassification is the risk",
+            "In-house recruitment quoted at 2% of annual salary when bundled with EOR",
+        ],
+        "cons": [
+            "EOR Plus at $399/employee/month is the plan that advertises no deposit; Flex buyers should ask what is held upfront",
+            "Salary, employer taxes, and country benefits sit outside every published platform fee",
+            "Owned-entity coverage is advertised; confirm the employment vehicle per country before comparing it with a fully owned network",
+        ],
+        "matrix": {
+            "Native Legal Entities": True,
+            "Contractor Auto-Pay": True,
+            "IT Device Shipping": False,
+            "Localized Health Benefits": True,
+            "Equity & Stock Admin": False,
+            "Zero FX Rate Markup": False,
+            "Global Tax Filings": True,
+            "Background Checks": True,
+            "Native US Payroll": False,
+            "Multi-Currency Wallets": False,
+            "Free Trial Available": False,
+        },
+    },
 }
 
 ATS_TOOLS = {
@@ -694,6 +729,12 @@ VENDOR_EDITORIAL = {
         "pricing_nuance": "Flat $39/contractor and $499/month EOR with a free HRIS keeps the base predictable, and low FX markup on direct bank payouts is a genuine differentiator for contractor-heavy teams. The trade-off is scope: localized benefits and statutory add-ons are thinner than larger providers, so complex markets may need a second vendor alongside it.",
         "take_fit": "you are a venture-backed startup paying developers abroad and want flat, low-overhead fees",
         "take_edge": "transparent flat pricing plus minimal FX markup keeps the true cost per contractor closest to the sticker price",
+    },
+    "remote-people": {
+        "badge": "Best for Low Published EOR Rates",
+        "pricing_nuance": "EOR Flex is $199/month per employee, billed monthly, with no minimum headcount. EOR Plus is $399/month per employee on an annual plan for five or more employees, and that is the plan that advertises no deposit. Contractor management is $29/month. Contractor of Record is $199/month. Global payroll on an entity you already own is $25/month per employee, and US PEO is $99/month per employee. Salary, statutory employer costs, and recruitment at 2% of annual salary when bundled with EOR are all outside those stickers. Zero wire fees on contractor pay is not a zero-markup FX promise.",
+        "take_fit": "you want a published EOR rate under $200 per employee and you will still price deposits, employer taxes, and benefits by country",
+        "take_edge": "the $199 Flex fee, $29 contractor fee, and in-house recruitment on the same account keep the first international hire on one invoice",
     },
     "payoneer-workforce-management": {
         "badge": "Best for Cross-Border Contractor Payouts",

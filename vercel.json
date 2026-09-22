@@ -693,6 +693,26 @@
       "statusCode": 308
     },
     {
+      "source": "/remote-people-vs-deel",
+      "destination": "/deel-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-deel/",
+      "destination": "/deel-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-deel-for-:mod*",
+      "destination": "/deel-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-deel-for-:mod*/",
+      "destination": "/deel-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
       "source": "/rippling-vs-deel",
       "destination": "/deel-vs-rippling/",
       "statusCode": 308
@@ -810,6 +830,26 @@
     {
       "source": "/payoneer-workforce-management-vs-gusto-for-:mod*/",
       "destination": "/gusto-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-gusto",
+      "destination": "/gusto-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-gusto/",
+      "destination": "/gusto-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-gusto-for-:mod*",
+      "destination": "/gusto-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-gusto-for-:mod*/",
+      "destination": "/gusto-vs-remote-people/",
       "statusCode": 308
     },
     {
@@ -990,6 +1030,26 @@
     {
       "source": "/payoneer-workforce-management-vs-multiplier-for-:mod*/",
       "destination": "/multiplier-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-multiplier",
+      "destination": "/multiplier-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-multiplier/",
+      "destination": "/multiplier-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-multiplier-for-:mod*",
+      "destination": "/multiplier-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-multiplier-for-:mod*/",
+      "destination": "/multiplier-vs-remote-people/",
       "statusCode": 308
     },
     {
@@ -1313,6 +1373,66 @@
       "statusCode": 308
     },
     {
+      "source": "/remote-people-vs-oyster-hr",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-oyster-hr/",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-oyster-hr-for-:mod*",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-oyster-hr-for-:mod*/",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-remote-people",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-remote-people/",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-remote-people-for-:mod*",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/oyster-vs-remote-people-for-:mod*/",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-oyster",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-oyster/",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-oyster-for-:mod*",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-oyster-for-:mod*/",
+      "destination": "/oyster-hr-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
       "source": "/multiplier-vs-papaya-global",
       "destination": "/papaya-global-vs-multiplier/",
       "statusCode": 308
@@ -1430,6 +1550,86 @@
     {
       "source": "/payoneer-workforce-management-vs-papaya-for-:mod*/",
       "destination": "/papaya-global-vs-payoneer-workforce-management/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-papaya-global",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-papaya-global/",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-papaya-global-for-:mod*",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-papaya-global-for-:mod*/",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-remote-people",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-remote-people/",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-remote-people-for-:mod*",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/papaya-vs-remote-people-for-:mod*/",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-papaya",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-papaya/",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-papaya-for-:mod*",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-papaya-for-:mod*/",
+      "destination": "/papaya-global-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-payoneer-workforce-management",
+      "destination": "/payoneer-workforce-management-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-payoneer-workforce-management/",
+      "destination": "/payoneer-workforce-management-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-payoneer-workforce-management-for-:mod*",
+      "destination": "/payoneer-workforce-management-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-payoneer-workforce-management-for-:mod*/",
+      "destination": "/payoneer-workforce-management-vs-remote-people/",
       "statusCode": 308
     },
     {
@@ -1673,6 +1873,26 @@
       "statusCode": 308
     },
     {
+      "source": "/remote-people-vs-remote",
+      "destination": "/remote-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-remote/",
+      "destination": "/remote-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-remote-for-:mod*",
+      "destination": "/remote-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-remote-for-:mod*/",
+      "destination": "/remote-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
       "source": "/gusto-vs-rippling",
       "destination": "/rippling-vs-gusto/",
       "statusCode": 308
@@ -1870,6 +2090,26 @@
     {
       "source": "/remote-vs-rippling-for-:mod*/",
       "destination": "/rippling-vs-remote/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-rippling",
+      "destination": "/rippling-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-rippling/",
+      "destination": "/rippling-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-rippling-for-:mod*",
+      "destination": "/rippling-vs-remote-people/",
+      "statusCode": 308
+    },
+    {
+      "source": "/remote-people-vs-rippling-for-:mod*/",
+      "destination": "/rippling-vs-remote-people/",
       "statusCode": 308
     },
     {

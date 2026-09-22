@@ -28,6 +28,7 @@
     { "id": "payoneer-workforce-management", "name": "Payoneer", "category": "payroll-eor" },
     { "id": "rippling", "name": "Rippling", "category": "payroll-eor" },
     { "id": "oyster-hr", "name": "Oyster", "category": "payroll-eor" },
+    { "id": "remote-people", "name": "Remote People", "category": "payroll-eor" },
     { "id": "breezy-hr", "name": "Breezy HR", "category": "ats" },
     { "id": "bamboohr-ats", "name": "BambooHR", "category": "ats" },
     { "id": "ashby", "name": "Ashby", "category": "ats" },
