@@ -30,9 +30,9 @@ const CATEGORY_NOUN: Record<Exclude<SeoFamily, null>, string> = {
 
 /** Master 1-1 H1 category labels: `{A} vs {B}: {label} Comparison (2026)`. */
 export const HUB_HEADING_CATEGORY: Record<Exclude<SeoFamily, null>, string> = {
-  payroll: 'Global Payroll & EOR',
+  payroll: 'Global Payroll & EOR Software',
   ats: 'ATS & Recruiting Software',
-  pm: 'Performance Management',
+  pm: 'Performance Management Software',
 };
 
 /**
