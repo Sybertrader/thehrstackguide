@@ -90,20 +90,12 @@ export function resolveScenarioSubtitle(
 
 type HeroVertical = 'ats' | 'payroll' | 'pm';
 
-/** Master-hub hero: category noun phrase interpolated into the subhead template. */
-export const HUB_CATEGORY_LABELS: Record<HeroVertical, string> = {
-  ats: 'applicant tracking systems and recruiting software',
-  payroll: 'global payroll and Employer of Record (EOR) platforms',
-  pm: 'performance management and review software',
-};
-
 export function resolveHubHeroSubtitle(
-  family: HeroVertical | null | undefined,
+  _family: HeroVertical | null | undefined,
   toolAName: string,
   toolBName: string
 ): string {
-  const categoryLabel = (family && HUB_CATEGORY_LABELS[family]) || 'HR software';
-  return `Who to buy between ${toolAName} and ${toolBName}. Who to skip. What the quote hides on ${categoryLabel}.`;
+  return `An independent side-by-side comparison of pricing, core features, hidden contract terms, and best use cases for ${toolAName} and ${toolBName}.`;
 }
 
 /** Child-page hero subheads: one description per vertical × persona. */

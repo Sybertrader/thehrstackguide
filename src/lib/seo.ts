@@ -21,11 +21,18 @@ export function titleVendorName(toolId: string, displayName: string): string {
   return TITLE_NAME_BY_ID[toolId] ?? displayName;
 }
 
-/** Short category noun interpolated into comparison titles and H1s. */
+/** Short category noun interpolated into comparison titles and persona H1s. */
 const CATEGORY_NOUN: Record<Exclude<SeoFamily, null>, string> = {
   payroll: 'Payroll',
   ats: 'ATS',
   pm: 'Performance',
+};
+
+/** Master 1-1 H1 category labels: `{A} vs {B}: {label} Comparison (2026)`. */
+export const HUB_HEADING_CATEGORY: Record<Exclude<SeoFamily, null>, string> = {
+  payroll: 'Global Payroll & EOR',
+  ats: 'ATS & Recruiting Software',
+  pm: 'Performance Management',
 };
 
 /**
@@ -112,7 +119,7 @@ export function comparisonPageTitle(
 }
 
 /**
- * Hub H1: `[A] vs [B] Review: Global [Category] Breakdown`
+ * Hub H1: `[A] vs [B]: [Category] Comparison (2026)`
  * Persona H1: `[A] vs [B]: Which [Category] Tool Wins for [Segment]?`
  * Never appends “Comparison & Analysis”. Never copies `<title>` verbatim.
  */
@@ -123,9 +130,9 @@ export function comparisonPageHeading(
   personaLabel?: string | null
 ): string {
   const pair = `${vendorA} vs ${vendorB}`;
-  const category = categoryNoun(family);
-  if (personaLabel) return `${pair}: Which ${category} Tool Wins for ${personaLabel}?`;
-  return `${pair} Review: Global ${category} Breakdown`;
+  if (personaLabel) return `${pair}: Which ${categoryNoun(family)} Tool Wins for ${personaLabel}?`;
+  const category = family ? HUB_HEADING_CATEGORY[family] : 'HR Software';
+  return `${pair}: ${category} Comparison (2026)`;
 }
 
 /**
@@ -171,7 +178,7 @@ export function comparisonSeo(
   if (heading === title) {
     heading = personaLabel
       ? `${nameA} vs ${nameB}: Best ${categoryNoun(family)} Fit for ${personaLabel}`
-      : `${nameA} vs ${nameB}: ${categoryNoun(family)} Side-by-Side Review`;
+      : `${nameA} vs ${nameB}: ${family ? HUB_HEADING_CATEGORY[family] : 'HR Software'} Side-by-Side`;
   }
   return { title, heading };
 }

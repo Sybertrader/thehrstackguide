@@ -449,8 +449,9 @@ const richSnippetSchema = [
   }));
 
 /**
- * Title/H1 come from comparisonSeo: segment-specific title closers and
- * question/review H1s so pages do not share “: Comparison & Analysis”.
+ * Title comes from comparisonSeo. Master-hub H1 is
+ * `{A} vs {B}: {category} Comparison (2026)` with the category labels in
+ * `HUB_HEADING_CATEGORY`. Persona child H1s stay question-form.
  */
 const modifierLabel = modifierTitleSuffix(comparison.niche_id, comparison.niche_name);
 const pairName = `${comparison.tool_a_name} vs ${comparison.tool_b_name}`;
@@ -462,7 +463,7 @@ const { title: pageTitle, heading: pageHeading } = comparisonSeo(
   isChildRoute ? comparison.niche_id : undefined
 );
 const pageDescription = isHub
-  ? `${comparison.tool_a_name} vs ${comparison.tool_b_name}: who to buy, who to skip, what FX and seats add to the sticker, and which capabilities actually differ.`
+  ? resolveHubHeroSubtitle(hubFamily, comparison.tool_a_name, comparison.tool_b_name)
   : `${comparison.tool_a_name} vs ${comparison.tool_b_name} for ${modifierLabel}: the buying test, the skip, and the fees that do not make the pricing page.`;
 const heroSubtitle = isHub
   ? resolveHubHeroSubtitle(hubFamily, comparison.tool_a_name, comparison.tool_b_name)
