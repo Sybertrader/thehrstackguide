@@ -3,10 +3,14 @@ import tailwindcss from '@tailwindcss/vite';
 
 import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
+import react from '@astrojs/react';
+import vercel from '@astrojs/vercel';
 import { includeInSitemap, withTrailingSlash } from './src/lib/master-redirects';
 
 export default defineConfig({
   site: 'https://www.thehrstackguide.com',
+  output: 'static',
+  adapter: vercel(),
   trailingSlash: 'always',
   prefetch: {
     prefetchAll: false,
@@ -20,6 +24,7 @@ export default defineConfig({
   },
 
   integrations: [
+    react(),
     partytown({
       config: {
         forward: ["dataLayer.push", "gtag"],

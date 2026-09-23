@@ -4,44 +4,33 @@ import PreferredSourceButton from './PreferredSourceButton.astro';
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
   month: 'long',
   year: 'numeric',
-}); // Produces "September 2026"
+});
 const currentYear = new Date().getFullYear();
 
-const eorLinks = [
-  { href: '/deel-vs-remote/', label: 'Deel vs Remote' },
-  { href: '/rippling-vs-gusto/', label: 'Rippling vs Gusto' },
-  { href: '/deel-vs-oyster-hr/', label: 'Deel vs Oyster HR' },
-  { href: '/gusto-vs-multiplier/', label: 'Gusto vs Multiplier' },
-  { href: '/remote-vs-papaya-global/', label: 'Remote vs Papaya Global' },
+const categoryLinks = [
+  { href: '/global-payroll-eor/', label: 'Global Payroll & EOR' },
+  { href: '/applicant-tracking-systems/', label: 'Applicant Tracking Systems' },
+  { href: '/performance-management/', label: 'Performance Management' },
 ];
 
-const atsLinks = [
-  { href: '/ashby-vs-lever/', label: 'Ashby vs Lever' },
-  { href: '/workable-vs-jazzhr/', label: 'Workable vs JazzHR' },
-  { href: '/ashby-vs-workable/', label: 'Ashby vs Workable' },
-  { href: '/workable-vs-breezy-hr/', label: 'Breezy HR vs Workable' },
-  { href: '/lever-vs-workable/', label: 'Lever vs Workable' },
-];
-
-const pmLinks = [
-  { href: '/lattice-vs-culture-amp/', label: 'Lattice vs Culture Amp' },
-  { href: '/performyard-vs-lattice/', label: 'PerformYard vs Lattice' },
-  { href: '/performyard-vs-culture-amp/', label: 'PerformYard vs Culture Amp' },
+const coreLinks = [
+  { href: '/recommendation/', label: 'Get a recommendation' },
+  { href: '/how-to-build-an-hr-tech-stack/', label: 'How to build an HR stack' },
+  { href: '/methodology/', label: 'Methodology' },
+  { href: '/about/', label: 'About Us' },
 ];
 
 const legalLinks = [
-  { href: '/about/', label: 'About Us' },
   { href: '/privacy-policy/', label: 'Privacy Policy' },
   { href: '/terms/', label: 'Terms of Service' },
   { href: '/affiliate-disclosure/', label: 'Affiliate Disclosure' },
-  { href: '/methodology/', label: 'Methodology' },
+  { href: '/contact/', label: 'Contact' },
 ];
 ---
 
 <footer class="shrink-0 overflow-visible border-t border-slate-200 bg-white">
   <div class="mx-auto max-w-6xl overflow-visible px-4 py-12 sm:px-6 lg:px-8">
-    <div class="grid gap-10 overflow-visible sm:grid-cols-2 lg:grid-cols-[minmax(17.5rem,1.35fr)_repeat(4,minmax(0,1fr))]">
-      <!-- Col 1: Brand & Trust -->
+    <div class="grid gap-10 overflow-visible sm:grid-cols-2 lg:grid-cols-[minmax(17.5rem,1.35fr)_repeat(3,minmax(0,1fr))]">
       <div class="h-auto overflow-visible pb-3">
         <a href="/" class="flex items-center gap-2.5">
           <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-sm font-bold text-white">
@@ -61,13 +50,10 @@ const legalLinks = [
         <PreferredSourceButton theme="light" align="left" />
       </div>
 
-      <!-- Col 2: Global Payroll & EOR -->
       <div>
-        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">
-          <a href="/global-payroll-eor/" class="transition hover:text-indigo-600">Global Payroll &amp; EOR</a>
-        </h3>
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">Categories</h3>
         <ul class="mt-4 space-y-2.5">
-          {eorLinks.map((link) => (
+          {categoryLinks.map((link) => (
             <li>
               <a href={link.href} class="text-sm text-slate-500 transition hover:text-indigo-600">{link.label}</a>
             </li>
@@ -75,13 +61,10 @@ const legalLinks = [
         </ul>
       </div>
 
-      <!-- Col 3: Applicant Tracking Systems -->
       <div>
-        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">
-          <a href="/applicant-tracking-systems/" class="transition hover:text-indigo-600">Applicant Tracking Systems</a>
-        </h3>
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">Guides</h3>
         <ul class="mt-4 space-y-2.5">
-          {atsLinks.map((link) => (
+          {coreLinks.map((link) => (
             <li>
               <a href={link.href} class="text-sm text-slate-500 transition hover:text-indigo-600">{link.label}</a>
             </li>
@@ -89,23 +72,8 @@ const legalLinks = [
         </ul>
       </div>
 
-      <!-- Col 4: Performance Management -->
       <div>
-        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">
-          <a href="/performance-management/" class="transition hover:text-indigo-600">Performance Management</a>
-        </h3>
-        <ul class="mt-4 space-y-2.5">
-          {pmLinks.map((link) => (
-            <li>
-              <a href={link.href} class="text-sm text-slate-500 transition hover:text-indigo-600">{link.label}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <!-- Col 5: Legal & Methodology -->
-      <div>
-        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">Legal &amp; Methodology</h3>
+        <h3 class="text-sm font-semibold uppercase tracking-wide text-slate-900">Legal</h3>
         <ul class="mt-4 space-y-2.5">
           {legalLinks.map((link) => (
             <li>

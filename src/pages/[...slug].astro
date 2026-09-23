@@ -28,6 +28,8 @@ import VendorButton from '../components/VendorButton.astro';
 import VendorLogo from '../components/VendorLogo.astro';
 import { vendorLogoPreloadHref } from '../lib/vendor-logo';
 import { comparisonSeo } from '../lib/seo';
+import { pickRelatedHubs } from '../lib/related-comparisons';
+import RelatedComparisons from '../components/RelatedComparisons.astro';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildMasterSegmentPanels,
@@ -68,13 +70,6 @@ export function getStaticPaths() {
   const lastUpdatedIso = getComparisonsLastUpdated().toISOString();
   const firstPublishedIso = getComparisonsFirstPublished().toISOString();
 
-  function relatedScore(candidate: Comparison, current: Comparison): number {
-    let score = 0;
-    if (candidate.tool_a_id === current.tool_a_id || candidate.tool_a_id === current.tool_b_id) score += 1;
-    if (candidate.tool_b_id === current.tool_a_id || candidate.tool_b_id === current.tool_b_id) score += 1;
-    return score;
-  }
-
   // tools.json is the vendor allowlist. CSV rows (and any leftover alias
   // paths) whose tool ids are not keys in that catalog never become HTML.
   const liveComparisons = comparisons.filter((row) =>
@@ -89,19 +84,10 @@ export function getStaticPaths() {
     pairGroups.set(key, list);
   }
 
+  const hubRepresentatives = [...pairGroups.values()].map((rows) => pickHubComparison(rows));
+
   function relatedHubs(current: Comparison): Comparison[] {
-    const currentKey = comparisonHubSlug(current.tool_a_id, current.tool_b_id);
-    const seen = new Set<string>([currentKey]);
-    const scored: { row: Comparison; score: number }[] = [];
-    for (const [key, rows] of pairGroups) {
-      if (seen.has(key)) continue;
-      const representative = pickHubComparison(rows);
-      const score = relatedScore(representative, current);
-      if (score === 0) continue;
-      seen.add(key);
-      scored.push({ row: representative, score });
-    }
-    return scored.sort((a, b) => b.score - a.score).slice(0, 3).map((entry) => entry.row);
+    return pickRelatedHubs(current, hubRepresentatives);
   }
 
   const hubPaths = [...pairGroups.entries()]
@@ -533,8 +519,11 @@ const schemaGraph = buildSchemaGraph(
   }
 );
 
-const relatedHref = (item: Comparison) =>
-  isHub ? `/${comparisonHubSlug(item.tool_a_id, item.tool_b_id)}/` : `/${item.slug}/`;
+const relatedLinks = related.map((item) => ({
+  href: `/${comparisonHubSlug(item.tool_a_id, item.tool_b_id)}/`,
+  tool_a_name: item.tool_a_name,
+  tool_b_name: item.tool_b_name,
+}));
 
 const heroLogoPreloads = (
   await Promise.all([
@@ -1005,44 +994,11 @@ const heroLogoPreloads = (
       </>
       )}
 
-      <!-- Related Comparisons -->
-      {related.length > 0 && (
-        <section class="mt-16" aria-label="Related comparisons">
-          <h2 class="mb-2 text-2xl font-bold text-slate-900">
-            {isHub ? 'Related Comparisons' : `Related Comparisons for ${modifierLabel}`}
-          </h2>
-          <p class="mb-6 text-sm text-slate-600">
-            Same category. Different pair. Read these next, or go back to the
-            {' '}
-            <a href={categoryHub.href} class="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900">
-              {categoryHub.label}
-            </a>
-            {' '}
-            category hub.
-          </p>
-          <div class="grid gap-6 sm:grid-cols-3">
-            {related.map((item) => (
-              <a
-                href={relatedHref(item)}
-                class="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"
-              >
-                <span class="text-xs font-semibold uppercase tracking-wide text-indigo-600">
-                  {isHub ? 'Detailed comparison' : modifierTitleSuffix(item.niche_id, item.niche_name)}
-                </span>
-                <h3 class="mt-2 text-lg font-semibold text-slate-900 transition group-hover:text-indigo-600">
-                  {item.tool_a_name} vs {item.tool_b_name}
-                </h3>
-                <span class="mt-4 inline-flex items-center text-sm font-semibold text-indigo-600">
-                  View comparison
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1 h-4 w-4" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
-                  </svg>
-                </span>
-              </a>
-            ))}
-          </div>
-        </section>
-      )}
+      <RelatedComparisons
+        links={relatedLinks}
+        categoryHref={categoryHub.href}
+        categoryLabel={categoryHub.label}
+      />
 
     </main>
 

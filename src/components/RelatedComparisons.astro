@@ -1,0 +1,51 @@
+---
+interface RelatedLink {
+  href: string;
+  tool_a_name: string;
+  tool_b_name: string;
+}
+
+interface Props {
+  links: RelatedLink[];
+  categoryHref: string;
+  categoryLabel: string;
+}
+
+const { links, categoryHref, categoryLabel } = Astro.props;
+---
+
+{links.length > 0 && (
+  <section class="mt-16" aria-label="Related comparisons">
+    <h2 class="mb-2 text-2xl font-bold text-slate-900">Related Comparisons</h2>
+    <p class="mb-6 text-sm text-slate-600">
+      Same category. Different pair. Read these next, or go back to the
+      {' '}
+      <a href={categoryHref} class="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900">
+        {categoryLabel}
+      </a>
+      {' '}
+      category hub.
+    </p>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {links.map((item) => (
+        <a
+          href={item.href}
+          class="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"
+        >
+          <span class="text-xs font-semibold uppercase tracking-wide text-indigo-600">
+            Detailed comparison
+          </span>
+          <h3 class="mt-2 text-lg font-semibold text-slate-900 transition group-hover:text-indigo-600">
+            {item.tool_a_name} vs {item.tool_b_name}
+          </h3>
+          <span class="mt-4 inline-flex items-center text-sm font-semibold text-indigo-600">
+            View comparison
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1 h-4 w-4" aria-hidden="true">
+              <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+)}
