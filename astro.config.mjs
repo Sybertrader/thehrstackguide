@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
-import { includeInSitemap, withTrailingSlash } from './src/lib/master-redirects';
+import { includeInSitemap, sitemapPolicy, withTrailingSlash } from './src/lib/master-redirects';
 
 export default defineConfig({
   site: 'https://www.thehrstackguide.com',
@@ -30,6 +30,9 @@ export default defineConfig({
         forward: ["dataLayer.push", "gtag"],
       },
     }),
+    // Must precede sitemap(): it hands includeInSitemap the build output dir
+    // it needs to read each page's rendered robots meta.
+    sitemapPolicy(),
     sitemap({
       filter: (page) => includeInSitemap(page),
       serialize(item) {

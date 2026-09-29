@@ -6,21 +6,31 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parse } from 'csv-parse/sync';
 
 export const SITE_ORIGIN = 'https://www.thehrstackguide.com';
 export const REDIRECT_STATUS = 308;
 
-/** Sitemap allowlist besides live master comparison hubs. */
-export const SITEMAP_CORE_PATHS = [
-  '/',
-  '/global-payroll-eor/',
-  '/applicant-tracking-systems/',
-  '/performance-management/',
-  '/about/',
-  '/methodology/',
-  '/privacy-policy/',
-];
+/**
+ * Sitemap policy: every page Astro builds is submitted unless a rule below
+ * excludes it. This is deliberately an exclusion list rather than an
+ * allowlist, so a new page in src/pages/ is indexable the moment it ships
+ * instead of silently sitting out of the sitemap until someone remembers it.
+ */
+
+/** Affiliate cloaks and API endpoints are never search results. */
+const SITEMAP_EXCLUDED_PREFIXES = ['/go/', '/api/'];
+
+/** Utility routes with no search intent of their own. */
+const SITEMAP_EXCLUDED_PATHS = new Set(['/404/', '/thank-you/']);
+
+/**
+ * Matches `<meta name="robots" content="noindex, nofollow">` in any attribute
+ * order. Submitting a noindex URL trips "Submitted URL marked noindex" in
+ * Search Console, so the rendered page always overrules the default include.
+ */
+const ROBOTS_NOINDEX_RE = /<meta[^>]+name=["']robots["'][^>]*content=["'][^"']*\bnoindex\b/i;
 
 const CATEGORY_HUB_BY_ID = {
   'payroll-eor': '/global-payroll-eor/',
@@ -346,6 +356,56 @@ export function reverseHubRedirects() {
   return redirects;
 }
 
+/**
+ * Absolute path of the built client output, captured from the Astro config so
+ * the filter can read each page's rendered `robots` meta. @astrojs/sitemap
+ * hands the filter a URL and nothing else, and it runs at `astro:build:done`
+ * once every static page is already on disk.
+ */
+let sitemapOutputDir = null;
+
+/**
+ * Registers the output directory used by `includeInSitemap`. Must be listed in
+ * `astro.config.mjs` integrations; without it the sitemap cannot tell an
+ * indexable page from a noindex one.
+ */
+export function sitemapPolicy() {
+  return {
+    name: 'hrsg-sitemap-policy',
+    hooks: {
+      'astro:config:done'({ config }) {
+        const dir = config.build?.client ?? config.outDir;
+        sitemapOutputDir = dir ? fileURLToPath(dir) : null;
+      },
+    },
+  };
+}
+
+function rendersNoindex(normalized) {
+  if (!sitemapOutputDir) {
+    // Failing loudly beats emitting a sitemap that quietly submits noindex URLs.
+    throw new Error(
+      'sitemapPolicy() is missing from astro.config.mjs integrations, so the sitemap ' +
+        'filter cannot read rendered robots meta. Add it before the sitemap() integration.',
+    );
+  }
+
+  let html;
+  try {
+    html = fs.readFileSync(path.join(sitemapOutputDir, normalized, 'index.html'), 'utf-8');
+  } catch {
+    // No prerendered HTML to inspect (on-demand route). Nothing contradicts
+    // the default, so let the remaining rules decide.
+    return false;
+  }
+  return ROBOTS_NOINDEX_RE.test(html);
+}
+
+/**
+ * Include every built page by default; exclude only what the policy above
+ * rules out. Returning `true` for an unknown-but-indexable page is the
+ * intended behaviour, so new pages never need an entry here.
+ */
 export function includeInSitemap(page) {
   let pathname = page;
   try {
@@ -355,9 +415,13 @@ export function includeInSitemap(page) {
   }
   const normalized = withTrailingSlash(pathname);
 
-  if (pathname.startsWith('/go/') || pathname.startsWith('/api/')) return false;
+  if (SITEMAP_EXCLUDED_PREFIXES.some((prefix) => normalized.startsWith(prefix))) return false;
+  if (SITEMAP_EXCLUDED_PATHS.has(normalized)) return false;
+  // `-for-{segment}` URLs, reverse vendor order, and purged-vendor slugs are
+  // all 308 sources; submitting a redirect is a crawl-budget own goal.
   if (SEGMENT_SUFFIX_RE.test(stripTrailingSlash(pathname))) return false;
-  if (SITEMAP_CORE_PATHS.includes(normalized)) return true;
-  if (MASTER_PATH_RE.test(normalized) && !resolveMasterRedirect(normalized)) return true;
-  return false;
+  if (resolveMasterRedirect(normalized)) return false;
+  if (rendersNoindex(normalized)) return false;
+
+  return true;
 }
