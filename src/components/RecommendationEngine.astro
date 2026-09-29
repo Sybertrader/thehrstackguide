@@ -1,8 +1,13 @@
 ---
 import {
+  BUDGET_OPTIONS,
+  CATEGORY_OPTIONS,
+  COMPANY_TYPE_OPTIONS,
   LEGACY_CATEGORY_VALUES,
-  PERSONAS_BY_CATEGORY,
+  LOCATION_OPTIONS,
+  RECOMMENDATION_VENDOR_IDS,
 } from '../lib/recommendation-routing';
+import { outboundRel, resolveVendorOutboundHref, vendorCtaDestinationType } from '../lib/outbound';
 
 interface Props {
   headline?: string;
@@ -22,54 +27,28 @@ const {
   class: className = '',
 } = Astro.props;
 
-const categories = [
-  { value: 'performance', label: 'Performance Management' },
-  { value: 'global_eor', label: 'Global Payroll & EOR' },
-  { value: 'ats', label: 'Applicant Tracking Systems (ATS)' },
-];
-
 // Hub CTAs still send ?category=payroll; that older value maps to global_eor.
 const resolvedPrefill = LEGACY_CATEGORY_VALUES[categoryPrefill] ?? categoryPrefill;
 
-// Labels for every persona token the wizard can emit. Question 2 only
-// shows the subset that the selected category actually publishes.
-const companyTypeCatalog: Record<string, string> = {
-  startups: 'Tech Startup',
-  scaleups: 'Scaleup (50-250 employees)',
-  enterprise: 'Enterprise',
-  agencies: 'Agency / Professional Services',
-  'remote-teams': 'Remote / Distributed Team',
-  'us-latam': 'US & LATAM / Nearshore Team',
-  'people-ops': 'People Ops Leader',
-  'web3-crypto': 'Web3 & Crypto',
-};
-
-const personasByCategory = PERSONAS_BY_CATEGORY;
-
-function companyTypeOptionsFor(category: string): { value: string; label: string }[] {
-  return (personasByCategory[category] ?? []).map((value) => ({
-    value,
-    label: companyTypeCatalog[value] ?? value,
-  }));
-}
-
-const initialCompanyTypes = companyTypeOptionsFor(resolvedPrefill);
-
-const budgets = [
-  { value: 'lean', label: 'Under $500 / month' },
-  { value: 'mid', label: '$500–$2,000 / month' },
-  { value: 'flexible', label: '$2,000+ / month or flexible' },
-];
-
-const locations = [
-  { value: 'us_only', label: 'US Only' },
-  { value: 'global_remote', label: 'Global / Remote' },
-  { value: 'hybrid', label: 'Hybrid (US + International)' },
-];
+// Outbound hrefs are resolved here rather than in the client script because
+// resolveVendorOutboundHref reads tools.json through node:fs. Routing every
+// vendor through it also keeps lead-only brands (Workable, Lever, JazzHR,
+// Culture Amp, PerformYard) off `/go/{id}/`, which only builds for registered
+// affiliates and would otherwise 404.
+const vendorLinks = Object.fromEntries(
+  RECOMMENDATION_VENDOR_IDS.map((id) => {
+    const href = resolveVendorOutboundHref(id);
+    return [id, { href, rel: outboundRel(href) ?? '', type: vendorCtaDestinationType(href) }];
+  }),
+);
 
 const SELECT_CLASSES =
   'mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-normal text-slate-900 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500';
 const LABEL_CLASSES = 'block text-sm font-semibold text-slate-900';
+const PRIMARY_CTA_CLASSES =
+  'inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto';
+const SECONDARY_CTA_CLASSES =
+  'inline-flex w-full items-center justify-center rounded-xl border border-indigo-200 bg-white px-5 py-3.5 text-sm font-semibold text-indigo-700 shadow-sm transition hover:border-indigo-300 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto';
 
 const HeadingTag = headingLevel;
 ---
@@ -78,8 +57,7 @@ const HeadingTag = headingLevel;
   class:list={['recommendation-engine', className]}
   aria-label="Get our recommendation"
   data-recommendation-engine
-  data-company-type-catalog={JSON.stringify(companyTypeCatalog)}
-  data-personas-by-category={JSON.stringify(personasByCategory)}
+  data-vendor-links={JSON.stringify(vendorLinks)}
 >
   {showEyebrow && (
     <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold uppercase tracking-wide text-indigo-700">
@@ -107,7 +85,7 @@ const HeadingTag = headingLevel;
         </label>
         <select id="category-select" name="category" required class={SELECT_CLASSES}>
           <option value="" disabled selected={!resolvedPrefill}>Select a category</option>
-          {categories.map((option) => (
+          {CATEGORY_OPTIONS.map((option) => (
             <option value={option.value} selected={resolvedPrefill === option.value}>
               {option.label}
             </option>
@@ -119,15 +97,9 @@ const HeadingTag = headingLevel;
         <label class={LABEL_CLASSES} for="company-type-select">
           2. What best describes your company?
         </label>
-        <select
-          id="company-type-select"
-          name="companyType"
-          required
-          disabled={!resolvedPrefill}
-          class={SELECT_CLASSES}
-        >
+        <select id="company-type-select" name="companyType" required class={SELECT_CLASSES}>
           <option value="" disabled selected>Select company type</option>
-          {initialCompanyTypes.map((option) => (
+          {COMPANY_TYPE_OPTIONS.map((option) => (
             <option value={option.value}>{option.label}</option>
           ))}
         </select>
@@ -139,7 +111,7 @@ const HeadingTag = headingLevel;
         </label>
         <select id="budget-select" name="budget" required class={SELECT_CLASSES}>
           <option value="" disabled selected>Select budget range</option>
-          {budgets.map((option) => (
+          {BUDGET_OPTIONS.map((option) => (
             <option value={option.value}>{option.label}</option>
           ))}
         </select>
@@ -151,24 +123,51 @@ const HeadingTag = headingLevel;
         </label>
         <select id="location-select" name="location" required class={SELECT_CLASSES}>
           <option value="" disabled selected>Select workforce location</option>
-          {locations.map((option) => (
+          {LOCATION_OPTIONS.map((option) => (
             <option value={option.value}>{option.label}</option>
           ))}
         </select>
       </div>
 
-      <button
-        type="submit"
-        class="inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-5 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-      >
+      <button type="submit" class={PRIMARY_CTA_CLASSES}>
         Get Our Recommendation
       </button>
     </form>
+
+    <div id="wizard-result" class="recommendation-result hidden" hidden>
+      <span class="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-sm font-semibold uppercase tracking-wide text-indigo-700">
+        Your match
+      </span>
+      <h3 data-result-pair-label class="mt-5 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl"></h3>
+      <p data-result-rationale class="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg"></p>
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <a data-result-pair-href href="/" class={PRIMARY_CTA_CLASSES}>Read the comparison</a>
+        <a data-result-vendor-a data-vendor-cta href="/" target="_blank" class={SECONDARY_CTA_CLASSES}></a>
+        <a data-result-vendor-b data-vendor-cta href="/" target="_blank" class={SECONDARY_CTA_CLASSES}></a>
+      </div>
+      <button
+        type="button"
+        data-result-reset
+        class="mt-4 text-sm font-semibold text-indigo-600 transition hover:text-indigo-800"
+      >
+        Edit answers
+      </button>
+    </div>
   </div>
 </section>
 
 <script>
-  import { LEGACY_CATEGORY_VALUES, resolveRecommendationUrl } from '../lib/recommendation-routing';
+  import {
+    LEGACY_CATEGORY_VALUES,
+    resolveRecommendation,
+    type RecommendationVendor,
+  } from '../lib/recommendation-routing';
+
+  interface VendorLink {
+    href: string;
+    rel: string;
+    type: string;
+  }
 
   const INVALID_CLASSES = ['border-red-500', 'ring-2', 'ring-red-100'];
 
@@ -200,79 +199,68 @@ const HeadingTag = headingLevel;
     }
   }
 
-  function personasForCategory(
-    category: string,
-    byCategory: Record<string, string[]>,
-  ): string[] | null {
-    const key = LEGACY_CATEGORY_VALUES[category] ?? category;
-    const allowed = byCategory[key];
-    return allowed?.length ? allowed : null;
-  }
-
-  function syncCompanyTypeOptions(
-    root: HTMLElement,
-    categorySelect: HTMLSelectElement,
-    companyTypeSelect: HTMLSelectElement,
+  function applyVendorCta(
+    link: HTMLAnchorElement | null,
+    vendor: RecommendationVendor,
+    vendorLinks: Record<string, VendorLink>,
   ) {
-    const catalog = parseJsonData<Record<string, string>>(root, 'companyTypeCatalog', {});
-    const byCategory = parseJsonData<Record<string, string[]>>(root, 'personasByCategory', {});
-    const allowed = personasForCategory(categorySelect.value, byCategory);
-    const previous = companyTypeSelect.value;
+    if (!link) return;
 
-    const placeholder = document.createElement('option');
-    placeholder.value = '';
-    placeholder.disabled = true;
-    placeholder.textContent = 'Select company type';
-    companyTypeSelect.replaceChildren(placeholder);
-
-    if (!allowed) {
-      companyTypeSelect.disabled = true;
-      companyTypeSelect.selectedIndex = 0;
-      markValidity(companyTypeSelect, true);
+    const destination = vendorLinks[vendor.id];
+    if (!destination) {
+      link.hidden = true;
       return;
     }
 
-    companyTypeSelect.disabled = false;
-    for (const value of allowed) {
-      const option = document.createElement('option');
-      option.value = value;
-      option.textContent = catalog[value] ?? value;
-      companyTypeSelect.append(option);
-    }
-
-    if (previous && allowed.includes(previous)) {
-      companyTypeSelect.value = previous;
+    link.hidden = false;
+    link.href = destination.href;
+    link.textContent = `Try ${vendor.name} ↗`;
+    link.dataset.vendorId = vendor.id;
+    link.dataset.vendorName = vendor.name;
+    link.dataset.destinationType = destination.type;
+    if (destination.rel) {
+      link.rel = destination.rel;
     } else {
-      companyTypeSelect.selectedIndex = 0;
+      link.removeAttribute('rel');
     }
+  }
 
-    // A category switch that empties Q2 is a reset, not a failed submit.
-    markValidity(companyTypeSelect, true);
+  function trackVendorClick(link: HTMLAnchorElement) {
+    const gtag = (window as any).gtag;
+    if (typeof gtag !== 'function') return;
+    gtag('event', 'vendor_cta_click', {
+      vendor_id: link.dataset.vendorId ?? '',
+      vendor_name: link.dataset.vendorName ?? '',
+      cta_location: 'recommendation_engine',
+      destination_type: link.dataset.destinationType ?? 'direct_outbound',
+      page_location: window.location.pathname,
+    });
   }
 
   function initRecommendationEngine(root: Element) {
     const form = root.querySelector('.recommendation-form') as HTMLFormElement | null;
+    const result = root.querySelector('.recommendation-result') as HTMLElement | null;
     if (!form) return;
 
-    const categorySelect = form.querySelector('select[name="category"]') as HTMLSelectElement | null;
-    const companyTypeSelect = form.querySelector(
-      'select[name="companyType"]',
-    ) as HTMLSelectElement | null;
-    if (!categorySelect || !companyTypeSelect) return;
+    const vendorLinks = parseJsonData<Record<string, VendorLink>>(
+      root as HTMLElement,
+      'vendorLinks',
+      {},
+    );
 
     applyCategoryPrefill(form);
-    syncCompanyTypeOptions(root as HTMLElement, categorySelect, companyTypeSelect);
 
     const selects = Array.from(form.querySelectorAll('select')) as HTMLSelectElement[];
 
     // Clear the highlight as soon as the visitor answers the question.
     selects.forEach((select) => {
       select.addEventListener('change', () => {
-        if (select === categorySelect) {
-          syncCompanyTypeOptions(root as HTMLElement, categorySelect, companyTypeSelect);
-        }
         if (select.value) markValidity(select, true);
       });
+    });
+
+    result?.querySelectorAll('[data-vendor-cta]').forEach((link) => {
+      link.addEventListener('click', () => trackVendorClick(link as HTMLAnchorElement));
     });
 
     form.addEventListener('submit', (event) => {
@@ -300,9 +288,43 @@ const HeadingTag = headingLevel;
       const budget = String(data.get('budget') || '').trim();
       const location = String(data.get('location') || '').trim();
 
-      const targetUrl = resolveRecommendationUrl(category, companyType, budget, location);
-      console.log('Wizard routing submission to:', targetUrl);
-      window.location.href = targetUrl;
+      const match = resolveRecommendation(category, companyType, budget, location);
+
+      if (result) {
+        const pairLabel = result.querySelector('[data-result-pair-label]');
+        const rationale = result.querySelector('[data-result-rationale]');
+        const pairLink = result.querySelector('[data-result-pair-href]') as HTMLAnchorElement | null;
+        if (pairLabel) pairLabel.textContent = match.pairLabel;
+        if (rationale) rationale.textContent = match.rationale;
+        if (pairLink) {
+          pairLink.href = match.pairHref;
+          pairLink.textContent = `Read ${match.pairLabel}`;
+        }
+        applyVendorCta(
+          result.querySelector('[data-result-vendor-a]'),
+          match.vendorA,
+          vendorLinks,
+        );
+        applyVendorCta(
+          result.querySelector('[data-result-vendor-b]'),
+          match.vendorB,
+          vendorLinks,
+        );
+        form.classList.add('hidden');
+        result.classList.remove('hidden');
+        result.removeAttribute('hidden');
+        result.querySelector('[data-result-reset]')?.addEventListener(
+          'click',
+          () => {
+            result.classList.add('hidden');
+            result.setAttribute('hidden', '');
+            form.classList.remove('hidden');
+          },
+          { once: true },
+        );
+      } else {
+        window.location.href = match.pairHref;
+      }
     });
   }
 
