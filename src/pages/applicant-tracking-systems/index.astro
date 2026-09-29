@@ -190,23 +190,23 @@ const collectionSchema = {
                 {tool.bestFor}
               </span>
             )}
-            <div class="flex items-center gap-3">
+            <!-- flex-1 on the wrapper keeps the CTAs aligned across a row even
+                 when badges wrap to different line counts. -->
+            <div class="flex-1">
               <VendorLogo
                 src={tool.logo}
                 alt={`${tool.name} logo`}
                 name={tool.name}
                 badgeColor={logoBadgeColor(tool.name)}
+                size={64}
               />
-              <div>
-                <h3 class="text-lg font-bold text-slate-900">{tool.name}</h3>
-                {tool.rating && (
-                  <p class="text-sm font-medium text-slate-500">
-                    ⭐️ {tool.rating}/5{tool.review_count && ` (${tool.review_count}+)`}
-                  </p>
-                )}
-              </div>
+              <h3 class="mt-4 text-lg font-bold text-slate-900">{tool.name}</h3>
+              {tool.rating && (
+                <p class="mt-1 text-sm font-medium text-slate-500">
+                  ⭐️ {tool.rating}/5{tool.review_count && ` (${tool.review_count}+)`}
+                </p>
+              )}
             </div>
-            <p class="mt-4 flex-1 text-sm leading-relaxed text-slate-600">{tool.positioning}</p>
             <VendorButton
               href={isManualLeadBrand(tool.id) ? undefined : resolveVendorOutboundHref(tool.id)}
               modalId={isManualLeadBrand(tool.id) ? manualLeadModalId(tool.name) : undefined}
@@ -241,6 +241,15 @@ const collectionSchema = {
       </div>
     </section>
 
+    <!-- Recommendation Engine -->
+    <ConciergeLeadBox
+      categoryName="Applicant Tracking Systems (ATS)"
+      headline="Unsure which Applicant Tracking System fits your team?"
+      theme="teal"
+      ctaHref="/recommendation/?category=ats"
+      class="mb-16"
+    />
+
     <!-- Comparison Directory -->
     <section id="browse-comparisons" class="scroll-mt-24" aria-label="Comparison directory">
       <CategoryComparisonBrowser
@@ -250,13 +259,6 @@ const collectionSchema = {
         gridTitle="All Applicant Tracking System Head-to-Head Comparisons"
       />
     </section>
-
-    <ConciergeLeadBox
-      categoryName="Applicant Tracking Systems (ATS)"
-      headline="Unsure which Applicant Tracking System fits your team?"
-      theme="teal"
-      ctaHref="/recommendation/?category=ats"
-    />
 
     {toolRoster
       .filter((tool) => isManualLeadBrand(tool.id))

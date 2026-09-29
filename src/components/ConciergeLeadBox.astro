@@ -6,9 +6,18 @@ interface Props {
   ctaHref?: string;
   /** Optional full H2. Defaults to “Unsure which {categoryName} platform fits your team?” */
   headline?: string;
+  /** Extra classes on the section, so callers can set the spacing this box needs
+   * wherever they place it in the page flow. */
+  class?: string;
 }
 
-const { categoryName, theme = 'indigo', ctaHref = '/recommendation/', headline } = Astro.props;
+const {
+  categoryName,
+  theme = 'indigo',
+  ctaHref = '/recommendation/',
+  headline,
+  class: className = '',
+} = Astro.props;
 const resolvedHeadline = headline ?? `Unsure which ${categoryName} platform fits your team?`;
 
 const themes = {
@@ -35,7 +44,7 @@ const themes = {
 const styles = themes[theme];
 ---
 
-<section class="mt-12" aria-label="Get our recommendation">
+<section class:list={['mt-12', className]} aria-label="Get our recommendation">
   <div class:list={['relative overflow-hidden rounded-2xl border p-6 shadow-sm sm:p-8', styles.shell]}>
     <div class:list={['absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r', styles.accentBar]} aria-hidden="true"></div>
     <span class:list={['inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide', styles.eyebrow]}>
