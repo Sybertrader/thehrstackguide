@@ -1,4 +1,6 @@
 ---
+import { schemaOffer } from '../../lib/schema-offer';
+
 export interface SoftwareVendor {
   name: string;
   category?: string;
@@ -37,13 +39,8 @@ function softwareApplication(vendor: SoftwareVendor) {
     };
   }
 
-  if (vendor.priceStartingAt) {
-    node.offers = {
-      '@type': 'Offer',
-      price: vendor.priceStartingAt,
-      priceCurrency: 'USD',
-    };
-  }
+  const offer = schemaOffer(vendor.priceStartingAt);
+  if (offer) node.offers = offer;
 
   return node;
 }

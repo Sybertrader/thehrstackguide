@@ -28,6 +28,7 @@ import VendorButton from '../components/VendorButton.astro';
 import VendorLogo from '../components/VendorLogo.astro';
 import { vendorLogoPreloadHref } from '../lib/vendor-logo';
 import { comparisonSeo } from '../lib/seo';
+import { schemaOffer } from '../lib/schema-offer';
 import { pickRelatedHubs } from '../lib/related-comparisons';
 import RelatedComparisons from '../components/RelatedComparisons.astro';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
@@ -215,18 +216,6 @@ function resolveToolNarrative(
   };
 }
 
-/**
- * Google's Rich Results validator requires `offers.price` to be a bare
- * numeric string ("400", "0"), rejecting currency symbols, thousands
- * separators, or unit suffixes like "$400/mo" or "$6,000/yr". This strips
- * everything except digits and the decimal point, falling back to "0" if no
- * numeric value can be extracted from the source pricing string.
- */
-function toSchemaPrice(price: string): string {
-  const numeric = price.replace(/[^0-9.]/g, '');
-  return numeric || '0';
-}
-
 function buildSchemaGraph(
   comparison: Comparison,
   pageUrl: string,
@@ -308,11 +297,9 @@ function buildSchemaGraph(
         operatingSystem: 'Web-based',
         ...(schemaOptions.softwareDescriptionA ? { description: schemaOptions.softwareDescriptionA } : {}),
         ...(softwareAudience ? { audience: softwareAudience } : {}),
-        offers: {
-          '@type': 'Offer',
-          price: toSchemaPrice(comparison.tool_a_starting_price),
-          priceCurrency: 'USD',
-        },
+        ...(schemaOffer(comparison.tool_a_starting_price)
+          ? { offers: schemaOffer(comparison.tool_a_starting_price) }
+          : {}),
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: toolARating || '4.7',
@@ -341,11 +328,9 @@ function buildSchemaGraph(
         operatingSystem: 'Web-based',
         ...(schemaOptions.softwareDescriptionB ? { description: schemaOptions.softwareDescriptionB } : {}),
         ...(softwareAudience ? { audience: softwareAudience } : {}),
-        offers: {
-          '@type': 'Offer',
-          price: toSchemaPrice(comparison.tool_b_starting_price),
-          priceCurrency: 'USD',
-        },
+        ...(schemaOffer(comparison.tool_b_starting_price)
+          ? { offers: schemaOffer(comparison.tool_b_starting_price) }
+          : {}),
         aggregateRating: {
           '@type': 'AggregateRating',
           ratingValue: toolBRating || '4.7',
@@ -408,10 +393,12 @@ const richSnippetSchema = [
   {
     tool: comparison.tool_a_name,
     narrative: toolANarrative,
+    startingPrice: comparison.tool_a_starting_price,
   },
   {
     tool: comparison.tool_b_name,
     narrative: toolBNarrative,
+    startingPrice: comparison.tool_b_starting_price,
   },
 ]
   .filter((entry) => entry.narrative.reviewCountNumeric !== null)
@@ -421,12 +408,7 @@ const richSnippetSchema = [
     name: entry.tool,
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'Web-based',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-      description: 'Contact for custom enterprise pricing / Free demo',
-    },
+    ...(schemaOffer(entry.startingPrice) ? { offers: schemaOffer(entry.startingPrice) } : {}),
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: entry.narrative.rating,

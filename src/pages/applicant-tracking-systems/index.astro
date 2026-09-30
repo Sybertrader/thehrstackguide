@@ -9,6 +9,7 @@ import { loadComparisons } from '../../lib/comparisons';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../../lib/outbound';
 import { getToolsByCategory } from '../../lib/tools';
 import { comparisonHubSlug } from '../../lib/comparison-routes';
+import { schemaOffer } from '../../lib/schema-offer';
 import { ATS_HUB_HEADING, ATS_HUB_TITLE } from '../../lib/seo';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
@@ -128,12 +129,7 @@ const collectionSchema = {
           applicationCategory: 'BusinessApplication',
           operatingSystem: 'Web-based',
           description: tool.positioning,
-          offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'USD',
-            description: 'Contact for custom enterprise pricing / Free demo',
-          },
+          ...(schemaOffer(tool.starting_price) ? { offers: schemaOffer(tool.starting_price) } : {}),
           aggregateRating: {
             '@type': 'AggregateRating',
             ratingValue: tool.rating || '4.7',

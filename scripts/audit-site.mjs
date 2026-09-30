@@ -7,7 +7,8 @@
  *   2. robots meta is not noindex / none / nofollow-only crawl blocks
  *   3. Canonical href equals the requested URL (trailing slash included)
  *   4. Parseable JSON-LD; comparison pages must include SoftwareApplication,
- *      ItemPage, or Review; other pages need any valid schema.org @type
+ *      ItemPage, or Review; other pages need any valid schema.org @type.
+ *      Offer.price must be a bare number (no $, /mo, or "Custom quote").
  *   5. Non-empty unique <title> and meta description
  *
  * Also flags same-host links that 200 but are absent from the sitemap
@@ -98,10 +99,23 @@ function robotsBlocked(html) {
   return /\bnoindex\b|\bnone\b|\bno-crawl\b|\bnocrawl\b/.test(content);
 }
 
+const NUMERIC_OFFER_PRICE = /^\d+(?:\.\d+)?$/;
+
 function parseJsonLd(html) {
   const blocks = [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
   const nodes = [];
   const errors = [];
+  const invalidPrices = [];
+
+  function inspectOffer(offer) {
+    if (!offer || typeof offer !== 'object') return;
+    if (Object.prototype.hasOwnProperty.call(offer, 'price')) {
+      const price = offer.price;
+      if (typeof price !== 'number' && !NUMERIC_OFFER_PRICE.test(String(price))) {
+        invalidPrices.push(String(price));
+      }
+    }
+  }
 
   function walk(value) {
     if (Array.isArray(value)) {
@@ -113,6 +127,10 @@ function parseJsonLd(html) {
     if (value['@type']) {
       const types = Array.isArray(value['@type']) ? value['@type'] : [value['@type']];
       nodes.push(...types.map((t) => String(t).toLowerCase()));
+    }
+    if (value.offers) {
+      if (Array.isArray(value.offers)) value.offers.forEach(inspectOffer);
+      else inspectOffer(value.offers);
     }
     if (value.mainEntity) walk(value.mainEntity);
     if (value.itemListElement) walk(value.itemListElement);
@@ -128,7 +146,7 @@ function parseJsonLd(html) {
     }
   }
 
-  return { nodes: [...new Set(nodes)], errors, count: blocks.length };
+  return { nodes: [...new Set(nodes)], errors, invalidPrices: [...new Set(invalidPrices)], count: blocks.length };
 }
 
 function isComparisonUrl(url) {
@@ -295,6 +313,9 @@ const pageResults = await mapPool(sitemapUrls, CONCURRENCY, async (url, index) =
   schemaTypes = jsonLd.nodes;
   if (jsonLd.errors.length) issues.push(`JSON-LD parse error: ${jsonLd.errors[0]}`);
   if (jsonLd.count === 0) issues.push('no JSON-LD');
+  if (jsonLd.invalidPrices.length) {
+    issues.push(`Offer.price must be numeric (found: ${jsonLd.invalidPrices.join(', ')})`);
+  }
   const comparison = isComparisonUrl(url);
   const hasComparisonSchema = schemaTypes.some((t) => COMPARISON_SCHEMA.has(t));
   const hasAnySchema = schemaTypes.some((t) => ANY_SCHEMA.has(t));
