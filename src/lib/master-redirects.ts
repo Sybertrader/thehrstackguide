@@ -217,6 +217,61 @@ function slashPair(sourcePath, destination) {
   ];
 }
 
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Named-regex path segment. Legal on Vercel; `:param*` glued to a literal
+ * in the same segment (`/greenhouse-vs-:rest*`, `/:pair*-vs-greenhouse`)
+ * is not, and 502s as ROUTER_CANNOT_MATCH at the edge.
+ */
+function namedSegment(regex) {
+  return `/:path(${regex})`;
+}
+
+/**
+ * True when a `source` would 502 on Vercel: a splat sharing a path segment
+ * with a literal. `/go/:path*` is legal because the splat is the whole
+ * remaining segment.
+ */
+export function isUnsafeVercelRedirectSource(source) {
+  if (/:[A-Za-z0-9]+\*[^/]/.test(source)) return true;
+  if (/[^/]:[A-Za-z0-9]+\*/.test(source)) return true;
+  return false;
+}
+
+export function assertSafeVercelRedirects(redirects) {
+  const unsafe = redirects
+    .map((rule) => rule.source)
+    .filter((source) => isUnsafeVercelRedirectSource(source));
+  if (unsafe.length) {
+    throw new Error(
+      `Unsafe Vercel redirect sources (ROUTER_CANNOT_MATCH): ${unsafe.slice(0, 8).join(', ')}`,
+    );
+  }
+}
+
+/**
+ * Persona / sub-niche suffixes that used to have their own HTML
+ * (`/{a}-vs-{b}-for-startups/`, etc.). The catch-all 308s these to the
+ * 1-to-1 hub. Includes plural and truncated aliases that were never CSV
+ * niche ids but still appear in external links and Search Console.
+ */
+export const LEGACY_PERSONA_SUFFIXES = [
+  'tech-startups',
+  'web3-crypto',
+  'remote-teams',
+  'people-ops',
+  'enterprises',
+  'us-latam',
+  'startups',
+  'scaleups',
+  'enterprise',
+  'agencies',
+  'web3',
+];
+
 /**
  * Any URL containing `leapsome` (purged vendor) 308s to the PM hub.
  * Must sit first so leftover `/leapsome`, nested paths, and odd suffixes
@@ -244,28 +299,29 @@ export function buildPurgedVendorRedirects() {
     redirects.push({ source, destination, statusCode: REDIRECT_STATUS });
   }
 
+  function pushNamed(regex, destination) {
+    push(namedSegment(regex), destination);
+    push(`${namedSegment(regex)}/`, destination);
+  }
+
   for (const [id, hub] of purgedVendorHub()) {
     if (id === 'clearco' || id === 'clear-co') continue;
-    push(`/${id}-vs-:rest*`, hub);
-    push(`/${id}-vs-:rest*/`, hub);
-    push(`/:pair*-vs-${id}-for-:mod*`, hub);
-    push(`/:pair*-vs-${id}-for-:mod*/`, hub);
-    push(`/:pair*-vs-${id}`, hub);
-    push(`/:pair*-vs-${id}/`, hub);
+    const escaped = escapeRegex(id);
+    // `{id}-vs-{anything}` including `-for-{persona}`.
+    pushNamed(`${escaped}-vs-.*`, hub);
+    // `{anything}-vs-{id}` and `{anything}-vs-{id}-for-{persona}`.
+    pushNamed(`.*-vs-${escaped}(?:-.*)?`, hub);
     push(`/go/${id}`, hub);
     push(`/go/${id}/`, hub);
   }
 
-  push('/performyard-vs-reflektive-for-enterprise', '/performance-management/');
-  push('/performyard-vs-reflektive-for-enterprise/', '/performance-management/');
-  push('/leapsome-vs-reflektive-for-scaleups', '/performance-management/');
-  push('/leapsome-vs-reflektive-for-scaleups/', '/performance-management/');
-  push('/reflektive-vs-:rest*', '/performance-management/');
-  push('/reflektive-vs-:rest*/', '/performance-management/');
-  push('/:pair*-vs-reflektive-for-:mod*', '/performance-management/');
-  push('/:pair*-vs-reflektive-for-:mod*/', '/performance-management/');
-  push('/:pair*-vs-reflektive', '/performance-management/');
-  push('/:pair*-vs-reflektive/', '/performance-management/');
+  const pm = '/performance-management/';
+  push('/performyard-vs-reflektive-for-enterprise', pm);
+  push('/performyard-vs-reflektive-for-enterprise/', pm);
+  push('/leapsome-vs-reflektive-for-scaleups', pm);
+  push('/leapsome-vs-reflektive-for-scaleups/', pm);
+  pushNamed('reflektive-vs-.*', pm);
+  pushNamed('.*-vs-reflektive(?:-.*)?', pm);
 
   return redirects;
 }
@@ -278,12 +334,12 @@ export function buildLiveMasterRedirects() {
     for (const rule of [
       ...slashPair(`/${sourceSlug}`, destination),
       {
-        source: `/${sourceSlug}-for-:mod*`,
+        source: namedSegment(`${escapeRegex(sourceSlug)}-for-.*`),
         destination,
         statusCode: REDIRECT_STATUS,
       },
       {
-        source: `/${sourceSlug}-for-:mod*/`,
+        source: `${namedSegment(`${escapeRegex(sourceSlug)}-for-.*`)}/`,
         destination,
         statusCode: REDIRECT_STATUS,
       },
@@ -305,23 +361,35 @@ export function buildLiveMasterRedirects() {
 }
 
 /**
- * Catch-all: any remaining `brand-vs-brand-for-{segment}` (slash or not)
- * collapses to the hub in one 308. Must sit AFTER purged + reverse/alias
- * rules so those destinations stay 1-hop.
+ * Catch-all: any remaining `brand-vs-brand-for-{segment}` collapses to
+ * `/{brand-vs-brand}/` in one 308. Named regex + a character-class param
+ * (never `:mod*`) so Vercel can compile the rule. Must sit AFTER purged
+ * + reverse/alias rules so those destinations stay 1-hop.
+ *
+ * Known persona suffixes are listed first (one named group, proven
+ * leapsome-shaped). The generic `:mod([a-z0-9-]+)` rule covers typos and
+ * future niche ids so they 308 to the hub instead of 502.
  */
 export function buildSegmentCatchAllRedirects() {
-  return [
-    {
-      source: '/:hub(.*-vs-.*)-for-:mod*',
-      destination: '/:hub/',
-      statusCode: REDIRECT_STATUS,
-    },
-    {
-      source: '/:hub(.*-vs-.*)-for-:mod*/',
-      destination: '/:hub/',
-      statusCode: REDIRECT_STATUS,
-    },
-  ];
+  const redirects = [];
+  const seen = new Set();
+
+  function push(source, destination) {
+    if (seen.has(source)) return;
+    seen.add(source);
+    redirects.push({ source, destination, statusCode: REDIRECT_STATUS });
+  }
+
+  for (const suffix of LEGACY_PERSONA_SUFFIXES) {
+    const escaped = escapeRegex(suffix);
+    push(`/:hub(.*-vs-.*)-for-${escaped}`, '/:hub/');
+    push(`/:hub(.*-vs-.*)-for-${escaped}/`, '/:hub/');
+  }
+
+  push('/:hub(.*-vs-.*)-for-:mod([a-z0-9-]+)', '/:hub/');
+  push('/:hub(.*-vs-.*)-for-:mod([a-z0-9-]+)/', '/:hub/');
+
+  return redirects;
 }
 
 export function buildGoAliasRedirects() {
@@ -334,13 +402,15 @@ export function buildGoAliasRedirects() {
 }
 
 export function buildVercelRedirects() {
-  return [
+  const redirects = [
     ...buildLeapsomeCatchAllRedirects(),
     ...buildPurgedVendorRedirects(),
     ...buildLiveMasterRedirects(),
     ...buildSegmentCatchAllRedirects(),
     ...buildGoAliasRedirects(),
   ];
+  assertSafeVercelRedirects(redirects);
+  return redirects;
 }
 
 /** Reverse-order hubs only. Used by Astro preview; production 308s live in vercel.json. */
