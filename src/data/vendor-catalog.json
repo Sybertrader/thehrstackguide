@@ -1,7 +1,7 @@
 {
   "$schema": "./vendor-catalog.schema.json",
   "version": 1,
-  "notes": "Vendor ids are route parameters. Never rename a keep id. Categories are frozen: payroll-eor, ats, performance-management.",
+  "notes": "Vendor ids are catalog / affiliate keys. Never rename a keep id. Public comparison URLs remap bamboohr-ats → bamboohr. Categories are frozen: payroll-eor, ats, performance-management.",
   "categories": [
     {
       "id": "payroll-eor",

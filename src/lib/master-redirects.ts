@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'csv-parse/sync';
+import { comparisonHubSlug } from './comparison-routes.ts';
 
 export const SITE_ORIGIN = 'https://www.thehrstackguide.com';
 export const REDIRECT_STATUS = 308;
@@ -42,11 +43,13 @@ const CATEGORY_HUB_BY_ID = {
 const ID_ALIASES = {
   oyster: 'oyster-hr',
   papaya: 'papaya-global',
+  'bamboohr-ats': 'bamboohr',
 };
 
 const CANONICAL_TO_ALIASES = {
   'oyster-hr': ['oyster'],
   'papaya-global': ['papaya'],
+  bamboohr: ['bamboohr-ats'],
 };
 
 const SEGMENT_SUFFIX_RE = /-for-[a-z0-9]+(?:-[a-z0-9]+)*$/i;
@@ -125,7 +128,7 @@ function loadCanonicalHubs() {
   const hubs = new Set();
   for (const row of rows) {
     if (!live.has(row.tool_a_id) || !live.has(row.tool_b_id)) continue;
-    const hub = `${row.tool_a_id}-vs-${row.tool_b_id}`;
+    const hub = comparisonHubSlug(row.tool_a_id, row.tool_b_id);
     if (VS_SLUG_RE.test(hub)) hubs.add(hub);
   }
   cachedHubs = hubs;

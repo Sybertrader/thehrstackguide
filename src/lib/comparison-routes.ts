@@ -113,8 +113,25 @@ export function invertComparisonSlug(slug: string): string | null {
   return modifier ? `${invertedHub}-for-${modifier}` : invertedHub;
 }
 
+/**
+ * Vendor ids that must not appear in public comparison URLs.
+ * Internal ids (`tools.json`, `/go/{id}/`, affiliates) stay unchanged.
+ */
+export const PUBLIC_VENDOR_SLUGS: Record<string, string> = {
+  'bamboohr-ats': 'bamboohr',
+};
+
+/** Inverse of PUBLIC_VENDOR_SLUGS: public token → legacy URL token. */
+export const LEGACY_VENDOR_SLUGS: Record<string, string[]> = {
+  bamboohr: ['bamboohr-ats'],
+};
+
+export function publicVendorSlug(toolId: string): string {
+  return PUBLIC_VENDOR_SLUGS[toolId] ?? toolId;
+}
+
 export function comparisonHubSlug(toolAId: string, toolBId: string): string {
-  return `${toolAId}-vs-${toolBId}`;
+  return `${publicVendorSlug(toolAId)}-vs-${publicVendorSlug(toolBId)}`;
 }
 
 /**

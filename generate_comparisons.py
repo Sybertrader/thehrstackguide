@@ -8,6 +8,19 @@ import json
 BRAND_NAME = "The HR Stack Guide"
 EVALUATION_YEAR = "2026"
 
+# Internal vendor ids (tools.json / affiliates) that must not appear in public URLs.
+PUBLIC_VENDOR_SLUGS = {
+    "bamboohr-ats": "bamboohr",
+}
+
+
+def public_vendor_slug(tool_id: str) -> str:
+    return PUBLIC_VENDOR_SLUGS.get(tool_id, tool_id)
+
+
+def comparison_hub_slug(key_a: str, key_b: str) -> str:
+    return f"{public_vendor_slug(key_a)}-vs-{public_vendor_slug(key_b)}"
+
 TOOLS = {
     "deel": {
         "name": "Deel",
@@ -1145,7 +1158,7 @@ def build_row(tool_a, tool_b, key_a, key_b, niche_id, niche_info, winner_key, wi
     runner_up_tool = tool_b if winner_key == key_a else tool_a
 
     return {
-        "slug": f"{key_a}-vs-{key_b}-for-{niche_id}",
+        "slug": f"{comparison_hub_slug(key_a, key_b)}-for-{niche_id}",
         "niche_id": niche_id,
         "niche_name": niche_info["name"],
         "niche_audience_phrase": natural_audience_phrase(niche_info["name"], "teams"),

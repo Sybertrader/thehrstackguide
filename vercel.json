@@ -243,23 +243,63 @@
       "statusCode": 308
     },
     {
+      "source": "/bamboohr-vs-ashby",
+      "destination": "/ashby-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-vs-ashby/",
+      "destination": "/ashby-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-ashby-for-.*)",
+      "destination": "/ashby-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-ashby-for-.*)/",
+      "destination": "/ashby-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/ashby-vs-bamboohr-ats",
+      "destination": "/ashby-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/ashby-vs-bamboohr-ats/",
+      "destination": "/ashby-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(ashby-vs-bamboohr-ats-for-.*)",
+      "destination": "/ashby-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(ashby-vs-bamboohr-ats-for-.*)/",
+      "destination": "/ashby-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
       "source": "/bamboohr-ats-vs-ashby",
-      "destination": "/ashby-vs-bamboohr-ats/",
+      "destination": "/ashby-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/bamboohr-ats-vs-ashby/",
-      "destination": "/ashby-vs-bamboohr-ats/",
+      "destination": "/ashby-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-ashby-for-.*)",
-      "destination": "/ashby-vs-bamboohr-ats/",
+      "destination": "/ashby-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-ashby-for-.*)/",
-      "destination": "/ashby-vs-bamboohr-ats/",
+      "destination": "/ashby-vs-bamboohr/",
       "statusCode": 308
     },
     {
@@ -363,23 +403,63 @@
       "statusCode": 308
     },
     {
+      "source": "/bamboohr-vs-breezy-hr",
+      "destination": "/breezy-hr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-vs-breezy-hr/",
+      "destination": "/breezy-hr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-breezy-hr-for-.*)",
+      "destination": "/breezy-hr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-breezy-hr-for-.*)/",
+      "destination": "/breezy-hr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-bamboohr-ats",
+      "destination": "/breezy-hr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/breezy-hr-vs-bamboohr-ats/",
+      "destination": "/breezy-hr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(breezy-hr-vs-bamboohr-ats-for-.*)",
+      "destination": "/breezy-hr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(breezy-hr-vs-bamboohr-ats-for-.*)/",
+      "destination": "/breezy-hr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
       "source": "/bamboohr-ats-vs-breezy-hr",
-      "destination": "/breezy-hr-vs-bamboohr-ats/",
+      "destination": "/breezy-hr-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/bamboohr-ats-vs-breezy-hr/",
-      "destination": "/breezy-hr-vs-bamboohr-ats/",
+      "destination": "/breezy-hr-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-breezy-hr-for-.*)",
-      "destination": "/breezy-hr-vs-bamboohr-ats/",
+      "destination": "/breezy-hr-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-breezy-hr-for-.*)/",
-      "destination": "/breezy-hr-vs-bamboohr-ats/",
+      "destination": "/breezy-hr-vs-bamboohr/",
       "statusCode": 308
     },
     {
@@ -783,23 +863,63 @@
       "statusCode": 308
     },
     {
+      "source": "/bamboohr-vs-jazzhr",
+      "destination": "/jazzhr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-vs-jazzhr/",
+      "destination": "/jazzhr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-jazzhr-for-.*)",
+      "destination": "/jazzhr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-jazzhr-for-.*)/",
+      "destination": "/jazzhr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-bamboohr-ats",
+      "destination": "/jazzhr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/jazzhr-vs-bamboohr-ats/",
+      "destination": "/jazzhr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(jazzhr-vs-bamboohr-ats-for-.*)",
+      "destination": "/jazzhr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(jazzhr-vs-bamboohr-ats-for-.*)/",
+      "destination": "/jazzhr-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
       "source": "/bamboohr-ats-vs-jazzhr",
-      "destination": "/jazzhr-vs-bamboohr-ats/",
+      "destination": "/jazzhr-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/bamboohr-ats-vs-jazzhr/",
-      "destination": "/jazzhr-vs-bamboohr-ats/",
+      "destination": "/jazzhr-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-jazzhr-for-.*)",
-      "destination": "/jazzhr-vs-bamboohr-ats/",
+      "destination": "/jazzhr-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-jazzhr-for-.*)/",
-      "destination": "/jazzhr-vs-bamboohr-ats/",
+      "destination": "/jazzhr-vs-bamboohr/",
       "statusCode": 308
     },
     {
@@ -843,23 +963,63 @@
       "statusCode": 308
     },
     {
+      "source": "/bamboohr-vs-lever",
+      "destination": "/lever-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-vs-lever/",
+      "destination": "/lever-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-lever-for-.*)",
+      "destination": "/lever-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-lever-for-.*)/",
+      "destination": "/lever-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lever-vs-bamboohr-ats",
+      "destination": "/lever-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/lever-vs-bamboohr-ats/",
+      "destination": "/lever-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(lever-vs-bamboohr-ats-for-.*)",
+      "destination": "/lever-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(lever-vs-bamboohr-ats-for-.*)/",
+      "destination": "/lever-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
       "source": "/bamboohr-ats-vs-lever",
-      "destination": "/lever-vs-bamboohr-ats/",
+      "destination": "/lever-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/bamboohr-ats-vs-lever/",
-      "destination": "/lever-vs-bamboohr-ats/",
+      "destination": "/lever-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-lever-for-.*)",
-      "destination": "/lever-vs-bamboohr-ats/",
+      "destination": "/lever-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-lever-for-.*)/",
-      "destination": "/lever-vs-bamboohr-ats/",
+      "destination": "/lever-vs-bamboohr/",
       "statusCode": 308
     },
     {
@@ -1603,23 +1763,63 @@
       "statusCode": 308
     },
     {
+      "source": "/bamboohr-vs-recruitee",
+      "destination": "/recruitee-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-vs-recruitee/",
+      "destination": "/recruitee-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-recruitee-for-.*)",
+      "destination": "/recruitee-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-recruitee-for-.*)/",
+      "destination": "/recruitee-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-bamboohr-ats",
+      "destination": "/recruitee-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/recruitee-vs-bamboohr-ats/",
+      "destination": "/recruitee-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(recruitee-vs-bamboohr-ats-for-.*)",
+      "destination": "/recruitee-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(recruitee-vs-bamboohr-ats-for-.*)/",
+      "destination": "/recruitee-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
       "source": "/bamboohr-ats-vs-recruitee",
-      "destination": "/recruitee-vs-bamboohr-ats/",
+      "destination": "/recruitee-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/bamboohr-ats-vs-recruitee/",
-      "destination": "/recruitee-vs-bamboohr-ats/",
+      "destination": "/recruitee-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-recruitee-for-.*)",
-      "destination": "/recruitee-vs-bamboohr-ats/",
+      "destination": "/recruitee-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-recruitee-for-.*)/",
-      "destination": "/recruitee-vs-bamboohr-ats/",
+      "destination": "/recruitee-vs-bamboohr/",
       "statusCode": 308
     },
     {
@@ -2043,23 +2243,63 @@
       "statusCode": 308
     },
     {
+      "source": "/bamboohr-vs-workable",
+      "destination": "/workable-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/bamboohr-vs-workable/",
+      "destination": "/workable-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-workable-for-.*)",
+      "destination": "/workable-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(bamboohr-vs-workable-for-.*)/",
+      "destination": "/workable-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-bamboohr-ats",
+      "destination": "/workable-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/workable-vs-bamboohr-ats/",
+      "destination": "/workable-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(workable-vs-bamboohr-ats-for-.*)",
+      "destination": "/workable-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path(workable-vs-bamboohr-ats-for-.*)/",
+      "destination": "/workable-vs-bamboohr/",
+      "statusCode": 308
+    },
+    {
       "source": "/bamboohr-ats-vs-workable",
-      "destination": "/workable-vs-bamboohr-ats/",
+      "destination": "/workable-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/bamboohr-ats-vs-workable/",
-      "destination": "/workable-vs-bamboohr-ats/",
+      "destination": "/workable-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-workable-for-.*)",
-      "destination": "/workable-vs-bamboohr-ats/",
+      "destination": "/workable-vs-bamboohr/",
       "statusCode": 308
     },
     {
       "source": "/:path(bamboohr-ats-vs-workable-for-.*)/",
-      "destination": "/workable-vs-bamboohr-ats/",
+      "destination": "/workable-vs-bamboohr/",
       "statusCode": 308
     },
     {
