@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs && astro build",
+    "build": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs && astro build && node scripts/indexnow.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
     "sync-redirects": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs",
     "preview": "astro preview",
     "astro": "astro",

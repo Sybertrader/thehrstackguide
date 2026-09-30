@@ -3,6 +3,7 @@
 // quickly instead of waiting for a crawl.
 //
 // Usage: node scripts/submit-indexnow.js
+// Prefer scripts/submit-indexnow.mjs (wired to production `npm run build`).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
