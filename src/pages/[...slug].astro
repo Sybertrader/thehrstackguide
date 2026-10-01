@@ -12,7 +12,7 @@ import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublishe
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { isComparisonHubSlug, comparisonHubSlug, categoryHubNav } from '../lib/comparison-routes';
 import { comparisonVendorsAreLive, getToolProfile } from '../lib/tools';
-import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorQuoteCtaLabel } from '../lib/outbound';
+import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel, vendorQuoteCtaLabel } from '../lib/outbound';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
 import DataVerificationBadge from '../components/DataVerificationBadge.astro';
@@ -21,6 +21,7 @@ import AtAGlance from '../components/AtAGlance.astro';
 import PricingNuance from '../components/PricingNuance.astro';
 import VerdictCallout from '../components/VerdictCallout.astro';
 import SegmentTabEngine from '../components/SegmentTabEngine.astro';
+import StickyMobileCta from '../components/StickyMobileCta.astro';
 import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
 import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
@@ -456,6 +457,28 @@ const toolAModalId = manualLeadModalId(comparison.tool_a_name);
 const toolBModalId = manualLeadModalId(comparison.tool_b_name);
 const toolABadgeColor = logoBadgeColor(comparison.tool_a_name);
 const toolBBadgeColor = logoBadgeColor(comparison.tool_b_name);
+const stickyWinnerIsB = toolBIsWinner;
+const stickyWinner = stickyWinnerIsB
+  ? {
+      id: comparison.tool_b_id,
+      name: comparison.tool_b_name,
+      href: toolBAffiliateHref,
+      modalId: toolBIsManualLead ? toolBModalId : '',
+      logoUrl: comparison.tool_b_logo_url,
+      badgeColor: toolBBadgeColor,
+      ctaLabel: vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name, comparison.tool_b_free_trial),
+    }
+  : {
+      id: comparison.tool_a_id,
+      name: comparison.tool_a_name,
+      href: toolAAffiliateHref,
+      modalId: toolAIsManualLead ? toolAModalId : '',
+      logoUrl: comparison.tool_a_logo_url,
+      badgeColor: toolABadgeColor,
+      ctaLabel: vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name, comparison.tool_a_free_trial),
+    };
+const stickyFeatureCol =
+  'sticky left-0 z-20 min-w-[10rem] max-w-[12rem] border-r border-slate-200 shadow-[4px_0_12px_-6px_rgba(15,23,42,0.18)]';
 
 // Ratings always reflect the real, consistent scores from the CSV source data.
 const toolADisplayRating = comparison.tool_a_rating;
@@ -569,7 +592,7 @@ const heroLogoPreloads = (
       )}
 
       <!-- Hero Section -->
-      <header class="mb-2">
+      <header class="mb-2" data-comparison-hero>
         <nav aria-label="Breadcrumb">
           <ol class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
             <li>
@@ -712,13 +735,13 @@ const heroLogoPreloads = (
       {showFeatureTable && (
         <section class="mb-12" aria-label="Feature and integration comparison">
           <h2 class="mb-6 text-2xl font-bold text-slate-900">Feature &amp; Integration Comparison</h2>
-          <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div class="overflow-x-auto">
-              <table class="w-full min-w-[480px] text-left text-sm">
+          <p class="mb-3 text-xs font-medium text-slate-500 md:hidden">Swipe sideways to compare. The Feature column stays put.</p>
+          <div class="feature-compare-scroll isolate overflow-x-auto overscroll-x-contain rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <table class="w-full min-w-[36rem] border-separate border-spacing-0 text-left text-sm">
                 <thead>
-                  <tr class="border-b border-slate-200 bg-slate-50">
-                    <th scope="col" class="px-6 py-4 align-bottom font-semibold text-slate-700">Feature</th>
-                    <th scope="col" class="px-6 py-4 align-bottom font-semibold text-slate-700">
+                  <tr class="bg-slate-50">
+                    <th scope="col" class:list={[stickyFeatureCol, 'border-b border-slate-200 bg-slate-50 px-6 py-4 align-bottom font-semibold text-slate-700']}>Feature</th>
+                    <th scope="col" class="min-w-[10rem] border-b border-slate-200 px-6 py-4 align-bottom font-semibold text-slate-700">
                       <span class="flex items-center gap-2.5">
                         <VendorLogo
                           src={comparison.tool_a_logo_url}
@@ -730,7 +753,7 @@ const heroLogoPreloads = (
                         <span>{comparison.tool_a_name}</span>
                       </span>
                     </th>
-                    <th scope="col" class="px-6 py-4 align-bottom font-semibold text-slate-700">
+                    <th scope="col" class="min-w-[10rem] border-b border-slate-200 px-6 py-4 align-bottom font-semibold text-slate-700">
                       <span class="flex items-center gap-2.5">
                         <VendorLogo
                           src={comparison.tool_b_logo_url}
@@ -744,11 +767,11 @@ const heroLogoPreloads = (
                     </th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody>
                   {featureMatrixRows.map(([feature, value]) => (
-                    <tr class="transition hover:bg-slate-50/80">
-                      <th scope="row" class="px-6 py-4 font-medium text-slate-900">{feature}</th>
-                      <td class="px-6 py-4">
+                    <tr class="group transition hover:bg-slate-50/80">
+                      <th scope="row" class:list={[stickyFeatureCol, 'border-b border-slate-100 bg-white px-6 py-4 font-medium text-slate-900 group-hover:bg-slate-50']}>{feature}</th>
+                      <td class="border-b border-slate-100 px-6 py-4">
                         {value.a ? (
                           <span class="inline-flex items-center rounded-full bg-emerald-50 p-0.5 text-emerald-600" aria-label="Yes">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
@@ -763,7 +786,7 @@ const heroLogoPreloads = (
                           </span>
                         )}
                       </td>
-                      <td class="px-6 py-4">
+                      <td class="border-b border-slate-100 px-6 py-4">
                         {value.b ? (
                           <span class="inline-flex items-center rounded-full bg-emerald-50 p-0.5 text-emerald-600" aria-label="Yes">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
@@ -781,10 +804,10 @@ const heroLogoPreloads = (
                     </tr>
                   ))}
                   {hasNativeIntegrations && (
-                    <tr class="align-top transition hover:bg-slate-50/80">
-                      <th scope="row" class="px-6 py-4 font-medium text-slate-900">Native Integrations</th>
+                    <tr class="group align-top transition hover:bg-slate-50/80">
+                      <th scope="row" class:list={[stickyFeatureCol, 'border-b border-slate-100 bg-white px-6 py-4 font-medium text-slate-900 group-hover:bg-slate-50']}>Native Integrations</th>
                       {[toolAIntegrations, toolBIntegrations].map((integrations) => (
-                        <td class="px-6 py-4 text-slate-700">
+                        <td class="border-b border-slate-100 px-6 py-4 text-slate-700">
                           {integrations.length > 0 ? (
                             <ul class="flex flex-wrap gap-1.5">
                               {integrations.map((item) => (
@@ -802,9 +825,9 @@ const heroLogoPreloads = (
                   )}
                 </tbody>
                 <tfoot>
-                  <tr class="border-t border-slate-200 bg-slate-50">
-                    <td class="px-6 py-4 text-sm font-medium text-slate-500">Get a quote</td>
-                    <td class="px-6 py-4">
+                  <tr class="bg-slate-50">
+                    <td class:list={[stickyFeatureCol, 'border-t border-slate-200 bg-slate-50 px-6 py-4 text-sm font-medium text-slate-500']}>Get a quote</td>
+                    <td class="border-t border-slate-200 px-6 py-4">
                       <VendorButton
                         href={toolAAffiliateHref}
                         modalId={toolAIsManualLead ? toolAModalId : undefined}
@@ -820,7 +843,7 @@ const heroLogoPreloads = (
                         {vendorQuoteCtaLabel(comparison.tool_a_name)}
                       </VendorButton>
                     </td>
-                    <td class="px-6 py-4">
+                    <td class="border-t border-slate-200 px-6 py-4">
                       <VendorButton
                         href={toolBAffiliateHref}
                         modalId={toolBIsManualLead ? toolBModalId : undefined}
@@ -839,7 +862,6 @@ const heroLogoPreloads = (
                   </tr>
                 </tfoot>
               </table>
-            </div>
           </div>
         </section>
       )}
@@ -998,7 +1020,18 @@ const heroLogoPreloads = (
         categoryLabel={categoryHub.label}
       />
 
+      <div class="h-20 md:hidden" aria-hidden="true"></div>
     </main>
+
+    <StickyMobileCta
+      vendorId={stickyWinner.id}
+      vendorName={stickyWinner.name}
+      href={stickyWinner.href}
+      ctaLabel={stickyWinner.ctaLabel}
+      logoUrl={stickyWinner.logoUrl}
+      badgeColor={stickyWinner.badgeColor}
+      modalId={stickyWinner.modalId}
+    />
 
     <script>
       // Client-only: Astro scripts never execute during SSR, and `track()`

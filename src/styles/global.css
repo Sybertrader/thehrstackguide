@@ -13,3 +13,11 @@
 img.aspect-square {
   aspect-ratio: 1 / 1;
 }
+
+/*
+ * Frozen first column for comparison tables. `border-collapse: collapse`
+ * (Tailwind preflight) breaks `position: sticky` on table cells.
+ */
+.feature-compare-scroll {
+  -webkit-overflow-scrolling: touch;
+}

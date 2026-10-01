@@ -1,0 +1,82 @@
+---
+/**
+ * Mobile-only bottom bar: the winning vendor's primary CTA after the hero
+ * leaves the viewport. Hidden from md and up so desktop layout is unchanged.
+ */
+import VendorButton from './VendorButton.astro';
+import VendorLogo from './VendorLogo.astro';
+
+interface Props {
+  vendorId: string;
+  vendorName: string;
+  href: string;
+  ctaLabel: string;
+  logoUrl?: string | null;
+  badgeColor: string;
+  modalId?: string;
+}
+
+const { vendorId, vendorName, href, ctaLabel, logoUrl, badgeColor, modalId = '' } = Astro.props;
+---
+
+<div
+  data-sticky-mobile-cta
+  aria-hidden="true"
+  inert
+  class="pointer-events-none invisible fixed inset-x-0 bottom-0 z-40 translate-y-full border-t border-slate-200 bg-white/95 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] backdrop-blur transition-[translate,opacity] duration-300 ease-out md:hidden"
+  style="padding-bottom: max(0.75rem, env(safe-area-inset-bottom));"
+>
+  <div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+    <VendorLogo src={logoUrl} alt="" name={vendorName} badgeColor={badgeColor} size={32} />
+    <div class="min-w-0 flex-1">
+      <p class="text-[11px] font-medium uppercase tracking-wide text-slate-500">Recommended</p>
+      <p class="truncate text-sm font-semibold text-slate-900">{vendorName}</p>
+    </div>
+    <VendorButton
+      href={href}
+      modalId={modalId || undefined}
+      vendorId={vendorId}
+      vendorName={vendorName}
+      location="sticky_mobile"
+      class="inline-flex shrink-0 items-center justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold whitespace-nowrap text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    >
+      {ctaLabel}
+    </VendorButton>
+  </div>
+</div>
+
+<script>
+  function initStickyMobileCta() {
+    const bar = document.querySelector<HTMLElement>('[data-sticky-mobile-cta]');
+    const hero = document.querySelector<HTMLElement>('[data-comparison-hero]');
+    if (!bar || !hero) return;
+
+    const desktop = window.matchMedia('(min-width: 768px)');
+
+    const setShown = (shown: boolean) => {
+      bar.classList.toggle('translate-y-full', !shown);
+      bar.classList.toggle('pointer-events-none', !shown);
+      bar.classList.toggle('invisible', !shown);
+      bar.setAttribute('aria-hidden', shown ? 'false' : 'true');
+      if (shown) bar.removeAttribute('inert');
+      else bar.setAttribute('inert', '');
+    };
+
+    const update = () => {
+      if (desktop.matches) {
+        setShown(false);
+        return;
+      }
+      setShown(hero.getBoundingClientRect().bottom <= 0);
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    desktop.addEventListener('change', update);
+    update();
+  }
+
+  if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+    initStickyMobileCta();
+  }
+</script>
