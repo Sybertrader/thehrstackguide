@@ -32,6 +32,7 @@ import { comparisonSeo } from '../lib/seo';
 import { schemaOffer } from '../lib/schema-offer';
 import { pickRelatedHubs } from '../lib/related-comparisons';
 import RelatedComparisons from '../components/RelatedComparisons.astro';
+import BuyOrSkip from '../components/BuyOrSkip.astro';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildMasterSegmentPanels,
@@ -171,6 +172,19 @@ interface ToolNarrative {
   ratingSource: string | null;
   positioning: string;
   chooseIf: string[];
+  skipIf: string[];
+}
+
+function stripSkipPrefix(text: string, vendorName: string): string {
+  const escaped = vendorName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  let out = text.trim();
+  out = out
+    .replace(new RegExp(`^Don['’]t buy\\s+${escaped}\\s+if\\s+`, 'i'), '')
+    .replace(/^Don['’]t buy\s+.+?\s+if\s+/i, '')
+    .replace(new RegExp(`^Skip\\s+${escaped}\\s+if\\s+`, 'i'), '')
+    .trim();
+  if (!out) return text.trim();
+  return out.charAt(0).toUpperCase() + out.slice(1);
 }
 
 /**
@@ -204,8 +218,9 @@ function resolveToolNarrative(
 
   const chooseIf =
     profile?.choose_if && profile.choose_if.length > 0
-      ? [...profile.choose_if, ...(profile.skip_if ? [profile.skip_if] : [])]
+      ? profile.choose_if
       : pros.slice(0, 4).map((pro) => `You want ${pro.toLowerCase()}`);
+  const skipIf = profile?.skip_if ? [stripSkipPrefix(profile.skip_if, toolName)] : [];
 
   return {
     rating: profile?.rating ?? csvRating,
@@ -214,6 +229,7 @@ function resolveToolNarrative(
     ratingSource: profile?.rating_source ?? null,
     positioning,
     chooseIf,
+    skipIf,
   };
 }
 
@@ -931,21 +947,11 @@ const heroLogoPreloads = (
                 </ul>
               </div>
             </div>
-            {toolANarrative.chooseIf.length > 0 && (
-              <div class="mt-8 border-t border-slate-100 pt-6">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">Buy or skip {comparison.tool_a_name}</h4>
-                <ul class="mt-4 space-y-3">
-                  {toolANarrative.chooseIf.map((reason) => (
-                    <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-5 w-5 shrink-0 text-indigo-600" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                      </svg>
-                      <span>{reason}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <BuyOrSkip
+              vendorName={comparison.tool_a_name}
+              chooseIf={toolANarrative.chooseIf}
+              skipIf={toolANarrative.skipIf}
+            />
           </div>
 
           <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
@@ -991,21 +997,11 @@ const heroLogoPreloads = (
                 </ul>
               </div>
             </div>
-            {toolBNarrative.chooseIf.length > 0 && (
-              <div class="mt-8 border-t border-slate-100 pt-6">
-                <h4 class="text-sm font-semibold uppercase tracking-wide text-indigo-700">Buy or skip {comparison.tool_b_name}</h4>
-                <ul class="mt-4 space-y-3">
-                  {toolBNarrative.chooseIf.map((reason) => (
-                    <li class="flex items-start gap-2.5 text-sm leading-relaxed text-slate-700">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="mt-0.5 h-5 w-5 shrink-0 text-indigo-600" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                      </svg>
-                      <span>{reason}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <BuyOrSkip
+              vendorName={comparison.tool_b_name}
+              chooseIf={toolBNarrative.chooseIf}
+              skipIf={toolBNarrative.skipIf}
+            />
           </div>
         </div>
       </section>
