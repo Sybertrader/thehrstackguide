@@ -145,6 +145,7 @@ const secondaryCtaClass =
         vendorId={comparison.tool_a_id}
         vendorName={comparison.tool_a_name}
         location="comparison_card"
+        leadMagnet
         class={toolAIsWinner ? primaryCtaClass : secondaryCtaClass}
       >
         {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name, comparison.tool_a_free_trial)}
@@ -229,6 +230,7 @@ const secondaryCtaClass =
         vendorId={comparison.tool_b_id}
         vendorName={comparison.tool_b_name}
         location="comparison_card"
+        leadMagnet
         class={toolBIsWinner ? primaryCtaClass : secondaryCtaClass}
       >
         {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name, comparison.tool_b_free_trial)}

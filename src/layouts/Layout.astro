@@ -7,6 +7,7 @@ import BaseHead from '../components/BaseHead.astro';
 import { ORGANIZATION_SAME_AS } from '../lib/organization';
 import JsonLdSchema from '../components/SEO/JsonLdSchema.astro';
 import type { SoftwareVendor } from '../components/SEO/JsonLdSchema.astro';
+import { SCORECARD_FILENAME, SCORECARD_HREF } from '../lib/lead-magnet';
 
 export interface Props {
   /** Document `<title>`, Open Graph, and Twitter title. Must match 1:1. */
@@ -197,6 +198,17 @@ const organizationSchema = {
     <Analytics />
     <SpeedInsights />
 
+    <a
+      id="js-scorecard-download"
+      href={SCORECARD_HREF}
+      download={SCORECARD_FILENAME}
+      class="pointer-events-none fixed left-[-9999px] top-auto h-px w-px overflow-hidden opacity-0"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      Download {SCORECARD_FILENAME}
+    </a>
+
     <script>
       const toggle = document.getElementById('mobile-nav-toggle');
       const menu = document.getElementById('mobile-nav');
@@ -219,23 +231,44 @@ const organizationSchema = {
         const target = e.target;
         if (!target || typeof target.closest !== 'function') return;
         const cta = target.closest('.js-affiliate-cta');
-        if (!cta || typeof window.gtag !== 'function') return;
+        if (!cta) return;
 
-        const vendorId = cta.getAttribute('data-vendor-id') || '';
-        const vendorName =
-          cta.getAttribute('data-vendor-name') || cta.getAttribute('data-track-vendor') || '';
-        const ctaLocation =
-          cta.getAttribute('data-cta-location') || cta.getAttribute('data-track-location') || '';
-        if (!vendorName || !ctaLocation) return;
+        if (typeof window.gtag === 'function') {
+          const vendorId = cta.getAttribute('data-vendor-id') || '';
+          const vendorName =
+            cta.getAttribute('data-vendor-name') || cta.getAttribute('data-track-vendor') || '';
+          const ctaLocation =
+            cta.getAttribute('data-cta-location') || cta.getAttribute('data-track-location') || '';
+          if (vendorName && ctaLocation) {
+            window.gtag('event', 'vendor_cta_click', {
+              vendor_id: vendorId,
+              vendor_name: vendorName,
+              cta_location: ctaLocation,
+              destination_type: cta.getAttribute('data-destination-type') || '',
+              link_url: cta.getAttribute('href') || '',
+              page_location: window.location.pathname,
+            });
+          }
+        }
 
-        window.gtag('event', 'vendor_cta_click', {
-          vendor_id: vendorId,
-          vendor_name: vendorName,
-          cta_location: ctaLocation,
-          destination_type: cta.getAttribute('data-destination-type') || '',
-          link_url: cta.getAttribute('href') || '',
-          page_location: window.location.pathname,
-        });
+        if (cta.getAttribute('data-lead-magnet') !== 'true') return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        if (typeof e.button === 'number' && e.button !== 0) return;
+
+        const source = document.getElementById('js-scorecard-download');
+        const link = document.createElement('a');
+        link.href = source ? source.getAttribute('href') || '' : '/scorecards/HR%20Software%20Vendor%20Evaluation%20Scorecard.docx';
+        link.download = source ? source.getAttribute('download') || '' : 'HR Software Vendor Evaluation Scorecard.docx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        if (cta.hasAttribute('data-modal-target')) return;
+
+        const affiliateUrl = cta.getAttribute('href');
+        if (!affiliateUrl) return;
+        e.preventDefault();
+        window.open(affiliateUrl, '_blank');
       });
     </script>
   </body>

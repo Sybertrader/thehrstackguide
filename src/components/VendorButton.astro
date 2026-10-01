@@ -20,9 +20,23 @@ interface Props {
   modalId?: string;
   /** Optional inline click handler (used on `/go/` shells that do not load Layout). */
   onclick?: string;
+  /**
+   * Trial/demo CTAs: show the scorecard micro-badge and trigger the
+   * dual-action download + affiliate open on click.
+   */
+  leadMagnet?: boolean;
 }
 
-const { href = '', vendorName, vendorId = '', location = 'body_link', class: className = '', modalId = '', onclick = '' } = Astro.props;
+const {
+  href = '',
+  vendorName,
+  vendorId = '',
+  location = 'body_link',
+  class: className = '',
+  modalId = '',
+  onclick = '',
+  leadMagnet = false,
+} = Astro.props;
 const opensModal = Boolean(modalId);
 const resolvedVendorId = vendorId || vendorName.toLowerCase().replace(/\s+/g, '-');
 const resolvedHref = ensureAffiliateGoTrailingSlash(href);
@@ -30,42 +44,65 @@ const linkRel = outboundRel(resolvedHref);
 const opensNewTab = Boolean(linkRel) || isAffiliateRedirect(resolvedHref);
 const destinationType = vendorCtaDestinationType(resolvedHref, opensModal);
 const vendorHomeUrl = nonAffiliateVendorHomeUrl(resolvedVendorId);
+
+const spacingTokens = new Set(['mt-5', 'mt-8']);
+const classTokens = className.split(/\s+/).filter(Boolean);
+const wrapSpacing = leadMagnet ? classTokens.filter((token) => spacingTokens.has(token)).join(' ') : '';
+const buttonClass = leadMagnet ? classTokens.filter((token) => !spacingTokens.has(token)).join(' ') : className;
+const wrapFullWidth = leadMagnet && classTokens.includes('w-full');
 ---
 
-{
-  opensModal ? (
-    <button
-      type="button"
-      data-modal-target={modalId}
-      class:list={['js-affiliate-cta', 'open-modal-btn', 'open-lead-modal', className]}
-      data-vendor-id={resolvedVendorId}
-      data-vendor-name={vendorName}
-      data-vendor-url={vendorHomeUrl || undefined}
-      data-cta-location={location}
-      data-track-vendor={vendorName}
-      data-track-location={location}
-      data-destination-type={destinationType}
-      onclick={onclick || undefined}
-    >
-      <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
-    </button>
-  ) : (
-    <a
-      href={resolvedHref}
-      target={opensNewTab ? '_blank' : undefined}
-      rel={linkRel ?? (opensNewTab ? 'noopener' : undefined)}
-      class:list={['js-affiliate-cta', className]}
-      data-vendor-id={resolvedVendorId}
-      data-vendor-name={vendorName}
-      data-cta-location={location}
-      data-track-vendor={vendorName}
-      data-track-location={location}
-      data-destination-type={destinationType}
-      data-vendor-outbound
-      data-astro-prefetch={isAffiliateRedirect(resolvedHref) ? 'false' : undefined}
-      onclick={onclick || undefined}
-    >
-      <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
-    </a>
-  )
-}
+<div
+  class:list={[
+    leadMagnet ? 'flex min-w-0 flex-col items-stretch gap-1.5' : 'contents',
+    wrapFullWidth && 'w-full',
+    wrapSpacing,
+  ]}
+>
+  {leadMagnet && (
+    <p class="text-center">
+      <span class="inline-flex max-w-full items-center justify-center rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold leading-snug text-amber-950 ring-1 ring-inset ring-amber-300">
+        🎁 Includes Free Vendor Evaluation Scorecard (.docx)
+      </span>
+    </p>
+  )}
+  {
+    opensModal ? (
+      <button
+        type="button"
+        data-modal-target={modalId}
+        class:list={['js-affiliate-cta', 'open-modal-btn', 'open-lead-modal', buttonClass]}
+        data-vendor-id={resolvedVendorId}
+        data-vendor-name={vendorName}
+        data-vendor-url={vendorHomeUrl || undefined}
+        data-cta-location={location}
+        data-track-vendor={vendorName}
+        data-track-location={location}
+        data-destination-type={destinationType}
+        data-lead-magnet={leadMagnet ? 'true' : undefined}
+        onclick={onclick || undefined}
+      >
+        <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
+      </button>
+    ) : (
+      <a
+        href={resolvedHref}
+        target={opensNewTab ? '_blank' : undefined}
+        rel={linkRel ?? (opensNewTab ? 'noopener' : undefined)}
+        class:list={['js-affiliate-cta', buttonClass]}
+        data-vendor-id={resolvedVendorId}
+        data-vendor-name={vendorName}
+        data-cta-location={location}
+        data-track-vendor={vendorName}
+        data-track-location={location}
+        data-destination-type={destinationType}
+        data-vendor-outbound
+        data-lead-magnet={leadMagnet ? 'true' : undefined}
+        data-astro-prefetch={isAffiliateRedirect(resolvedHref) ? 'false' : undefined}
+        onclick={onclick || undefined}
+      >
+        <slot>{vendorCtaLabel(resolvedVendorId, vendorName)}</slot>
+      </a>
+    )
+  }
+</div>
