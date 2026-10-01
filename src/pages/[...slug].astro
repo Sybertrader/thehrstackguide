@@ -12,7 +12,7 @@ import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublishe
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { isComparisonHubSlug, comparisonHubSlug, categoryHubNav } from '../lib/comparison-routes';
 import { comparisonVendorsAreLive, getToolProfile } from '../lib/tools';
-import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../lib/outbound';
+import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorQuoteCtaLabel } from '../lib/outbound';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
 import PreferredSourceButton from '../components/PreferredSourceButton.astro';
 import DataVerificationBadge from '../components/DataVerificationBadge.astro';
@@ -677,12 +677,20 @@ const heroLogoPreloads = (
         <PricingNuance
           toolAName={comparison.tool_a_name}
           toolBName={comparison.tool_b_name}
+          toolAId={comparison.tool_a_id}
+          toolBId={comparison.tool_b_id}
           toolALogo={comparison.tool_a_logo_url}
           toolBLogo={comparison.tool_b_logo_url}
           toolABadgeColor={toolABadgeColor}
           toolBBadgeColor={toolBBadgeColor}
           toolANuance={comparison.tool_a_pricing_nuance ? cleanCopy(comparison.tool_a_pricing_nuance) : ''}
           toolBNuance={comparison.tool_b_pricing_nuance ? cleanCopy(comparison.tool_b_pricing_nuance) : ''}
+          toolAAffiliateHref={toolAAffiliateHref}
+          toolBAffiliateHref={toolBAffiliateHref}
+          toolAIsManualLead={toolAIsManualLead}
+          toolBIsManualLead={toolBIsManualLead}
+          toolAModalId={toolAModalId}
+          toolBModalId={toolBModalId}
         />
       )}
 
@@ -803,9 +811,9 @@ const heroLogoPreloads = (
                         vendorId={comparison.tool_a_id}
                         vendorName={comparison.tool_a_name}
                         location="feature_table"
-                        class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                        class="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
                       >
-                        {vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name)}{toolAIsManualLead ? '' : ' ↗'}
+                        {vendorQuoteCtaLabel(comparison.tool_a_name)}
                       </VendorButton>
                     </td>
                     <td class="px-6 py-4">
@@ -815,9 +823,9 @@ const heroLogoPreloads = (
                         vendorId={comparison.tool_b_id}
                         vendorName={comparison.tool_b_name}
                         location="feature_table"
-                        class="inline-flex items-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+                        class="inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700"
                       >
-                        {vendorCtaLabel(comparison.tool_b_id, comparison.tool_b_name)}{toolBIsManualLead ? '' : ' ↗'}
+                        {vendorQuoteCtaLabel(comparison.tool_b_name)}
                       </VendorButton>
                     </td>
                   </tr>
@@ -972,7 +980,19 @@ const heroLogoPreloads = (
         </div>
       </section>
 
-      <DemoQuestions toolA={comparison.tool_a_name} toolB={comparison.tool_b_name} family={hubFamily} />
+      <DemoQuestions
+        toolA={comparison.tool_a_name}
+        toolB={comparison.tool_b_name}
+        toolAId={comparison.tool_a_id}
+        toolBId={comparison.tool_b_id}
+        toolAAffiliateHref={toolAAffiliateHref}
+        toolBAffiliateHref={toolBAffiliateHref}
+        toolAIsManualLead={toolAIsManualLead}
+        toolBIsManualLead={toolBIsManualLead}
+        toolAModalId={toolAModalId}
+        toolBModalId={toolBModalId}
+        family={hubFamily}
+      />
       </>
       )}
 

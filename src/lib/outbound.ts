@@ -44,9 +44,22 @@ export function nonAffiliateVendorHomeUrl(toolId: string): string {
   return NON_AFFILIATE_VENDOR_HOME_URLS[id] ?? '';
 }
 
-/** CTA copy for all vendors: “Try {name}”. */
-export function vendorCtaLabel(_toolId: string, vendorName: string): string {
-  return `Try ${vendorName}`;
+export function vendorHasFreeTrial(toolId: string, csvFlag?: string | boolean): boolean {
+  if (csvFlag === true || String(csvFlag).toLowerCase() === 'true') return true;
+  if (csvFlag === false || String(csvFlag).toLowerCase() === 'false') return false;
+  const profile = getToolProfile(toolId);
+  return Boolean(profile?.hasFreeTrial ?? profile?.free_trial);
+}
+
+/** Hero / default CTA: trial claim vs demo booking. */
+export function vendorCtaLabel(toolId: string, vendorName: string, csvFlag?: string | boolean): string {
+  return vendorHasFreeTrial(toolId, csvFlag)
+    ? `Claim ${vendorName} Trial →`
+    : `Book ${vendorName} Demo →`;
+}
+
+export function vendorQuoteCtaLabel(vendorName: string): string {
+  return `Get ${vendorName} Quote →`;
 }
 
 export function vendorLeadModalHeading(vendorName: string): string {

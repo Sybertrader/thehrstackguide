@@ -1,11 +1,9 @@
 /**
  * Single source of truth for the `rel` attribute on vendor CTAs.
  *
- * `noopener sponsored nofollow` is for off-site destinations only
- * (`deel.com`, Impact partners, etc.). Same-host hrefs (`/`, category
- * hubs, comparison slugs, and `thehrstackguide.com` URLs, including
- * cloaked `/go/{id}/` redirects) omit `rel` so internal equity is not
- * tagged nofollow/sponsored.
+ * `/go/{id}/` affiliate redirects: `noopener sponsored`.
+ * Off-site vendor destinations: `noopener sponsored nofollow`.
+ * Other same-host hrefs omit `rel`.
  */
 
 /** Namespace for our own affiliate redirect routes. Always trailing-slash. */
@@ -75,15 +73,17 @@ export function isAffiliateRedirect(href: string): boolean {
 
 /**
  * Returns the `rel` for a vendor CTA, or `undefined` when the href is
- * same-host (`/`, `/go/…`, `thehrstackguide.com`) and must not carry
- * `nofollow` or `sponsored`.
+ * same-host and not an affiliate redirect.
  *
- * Off-site http(s) URLs get `noopener sponsored nofollow`.
+ * `/go/{id}/` → `noopener sponsored`. Off-site http(s) URLs get
+ * `noopener sponsored nofollow`.
  */
 export const VENDOR_OUTBOUND_REL = 'noopener sponsored nofollow';
+export const AFFILIATE_GO_REL = 'noopener sponsored';
 
 export function outboundRel(href: string): string | undefined {
   if (!href.trim()) return undefined;
+  if (isAffiliateRedirect(href)) return AFFILIATE_GO_REL;
   if (isInternalHref(href)) return undefined;
   return VENDOR_OUTBOUND_REL;
 }

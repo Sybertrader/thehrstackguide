@@ -1,28 +1,48 @@
 ---
 import VendorLogo from './VendorLogo.astro';
+import VendorButton from './VendorButton.astro';
 
 interface Props {
   toolAName: string;
   toolBName: string;
+  toolAId: string;
+  toolBId: string;
   toolALogo?: string | null;
   toolBLogo?: string | null;
   toolABadgeColor: string;
   toolBBadgeColor: string;
   toolANuance?: string;
   toolBNuance?: string;
+  toolAAffiliateHref: string;
+  toolBAffiliateHref: string;
+  toolAIsManualLead?: boolean;
+  toolBIsManualLead?: boolean;
+  toolAModalId?: string;
+  toolBModalId?: string;
 }
 
 const {
   toolAName,
   toolBName,
+  toolAId,
+  toolBId,
   toolALogo = '',
   toolBLogo = '',
   toolABadgeColor,
   toolBBadgeColor,
   toolANuance = '',
   toolBNuance = '',
+  toolAAffiliateHref,
+  toolBAffiliateHref,
+  toolAIsManualLead = false,
+  toolBIsManualLead = false,
+  toolAModalId = '',
+  toolBModalId = '',
 } = Astro.props;
 const hasNuance = Boolean(toolANuance || toolBNuance);
+
+const nuanceLinkClass =
+  'mt-1.5 inline-block font-semibold text-indigo-800 transition hover:underline';
 ---
 
 {hasNuance && (
@@ -42,12 +62,24 @@ const hasNuance = Boolean(toolANuance || toolBNuance);
               badgeColor={toolABadgeColor}
               size={24}
             />
+            <div class="min-w-0">
             <p class="text-sm leading-relaxed text-slate-700">
               <strong class="font-semibold text-slate-900">
                 Pricing Nuance: {toolAName}:
               </strong>{' '}
               {toolANuance}
             </p>
+            <VendorButton
+              href={toolAAffiliateHref}
+              modalId={toolAIsManualLead ? toolAModalId : undefined}
+              vendorId={toolAId}
+              vendorName={toolAName}
+              location="pricing_nuance"
+              class={nuanceLinkClass}
+            >
+              Calculate exact seat &amp; FX costs on {toolAName}'s official calculator →
+            </VendorButton>
+            </div>
           </li>
         )}
         {toolBNuance && (
@@ -59,12 +91,24 @@ const hasNuance = Boolean(toolANuance || toolBNuance);
               badgeColor={toolBBadgeColor}
               size={24}
             />
+            <div class="min-w-0">
             <p class="text-sm leading-relaxed text-slate-700">
               <strong class="font-semibold text-slate-900">
                 Pricing Nuance: {toolBName}:
               </strong>{' '}
               {toolBNuance}
             </p>
+            <VendorButton
+              href={toolBAffiliateHref}
+              modalId={toolBIsManualLead ? toolBModalId : undefined}
+              vendorId={toolBId}
+              vendorName={toolBName}
+              location="pricing_nuance"
+              class={nuanceLinkClass}
+            >
+              View {toolBName}'s official pricing tiers →
+            </VendorButton>
+            </div>
           </li>
         )}
       </ul>
