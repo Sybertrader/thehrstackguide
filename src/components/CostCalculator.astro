@@ -53,6 +53,8 @@ const {
 
 const DEFAULT_EOR = 5;
 const DEFAULT_CONTRACTORS = 10;
+const MAX_EOR = 250;
+const MAX_CONTRACTORS = 500;
 const DEFAULT_CYCLE = 'annual' as const;
 
 function ratesFor(vendor: CostCalculatorVendor): EorPlatformRates {
@@ -91,7 +93,9 @@ function money(value: number): string {
 
 const catalogJson = selectable ? JSON.stringify(vendors) : '';
 const eorSliderId = `${instanceId}-eor`;
+const eorCountId = `${instanceId}-eor-count`;
 const contractorSliderId = `${instanceId}-contractors`;
+const contractorCountId = `${instanceId}-contractors-count`;
 const vendorASelectId = `${instanceId}-vendor-a`;
 const vendorBSelectId = `${instanceId}-vendor-b`;
 
@@ -166,41 +170,67 @@ const ctaClass = (isWinner: boolean) =>
     )}
     <div>
       <div class="mb-2 flex items-center justify-between gap-3">
-        <label for={eorSliderId} class="text-sm font-semibold text-slate-800">Full-Time EOR Employees</label>
-        <span class="tabular-nums text-sm font-bold text-indigo-700" data-eor-count>{DEFAULT_EOR}</span>
+        <label for={eorCountId} class="text-sm font-semibold text-slate-800">Full-Time EOR Employees</label>
+        <input
+          id={eorCountId}
+          type="number"
+          inputmode="numeric"
+          min="0"
+          max={MAX_EOR}
+          step="1"
+          value={DEFAULT_EOR}
+          data-eor-count
+          aria-label="Full-time EOR employee headcount"
+          class="w-20 rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-center text-sm font-bold tabular-nums text-indigo-700 outline-none [appearance:textfield] focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        />
       </div>
       <input
         id={eorSliderId}
         type="range"
         min="0"
-        max="50"
+        max={MAX_EOR}
+        step="1"
         value={DEFAULT_EOR}
         data-eor-slider
+        aria-controls={eorCountId}
         class="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-indigo-600"
       />
       <div class="mt-1 flex justify-between text-[11px] text-slate-400">
         <span>0</span>
-        <span>50</span>
+        <span>{MAX_EOR}</span>
       </div>
     </div>
 
     <div>
       <div class="mb-2 flex items-center justify-between gap-3">
-        <label for={contractorSliderId} class="text-sm font-semibold text-slate-800">Global Contractors</label>
-        <span class="tabular-nums text-sm font-bold text-indigo-700" data-contractor-count>{DEFAULT_CONTRACTORS}</span>
+        <label for={contractorCountId} class="text-sm font-semibold text-slate-800">Global Contractors</label>
+        <input
+          id={contractorCountId}
+          type="number"
+          inputmode="numeric"
+          min="0"
+          max={MAX_CONTRACTORS}
+          step="1"
+          value={DEFAULT_CONTRACTORS}
+          data-contractor-count
+          aria-label="Global contractor headcount"
+          class="w-20 rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-center text-sm font-bold tabular-nums text-indigo-700 outline-none [appearance:textfield] focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        />
       </div>
       <input
         id={contractorSliderId}
         type="range"
         min="0"
-        max="100"
+        max={MAX_CONTRACTORS}
+        step="1"
         value={DEFAULT_CONTRACTORS}
         data-contractor-slider
+        aria-controls={contractorCountId}
         class="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-indigo-600"
       />
       <div class="mt-1 flex justify-between text-[11px] text-slate-400">
         <span>0</span>
-        <span>100</span>
+        <span>{MAX_CONTRACTORS}</span>
       </div>
     </div>
 
@@ -277,6 +307,12 @@ const ctaClass = (isWinner: boolean) =>
     </article>
   </div>
 
+  <p class="mt-4 hidden text-center" data-enterprise-callout>
+    <span class="inline-flex max-w-3xl items-center justify-center rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-sm font-medium leading-relaxed text-amber-950">
+      💼 Teams with 50+ EOR employees qualify for custom volume rates. Book a demo to lock in negotiated enterprise quotes.
+    </span>
+  </p>
+
   <p class="mt-6 text-sm leading-relaxed text-slate-600 italic">
     ℹ️ Baseline Estimate Note: Calculations reflect latest standard published platform rates. Final binding quotes, enterprise volume discounts, and local statutory employment costs depend on your team's specific country mix. Click below to request custom pricing directly on your vendor demo call.
   </p>
@@ -338,18 +374,28 @@ const ctaClass = (isWinner: boolean) =>
   }
 
   function initCalculator(root: HTMLElement) {
+    const MAX_EOR = 250;
+    const MAX_CONTRACTORS = 500;
+    const ENTERPRISE_EOR_THRESHOLD = 50;
+
     const eorSlider = root.querySelector<HTMLInputElement>('[data-eor-slider]');
     const contractorSlider = root.querySelector<HTMLInputElement>('[data-contractor-slider]');
-    const eorCountEl = root.querySelector('[data-eor-count]');
-    const contractorCountEl = root.querySelector('[data-contractor-count]');
+    const eorCountEl = root.querySelector<HTMLInputElement>('[data-eor-count]');
+    const contractorCountEl = root.querySelector<HTMLInputElement>('[data-contractor-count]');
     const savingsWrap = root.querySelector<HTMLElement>('[data-savings-badge]');
     const savingsText = root.querySelector('[data-savings-text]');
+    const enterpriseCallout = root.querySelector<HTMLElement>('[data-enterprise-callout]');
     const cardA = root.querySelector<HTMLElement>('[data-vendor-card="a"]');
     const cardB = root.querySelector<HTMLElement>('[data-vendor-card="b"]');
     const selectA = root.querySelector<HTMLSelectElement>('[data-vendor-select="a"]');
     const selectB = root.querySelector<HTMLSelectElement>('[data-vendor-select="b"]');
     const pairCopy = root.querySelector('[data-pair-copy]');
-    if (!eorSlider || !contractorSlider || !cardA || !cardB) return;
+    if (!eorSlider || !contractorSlider || !eorCountEl || !contractorCountEl || !cardA || !cardB) return;
+
+    function clamp(value: number, min: number, max: number): number {
+      if (!Number.isFinite(value)) return min;
+      return Math.min(max, Math.max(min, Math.round(value)));
+    }
 
     let cycle: 'annual' | 'monthly' = 'annual';
     let catalog: Record<string, {
@@ -442,10 +488,10 @@ const ctaClass = (isWinner: boolean) =>
     }
 
     function update() {
-      const eorCount = Number(eorSlider.value);
-      const contractorCount = Number(contractorSlider.value);
-      if (eorCountEl) eorCountEl.textContent = String(eorCount);
-      if (contractorCountEl) contractorCountEl.textContent = String(contractorCount);
+      const eorCount = clamp(Number(eorSlider.value), 0, MAX_EOR);
+      const contractorCount = clamp(Number(contractorSlider.value), 0, MAX_CONTRACTORS);
+      if (document.activeElement !== eorCountEl) eorCountEl.value = String(eorCount);
+      if (document.activeElement !== contractorCountEl) contractorCountEl.value = String(contractorCount);
 
       const a = ratesFor('a');
       const b = ratesFor('b');
@@ -454,6 +500,7 @@ const ctaClass = (isWinner: boolean) =>
       const delta = Math.abs(yearlyA - yearlyB);
       const aWins = yearlyA < yearlyB;
       const bWins = yearlyB < yearlyA;
+      const enterprise = eorCount > ENTERPRISE_EOR_THRESHOLD;
 
       cardA.classList.toggle('border-emerald-300', aWins);
       cardA.classList.toggle('ring-2', aWins);
@@ -473,6 +520,31 @@ const ctaClass = (isWinner: boolean) =>
           savingsWrap.classList.add('hidden');
         }
       }
+
+      enterpriseCallout?.classList.toggle('hidden', !enterprise);
+      root.querySelectorAll('[data-calc-cta] .js-affiliate-cta').forEach((cta) => {
+        cta.classList.toggle('ring-2', enterprise);
+        cta.classList.toggle('ring-amber-400', enterprise);
+        cta.classList.toggle('ring-offset-2', enterprise);
+        cta.classList.toggle('shadow-lg', enterprise);
+      });
+    }
+
+    function setCountFromInput(slider: HTMLInputElement, numberInput: HTMLInputElement, min: number, max: number) {
+      if (numberInput.value === '') {
+        slider.value = String(min);
+        update();
+        return;
+      }
+      const next = clamp(Number(numberInput.value), min, max);
+      numberInput.value = String(next);
+      slider.value = String(next);
+      update();
+    }
+
+    function setCountFromSlider(slider: HTMLInputElement, numberInput: HTMLInputElement) {
+      numberInput.value = slider.value;
+      update();
     }
 
     function setCycle(next: 'annual' | 'monthly') {
@@ -484,8 +556,18 @@ const ctaClass = (isWinner: boolean) =>
       update();
     }
 
-    eorSlider.addEventListener('input', update);
-    contractorSlider.addEventListener('input', update);
+    eorSlider.addEventListener('input', () => setCountFromSlider(eorSlider, eorCountEl));
+    contractorSlider.addEventListener('input', () => setCountFromSlider(contractorSlider, contractorCountEl));
+    eorCountEl.addEventListener('input', () => setCountFromInput(eorSlider, eorCountEl, 0, MAX_EOR));
+    contractorCountEl.addEventListener('input', () => setCountFromInput(contractorSlider, contractorCountEl, 0, MAX_CONTRACTORS));
+    eorCountEl.addEventListener('blur', () => {
+      if (eorCountEl.value === '') eorCountEl.value = '0';
+      setCountFromInput(eorSlider, eorCountEl, 0, MAX_EOR);
+    });
+    contractorCountEl.addEventListener('blur', () => {
+      if (contractorCountEl.value === '') contractorCountEl.value = '0';
+      setCountFromInput(contractorSlider, contractorCountEl, 0, MAX_CONTRACTORS);
+    });
     root.querySelectorAll<HTMLButtonElement>('[data-billing]').forEach((button) => {
       button.addEventListener('click', () => {
         const next = button.getAttribute('data-billing');
