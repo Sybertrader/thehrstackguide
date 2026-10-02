@@ -3,13 +3,44 @@
  * Deal-breaker questions for comparison pages. Vendor names are
  * interpolated so the checklist is about this pair, not generic HR software.
  */
+import VendorButton from './VendorButton.astro';
+
 interface Props {
   toolA: string;
   toolB: string;
   family?: 'payroll' | 'ats' | 'pm' | null;
+  toolAId: string;
+  toolBId: string;
+  toolAAffiliateHref: string;
+  toolBAffiliateHref: string;
+  toolAIsManualLead?: boolean;
+  toolBIsManualLead?: boolean;
+  toolAModalId?: string;
+  toolBModalId?: string;
+  toolAIsWinner?: boolean;
+  toolBIsWinner?: boolean;
 }
 
-const { toolA, toolB, family = 'payroll' } = Astro.props;
+const {
+  toolA,
+  toolB,
+  family = 'payroll',
+  toolAId,
+  toolBId,
+  toolAAffiliateHref,
+  toolBAffiliateHref,
+  toolAIsManualLead = false,
+  toolBIsManualLead = false,
+  toolAModalId = '',
+  toolBModalId = '',
+  toolAIsWinner = false,
+  toolBIsWinner = false,
+} = Astro.props;
+
+const demoCtaClass = (isWinner: boolean) =>
+  isWinner
+    ? 'inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+    : 'inline-flex w-full items-center justify-center rounded-xl border-2 border-indigo-600 bg-white px-6 py-3.5 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-indigo-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2';
 
 const questionTwo =
   family === 'ats'
@@ -50,7 +81,7 @@ const questions = [
   data-demo-questions
   data-demo-pair={`${toolA} vs ${toolB}`}
 >
-  <h2 class="text-2xl font-bold text-slate-900">Questions to Ask on Your Demo Call</h2>
+  <h2 class="text-2xl font-bold text-slate-900">Critical Questions to Ask on Your Demo Call</h2>
   <p class="mt-2 max-w-3xl text-base leading-relaxed text-slate-700">
     Take these four questions to <span class="font-semibold text-slate-900">{toolA}</span> and <span class="font-semibold text-slate-900">{toolB}</span>. If they dodge them, walk.
   </p>
@@ -90,6 +121,43 @@ const questions = [
     >
       📋 Copy All Demo Questions to Clipboard
     </button>
+  </div>
+
+  <div class="mt-8 flex flex-col items-center text-center">
+    <p class="max-w-3xl text-base leading-relaxed text-slate-700 italic">
+      Or book a demo call directly with {toolA} or {toolB} and get the complete Vendor Evaluation Scorecard (.docx) with the full list of 20+ questions and evaluation grid:
+    </p>
+    <p class="mt-4">
+      <span class="inline-flex max-w-full items-center justify-center rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold leading-snug text-amber-950 ring-1 ring-inset ring-amber-300">
+        🎁 Includes Free Vendor Evaluation Scorecard (.docx)
+      </span>
+    </p>
+    <div class="mt-3 grid w-full max-w-3xl gap-4 sm:grid-cols-2">
+      <VendorButton
+        href={toolAAffiliateHref}
+        modalId={toolAIsManualLead ? toolAModalId : undefined}
+        vendorId={toolAId}
+        vendorName={toolA}
+        location="demo_questions"
+        leadMagnet
+        leadMagnetBadge={false}
+        class={demoCtaClass(toolAIsWinner || !toolBIsWinner)}
+      >
+        Book {toolA} Demo →
+      </VendorButton>
+      <VendorButton
+        href={toolBAffiliateHref}
+        modalId={toolBIsManualLead ? toolBModalId : undefined}
+        vendorId={toolBId}
+        vendorName={toolB}
+        location="demo_questions"
+        leadMagnet
+        leadMagnetBadge={false}
+        class={demoCtaClass(toolBIsWinner)}
+      >
+        Book {toolB} Demo →
+      </VendorButton>
+    </div>
   </div>
 </section>
 

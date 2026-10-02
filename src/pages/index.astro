@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PainPointSearch from '../components/PainPointSearch.jsx';
-import RecommendationTeaser from '../components/RecommendationTeaser.astro';
 import VendorLogo from '../components/VendorLogo.astro';
 import { loadComparisons } from '../lib/comparisons';
 import { comparisonHubSlug } from '../lib/comparison-routes';
@@ -132,6 +131,44 @@ const proofStats = [
   { value: currentYear, label: 'Verified Pricing' },
 ];
 
+const heroFeatureHighlights = [
+  '⚡ Live TCO Calculators',
+  '🎯 Stage-Based Verdicts',
+  '📋 1-Click Demo Scripts',
+  '📄 Free CFO Scorecards',
+];
+
+const comparisonToolkit = [
+  {
+    title: 'Interactive Cost Calculator',
+    body: 'Model total platform fees based on your exact EOR and contractor headcount.',
+    border: 'border-t-indigo-600 hover:border-t-indigo-600',
+    iconWrap: 'bg-indigo-50 text-indigo-600',
+    icon: 'calculator',
+  },
+  {
+    title: 'Persona-Based Verdicts',
+    body: 'Filter verdicts specifically for Startups, Scaleups, Agencies, or LATAM teams.',
+    border: 'border-t-violet-600 hover:border-t-violet-600',
+    iconWrap: 'bg-violet-50 text-violet-600',
+    icon: 'target',
+  },
+  {
+    title: 'Hidden Fee Audits',
+    body: 'Expose unlisted FX markups, deposit liabilities, and minimum seat terms.',
+    border: 'border-t-amber-500 hover:border-t-amber-500',
+    iconWrap: 'bg-amber-50 text-amber-600',
+    icon: 'shield',
+  },
+  {
+    title: '1-Click Demo Scripts',
+    body: 'Copy CFO-vetted negotiation questions directly to your clipboard for sales calls.',
+    border: 'border-t-emerald-600 hover:border-t-emerald-600',
+    iconWrap: 'bg-emerald-50 text-emerald-600',
+    icon: 'clipboard',
+  },
+];
+
 // Lightweight search index for the hero search bar: every tool's display
 // name + the sub-vertical hub it belongs to, plus every comparison's tool
 // names + slug. Kept intentionally small (ids/names/slugs only) since it's
@@ -255,6 +292,13 @@ const homepageSchema = {
           </div>
         </form>
       </div>
+      <ul class="mt-6 flex flex-wrap items-center justify-center gap-2" aria-label="Interactive tools inside every comparison">
+        {heroFeatureHighlights.map((item) => (
+          <li class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-500 sm:text-sm">
+            {item}
+          </li>
+        ))}
+      </ul>
     </section>
 
     <!-- Stats Proof Bar -->
@@ -301,9 +345,52 @@ const homepageSchema = {
       </div>
     </section>
 
-    
-
-    <RecommendationTeaser ctaHref="/recommendation/" />
+    <!-- What You Get Inside Every Comparison -->
+    <section class="mt-16" aria-label="What you get inside every comparison">
+      <div class="text-center sm:text-left">
+        <h2 class="text-2xl font-bold text-slate-900">What You Get Inside Every Comparison</h2>
+        <p class="mt-2 text-base text-slate-500">
+          Every 1-to-1 guide comes loaded with interactive financial tooling and procurement frameworks.
+        </p>
+      </div>
+      <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {comparisonToolkit.map((item) => (
+          <article
+            class:list={[
+              'relative overflow-hidden rounded-2xl border border-t-2 border-gray-100 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gray-300 hover:shadow-lg',
+              item.border,
+            ]}
+          >
+            <div class:list={['mb-4 flex h-12 w-12 items-center justify-center rounded-xl', item.iconWrap]}>
+              {item.icon === 'calculator' && (
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              )}
+              {item.icon === 'target' && (
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18a6 6 0 100-12 6 6 0 000 12z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14a2 2 0 100-4 2 2 0 000 4z" />
+                </svg>
+              )}
+              {item.icon === 'shield' && (
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+              )}
+              {item.icon === 'clipboard' && (
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+              )}
+            </div>
+            <h3 class="mt-4 mb-2 text-lg font-bold text-gray-900">{item.title}</h3>
+            <p class="text-sm leading-relaxed text-gray-600">{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </section>
 
     <!-- Popular Comparisons -->
     {featuredComparisons.length > 0 && (
@@ -315,7 +402,7 @@ const homepageSchema = {
           {featuredComparisons.map(({ comparison, href }) => (
             <a
               href={href}
-              class="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
+              class="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md"
             >
               <div class="flex items-center gap-2.5">
                 <VendorLogo
@@ -343,11 +430,38 @@ const homepageSchema = {
                   <path fill-rule="evenodd" d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
                 </svg>
               </span>
+              <div class="mt-auto flex flex-wrap gap-1.5 pt-4">
+                <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                  ⚡ Live Calculator
+                </span>
+                <span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-500">
+                  🎁 Free Scorecard
+                </span>
+              </div>
             </a>
           ))}
         </div>
       </section>
     )}
+
+    <!-- Calculator Hub Promo -->
+    <section class="mt-16" aria-label="Standalone EOR cost calculator">
+      <div class="relative overflow-hidden rounded-2xl border border-indigo-200 bg-indigo-50/70 p-6 shadow-sm sm:p-8">
+        <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-indigo-500 to-violet-600" aria-hidden="true"></div>
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          Try the Standalone Global EOR Cost Calculator
+        </h2>
+        <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
+          Compare pricing across Deel, Remote, Multiplier, Papaya, Gusto, and Payoneer in one dynamic view.
+        </p>
+        <a
+          href="/tools/eor-cost-calculator/"
+          class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          Launch Calculator Tool →
+        </a>
+      </div>
+    </section>
 
     <!-- Our Evaluation Methodology (E-E-A-T trust pillars) -->
     <section class="mt-16" aria-label="Our evaluation methodology">

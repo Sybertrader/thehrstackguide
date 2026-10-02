@@ -1,0 +1,122 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import CostCalculator from '../../components/CostCalculator.astro';
+import { listEorCalculatorVendors } from '../../data/vendors/eor-platform-rates';
+import { loadComparisons } from '../../lib/comparisons';
+import { comparisonHubSlug } from '../../lib/comparison-routes';
+
+const pageHeading = 'Global EOR & Payroll Cost Calculator';
+const pageTitle = `${pageHeading} — The HR Stack Guide`;
+const pageDescription =
+  'Estimate annual platform fees, compare vendor costs side-by-side, and calculate your CFO-ready budget for global teams.';
+
+const vendors = listEorCalculatorVendors();
+const vendorA = vendors.find((vendor) => vendor.id === 'deel') ?? vendors[0];
+const vendorB = vendors.find((vendor) => vendor.id === 'multiplier') ?? vendors[1];
+
+const comparisons = loadComparisons();
+const bySlug = new Map(comparisons.map((row) => [row.slug, row]));
+
+const POPULAR_SLUGS = [
+  'deel-vs-remote',
+  'deel-vs-multiplier',
+  'papaya-global-vs-multiplier',
+  'deel-vs-rippling',
+  'remote-vs-oyster-hr',
+  'deel-vs-papaya-global',
+  'rippling-vs-gusto',
+  'remote-vs-multiplier',
+];
+
+const popularLinks = POPULAR_SLUGS.map((slug) => {
+  const comparison =
+    bySlug.get(slug) ??
+    comparisons.find((row) => comparisonHubSlug(row.tool_a_id, row.tool_b_id) === slug);
+  if (!comparison) return null;
+  return {
+    href: `/${slug}/`,
+    label: `${comparison.tool_a_name} vs ${comparison.tool_b_name}`,
+  };
+}).filter((link): link is NonNullable<typeof link> => Boolean(link));
+
+const siteUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
+const pageUrl = new URL('/tools/eor-cost-calculator/', siteUrl).href;
+const pageSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      name: pageHeading,
+      description: pageDescription,
+      url: pageUrl,
+      isPartOf: { '@type': 'WebSite', name: 'The HR Stack Guide', url: siteUrl },
+    },
+    {
+      '@type': 'WebApplication',
+      name: pageHeading,
+      description: pageDescription,
+      url: pageUrl,
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Tools' },
+        { '@type': 'ListItem', position: 3, name: 'EOR Cost Calculator', item: pageUrl },
+      ],
+    },
+  ],
+};
+---
+
+<Layout title={pageTitle} heading={pageHeading} description={pageDescription}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+
+  <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <header class="mb-10">
+      <nav aria-label="Breadcrumb">
+        <ol class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+          <li><a href="/" class="transition hover:text-indigo-600">Home</a></li>
+          <li aria-hidden="true" class="text-slate-300">&gt;</li>
+          <li><span class="text-slate-500">Tools</span></li>
+          <li aria-hidden="true" class="text-slate-300">&gt;</li>
+          <li class="font-medium text-indigo-600" aria-current="page">EOR Cost Calculator</li>
+        </ol>
+      </nav>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+        {pageHeading}
+      </h1>
+      <p class="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600">
+        {pageDescription}
+      </p>
+    </header>
+
+    {vendorA && vendorB && (
+      <CostCalculator
+        selectable
+        showIntro={false}
+        instanceId="hub-cost-calc"
+        vendors={vendors}
+        vendorA={vendorA}
+        vendorB={vendorB}
+      />
+    )}
+
+    <section class="mb-12" aria-label="Popular 1-to-1 comparisons">
+      <h2 class="mb-6 text-2xl font-bold text-slate-900">Popular 1-to-1 Head-to-Head Comparisons</h2>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {popularLinks.map((link) => (
+          <a
+            href={link.href}
+            class="rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-indigo-200 hover:text-indigo-700 hover:shadow-md"
+          >
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>

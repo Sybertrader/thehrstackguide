@@ -27,6 +27,7 @@ export const RESERVED_ROUTE_SEGMENTS = [
   'recommendation',
   'terms',
   'thank-you',
+  'tools',
 ] as const;
 
 export type ReservedRouteSegment = (typeof RESERVED_ROUTE_SEGMENTS)[number];

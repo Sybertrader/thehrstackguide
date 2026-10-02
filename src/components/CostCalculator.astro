@@ -1,0 +1,516 @@
+---
+/**
+ * Interactive EOR + contractor platform-fee estimator for payroll comparisons.
+ */
+import VendorButton from './VendorButton.astro';
+import {
+  annualPlatformCost,
+  resolveEorPlatformRates,
+  type EorCalculatorVendor,
+  type EorPlatformRates,
+} from '../data/vendors/eor-platform-rates';
+
+export interface CostCalculatorVendor {
+  id: string;
+  name: string;
+  eorMonthlyRate?: number;
+  eorAnnualRate?: number;
+  contractorMonthlyRate?: number;
+  contractorAnnualRate?: number;
+  affiliateUrl: string;
+}
+
+interface Props {
+  vendorA: CostCalculatorVendor;
+  vendorB: CostCalculatorVendor;
+  toolAIsManualLead?: boolean;
+  toolBIsManualLead?: boolean;
+  toolAModalId?: string;
+  toolBModalId?: string;
+  toolAIsWinner?: boolean;
+  toolBIsWinner?: boolean;
+  /** Hub page: vendor dropdowns and client-side pair switching. */
+  selectable?: boolean;
+  vendors?: EorCalculatorVendor[];
+  showIntro?: boolean;
+  instanceId?: string;
+}
+
+const {
+  vendorA,
+  vendorB,
+  toolAIsManualLead = false,
+  toolBIsManualLead = false,
+  toolAModalId = '',
+  toolBModalId = '',
+  toolAIsWinner = false,
+  toolBIsWinner = false,
+  selectable = false,
+  vendors = [],
+  showIntro = true,
+  instanceId = 'cost-calc',
+} = Astro.props;
+
+const DEFAULT_EOR = 5;
+const DEFAULT_CONTRACTORS = 10;
+const DEFAULT_CYCLE = 'annual' as const;
+
+function ratesFor(vendor: CostCalculatorVendor): EorPlatformRates {
+  return resolveEorPlatformRates(vendor.id, {
+    eorMonthlyRate: vendor.eorMonthlyRate,
+    eorAnnualRate: vendor.eorAnnualRate,
+    contractorMonthlyRate: vendor.contractorMonthlyRate,
+    contractorAnnualRate: vendor.contractorAnnualRate,
+  });
+}
+
+const aRates = ratesFor(vendorA);
+const bRates = ratesFor(vendorB);
+
+function cycleRates(rates: EorPlatformRates, cycle: 'annual' | 'monthly') {
+  return cycle === 'annual'
+    ? { eor: rates.eorAnnualRate, contractor: rates.contractorAnnualRate }
+    : { eor: rates.eorMonthlyRate, contractor: rates.contractorMonthlyRate };
+}
+
+const initialA = cycleRates(aRates, DEFAULT_CYCLE);
+const initialB = cycleRates(bRates, DEFAULT_CYCLE);
+const initialAAnnual = annualPlatformCost(DEFAULT_EOR, DEFAULT_CONTRACTORS, initialA.eor, initialA.contractor);
+const initialBAnnual = annualPlatformCost(DEFAULT_EOR, DEFAULT_CONTRACTORS, initialB.eor, initialB.contractor);
+const initialDelta = Math.abs(initialAAnnual - initialBAnnual);
+const initialWinnerName =
+  initialAAnnual < initialBAnnual ? vendorA.name : initialBAnnual < initialAAnnual ? vendorB.name : '';
+
+function money(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+const catalogJson = selectable ? JSON.stringify(vendors) : '';
+const eorSliderId = `${instanceId}-eor`;
+const contractorSliderId = `${instanceId}-contractors`;
+const vendorASelectId = `${instanceId}-vendor-a`;
+const vendorBSelectId = `${instanceId}-vendor-b`;
+
+const ctaClass = (isWinner: boolean) =>
+  isWinner
+    ? 'inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+    : 'inline-flex w-full items-center justify-center rounded-xl border-2 border-indigo-600 bg-white px-6 py-3.5 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-indigo-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2';
+---
+
+<section
+  class="mb-12 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+  aria-label={`Interactive EOR and global hiring cost calculator for ${vendorA.name} vs ${vendorB.name}`}
+  data-cost-calculator
+  data-selectable={selectable ? 'true' : undefined}
+  data-a-id={vendorA.id}
+  data-b-id={vendorB.id}
+  data-a-name={vendorA.name}
+  data-b-name={vendorB.name}
+  data-a-eor-monthly={aRates.eorMonthlyRate}
+  data-a-eor-annual={aRates.eorAnnualRate}
+  data-a-contractor-monthly={aRates.contractorMonthlyRate}
+  data-a-contractor-annual={aRates.contractorAnnualRate}
+  data-b-eor-monthly={bRates.eorMonthlyRate}
+  data-b-eor-annual={bRates.eorAnnualRate}
+  data-b-contractor-monthly={bRates.contractorMonthlyRate}
+  data-b-contractor-annual={bRates.contractorAnnualRate}
+>
+  {selectable && catalogJson && (
+    <script type="application/json" data-cost-calculator-catalog set:html={catalogJson} />
+  )}
+  {showIntro && (
+  <header class="mb-6">
+    <h2 class="text-2xl font-bold text-slate-900">Interactive EOR &amp; Global Hiring Cost Calculator</h2>
+    <p class="mt-2 max-w-3xl text-base leading-relaxed text-slate-600" data-pair-copy>
+      Estimate your total annual software &amp; platform fees for {vendorA.name} vs {vendorB.name} based on your exact team roadmap.
+    </p>
+  </header>
+  )}
+
+  <div class="grid gap-5 rounded-xl border border-slate-100 bg-slate-50/80 p-4 sm:p-5">
+    {selectable && vendors.length > 0 && (
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label for={vendorASelectId} class="mb-2 block text-sm font-semibold text-slate-800">Vendor A</label>
+          <select
+            id={vendorASelectId}
+            data-vendor-select="a"
+            class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            {vendors.map((vendor) => (
+              <option value={vendor.id} selected={vendor.id === vendorA.id ? true : undefined}>
+                {vendor.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label for={vendorBSelectId} class="mb-2 block text-sm font-semibold text-slate-800">Vendor B</label>
+          <select
+            id={vendorBSelectId}
+            data-vendor-select="b"
+            class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-800 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            {vendors.map((vendor) => (
+              <option value={vendor.id} selected={vendor.id === vendorB.id ? true : undefined}>
+                {vendor.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    )}
+    <div>
+      <div class="mb-2 flex items-center justify-between gap-3">
+        <label for={eorSliderId} class="text-sm font-semibold text-slate-800">Full-Time EOR Employees</label>
+        <span class="tabular-nums text-sm font-bold text-indigo-700" data-eor-count>{DEFAULT_EOR}</span>
+      </div>
+      <input
+        id={eorSliderId}
+        type="range"
+        min="0"
+        max="50"
+        value={DEFAULT_EOR}
+        data-eor-slider
+        class="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-indigo-600"
+      />
+      <div class="mt-1 flex justify-between text-[11px] text-slate-400">
+        <span>0</span>
+        <span>50</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="mb-2 flex items-center justify-between gap-3">
+        <label for={contractorSliderId} class="text-sm font-semibold text-slate-800">Global Contractors</label>
+        <span class="tabular-nums text-sm font-bold text-indigo-700" data-contractor-count>{DEFAULT_CONTRACTORS}</span>
+      </div>
+      <input
+        id={contractorSliderId}
+        type="range"
+        min="0"
+        max="100"
+        value={DEFAULT_CONTRACTORS}
+        data-contractor-slider
+        class="h-2 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-indigo-600"
+      />
+      <div class="mt-1 flex justify-between text-[11px] text-slate-400">
+        <span>0</span>
+        <span>100</span>
+      </div>
+    </div>
+
+    <div>
+      <p class="mb-2 text-sm font-semibold text-slate-800" id={`${instanceId}-billing-label`}>Billing Cycle</p>
+      <div class="inline-flex flex-wrap items-center gap-2 rounded-full border border-slate-200 bg-white p-1" role="group" aria-labelledby={`${instanceId}-billing-label`}>
+        <button
+          type="button"
+          data-billing="monthly"
+          aria-pressed="false"
+          class="rounded-full px-3.5 py-1.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 aria-pressed:bg-indigo-600 aria-pressed:text-white aria-pressed:shadow-sm aria-pressed:hover:bg-indigo-600"
+        >
+          Monthly Billing
+        </button>
+        <button
+          type="button"
+          data-billing="annual"
+          aria-pressed="true"
+          class="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-semibold text-slate-600 aria-pressed:bg-indigo-600 aria-pressed:text-white aria-pressed:shadow-sm"
+        >
+          Annual Billing
+          <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-800">
+            Save up to 15%
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p class:list={['mt-6 text-center', initialDelta === 0 && 'hidden']} data-savings-badge>
+    <span class="inline-flex max-w-full items-center rounded-full bg-emerald-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm">
+      🏆 <span data-savings-text>{initialWinnerName} saves you {money(initialDelta)}/yr for this team size</span>
+    </span>
+  </p>
+
+  <div class="mt-6 grid gap-4 lg:grid-cols-2" aria-live="polite">
+    <article
+      class:list={[
+        'rounded-2xl border bg-white p-5 shadow-sm',
+        initialAAnnual < initialBAnnual ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200',
+      ]}
+      data-vendor-card="a"
+    >
+      <h3 class="text-lg font-bold text-slate-900" data-vendor-heading>{vendorA.name}</h3>
+      <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900">
+        <span data-annual-total>{money(initialAAnnual)}</span><span class="text-lg font-semibold text-slate-500">/yr</span>
+      </p>
+      <p class="mt-1 text-sm font-medium text-slate-500">
+        <span data-monthly-total>{money(initialAAnnual / 12)}</span>/mo
+      </p>
+      <ul class="mt-4 space-y-1.5 text-sm text-slate-600">
+        <li data-eor-line>EOR Fees ({DEFAULT_EOR} × {money(initialA.eor)}/mo)</li>
+        <li data-contractor-line>Contractor Fees ({DEFAULT_CONTRACTORS} × {money(initialA.contractor)}/mo)</li>
+      </ul>
+    </article>
+    <article
+      class:list={[
+        'rounded-2xl border bg-white p-5 shadow-sm',
+        initialBAnnual < initialAAnnual ? 'border-emerald-300 ring-2 ring-emerald-100' : 'border-slate-200',
+      ]}
+      data-vendor-card="b"
+    >
+      <h3 class="text-lg font-bold text-slate-900" data-vendor-heading>{vendorB.name}</h3>
+      <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900">
+        <span data-annual-total>{money(initialBAnnual)}</span><span class="text-lg font-semibold text-slate-500">/yr</span>
+      </p>
+      <p class="mt-1 text-sm font-medium text-slate-500">
+        <span data-monthly-total>{money(initialBAnnual / 12)}</span>/mo
+      </p>
+      <ul class="mt-4 space-y-1.5 text-sm text-slate-600">
+        <li data-eor-line>EOR Fees ({DEFAULT_EOR} × {money(initialB.eor)}/mo)</li>
+        <li data-contractor-line>Contractor Fees ({DEFAULT_CONTRACTORS} × {money(initialB.contractor)}/mo)</li>
+      </ul>
+    </article>
+  </div>
+
+  <p class="mt-6 text-sm leading-relaxed text-slate-600 italic">
+    ℹ️ Baseline Estimate Note: Calculations reflect latest standard published platform rates. Final binding quotes, enterprise volume discounts, and local statutory employment costs depend on your team's specific country mix. Click below to request custom pricing directly on your vendor demo call.
+  </p>
+
+  <div class="mt-6 flex flex-col items-center text-center">
+    <p>
+      <span class="inline-flex max-w-full items-center justify-center rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-semibold leading-snug text-amber-950 ring-1 ring-inset ring-amber-300">
+        🎁 Includes Free Vendor Evaluation Scorecard (.docx)
+      </span>
+    </p>
+    <div class="mt-3 grid w-full gap-4 sm:grid-cols-2">
+      <div data-calc-cta="a">
+      <VendorButton
+        href={vendorA.affiliateUrl}
+        modalId={toolAIsManualLead ? toolAModalId : undefined}
+        vendorId={vendorA.id}
+        vendorName={vendorA.name}
+        location="cost_calculator"
+        leadMagnet
+        leadMagnetBadge={false}
+        class={ctaClass(toolAIsWinner || !toolBIsWinner)}
+      >
+        Book {vendorA.name} Demo to Lock in Custom Quote →
+      </VendorButton>
+      </div>
+      <div data-calc-cta="b">
+      <VendorButton
+        href={vendorB.affiliateUrl}
+        modalId={toolBIsManualLead ? toolBModalId : undefined}
+        vendorId={vendorB.id}
+        vendorName={vendorB.name}
+        location="cost_calculator"
+        leadMagnet
+        leadMagnetBadge={false}
+        class={ctaClass(toolBIsWinner)}
+      >
+        Book {vendorB.name} Demo to Lock in Custom Quote →
+      </VendorButton>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function money(value: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+
+  function annualCost(eorCount: number, contractorCount: number, eorRate: number, contractorRate: number): number {
+    return (eorCount * eorRate + contractorCount * contractorRate) * 12;
+  }
+
+  function num(root: HTMLElement, key: string): number {
+    return Number(root.dataset[key] ?? 0) || 0;
+  }
+
+  function initCalculator(root: HTMLElement) {
+    const eorSlider = root.querySelector<HTMLInputElement>('[data-eor-slider]');
+    const contractorSlider = root.querySelector<HTMLInputElement>('[data-contractor-slider]');
+    const eorCountEl = root.querySelector('[data-eor-count]');
+    const contractorCountEl = root.querySelector('[data-contractor-count]');
+    const savingsWrap = root.querySelector<HTMLElement>('[data-savings-badge]');
+    const savingsText = root.querySelector('[data-savings-text]');
+    const cardA = root.querySelector<HTMLElement>('[data-vendor-card="a"]');
+    const cardB = root.querySelector<HTMLElement>('[data-vendor-card="b"]');
+    const selectA = root.querySelector<HTMLSelectElement>('[data-vendor-select="a"]');
+    const selectB = root.querySelector<HTMLSelectElement>('[data-vendor-select="b"]');
+    const pairCopy = root.querySelector('[data-pair-copy]');
+    if (!eorSlider || !contractorSlider || !cardA || !cardB) return;
+
+    let cycle: 'annual' | 'monthly' = 'annual';
+    let catalog: Record<string, {
+      id: string;
+      name: string;
+      affiliateUrl: string;
+      eorMonthlyRate: number;
+      eorAnnualRate: number;
+      contractorMonthlyRate: number;
+      contractorAnnualRate: number;
+    }> = {};
+
+    const catalogNode = root.querySelector('[data-cost-calculator-catalog]');
+    if (catalogNode?.textContent) {
+      try {
+        const list = JSON.parse(catalogNode.textContent) as Array<{
+          id: string;
+          name: string;
+          affiliateUrl: string;
+          eorMonthlyRate: number;
+          eorAnnualRate: number;
+          contractorMonthlyRate: number;
+          contractorAnnualRate: number;
+        }>;
+        catalog = Object.fromEntries(list.map((vendor) => [vendor.id, vendor]));
+      } catch {
+        catalog = {};
+      }
+    }
+
+    const applyVendor = (side: 'a' | 'b', vendorId: string) => {
+      const vendor = catalog[vendorId];
+      if (!vendor) return;
+      const prefix = side;
+      root.dataset[`${prefix}Id`] = vendor.id;
+      root.dataset[`${prefix}Name`] = vendor.name;
+      root.dataset[`${prefix}EorMonthly`] = String(vendor.eorMonthlyRate);
+      root.dataset[`${prefix}EorAnnual`] = String(vendor.eorAnnualRate);
+      root.dataset[`${prefix}ContractorMonthly`] = String(vendor.contractorMonthlyRate);
+      root.dataset[`${prefix}ContractorAnnual`] = String(vendor.contractorAnnualRate);
+
+      const card = side === 'a' ? cardA : cardB;
+      const heading = card.querySelector('[data-vendor-heading]');
+      if (heading) heading.textContent = vendor.name;
+
+      const cta = root.querySelector(`[data-calc-cta="${side}"] .js-affiliate-cta`);
+      if (cta instanceof HTMLAnchorElement) {
+        cta.href = vendor.affiliateUrl;
+        cta.setAttribute('data-vendor-id', vendor.id);
+        cta.setAttribute('data-vendor-name', vendor.name);
+        cta.setAttribute('data-track-vendor', vendor.name);
+        cta.textContent = `Book ${vendor.name} Demo to Lock in Custom Quote →`;
+      }
+
+      if (pairCopy) {
+        pairCopy.textContent = `Estimate your total annual software & platform fees for ${root.dataset.aName} vs ${root.dataset.bName} based on your exact team roadmap.`;
+      }
+    };
+
+    const ratesFor = (side: 'a' | 'b') =>
+      cycle === 'annual'
+        ? {
+            eor: num(root, `${side}EorAnnual`),
+            contractor: num(root, `${side}ContractorAnnual`),
+          }
+        : {
+            eor: num(root, `${side}EorMonthly`),
+            contractor: num(root, `${side}ContractorMonthly`),
+          };
+
+    function paintCard(
+      card: HTMLElement,
+      eorCount: number,
+      contractorCount: number,
+      eorRate: number,
+      contractorRate: number,
+    ) {
+      const yearly = annualCost(eorCount, contractorCount, eorRate, contractorRate);
+      const annualEl = card.querySelector('[data-annual-total]');
+      const monthlyEl = card.querySelector('[data-monthly-total]');
+      const eorLine = card.querySelector('[data-eor-line]');
+      const contractorLine = card.querySelector('[data-contractor-line]');
+      if (annualEl) annualEl.textContent = money(yearly);
+      if (monthlyEl) monthlyEl.textContent = money(yearly / 12);
+      if (eorLine) eorLine.textContent = `EOR Fees (${eorCount} × ${money(eorRate)}/mo)`;
+      if (contractorLine) {
+        contractorLine.textContent = `Contractor Fees (${contractorCount} × ${money(contractorRate)}/mo)`;
+      }
+      return yearly;
+    }
+
+    function update() {
+      const eorCount = Number(eorSlider.value);
+      const contractorCount = Number(contractorSlider.value);
+      if (eorCountEl) eorCountEl.textContent = String(eorCount);
+      if (contractorCountEl) contractorCountEl.textContent = String(contractorCount);
+
+      const a = ratesFor('a');
+      const b = ratesFor('b');
+      const yearlyA = paintCard(cardA, eorCount, contractorCount, a.eor, a.contractor);
+      const yearlyB = paintCard(cardB, eorCount, contractorCount, b.eor, b.contractor);
+      const delta = Math.abs(yearlyA - yearlyB);
+      const aWins = yearlyA < yearlyB;
+      const bWins = yearlyB < yearlyA;
+
+      cardA.classList.toggle('border-emerald-300', aWins);
+      cardA.classList.toggle('ring-2', aWins);
+      cardA.classList.toggle('ring-emerald-100', aWins);
+      cardA.classList.toggle('border-slate-200', !aWins);
+      cardB.classList.toggle('border-emerald-300', bWins);
+      cardB.classList.toggle('ring-2', bWins);
+      cardB.classList.toggle('ring-emerald-100', bWins);
+      cardB.classList.toggle('border-slate-200', !bWins);
+
+      if (savingsWrap && savingsText) {
+        if (delta > 0) {
+          const winner = aWins ? root.dataset.aName : root.dataset.bName;
+          savingsText.textContent = `${winner} saves you ${money(delta)}/yr for this team size`;
+          savingsWrap.classList.remove('hidden');
+        } else {
+          savingsWrap.classList.add('hidden');
+        }
+      }
+    }
+
+    function setCycle(next: 'annual' | 'monthly') {
+      cycle = next;
+      root.querySelectorAll<HTMLButtonElement>('[data-billing]').forEach((button) => {
+        const active = button.getAttribute('data-billing') === next;
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      update();
+    }
+
+    eorSlider.addEventListener('input', update);
+    contractorSlider.addEventListener('input', update);
+    root.querySelectorAll<HTMLButtonElement>('[data-billing]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const next = button.getAttribute('data-billing');
+        if (next === 'annual' || next === 'monthly') setCycle(next);
+      });
+    });
+
+    const onVendorChange = (side: 'a' | 'b', select: HTMLSelectElement, other: HTMLSelectElement | null) => {
+      let nextId = select.value;
+      if (other && nextId === other.value) {
+        const previous = side === 'a' ? root.dataset.aId : root.dataset.bId;
+        if (previous && previous !== nextId) {
+          other.value = previous;
+          applyVendor(side === 'a' ? 'b' : 'a', previous);
+        }
+      }
+      applyVendor(side, select.value);
+      update();
+    };
+
+    selectA?.addEventListener('change', () => onVendorChange('a', selectA, selectB));
+    selectB?.addEventListener('change', () => onVendorChange('b', selectB, selectA));
+
+    update();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-cost-calculator]').forEach(initCalculator);
+</script>
