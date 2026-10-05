@@ -10,6 +10,8 @@ const pageDescription =
 const founderName = 'Dave Storey';
 const founderLinkedIn = 'https://www.linkedin.com/in/dave-storey-0053b111/';
 const brandLinkedIn = 'https://www.linkedin.com/company/the-hr-stack-guide/';
+const founderImagePath = '/Dave Storey.png';
+const founderImageUrl = 'https://www.thehrstackguide.com/Dave%20Storey.png';
 
 const siteUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
 const aboutUrl = new URL('/about/', siteUrl).href;
@@ -41,6 +43,7 @@ const aboutSchema = {
       jobTitle: 'Founder',
       nationality: 'British',
       url: aboutUrl,
+      image: founderImageUrl,
       worksFor: { '@id': organizationId },
       sameAs: [founderLinkedIn],
     },
@@ -84,9 +87,18 @@ const aboutSchema = {
 
       <section class="space-y-4">
         <h2 class="text-2xl font-bold text-slate-900">About the Founder</h2>
-        <p class="text-lg leading-relaxed">
-          <strong>Dave Storey</strong> is a UK entrepreneur and technology strategist. Dave Storey founded The HR Stack Guide in 2026. Dave Storey specializes in B2B software evaluation, human resource management systems, and financial vendor modeling.
-        </p>
+        <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
+          <img
+            src={founderImagePath}
+            alt="Dave Storey - Founder of The HR Stack Guide"
+            class="h-32 w-32 flex-shrink-0 rounded-full border-2 border-gray-100 object-cover shadow-md"
+            width="128"
+            height="128"
+          />
+          <p class="text-lg leading-relaxed">
+            <strong>Dave Storey</strong> is a UK entrepreneur and technology strategist. Dave Storey founded The HR Stack Guide in 2026. Dave Storey specializes in B2B software evaluation, human resource management systems, and financial vendor modeling.
+          </p>
+        </div>
       </section>
 
       <section class="space-y-4">
