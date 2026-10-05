@@ -1,6 +1,20 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "trailingSlash": true,
+  "rewrites": [
+    {
+      "source": "/api/calculate-eor.json",
+      "destination": "/api/calculate-eor"
+    },
+    {
+      "source": "/api/calculate-eor.json/",
+      "destination": "/api/calculate-eor"
+    },
+    {
+      "source": "/api/calculate-eor/",
+      "destination": "/api/calculate-eor"
+    }
+  ],
   "redirects": [
     {
       "source": "/:path(.*leapsome.*)",

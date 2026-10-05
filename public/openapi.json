@@ -15,7 +15,7 @@
     "url": "https://www.thehrstackguide.com/methodology/"
   },
   "paths": {
-    "/api/calculate-eor/": {
+    "/api/calculate-eor": {
       "get": {
         "summary": "Calculate global hiring and EOR annual software costs",
         "operationId": "calculateEorCost",

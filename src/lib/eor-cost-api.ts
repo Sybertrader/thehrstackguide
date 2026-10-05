@@ -5,7 +5,7 @@
 
 export const MAX_EOR_HEADCOUNT = 250;
 export const MAX_CONTRACTOR_HEADCOUNT = 500;
-export const CALCULATE_EOR_PATH = '/api/calculate-eor/';
+export const CALCULATE_EOR_PATH = '/api/calculate-eor';
 export const CALCULATE_EOR_JSON_PATH = '/api/calculate-eor.json';
 export const OPENAPI_PATH = '/openapi.json';
 export const EOR_CALCULATOR_PATH = '/tools/eor-cost-calculator/';

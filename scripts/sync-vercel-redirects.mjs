@@ -67,9 +67,16 @@ const HEADERS = [
   },
 ];
 
+const REWRITES = [
+  { source: '/api/calculate-eor.json', destination: '/api/calculate-eor' },
+  { source: '/api/calculate-eor.json/', destination: '/api/calculate-eor' },
+  { source: '/api/calculate-eor/', destination: '/api/calculate-eor' },
+];
+
 const config = {
   $schema: 'https://openapi.vercel.sh/vercel.json',
   trailingSlash: true,
+  rewrites: REWRITES,
   redirects: buildVercelRedirects(),
   headers: HEADERS,
 };
@@ -102,4 +109,6 @@ for (const [from, to] of PROBES) {
 }
 
 fs.writeFileSync(VERCEL_PATH, `${JSON.stringify(config, null, 2)}\n`);
-console.log(`Wrote ${config.redirects.length} HTTP 308 redirects to vercel.json`);
+console.log(
+  `Wrote ${config.redirects.length} HTTP 308 redirects and ${config.rewrites.length} rewrites to vercel.json`,
+);
