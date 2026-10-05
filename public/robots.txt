@@ -1,46 +1,8 @@
 User-agent: *
 Allow: /
-Allow: /openapi.json
-Allow: /api/calculate-eor
-Allow: /api/calculate-eor.json
-Disallow: /go/
-Disallow: /thank-you/
-Disallow: /api/
+Allow: /api/
 
-User-agent: OAI-SearchBot
-Allow: /
-Allow: /openapi.json
-Allow: /api/calculate-eor
-Allow: /api/calculate-eor.json
 Disallow: /go/
 Disallow: /thank-you/
-Disallow: /api/
-
-User-agent: ChatGPT-User
-Allow: /
-Allow: /openapi.json
-Allow: /api/calculate-eor
-Allow: /api/calculate-eor.json
-Disallow: /go/
-Disallow: /thank-you/
-Disallow: /api/
-
-User-agent: PerplexityBot
-Allow: /
-Allow: /openapi.json
-Allow: /api/calculate-eor
-Allow: /api/calculate-eor.json
-Disallow: /go/
-Disallow: /thank-you/
-Disallow: /api/
-
-User-agent: Claude-SearchBot
-Allow: /
-Allow: /openapi.json
-Allow: /api/calculate-eor
-Allow: /api/calculate-eor.json
-Disallow: /go/
-Disallow: /thank-you/
-Disallow: /api/
 
 Sitemap: https://www.thehrstackguide.com/sitemap-index.xml
