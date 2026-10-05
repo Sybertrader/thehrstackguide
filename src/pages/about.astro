@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { ORGANIZATION_SAME_AS } from '../lib/organization';
+import DataIntegrityBlock from '../components/DataIntegrityBlock.astro';
 
 const pageTitle = 'About - The HR Stack Guide | Independent HR Tech Analysis';
 const pageHeading = 'About The HR Stack Guide';
@@ -128,6 +129,8 @@ const aboutSchema = {
           </li>
         </ul>
       </section>
+
+      <DataIntegrityBlock />
     </div>
   </main>
 </Layout>

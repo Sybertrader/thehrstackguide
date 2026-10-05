@@ -3,21 +3,39 @@
  *
  * Production traffic on Vercel static hosting is handled by vercel.json
  * (same destinations, HTTP 308). This middleware covers `astro dev` so
- * segment URLs never render as 200s locally.
+ * segment URLs never render as 200s locally, and so `trailingSlash: 'always'`
+ * pages like `/about` and `/methodology` 308 to their slashed canonicals
+ * instead of 404ing.
  */
 import type { MiddlewareHandler } from 'astro';
 import { REDIRECT_STATUS, SITE_ORIGIN, resolveMasterRedirect } from './lib/master-redirects';
 
-export const onRequest: MiddlewareHandler = async (context, next) => {
-  const destination = resolveMasterRedirect(context.url.pathname);
-  if (!destination) return next();
+/** Static HTML routes that 404 without a trailing slash under Astro `always`. */
+const TRAILING_SLASH_PAGES = new Set(['/about', '/methodology']);
 
-  const location = new URL(destination, SITE_ORIGIN);
-  location.search = context.url.search;
+function redirectTo(url: URL) {
   return new Response(null, {
     status: REDIRECT_STATUS,
     headers: {
-      Location: location.href,
+      Location: url.href,
     },
   });
+}
+
+export const onRequest: MiddlewareHandler = async (context, next) => {
+  const pathname = context.url.pathname;
+  const destination = resolveMasterRedirect(pathname);
+  if (destination) {
+    const location = new URL(destination, SITE_ORIGIN);
+    location.search = context.url.search;
+    return redirectTo(location);
+  }
+
+  if (TRAILING_SLASH_PAGES.has(pathname)) {
+    const location = new URL(context.url.href);
+    location.pathname = `${pathname}/`;
+    return redirectTo(location);
+  }
+
+  return next();
 };

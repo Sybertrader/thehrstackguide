@@ -1,0 +1,35 @@
+---
+const postmanDocsUrl = 'https://documenter.getpostman.com/view/58742298/2sBYHNYPFB';
+const calculationLogicUrl = 'https://github.com/Sybertrader/thehrstackguide-eor-api';
+const openApiSchemaUrl = '/openapi.json';
+---
+
+<section class="data-integrity-block my-10 rounded-xl border border-slate-200 bg-slate-50 p-6 text-slate-800">
+  <div class="mb-2 flex items-center gap-2">
+    <svg class="h-5 w-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+      ></path>
+    </svg>
+    <h3 class="m-0 text-base font-semibold text-slate-900">Open Methodology &amp; Pricing Verification</h3>
+  </div>
+
+  <p class="mb-4 text-sm leading-relaxed text-slate-600">
+    To eliminate vendor bias and affiliate inflation, our global EOR cost calculation engines are deterministic, open-source, and standardized via public OpenAPI schemas.
+  </p>
+
+  <div class="flex flex-wrap gap-4 border-t border-slate-200 pt-2 text-xs font-medium text-slate-600">
+    <a href={postmanDocsUrl} target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-600">
+      Interactive Data Console →
+    </a>
+    <a href={calculationLogicUrl} target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-600">
+      Calculation Logic Repository →
+    </a>
+    <a href={openApiSchemaUrl} target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-600">
+      OpenAPI 3.0 Data Schema →
+    </a>
+  </div>
+</section>
