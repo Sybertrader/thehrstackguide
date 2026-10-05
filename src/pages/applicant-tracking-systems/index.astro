@@ -10,6 +10,7 @@ import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendor
 import { getToolsByCategory } from '../../lib/tools';
 import { comparisonHubSlug } from '../../lib/comparison-routes';
 import { schemaOffer } from '../../lib/schema-offer';
+import { eorCostCalculatorJsonLd } from '../../lib/eor-cost-api';
 import { ATS_HUB_HEADING, ATS_HUB_TITLE } from '../../lib/seo';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
@@ -148,6 +149,7 @@ const collectionSchema = {
   description={`Independent ${currentMonthYear} applicant tracking system (ATS) comparisons. Compare Ashby, Lever, Workable, and more on features, pricing, and workflows.`}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(eorCostCalculatorJsonLd())} />
 
   <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
     <!-- Hero -->

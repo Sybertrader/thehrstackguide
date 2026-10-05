@@ -6,6 +6,7 @@ import { loadComparisons } from '../lib/comparisons';
 import { comparisonHubSlug } from '../lib/comparison-routes';
 import { getToolsByCategory, loadToolProfiles } from '../lib/tools';
 import { ORGANIZATION_SAME_AS } from '../lib/organization';
+import { eorCostCalculatorWebApplication } from '../lib/eor-cost-api';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
   month: 'long',
@@ -224,6 +225,7 @@ const homepageSchema = {
       logo: 'https://www.thehrstackguide.com/favicon.svg',
       sameAs: [...ORGANIZATION_SAME_AS],
     },
+    eorCostCalculatorWebApplication(),
   ],
 };
 ---

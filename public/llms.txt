@@ -9,3 +9,9 @@
 
 ## Key Comparisons
 - Head-to-head comparison pages evaluate pricing, feature matrices, integration ecosystems, and buyer checklists for HR platforms.
+
+## Tools
+- [/tools/eor-cost-calculator/](https://www.thehrstackguide.com/tools/eor-cost-calculator/): Interactive EOR and global hiring cost calculator.
+- [/api/calculate-eor.json](https://www.thehrstackguide.com/api/calculate-eor.json): Public GET API for annual Deel, Rippling, Multiplier, and Remote platform costs. Query params: `eor` (0–250), `contractors` (0–500).
+- [/openapi.json](https://www.thehrstackguide.com/openapi.json): OpenAPI 3.1 spec for the calculator API (GPT Actions / agent frameworks).
+- [/methodology/](https://www.thehrstackguide.com/methodology/): How pricing and comparison data are audited.

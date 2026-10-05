@@ -4,6 +4,7 @@ import CostCalculator from '../../components/CostCalculator.astro';
 import { listEorCalculatorVendors } from '../../data/vendors/eor-platform-rates';
 import { loadComparisons } from '../../lib/comparisons';
 import { comparisonHubSlug } from '../../lib/comparison-routes';
+import { eorCostCalculatorWebApplication, OPENAPI_PATH } from '../../lib/eor-cost-api';
 
 const pageHeading = 'Global EOR & Payroll Cost Calculator';
 const pageTitle = `${pageHeading} — The HR Stack Guide`;
@@ -53,12 +54,10 @@ const pageSchema = {
     },
     {
       '@type': 'WebApplication',
+      ...eorCostCalculatorWebApplication(),
       name: pageHeading,
       description: pageDescription,
       url: pageUrl,
-      applicationCategory: 'FinanceApplication',
-      operatingSystem: 'Web',
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
     },
     {
       '@type': 'BreadcrumbList',
@@ -73,6 +72,7 @@ const pageSchema = {
 ---
 
 <Layout title={pageTitle} heading={pageHeading} description={pageDescription}>
+  <link slot="head" rel="describedby" href={OPENAPI_PATH} type="application/json" />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
 
   <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">

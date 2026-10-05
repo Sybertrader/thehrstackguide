@@ -1,0 +1,108 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "The HR Stack Guide EOR & Global Hiring Cost API",
+    "description": "Calculates total annual platform, software, and headcount costs for Global Payroll and EOR providers (Deel, Rippling, Multiplier, Remote) based on team size.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://www.thehrstackguide.com"
+    }
+  ],
+  "externalDocs": {
+    "description": "Methodology",
+    "url": "https://www.thehrstackguide.com/methodology/"
+  },
+  "paths": {
+    "/api/calculate-eor.json": {
+      "get": {
+        "summary": "Calculate global hiring and EOR annual software costs",
+        "operationId": "calculateEorCost",
+        "parameters": [
+          {
+            "name": "eor",
+            "in": "query",
+            "required": false,
+            "description": "Number of full-time Employer of Record (EOR) international employees.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 250,
+              "default": 0
+            },
+            "example": 5
+          },
+          {
+            "name": "contractors",
+            "in": "query",
+            "required": false,
+            "description": "Number of international independent contractors.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500,
+              "default": 0
+            },
+            "example": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Calculated annual software cost breakdown across major platforms.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["success"]
+                    },
+                    "input": {
+                      "type": "object",
+                      "properties": {
+                        "eor_employees": { "type": "integer" },
+                        "global_contractors": { "type": "integer" }
+                      }
+                    },
+                    "estimates": {
+                      "type": "object",
+                      "properties": {
+                        "cheapest_option": {
+                          "type": "string",
+                          "description": "Vendor with the lowest estimated annual platform cost."
+                        },
+                        "estimated_annual_savings_vs_highest": {
+                          "type": "number",
+                          "description": "Difference in USD between the highest and lowest vendor annual totals."
+                        },
+                        "breakdown": {
+                          "type": "object",
+                          "properties": {
+                            "multiplier_annual_usd": { "type": "number" },
+                            "rippling_annual_usd": { "type": "number" },
+                            "remote_annual_usd": { "type": "number" },
+                            "deel_annual_usd": { "type": "number" }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "data_source": { "type": "string" },
+                        "last_audited": { "type": "string" },
+                        "documentation": { "type": "string", "format": "uri" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
