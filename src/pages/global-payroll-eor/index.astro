@@ -177,9 +177,37 @@ const collectionSchema = {
       </p>
     </header>
 
+    <!-- Comparison Builder -->
+    <CategoryComparisonBrowser
+      comparisons={categoryComparisons}
+      theme="indigo"
+      idPrefix="eor"
+      gridTitle="All Global Payroll & EOR Head-to-Head Comparisons"
+      showPairings={false}
+    />
+
     <!-- Tool Roster -->
     <section class="mb-16" aria-label="Global Payroll & EOR tool roster">
-      <h2 class="mb-6 text-2xl font-bold text-slate-900">The {currentMonthYear} Platform Roster</h2>
+      <div class="mb-4 flex flex-wrap items-center gap-3">
+        <h2 class="text-2xl font-bold text-slate-900">The {currentMonthYear} Platform Roster</h2>
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+          <svg class="h-3.5 w-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Human-Audited Pricing &amp; Features
+        </span>
+      </div>
+      <div class="mb-6 flex items-center justify-between gap-3 rounded-xl border border-amber-200/80 bg-amber-50 p-4 text-sm text-amber-950">
+        <div class="flex items-center gap-2">
+          <span class="text-base">📄</span>
+          <span>
+            <strong>Instant Scorecard Included:</strong> All vendor demo and trial links include a free copy of our <strong>CFO Vendor Evaluation Scorecard (.docx)</strong>.
+          </span>
+        </div>
+        <span class="hidden rounded-md bg-amber-200/60 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-amber-900 sm:inline-block">
+          Instant Download
+        </span>
+      </div>
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {toolRoster.map((tool) => (
           <article class="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md">
@@ -215,6 +243,7 @@ const collectionSchema = {
               vendorName={tool.name}
               location="hub_roster"
               leadMagnet
+              leadMagnetBadge={false}
               class="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md"
             >
               {vendorCtaLabel(tool.id, tool.name)}
@@ -258,6 +287,7 @@ const collectionSchema = {
         theme="indigo"
         idPrefix="eor"
         gridTitle="All Global Payroll & EOR Head-to-Head Comparisons"
+        showBuilder={false}
       />
     </section>
 

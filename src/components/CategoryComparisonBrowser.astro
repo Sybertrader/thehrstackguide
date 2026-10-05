@@ -7,9 +7,20 @@ interface Props {
   theme: 'emerald' | 'indigo' | 'sky';
   idPrefix: string;
   gridTitle: string;
+  /** Vendor A vs Vendor B dropdown. Default true. */
+  showBuilder?: boolean;
+  /** Head-to-head pairing list. Default true. */
+  showPairings?: boolean;
 }
 
-const { comparisons, theme, idPrefix, gridTitle } = Astro.props;
+const {
+  comparisons,
+  theme,
+  idPrefix,
+  gridTitle,
+  showBuilder = true,
+  showPairings = true,
+} = Astro.props;
 const { vendors, pairings, canonicalByPair } = buildCategoryBrowser(comparisons);
 const canonicalMapJson = JSON.stringify(canonicalByPair);
 
@@ -46,7 +57,7 @@ const vendorBId = `${idPrefix}-vendor-b`;
 ---
 
 {
-  vendors.length > 1 && pairings.length > 0 && (
+  showBuilder && vendors.length > 1 && pairings.length > 0 && (
     <div class="mb-16" data-matchup-selector data-canonical-map={canonicalMapJson}>
       <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
         <h2 class="text-2xl font-bold tracking-tight text-slate-900">Build Your Comparison</h2>
@@ -130,40 +141,44 @@ const vendorBId = `${idPrefix}-vendor-b`;
           <p data-matchup-error class="mt-3 hidden text-sm font-medium text-red-600" role="alert"></p>
         </form>
       </div>
+    </div>
+  )
+}
 
-      <div class="mt-10">
-        <h3 class="mb-4 text-lg font-bold text-slate-900">{gridTitle}</h3>
-        <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {pairings.map((pairing) => (
-            <li>
-              <a
-                href={pairing.href}
-                class:list={[
-                  'group flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:shadow-md',
-                  palette.cardHover,
-                ]}
+{
+  showPairings && vendors.length > 1 && pairings.length > 0 && (
+    <div class={showBuilder ? 'mt-10' : undefined}>
+      <h3 class="mb-4 text-lg font-bold text-slate-900">{gridTitle}</h3>
+      <ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {pairings.map((pairing) => (
+          <li>
+            <a
+              href={pairing.href}
+              class:list={[
+                'group flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm shadow-sm transition duration-150 hover:-translate-y-0.5 hover:shadow-md',
+                palette.cardHover,
+              ]}
+            >
+              <span class:list={['font-semibold text-slate-800 transition', palette.titleHover]}>
+                {pairing.toolAName} vs {pairing.toolBName}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                class:list={['h-4 w-4 shrink-0 text-slate-400 transition', palette.iconHover]}
+                aria-hidden="true"
               >
-                <span class:list={['font-semibold text-slate-800 transition', palette.titleHover]}>
-                  {pairing.toolAName} vs {pairing.toolBName}
-                </span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  class:list={['h-4 w-4 shrink-0 text-slate-400 transition', palette.iconHover]}
-                  aria-hidden="true"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+                <path
+                  fill-rule="evenodd"
+                  d="M4.25 5.5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 .75.75v5.75a.75.75 0 0 1-1.5 0V7.06l-7.47 7.47a.75.75 0 0 1-1.06-1.06L11.94 6H5.5a.75.75 0 0 1-.75-.75Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
