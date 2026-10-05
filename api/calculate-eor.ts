@@ -5,56 +5,48 @@ import {
   parseHeadcount,
 } from '../src/lib/eor-cost-api';
 
-type NodeReq = {
-  method?: string;
-  url?: string;
-  headers: Record<string, string | string[] | undefined>;
+export const config = {
+  runtime: 'edge',
 };
 
-type NodeRes = {
-  setHeader: (name: string, value: string) => NodeRes | void;
-  status: (code: number) => NodeRes;
-  json: (body: unknown) => void;
-  end: () => void;
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-const CORS = {
-  origin: '*',
-  methods: 'GET, OPTIONS',
-  headers: 'Content-Type',
-};
-
-function applyCors(res: NodeRes) {
-  res.setHeader('Access-Control-Allow-Origin', CORS.origin);
-  res.setHeader('Access-Control-Allow-Methods', CORS.methods);
-  res.setHeader('Access-Control-Allow-Headers', CORS.headers);
-}
-
-function requestUrl(req: NodeReq): URL {
-  const hostHeader = req.headers.host;
-  const host = Array.isArray(hostHeader) ? hostHeader[0] : hostHeader || 'www.thehrstackguide.com';
-  const protoHeader = req.headers['x-forwarded-proto'];
-  const proto = Array.isArray(protoHeader) ? protoHeader[0] : protoHeader || 'https';
-  return new URL(req.url || '/', `${proto}://${host}`);
-}
-
-export default function handler(req: NodeReq, res: NodeRes) {
-  applyCors(res);
-  res.setHeader('Cache-Control', 'public, max-age=3600');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
+export default function handler(request: Request) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        ...CORS_HEADERS,
+        'Access-Control-Max-Age': '86400',
+      },
+    });
   }
 
-  if (req.method && req.method !== 'GET') {
-    res.setHeader('Allow', CORS.methods);
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (request.method !== 'GET') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: {
+        ...CORS_HEADERS,
+        Allow: 'GET, OPTIONS',
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+    });
   }
 
-  const url = requestUrl(req);
+  const url = new URL(request.url);
   const eorCount = parseHeadcount(url.searchParams.get('eor'), MAX_EOR_HEADCOUNT);
   const contractorCount = parseHeadcount(url.searchParams.get('contractors'), MAX_CONTRACTOR_HEADCOUNT);
 
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  return res.status(200).json(buildEorCostEstimate(eorCount, contractorCount));
+  return new Response(JSON.stringify(buildEorCostEstimate(eorCount, contractorCount)), {
+    status: 200,
+    headers: {
+      ...CORS_HEADERS,
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600',
+    },
+  });
 }
