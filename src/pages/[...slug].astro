@@ -124,8 +124,6 @@ const { comparison, related, lastUpdatedIso, firstPublishedIso, isHub, hubSlug, 
 const isChildRoute = !isHub;
 const hubFamily = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
 
-const currentQuarter = `Q${Math.ceil((new Date().getMonth() + 1) / 3)} ${new Date().getFullYear()}`;
-
 function parsePipeList(value: string): string[] {
   if (!value?.trim()) return [];
   return value.split('|').map((item) => item.trim()).filter(Boolean);
@@ -545,6 +543,8 @@ const relatedLinks = related.map((item) => ({
   href: `/${comparisonHubSlug(item.tool_a_id, item.tool_b_id)}/`,
   tool_a_name: item.tool_a_name,
   tool_b_name: item.tool_b_name,
+  tool_a_logo_url: item.tool_a_logo_url,
+  tool_b_logo_url: item.tool_b_logo_url,
 }));
 
 const heroLogoPreloads = (
@@ -677,7 +677,7 @@ const heroLogoPreloads = (
           <a href="/affiliate-disclosure/" class="text-slate-500 underline underline-offset-2 hover:text-indigo-600">Read full disclosure</a>.
         </p>
 
-        <DataVerificationBadge quarter={currentQuarter} />
+        <DataVerificationBadge />
       </header>
 
       {isChildRoute && (
@@ -873,6 +873,7 @@ const heroLogoPreloads = (
                         vendorName={comparison.tool_a_name}
                         location="feature_table"
                         leadMagnet
+                        leadMagnetBadge={false}
                         class={
                           toolAIsWinner || !toolBIsWinner
                             ? 'inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700'
@@ -890,6 +891,7 @@ const heroLogoPreloads = (
                         vendorName={comparison.tool_b_name}
                         location="feature_table"
                         leadMagnet
+                        leadMagnetBadge={false}
                         class={
                           toolBIsWinner
                             ? 'inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700'

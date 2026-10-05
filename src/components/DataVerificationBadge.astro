@@ -1,19 +1,24 @@
 ---
 /**
- * Compact EEAT / GEO trust chip for comparison pages. Pass `quarter` from
- * the page's existing date helper (e.g. `currentQuarter`); defaults to the
- * current editorial window so the badge never renders blank.
+ * Compact EEAT / GEO trust chip for comparison pages. Month/year is computed
+ * at build time so the badge stays current without hardcoded quarters.
  */
 interface Props {
-  quarter?: string;
+  updatedLabel?: string;
 }
 
-const { quarter = 'Q3 2026' } = Astro.props;
+const currentMonthYear = new Date().toLocaleDateString('en-US', {
+  month: 'long',
+  year: 'numeric',
+});
+const { updatedLabel = currentMonthYear } = Astro.props;
 ---
 
-<p class="my-2 inline-flex max-w-full items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/50 px-3 py-1 text-xs font-medium text-slate-700">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3.5 w-3.5 shrink-0 text-emerald-600" aria-hidden="true">
-    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
+<div class="my-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-900">
+  <svg class="h-4 w-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
   </svg>
-  <span>Primary Terms &amp; Pricing Audited {quarter} | Unbiased Data</span>
-</p>
+  <span>Human-Verified Pricing &amp; Terms (Updated {updatedLabel})</span>
+  <span class="text-emerald-300" aria-hidden="true">|</span>
+  <span>Independent Operational Data</span>
+</div>
