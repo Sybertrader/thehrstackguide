@@ -2,137 +2,120 @@
 import Layout from '../layouts/Layout.astro';
 import { ORGANIZATION_SAME_AS } from '../lib/organization';
 
-const lastUpdated = 'September 2026';
-const pageTitle = 'About Us — The HR Stack Guide';
-const pageHeading = 'About Us';
+const pageTitle = 'About - The HR Stack Guide | Independent HR Tech Analysis';
+const pageHeading = 'About The HR Stack Guide';
 const pageDescription =
-  'The HR Stack Guide is an independent buyer\'s guide for modern HR technology. We publish data-backed comparisons of Global Payroll & EOR, Applicant Tracking Systems (ATS), and Performance Management platforms so teams can choose software without relying on vendor sales pitches.';
+  'Independent B2B HR technology analysis, pricing calculation engines, and software procurement benchmarking.';
+
+const founderName = 'Dave Storey';
+const founderLinkedIn = 'https://www.linkedin.com/in/dave-storey-0053b111/';
+const brandLinkedIn = 'https://www.linkedin.com/company/the-hr-stack-guide/';
 
 const siteUrl = new URL('/', Astro.site ?? Astro.url.origin).href;
+const aboutUrl = new URL('/about/', siteUrl).href;
+const daveId = `${aboutUrl}#dave-storey`;
+const organizationId = 'https://www.thehrstackguide.com/#organization';
+
 const aboutSchema = {
   '@context': 'https://schema.org',
-  '@type': 'AboutPage',
-  name: pageTitle,
-  description: pageDescription,
-  url: new URL('/about/', siteUrl).href,
-  isPartOf: {
-    '@type': 'WebSite',
-    name: 'The HR Stack Guide',
-    url: siteUrl,
-  },
-  about: {
-    '@type': 'Organization',
-    name: 'Stack Guide Media',
-    url: siteUrl,
-    logo: 'https://www.thehrstackguide.com/icon-512.png',
-    sameAs: [...ORGANIZATION_SAME_AS],
-    description:
-      'Stack Guide Media publishes The HR Stack Guide, an independent buyer\'s guide comparing Global Payroll & EOR, Applicant Tracking Systems (ATS), and Performance Management platforms.',
-    email: 'dave@thehrstackguide.com',
-  },
+  '@graph': [
+    {
+      '@type': 'AboutPage',
+      '@id': `${aboutUrl}#webpage`,
+      name: pageTitle,
+      description: pageDescription,
+      url: aboutUrl,
+      isPartOf: {
+        '@type': 'WebSite',
+        '@id': 'https://www.thehrstackguide.com/#website',
+        name: 'The HR Stack Guide',
+        url: siteUrl,
+      },
+      about: { '@id': organizationId },
+      mainEntity: { '@id': daveId },
+    },
+    {
+      '@type': 'Person',
+      '@id': daveId,
+      name: founderName,
+      jobTitle: 'Founder',
+      nationality: 'British',
+      url: aboutUrl,
+      worksFor: { '@id': organizationId },
+      sameAs: [founderLinkedIn],
+    },
+    {
+      '@type': 'Organization',
+      '@id': organizationId,
+      name: 'The HR Stack Guide',
+      alternateName: 'Stack Guide Media',
+      legalName: 'Lonestar Assets LLC',
+      url: siteUrl,
+      logo: 'https://www.thehrstackguide.com/icon-512.png',
+      description: 'An independent B2B HR technology comparison engine and global hiring pricing calculator.',
+      founder: { '@id': daveId },
+      sameAs: [...ORGANIZATION_SAME_AS],
+    },
+  ],
 };
-
-const evaluationItems = [
-  {
-    title: 'Primary Source Verification',
-    description:
-      'We pull specifications directly from vendor documentation, public changelogs, terms of service, and official pricing sheets.',
-  },
-  {
-    title: 'Hands-On Testing',
-    description:
-      'Where available, we test platform workflows inside trial environments to verify onboarding, compliance settings, and feature limitations.',
-  },
-  {
-    title: 'Standardized Scoring',
-    description:
-      'Tools are evaluated against a consistent rubric weighted by organization size (from seed-stage startups to international scaleups).',
-  },
-  {
-    title: 'Scheduled Recalibration',
-    description:
-      'When vendor pricing or core capabilities change, we re-audit affected comparison matrices and update page verification dates.',
-  },
-];
 ---
 
 <Layout
   title={pageTitle}
   heading={pageHeading}
   description={pageDescription}
+  includeOrganizationSchema={false}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(aboutSchema)} />
 
-  <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-    <header class="mb-10">
-      <nav aria-label="Breadcrumb">
-        <ol class="flex items-center gap-2 text-sm text-slate-500">
-          <li><a href="/" class="transition hover:text-indigo-600">Home</a></li>
-          <li aria-hidden="true" class="text-slate-300">&gt;</li>
-          <li class="font-medium text-indigo-600" aria-current="page">About Us</li>
-        </ol>
-      </nav>
-      <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-        {pageHeading}
-      </h1>
-      <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
-    </header>
+  <main class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="space-y-8 text-slate-800">
+      <header class="border-b border-slate-200 pb-6">
+        <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">{pageHeading}</h1>
+        <p class="mt-2 text-xl text-slate-600">{pageDescription}</p>
+      </header>
 
-    <article class="space-y-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <section>
-        <h2 class="text-lg font-semibold text-slate-900">Our Mission</h2>
-        <p class="mt-2 text-base leading-relaxed text-slate-700">
-          The HR Stack Guide is an independent buyer's guide for modern HR technology. We publish data-backed,
-          side-by-side comparisons of Global Payroll &amp; EOR, Applicant Tracking Systems (ATS), and
-          Performance Management platforms so founders, HR operations leads, and people leaders can choose
-          software without relying on vendor sales pitches.
-        </p>
-        <p class="mt-3 text-base leading-relaxed text-slate-700">
-          The site is published and operated by Stack Guide Media. We do not build, resell, or receive funding
-          from any HR software vendor. Our sole focus is delivering accurate, well-sourced comparison data.
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-slate-900">What We Do</h2>
+        <p class="text-lg leading-relaxed">
+          <strong>The HR Stack Guide</strong> is an independent B2B HR technology evaluation platform. The HR Stack Guide provides live financial calculation tools for Global Payroll, Applicant Tracking Systems (ATS), and Employer of Record (EOR) software. The HR Stack Guide operates in the United Kingdom and serves an international audience of Chief Financial Officers, Chief People Officers, and HR Operations leaders.
         </p>
       </section>
 
-      <section aria-label="How we evaluate software">
-        <h2 class="text-lg font-semibold text-slate-900">How We Evaluate Software</h2>
-        <p class="mt-2 text-base leading-relaxed text-slate-700">
-          Every evaluation on this site follows a single, transparent editorial methodology rather than
-          unverified user reviews:
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-slate-900">About the Founder</h2>
+        <p class="text-lg leading-relaxed">
+          <strong>Dave Storey</strong> is a UK entrepreneur and technology strategist. Dave Storey founded The HR Stack Guide in 2026. Dave Storey specializes in B2B software evaluation, human resource management systems, and financial vendor modeling.
         </p>
-        <ul class="mt-3 list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-700">
-          {evaluationItems.map((item) => (
-            <li>
-              <strong>{item.title}:</strong> {item.description}
-            </li>
-          ))}
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-slate-900">Methodology &amp; Data Integrity</h2>
+        <p class="text-lg leading-relaxed">
+          The HR Stack Guide collects verified software pricing data, fee schedules, and enterprise contract benchmarks directly from platform documentation and user disclosures. The HR Stack Guide does not accept financial compensation to alter scorecard verdicts or calculation outputs.
+        </p>
+      </section>
+
+      <section class="space-y-4 border-t border-slate-200 pt-6">
+        <h2 class="text-2xl font-bold text-slate-900">Verified Entity Links</h2>
+        <ul class="list-disc space-y-2 pl-6 font-medium text-indigo-600">
+          <li>
+            <a href={founderLinkedIn} target="_blank" rel="noopener noreferrer" class="hover:underline">
+              Dave Storey on LinkedIn (Founder)
+            </a>
+          </li>
+          <li>
+            <a href={brandLinkedIn} target="_blank" rel="noopener noreferrer" class="hover:underline">
+              The HR Stack Guide on LinkedIn (Organization)
+            </a>
+          </li>
+          <li>
+            <a href="/methodology/" class="hover:underline">
+              Data &amp; Scoring Methodology
+            </a>
+          </li>
         </ul>
       </section>
-
-      <section>
-        <h2 class="text-lg font-semibold text-slate-900">Editorial Independence &amp; Funding</h2>
-        <p class="mt-2 text-base leading-relaxed text-slate-700">
-          This site is free to use. We earn revenue through affiliate partnerships when readers sign up for a
-          vendor through links on our pages, at no additional cost to them.
-        </p>
-        <p class="mt-3 text-base leading-relaxed text-slate-700">
-          Affiliate relationships never dictate which vendors are evaluated, how platforms are scored, or who
-          wins a comparison. Full details are available in our
-          <a href="/affiliate-disclosure/" class="font-medium text-indigo-600 hover:underline">Affiliate Disclosure</a>.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-lg font-semibold text-slate-900">Corrections &amp; Vendor Inquiries</h2>
-        <p class="mt-2 text-base leading-relaxed text-slate-700">
-          If you spot an outdated price point, an unverified feature claim, or a factual error, please let us
-          know. We re-verify all correction requests against primary sources and update our data matrices
-          promptly.
-        </p>
-        <p class="mt-3 text-base leading-relaxed text-slate-700">
-          Contact:
-          <a href="mailto:dave@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">dave@thehrstackguide.com</a>
-        </p>
-      </section>
-    </article>
+    </div>
   </main>
 </Layout>
