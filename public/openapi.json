@@ -15,7 +15,7 @@
     "url": "https://www.thehrstackguide.com/methodology/"
   },
   "paths": {
-    "/api/calculate-eor.json": {
+    "/api/calculate-eor/": {
       "get": {
         "summary": "Calculate global hiring and EOR annual software costs",
         "operationId": "calculateEorCost",
@@ -95,6 +95,58 @@
                         "last_audited": { "type": "string" },
                         "documentation": { "type": "string", "format": "uri" }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/calculate-eor.json": {
+      "get": {
+        "summary": "Calculate global hiring and EOR annual software costs",
+        "description": "Alias of /api/calculate-eor for clients that expect a .json suffix.",
+        "operationId": "calculateEorCostJson",
+        "parameters": [
+          {
+            "name": "eor",
+            "in": "query",
+            "required": false,
+            "description": "Number of full-time Employer of Record (EOR) international employees.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 250,
+              "default": 0
+            },
+            "example": 5
+          },
+          {
+            "name": "contractors",
+            "in": "query",
+            "required": false,
+            "description": "Number of international independent contractors.",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 500,
+              "default": 0
+            },
+            "example": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Calculated annual software cost breakdown across major platforms.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "estimates": {
+                      "type": "object"
                     }
                   }
                 }

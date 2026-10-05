@@ -10,7 +10,7 @@ import { includeInSitemap, sitemapPolicy, withTrailingSlash } from './src/lib/ma
 export default defineConfig({
   site: 'https://www.thehrstackguide.com',
   // Static HTML for pages; routes with `export const prerender = false`
-  // (e.g. /api/calculate-eor.json) still deploy as Vercel serverless functions.
+  // (e.g. /api/calculate-eor and /api/calculate-eor.json) still deploy as Vercel serverless functions.
   output: 'static',
   adapter: vercel({
     webAnalytics: { enabled: true },
