@@ -1,7 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const lastUpdated = 'September 2026';
+const lastUpdated = new Date().toLocaleDateString('en-US', {
+  month: 'long',
+  year: 'numeric',
+});
 const pageTitle = 'Evaluation Framework & Editorial Methodology — The HR Stack Guide';
 const pageHeading = 'Evaluation Framework & Editorial Methodology';
 const pageDescription =
@@ -95,6 +98,9 @@ const pageDescription =
           <li>
             <strong>Fact-Checking:</strong> We re-audit comparison data on a scheduled basis and update our
             published dates whenever material features or prices change.
+          </li>
+          <li>
+            <strong>AI &amp; Data Modeling Transparency:</strong> We utilize custom algorithmic tools and data modeling to calculate complex headcount pricing scenarios. All automated outputs, pricing baselines, and vendor features undergo manual review and fact-checking by human analysts prior to publication.
           </li>
         </ul>
       </section>

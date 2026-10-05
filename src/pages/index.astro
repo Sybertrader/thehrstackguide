@@ -131,13 +131,6 @@ const proofStats = [
   { value: currentYear, label: 'Verified Pricing' },
 ];
 
-const heroFeatureHighlights = [
-  '⚡ Live TCO Calculators',
-  '🎯 Stage-Based Verdicts',
-  '📋 1-Click Demo Scripts',
-  '📄 Free CFO Scorecards',
-];
-
 const comparisonToolkit = [
   {
     title: 'Interactive Cost Calculator',
@@ -292,13 +285,6 @@ const homepageSchema = {
           </div>
         </form>
       </div>
-      <ul class="mt-6 flex flex-wrap items-center justify-center gap-2" aria-label="Interactive tools inside every comparison">
-        {heroFeatureHighlights.map((item) => (
-          <li class="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-medium text-slate-500 sm:text-sm">
-            {item}
-          </li>
-        ))}
-      </ul>
     </section>
 
     <!-- Stats Proof Bar -->
@@ -392,6 +378,109 @@ const homepageSchema = {
       </div>
     </section>
 
+    <section class="my-12">
+      <div class="mb-6 text-left">
+        <h2 class="text-xl font-bold text-gray-900 sm:text-2xl">Why Buyers Use The HR Stack Guide</h2>
+        <p class="text-sm text-gray-600 mt-1">Built to eliminate sales call surprises and hidden software fees.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="p-6 bg-white rounded-2xl border border-gray-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="text-blue-600 font-semibold mb-2 text-sm flex items-center gap-1.5">
+              <span>⚡</span> Skip Demo Traps
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Model total platform fees and EOR costs instantly without sitting through a mandatory sales call.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-6 bg-white rounded-2xl border border-gray-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="text-amber-600 font-semibold mb-2 text-sm flex items-center gap-1.5">
+              <span>🔍</span> Expose Hidden Fees
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Uncover unlisted FX conversion markups, deposit requirements, and seat minimums before signing.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-6 bg-white rounded-2xl border border-gray-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="text-emerald-600 font-semibold mb-2 text-sm flex items-center gap-1.5">
+              <span>🛡️</span> 100% Unbiased
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Zero paid vendor placements. Rankings and matrices are calculated using independent operational data.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-6 bg-white rounded-2xl border border-gray-200/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="text-purple-600 font-semibold mb-2 text-sm flex items-center gap-1.5">
+              <span>🎯</span> Stage-Matched
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              Get filtered verdicts based on your exact team size from 2 contractors to 250+ enterprise employees.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculator Hub Promo -->
+    <section class="mt-16" aria-label="Standalone EOR cost calculator">
+      <div class="relative overflow-hidden rounded-2xl border border-indigo-200 bg-indigo-50/70 p-6 shadow-sm sm:p-8">
+        <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-indigo-500 to-violet-600" aria-hidden="true"></div>
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          Try the Standalone Global EOR Cost Calculator
+        </h2>
+        <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
+          Compare pricing across Deel, Remote, Multiplier, Papaya, Gusto, and Payoneer in one dynamic view.
+        </p>
+        <a
+          href="/tools/eor-cost-calculator/"
+          class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
+          Launch Calculator Tool →
+        </a>
+      </div>
+    </section>
+
+    <!-- Our Evaluation Methodology (E-E-A-T trust pillars) -->
+    <section class="mt-16" aria-label="Our evaluation methodology">
+      <div class="text-center sm:text-left">
+        <h2 class="text-2xl font-bold text-slate-900">How We Build Independent HR Tech Guides</h2>
+        <p class="mt-2 text-base text-slate-500">
+          Our independent criteria for auditing pricing, global compliance, tech stack integrations, and stage alignment.
+        </p>
+        <div class="mt-4 mb-8 flex items-center gap-3 rounded-xl border border-blue-100 bg-blue-50/80 p-4 text-sm text-blue-950">
+          <svg class="h-5 w-5 shrink-0 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>
+            <strong>Human-Verified Data:</strong> All platform fee baselines, FX markups, and module pricing are manually audited and fact-checked against official vendor documentation by our software operations team (Updated October 2026).
+          </span>
+        </div>
+      </div>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {eeatPillars.map((pillar) => (
+          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-6 w-6" aria-hidden="true">
+                <path fill-rule="evenodd" d={pillar.icon} clip-rule="evenodd" />
+              </svg>
+            </div>
+            <h3 class="mt-5 text-lg font-bold text-slate-900">{pillar.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">{pillar.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
     <!-- Popular Comparisons -->
     {featuredComparisons.length > 0 && (
       <section class="mt-16" aria-label="Popular comparisons">
@@ -443,48 +532,6 @@ const homepageSchema = {
         </div>
       </section>
     )}
-
-    <!-- Calculator Hub Promo -->
-    <section class="mt-16" aria-label="Standalone EOR cost calculator">
-      <div class="relative overflow-hidden rounded-2xl border border-indigo-200 bg-indigo-50/70 p-6 shadow-sm sm:p-8">
-        <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-indigo-500 to-violet-600" aria-hidden="true"></div>
-        <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-          Try the Standalone Global EOR Cost Calculator
-        </h2>
-        <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
-          Compare pricing across Deel, Remote, Multiplier, Papaya, Gusto, and Payoneer in one dynamic view.
-        </p>
-        <a
-          href="/tools/eor-cost-calculator/"
-          class="mt-6 inline-flex items-center justify-center rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-        >
-          Launch Calculator Tool →
-        </a>
-      </div>
-    </section>
-
-    <!-- Our Evaluation Methodology (E-E-A-T trust pillars) -->
-    <section class="mt-16" aria-label="Our evaluation methodology">
-      <div class="text-center sm:text-left">
-        <h2 class="text-2xl font-bold text-slate-900">How We Build Independent HR Tech Guides</h2>
-        <p class="mt-2 text-base text-slate-500">
-          Our independent criteria for auditing pricing, global compliance, tech stack integrations, and stage alignment.
-        </p>
-      </div>
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {eeatPillars.map((pillar) => (
-          <article class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-6 w-6" aria-hidden="true">
-                <path fill-rule="evenodd" d={pillar.icon} clip-rule="evenodd" />
-              </svg>
-            </div>
-            <h3 class="mt-5 text-lg font-bold text-slate-900">{pillar.title}</h3>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">{pillar.description}</p>
-          </article>
-        ))}
-      </div>
-    </section>
   </main>
 
   <script type="application/json" id="hero-search-data" set:html={searchData} />
