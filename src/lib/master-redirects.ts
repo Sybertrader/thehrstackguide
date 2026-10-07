@@ -9,6 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'csv-parse/sync';
 import { comparisonHubSlug } from './comparison-routes.ts';
+import { isGonePath } from './gone.ts';
 
 export const SITE_ORIGIN = 'https://www.thehrstackguide.com';
 export const REDIRECT_STATUS = 308;
@@ -78,7 +79,6 @@ function purgedVendorHub() {
   for (const vendor of loadCatalog().purgeVendors ?? []) {
     map.set(vendor.id, CATEGORY_HUB_BY_ID[vendor.category] ?? '/');
   }
-  map.set('reflektive', '/performance-management/');
   map.set('clearco', '/performance-management/');
   map.set('clear-co', '/performance-management/');
   return map;
@@ -186,6 +186,9 @@ export function resolveMasterRedirect(pathname) {
   }
 
   const raw = pathName.split('?')[0].split('#')[0] || '/';
+  if (isGonePath(raw)) return null;
+  const exactHub = exactParentHubBySource.get(stripTrailingSlash(raw));
+  if (exactHub) return exactHub;
   if (raw.toLowerCase().includes('leapsome')) return '/performance-management/';
   if (raw.startsWith('/go') || raw.startsWith('/api/')) return null;
 
@@ -234,6 +237,20 @@ function namedSegment(regex) {
 }
 
 /**
+ * Named-regex bodies that would otherwise match any `-vs-` slug, including
+ * Reflektive URLs that must 410 instead of 308. Vercel/path-to-regexp accepts
+ * this lookahead (same shape as the headers matcher `/((?!api/|go/).*)`).
+ */
+const REFLEKTIVE_LOOKAHEAD = '(?!.*reflektive)';
+
+/** One comparison-hub token that stops before a `-for-{persona}` suffix. */
+const HUB_SLUG_TOKEN = '[a-z0-9]+(?:-(?!for-)[a-z0-9]+)*';
+
+function excludeReflektive(regex) {
+  return `${REFLEKTIVE_LOOKAHEAD}${regex}`;
+}
+
+/**
  * True when a `source` would 502 on Vercel: a splat sharing a path segment
  * with a literal. `/go/:path*` is legal because the splat is the whole
  * remaining segment.
@@ -276,9 +293,85 @@ export const LEGACY_PERSONA_SUFFIXES = [
 ];
 
 /**
+ * Exact long-tail → 1:1 parent comparison hub. Must sit before leapsome and
+ * purged-vendor catch-alls so these URLs never 308 to a category hub.
+ * Sources are stored without a trailing slash; destinations always have one.
+ */
+export const EXACT_PARENT_HUB_REDIRECTS = [
+  ['/oyster-vs-plane-for-tech-startups', '/oyster-vs-plane/'],
+  ['/oyster-vs-multiplier-for-us-latam', '/oyster-vs-multiplier/'],
+  ['/oyster-vs-multiplier-for-tech-startups', '/oyster-vs-multiplier/'],
+  ['/remote-vs-papaya-for-web3-crypto', '/remote-vs-papaya/'],
+  ['/rippling-vs-remote-for-scaleups', '/rippling-vs-remote/'],
+  ['/papaya-vs-multiplier-for-scaleups', '/papaya-vs-multiplier/'],
+  ['/remote-vs-multiplier-for-web3-crypto', '/remote-vs-multiplier/'],
+  ['/deel-vs-papaya-for-us-latam', '/deel-vs-papaya/'],
+  ['/rippling-vs-remote-for-web3-crypto', '/rippling-vs-remote/'],
+  ['/rippling-vs-oyster-for-agencies', '/rippling-vs-oyster/'],
+  ['/workable-vs-breezy-hr-for-enterprise', '/workable-vs-breezy-hr/'],
+  ['/ashby-vs-lever-for-remote-teams', '/ashby-vs-lever/'],
+  ['/performyard-vs-lattice-for-scaleups', '/performyard-vs-lattice/'],
+  ['/15five-vs-lattice-for-enterprise', '/15five-vs-lattice/'],
+  ['/leapsome-vs-clearcompany-for-scaleups', '/leapsome-vs-clearcompany/'],
+  ['/performyard-vs-lattice-for-enterprise', '/performyard-vs-lattice/'],
+  ['/culture-amp-vs-clearcompany-for-enterprise', '/culture-amp-vs-clearcompany/'],
+  ['/recruitee-vs-bamboohr-ats-for-scaleups', '/recruitee-vs-bamboohr-ats/'],
+  ['/workable-vs-recruitee-for-startups', '/workable-vs-recruitee/'],
+  ['/deel-vs-rippling-for-web3-crypto', '/deel-vs-rippling/'],
+  ['/jazzhr-vs-recruitee-for-enterprise', '/jazzhr-vs-recruitee/'],
+  ['/15five-vs-performyard-for-people-ops', '/15five-vs-performyard/'],
+  ['/15five-vs-leapsome-for-scaleups', '/15five-vs-leapsome/'],
+  ['/15five-vs-lattice-for-startups', '/15five-vs-lattice/'],
+  ['/15five-vs-performyard-for-scaleups', '/15five-vs-performyard/'],
+  ['/15five-vs-culture-amp-for-people-ops', '/15five-vs-culture-amp/'],
+  ['/performyard-vs-lattice-for-people-ops', '/performyard-vs-lattice/'],
+  ['/greenhouse-vs-lever-for-remote-teams', '/greenhouse-vs-lever/'],
+  ['/greenhouse-vs-bamboohr-ats-for-scaleups', '/greenhouse-vs-bamboohr-ats/'],
+  ['/ashby-vs-bamboohr-ats-for-startups', '/ashby-vs-bamboohr-ats/'],
+  ['/breezy-hr-vs-jazzhr-for-startups', '/breezy-hr-vs-jazzhr/'],
+  ['/lever-vs-recruitee-for-scaleups', '/lever-vs-recruitee/'],
+  ['/breezy-hr-vs-jazzhr-for-enterprise', '/breezy-hr-vs-jazzhr/'],
+  ['/ashby-vs-workable-for-startups', '/ashby-vs-workable/'],
+  ['/papaya-vs-multiplier-for-tech-startups', '/papaya-vs-multiplier/'],
+  ['/ashby-vs-breezy-hr-for-scaleups', '/ashby-vs-breezy-hr/'],
+  ['/rippling-vs-plane-for-scaleups', '/rippling-vs-plane/'],
+  ['/remote-vs-multiplier-for-tech-startups', '/remote-vs-multiplier/'],
+  ['/greenhouse-vs-breezy-hr-for-startups', '/greenhouse-vs-breezy-hr/'],
+  ['/jazzhr-vs-bamboohr-ats-for-agencies', '/jazzhr-vs-bamboohr-ats/'],
+  ['/deel-vs-remote-for-agencies', '/deel-vs-remote/'],
+  ['/rippling-vs-papaya-for-tech-startups', '/rippling-vs-papaya/'],
+  ['/deel-vs-gusto-for-tech-startups', '/deel-vs-gusto/'],
+  ['/deel-vs-papaya-for-web3-crypto', '/deel-vs-papaya/'],
+  ['/deel-vs-plane-for-us-latam', '/deel-vs-plane/'],
+  ['/papaya-vs-multiplier-for-web3-crypto', '/papaya-vs-multiplier/'],
+  ['/deel-vs-multiplier-for-scaleups', '/deel-vs-multiplier/'],
+  ['/rippling-vs-gusto-for-agencies', '/rippling-vs-gusto/'],
+  ['/rippling-vs-oyster-for-us-latam', '/rippling-vs-oyster/'],
+  ['/deel-vs-oyster-for-web3-crypto', '/deel-vs-oyster/'],
+  ['/rippling-vs-papaya-for-agencies', '/rippling-vs-papaya/'],
+];
+
+const exactParentHubBySource = new Map(EXACT_PARENT_HUB_REDIRECTS);
+
+export function buildExactParentHubRedirects() {
+  const redirects = [];
+  const seen = new Set();
+  for (const [source, destination] of EXACT_PARENT_HUB_REDIRECTS) {
+    for (const rule of slashPair(source, destination)) {
+      if (seen.has(rule.source)) continue;
+      seen.add(rule.source);
+      redirects.push(rule);
+    }
+  }
+  return redirects;
+}
+
+/**
  * Any URL containing `leapsome` (purged vendor) 308s to the PM hub.
- * Must sit first so leftover `/leapsome`, nested paths, and odd suffixes
- * never fall through to Vercel ROUTER_CANNOT_MATCH.
+ * Sits after the exact 51 long-tail → parent-hub rules so those never
+ * collapse to the category hub. Negative lookaheads keep Reflektive 410s
+ * and `-for-{persona}` long-tails out of this catch-all (persona rules
+ * send leftover `-for-*` to the 1:1 parent instead).
  *
  * Do not use `/:path*leapsome:path*` — duplicate `:path*` names are invalid
  * path-to-regexp and can 502 at the edge. Named regex `:path(.*leapsome.*)`
@@ -286,9 +379,10 @@ export const LEGACY_PERSONA_SUFFIXES = [
  */
 export function buildLeapsomeCatchAllRedirects() {
   const hub = '/performance-management/';
+  const body = excludeReflektive(`(?!.*-for-).*leapsome.*`);
   return [
-    { source: '/:path(.*leapsome.*)', destination: hub, statusCode: REDIRECT_STATUS },
-    { source: '/:path(.*leapsome.*)/', destination: hub, statusCode: REDIRECT_STATUS },
+    { source: namedSegment(body), destination: hub, statusCode: REDIRECT_STATUS },
+    { source: `${namedSegment(body)}/`, destination: hub, statusCode: REDIRECT_STATUS },
   ];
 }
 
@@ -308,23 +402,15 @@ export function buildPurgedVendorRedirects() {
   }
 
   for (const [id, hub] of purgedVendorHub()) {
-    if (id === 'clearco' || id === 'clear-co') continue;
+    if (id === 'clearco' || id === 'clear-co' || id === 'reflektive') continue;
     const escaped = escapeRegex(id);
-    // `{id}-vs-{anything}` including `-for-{persona}`.
-    pushNamed(`${escaped}-vs-.*`, hub);
-    // `{anything}-vs-{id}` and `{anything}-vs-{id}-for-{persona}`.
-    pushNamed(`.*-vs-${escaped}(?:-.*)?`, hub);
+    // Exact `{id}-vs-{partner}` hubs only. Do not swallow `-for-{persona}`
+    // long-tails (those 308 to the 1:1 parent, including the 51 mappings).
+    pushNamed(excludeReflektive(`${escaped}-vs-${HUB_SLUG_TOKEN}`), hub);
+    pushNamed(excludeReflektive(`${HUB_SLUG_TOKEN}-vs-${escaped}`), hub);
     push(`/go/${id}`, hub);
     push(`/go/${id}/`, hub);
   }
-
-  const pm = '/performance-management/';
-  push('/performyard-vs-reflektive-for-enterprise', pm);
-  push('/performyard-vs-reflektive-for-enterprise/', pm);
-  push('/leapsome-vs-reflektive-for-scaleups', pm);
-  push('/leapsome-vs-reflektive-for-scaleups/', pm);
-  pushNamed('reflektive-vs-.*', pm);
-  pushNamed('.*-vs-reflektive(?:-.*)?', pm);
 
   return redirects;
 }
@@ -334,15 +420,16 @@ export function buildLiveMasterRedirects() {
   const seen = new Set();
 
   function pushAll(sourceSlug, destination) {
+    const forBody = excludeReflektive(`${escapeRegex(sourceSlug)}-for-.*`);
     for (const rule of [
       ...slashPair(`/${sourceSlug}`, destination),
       {
-        source: namedSegment(`${escapeRegex(sourceSlug)}-for-.*`),
+        source: namedSegment(forBody),
         destination,
         statusCode: REDIRECT_STATUS,
       },
       {
-        source: `${namedSegment(`${escapeRegex(sourceSlug)}-for-.*`)}/`,
+        source: `${namedSegment(forBody)}/`,
         destination,
         statusCode: REDIRECT_STATUS,
       },
@@ -365,13 +452,15 @@ export function buildLiveMasterRedirects() {
 
 /**
  * Catch-all: any remaining `brand-vs-brand-for-{segment}` collapses to
- * `/{brand-vs-brand}/` in one 308. Named regex + a character-class param
- * (never `:mod*`) so Vercel can compile the rule. Must sit AFTER purged
- * + reverse/alias rules so those destinations stay 1-hop.
+ * `/{brand-vs-brand}/` in one 308 (the 1:1 parent, never a category hub).
+ * Named regex + a character-class param (never `:mod*`) so Vercel can
+ * compile the rule. Must sit AFTER exact 51 + purged + reverse/alias
+ * rules so those destinations stay 1-hop.
  *
  * Known persona suffixes are listed first (one named group, proven
  * leapsome-shaped). The generic `:mod([a-z0-9-]+)` rule covers typos and
  * future niche ids so they 308 to the hub instead of 502.
+ * Reflektive paths are excluded so they fall through to 410.
  */
 export function buildSegmentCatchAllRedirects() {
   const redirects = [];
@@ -383,14 +472,16 @@ export function buildSegmentCatchAllRedirects() {
     redirects.push({ source, destination, statusCode: REDIRECT_STATUS });
   }
 
+  const hubGroup = `/:hub(${excludeReflektive('.*-vs-.*')})`;
+
   for (const suffix of LEGACY_PERSONA_SUFFIXES) {
     const escaped = escapeRegex(suffix);
-    push(`/:hub(.*-vs-.*)-for-${escaped}`, '/:hub/');
-    push(`/:hub(.*-vs-.*)-for-${escaped}/`, '/:hub/');
+    push(`${hubGroup}-for-${escaped}`, '/:hub/');
+    push(`${hubGroup}-for-${escaped}/`, '/:hub/');
   }
 
-  push('/:hub(.*-vs-.*)-for-:mod([a-z0-9-]+)', '/:hub/');
-  push('/:hub(.*-vs-.*)-for-:mod([a-z0-9-]+)/', '/:hub/');
+  push(`${hubGroup}-for-:mod([a-z0-9-]+)`, '/:hub/');
+  push(`${hubGroup}-for-:mod([a-z0-9-]+)/`, '/:hub/');
 
   return redirects;
 }
@@ -405,13 +496,15 @@ export function buildGoAliasRedirects() {
 }
 
 export function buildVercelRedirects() {
+  // Exact 51 long-tails first: Vercel first-match so they win over catch-alls.
   const redirects = [
+    ...buildExactParentHubRedirects(),
     ...buildLeapsomeCatchAllRedirects(),
     ...buildPurgedVendorRedirects(),
     ...buildLiveMasterRedirects(),
     ...buildSegmentCatchAllRedirects(),
     ...buildGoAliasRedirects(),
-  ];
+  ].filter((rule) => rule.source.includes(':') || !isGonePath(rule.source));
   assertSafeVercelRedirects(redirects);
   return redirects;
 }
@@ -490,6 +583,7 @@ export function includeInSitemap(page) {
 
   if (SITEMAP_EXCLUDED_PREFIXES.some((prefix) => normalized.startsWith(prefix))) return false;
   if (SITEMAP_EXCLUDED_PATHS.has(normalized)) return false;
+  if (isGonePath(normalized)) return false;
   // `-for-{segment}` URLs, reverse vendor order, and purged-vendor slugs are
   // all 308 sources; submitting a redirect is a crawl-budget own goal.
   if (SEGMENT_SUFFIX_RE.test(stripTrailingSlash(pathname))) return false;

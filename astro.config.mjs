@@ -5,7 +5,14 @@ import sitemap from '@astrojs/sitemap';
 import partytown from '@astrojs/partytown';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
-import { includeInSitemap, sitemapPolicy, withTrailingSlash } from './src/lib/master-redirects';
+import { GONE_HEADERS, GONE_HTML, GONE_STATUS, isGonePath } from './src/lib/gone';
+import {
+  includeInSitemap,
+  REDIRECT_STATUS,
+  resolveMasterRedirect,
+  sitemapPolicy,
+  withTrailingSlash,
+} from './src/lib/master-redirects';
 
 /**
  * Astro `trailingSlash: 'always'` returns 404 for `/about` and `/methodology`
@@ -17,6 +24,23 @@ function trailingSlashPageRedirects() {
   const pages = new Set(['/about', '/methodology']);
   function handler(req, res, next) {
     const [pathname, search] = (req.url ?? '').split('?');
+    if (isGonePath(pathname)) {
+      res.statusCode = GONE_STATUS;
+      res.statusMessage = 'Gone';
+      for (const [key, value] of Object.entries(GONE_HEADERS)) {
+        res.setHeader(key, value);
+      }
+      res.end(GONE_HTML);
+      return;
+    }
+    const destination = resolveMasterRedirect(pathname);
+    if (destination) {
+      const query = search ? `?${search}` : '';
+      res.statusCode = REDIRECT_STATUS;
+      res.setHeader('Location', `${destination}${query}`);
+      res.end();
+      return;
+    }
     if (!pages.has(pathname)) {
       next();
       return;

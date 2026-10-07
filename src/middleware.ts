@@ -1,13 +1,13 @@
 /**
- * Edge/dev 308s for the master 1-1 architecture.
+ * Edge/dev interceptors for deleted URLs (HTTP 410) and the master 1-1
+ * architecture (HTTP 308).
  *
- * Production traffic on Vercel static hosting is handled by vercel.json
- * (same destinations, HTTP 308). This middleware covers `astro dev` so
- * segment URLs never render as 200s locally, and so `trailingSlash: 'always'`
- * pages like `/about` and `/methodology` 308 to their slashed canonicals
- * instead of 404ing.
+ * Production 308s for comparison aliases are also in vercel.json. Production
+ * 410s are vercel.json rewrites to /api/gone (a `routes` array would ignore
+ * those existing redirects). This middleware covers `astro dev` and SSR.
  */
-import type { MiddlewareHandler } from 'astro';
+import { defineMiddleware } from 'astro:middleware';
+import { goneHtmlResponse, isGonePath } from './lib/gone';
 import { REDIRECT_STATUS, SITE_ORIGIN, resolveMasterRedirect } from './lib/master-redirects';
 
 /** Static HTML routes that 404 without a trailing slash under Astro `always`. */
@@ -22,8 +22,13 @@ function redirectTo(url: URL) {
   });
 }
 
-export const onRequest: MiddlewareHandler = async (context, next) => {
+export const onRequest = defineMiddleware(async (context, next) => {
   const pathname = context.url.pathname;
+
+  if (isGonePath(pathname)) {
+    return goneHtmlResponse();
+  }
+
   const destination = resolveMasterRedirect(pathname);
   if (destination) {
     const location = new URL(destination, SITE_ORIGIN);
@@ -38,4 +43,4 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   }
 
   return next();
-};
+});
