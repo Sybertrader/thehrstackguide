@@ -11,6 +11,7 @@ export const DELETED_PATHS = [
   '/culture-amp-vs-reflektive-for-remote-teams',
   '/performyard-vs-reflektive-for-enterprise',
   '/leapsome-vs-reflektive-for-scaleups',
+  '/15five-vs-peoplefluent',
 ];
 
 export const DELETED_PREFIXES = [

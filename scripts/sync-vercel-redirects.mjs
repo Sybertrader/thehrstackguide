@@ -3,7 +3,7 @@
  * Writes vercel.json 308 rules for the master 1-1 architecture.
  *
  * Order is load-bearing:
- *   1. Exact long-tail → 1:1 parent comparison hubs (the 51, top of array)
+ *   1. Exact long-tail → 1:1 parent comparison hubs (top of array)
  *   2. Leapsome contains-path catch-all → /performance-management/
  *      (excludes reflektive and `-for-*` long-tails)
  *   3. Purged vendors → category hubs (exact a-vs-b only, no `-for-*`)
@@ -114,6 +114,9 @@ const PROBES = [
   ['/oyster-vs-plane-for-tech-startups/', '/oyster-vs-plane/'],
   ['/15five-vs-lattice-for-enterprise/', '/15five-vs-lattice/'],
   ['/leapsome-vs-clearcompany-for-scaleups/', '/leapsome-vs-clearcompany/'],
+  ['/performyard-vs-leapsome-for-scaleups/', '/performyard-vs-leapsome/'],
+  ['/greenhouse-vs-recruitee-for-scaleups/', '/greenhouse-vs-recruitee/'],
+  ['/rippling-vs-plane-for-startups/', '/rippling-vs-plane/'],
 ];
 
 for (const [from, to] of PROBES) {
@@ -129,7 +132,9 @@ if (
   !isGonePath('/leapsome-vs-reflektive-for-scaleups') ||
   !isGonePath('/foo-vs-reflektive/') ||
   !isGonePath('/Reflektive-vs-lattice-for-enterprise') ||
-  !isGonePath('/old-category/retired-hub/')
+  !isGonePath('/old-category/retired-hub/') ||
+  !isGonePath('/15five-vs-peoplefluent') ||
+  !isGonePath('/15five-vs-peoplefluent/')
 ) {
   throw new Error('isGonePath() does not match DELETED_PATHS, DELETED_PREFIXES, or reflektive');
 }
@@ -151,6 +156,12 @@ const hasReflektiveRewrite = config.rewrites.some(
 if (!hasReflektiveRewrite) {
   throw new Error('Missing Vercel rewrite matcher /:path(.*reflektive.*) → /api/gone');
 }
+const hasPeoplefluentGoneRewrite =
+  config.rewrites.some((rule) => rule.source === '/15five-vs-peoplefluent' && rule.destination === '/api/gone') &&
+  config.rewrites.some((rule) => rule.source === '/15five-vs-peoplefluent/' && rule.destination === '/api/gone');
+if (!hasPeoplefluentGoneRewrite) {
+  throw new Error('Missing Vercel rewrite slash pair /15five-vs-peoplefluent → /api/gone');
+}
 
 const CATEGORY_HUBS = new Set([
   '/global-payroll-eor/',
@@ -167,6 +178,8 @@ const REFLEKTIVE_PROBES = [
   '/reflektive-vs-lattice',
   '/Reflektive-vs-lattice-for-enterprise',
   '/performyard-vs-reflektive-for-enterprise/',
+  '/15five-vs-peoplefluent',
+  '/15five-vs-peoplefluent/',
 ];
 
 const LONG_TAIL_PROBES = [
@@ -174,6 +187,8 @@ const LONG_TAIL_PROBES = [
   ['/oyster-vs-plane-for-tech-startups/', '/oyster-vs-plane/'],
   ['/15five-vs-lattice-for-enterprise/', '/15five-vs-lattice/'],
   ['/rippling-vs-remote-for-scaleups', '/rippling-vs-remote/'],
+  ['/performyard-vs-leapsome-for-scaleups', '/performyard-vs-leapsome/'],
+  ['/greenhouse-vs-recruitee-for-scaleups/', '/greenhouse-vs-recruitee/'],
 ];
 
 function redirectSourceMatches(source, pathname) {
@@ -233,7 +248,7 @@ for (let i = 0; i < expectedExactPrefix.length; i += 1) {
     got.statusCode !== 308
   ) {
     throw new Error(
-      `Exact 51 must lead vercel.json redirects. Index ${i}: expected ${want.source} → ${want.destination}, got ${got?.source} → ${got?.destination}`,
+      `Exact parent-hub long-tails must lead vercel.json redirects. Index ${i}: expected ${want.source} → ${want.destination}, got ${got?.source} → ${got?.destination}`,
     );
   }
 }

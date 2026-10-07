@@ -9,7 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'csv-parse/sync';
 import { comparisonHubSlug } from './comparison-routes.ts';
-import { isGonePath } from './gone.ts';
+import { DELETED_PATHS, isGonePath } from './gone.ts';
 
 export const SITE_ORIGIN = 'https://www.thehrstackguide.com';
 export const REDIRECT_STATUS = 308;
@@ -247,7 +247,16 @@ const REFLEKTIVE_LOOKAHEAD = '(?!.*reflektive)';
 const HUB_SLUG_TOKEN = '[a-z0-9]+(?:-(?!for-)[a-z0-9]+)*';
 
 function excludeReflektive(regex) {
-  return `${REFLEKTIVE_LOOKAHEAD}${regex}`;
+  // Non-reflektive DELETED_PATHS must not match 308 catch-alls: Vercel
+  // redirects run before rewrites, so a peoplefluent/15five hub would 308
+  // instead of rewriting to /api/gone. Reflektive URLs are already excluded
+  // by REFLEKTIVE_LOOKAHEAD.
+  const deletedLookaheads = DELETED_PATHS.filter(
+    (gonePath) => !gonePath.toLowerCase().includes('reflektive'),
+  )
+    .map((gonePath) => `(?!${escapeRegex(gonePath.replace(/^\//, ''))})`)
+    .join('');
+  return `${REFLEKTIVE_LOOKAHEAD}${deletedLookaheads}${regex}`;
 }
 
 /**
@@ -349,6 +358,85 @@ export const EXACT_PARENT_HUB_REDIRECTS = [
   ['/rippling-vs-oyster-for-us-latam', '/rippling-vs-oyster/'],
   ['/deel-vs-oyster-for-web3-crypto', '/deel-vs-oyster/'],
   ['/rippling-vs-papaya-for-agencies', '/rippling-vs-papaya/'],
+  ['/greenhouse-vs-recruitee-for-scaleups', '/greenhouse-vs-recruitee/'],
+  ['/performyard-vs-leapsome-for-scaleups', '/performyard-vs-leapsome/'],
+  ['/performyard-vs-clearcompany-for-enterprise', '/performyard-vs-clearcompany/'],
+  ['/15five-vs-leapsome-for-startups', '/15five-vs-leapsome/'],
+  ['/performyard-vs-clearcompany-for-scaleups', '/performyard-vs-clearcompany/'],
+  ['/leapsome-vs-culture-amp-for-enterprise', '/leapsome-vs-culture-amp/'],
+  ['/leapsome-vs-culture-amp-for-scaleups', '/leapsome-vs-culture-amp/'],
+  ['/leapsome-vs-culture-amp-for-people-ops', '/leapsome-vs-culture-amp/'],
+  ['/performyard-vs-leapsome-for-enterprise', '/performyard-vs-leapsome/'],
+  ['/leapsome-vs-lattice-for-scaleups', '/leapsome-vs-lattice/'],
+  ['/greenhouse-vs-workable-for-startups', '/greenhouse-vs-workable/'],
+  ['/performyard-vs-leapsome-for-people-ops', '/performyard-vs-leapsome/'],
+  ['/greenhouse-vs-breezy-hr-for-scaleups', '/greenhouse-vs-breezy-hr/'],
+  ['/greenhouse-vs-jazzhr-for-scaleups', '/greenhouse-vs-jazzhr/'],
+  ['/leapsome-vs-lattice-for-enterprise', '/leapsome-vs-lattice/'],
+  ['/greenhouse-vs-jazzhr-for-startups', '/greenhouse-vs-jazzhr/'],
+  ['/performyard-vs-clearcompany-for-startups', '/performyard-vs-clearcompany/'],
+  ['/rippling-vs-plane-for-startups', '/rippling-vs-plane/'],
+  ['/greenhouse-vs-bamboohr-ats-for-remote-teams', '/greenhouse-vs-bamboohr-ats/'],
+  ['/greenhouse-vs-workable-for-scaleups', '/greenhouse-vs-workable/'],
+  ['/greenhouse-vs-lever-for-scaleups', '/greenhouse-vs-lever/'],
+  ['/deel-vs-plane-for-web3-crypto', '/deel-vs-plane/'],
+  ['/15five-vs-lattice-for-scaleups', '/15five-vs-lattice/'],
+  ['/ashby-vs-greenhouse-for-scaleups', '/ashby-vs-greenhouse/'],
+  ['/greenhouse-vs-lever-for-enterprise', '/greenhouse-vs-lever/'],
+  ['/papaya-vs-plane-for-us-latam', '/papaya-vs-plane/'],
+  ['/papaya-vs-plane-for-web3-crypto', '/papaya-vs-plane/'],
+  ['/multiplier-vs-plane-for-web3-crypto', '/multiplier-vs-plane/'],
+  ['/oyster-vs-plane-for-web3-crypto', '/oyster-vs-plane/'],
+  ['/rippling-vs-plane-for-us-latam', '/rippling-vs-plane/'],
+  ['/greenhouse-vs-recruitee-for-startups', '/greenhouse-vs-recruitee/'],
+  ['/ashby-vs-greenhouse-for-startups', '/ashby-vs-greenhouse/'],
+  ['/multiplier-vs-plane-for-scaleups', '/multiplier-vs-plane/'],
+  ['/culture-amp-vs-clearcompany-for-remote-teams', '/culture-amp-vs-clearcompany/'],
+  ['/performyard-vs-leapsome-for-remote-teams', '/performyard-vs-leapsome/'],
+  ['/leapsome-vs-clearcompany-for-remote-teams', '/leapsome-vs-clearcompany/'],
+  ['/leapsome-vs-lattice-for-startups', '/leapsome-vs-lattice/'],
+  ['/15five-vs-clearcompany-for-scaleups', '/15five-vs-clearcompany/'],
+  ['/lattice-vs-clearcompany-for-remote-teams', '/lattice-vs-clearcompany/'],
+  ['/leapsome-vs-clearcompany-for-startups', '/leapsome-vs-clearcompany/'],
+  ['/15five-vs-clearcompany-for-enterprise', '/15five-vs-clearcompany/'],
+  ['/15five-vs-clearcompany-for-people-ops', '/15five-vs-clearcompany/'],
+  ['/15five-vs-performyard-for-enterprise', '/15five-vs-performyard/'],
+  ['/leapsome-vs-culture-amp-for-startups', '/leapsome-vs-culture-amp/'],
+  ['/lattice-vs-clearcompany-for-startups', '/lattice-vs-clearcompany/'],
+  ['/15five-vs-culture-amp-for-enterprise', '/15five-vs-culture-amp/'],
+  ['/performyard-vs-leapsome-for-startups', '/performyard-vs-leapsome/'],
+  ['/greenhouse-vs-bamboohr-ats-for-enterprise', '/greenhouse-vs-bamboohr-ats/'],
+  ['/multiplier-vs-plane-for-tech-startups', '/multiplier-vs-plane/'],
+  ['/greenhouse-vs-workable-for-agencies', '/greenhouse-vs-workable/'],
+  ['/greenhouse-vs-bamboohr-ats-for-startups', '/greenhouse-vs-bamboohr-ats/'],
+  ['/greenhouse-vs-jazzhr-for-enterprise', '/greenhouse-vs-jazzhr/'],
+  ['/greenhouse-vs-recruitee-for-agencies', '/greenhouse-vs-recruitee/'],
+  ['/papaya-vs-plane-for-agencies', '/papaya-vs-plane/'],
+  ['/15five-vs-culture-amp-for-startups', '/15five-vs-culture-amp/'],
+  ['/15five-vs-performyard-for-startups', '/15five-vs-performyard/'],
+  ['/greenhouse-vs-recruitee-for-remote-teams', '/greenhouse-vs-recruitee/'],
+  ['/ashby-vs-greenhouse-for-enterprise', '/ashby-vs-greenhouse/'],
+  ['/gusto-vs-plane-for-us-latam', '/gusto-vs-plane/'],
+  ['/greenhouse-vs-breezy-hr-for-enterprise', '/greenhouse-vs-breezy-hr/'],
+  ['/greenhouse-vs-recruitee-for-enterprise', '/greenhouse-vs-recruitee/'],
+  ['/oyster-vs-plane-for-scaleups', '/oyster-vs-plane/'],
+  ['/papaya-vs-plane-for-tech-startups', '/papaya-vs-plane/'],
+  ['/papaya-vs-plane-for-scaleups', '/papaya-vs-plane/'],
+  ['/multiplier-vs-plane-for-us-latam', '/multiplier-vs-plane/'],
+  ['/rippling-vs-plane-for-tech-startups', '/rippling-vs-plane/'],
+  ['/ashby-vs-greenhouse-for-agencies', '/ashby-vs-greenhouse/'],
+  ['/greenhouse-vs-jazzhr-for-agencies', '/greenhouse-vs-jazzhr/'],
+  ['/greenhouse-vs-bamboohr-ats-for-agencies', '/greenhouse-vs-bamboohr-ats/'],
+  ['/rippling-vs-plane-for-web3-crypto', '/rippling-vs-plane/'],
+  ['/multiplier-vs-plane-for-agencies', '/multiplier-vs-plane/'],
+  ['/rippling-vs-plane-for-agencies', '/rippling-vs-plane/'],
+  ['/greenhouse-vs-lever-for-agencies', '/greenhouse-vs-lever/'],
+  ['/greenhouse-vs-breezy-hr-for-agencies', '/greenhouse-vs-breezy-hr/'],
+  ['/deel-vs-plane-for-scaleups', '/deel-vs-plane/'],
+  ['/oyster-vs-plane-for-us-latam', '/oyster-vs-plane/'],
+  ['/deel-vs-plane-for-tech-startups', '/deel-vs-plane/'],
+  ['/oyster-vs-plane-for-agencies', '/oyster-vs-plane/'],
+  ['/deel-vs-plane-for-agencies', '/deel-vs-plane/'],
 ];
 
 const exactParentHubBySource = new Map(EXACT_PARENT_HUB_REDIRECTS);
@@ -368,7 +456,7 @@ export function buildExactParentHubRedirects() {
 
 /**
  * Any URL containing `leapsome` (purged vendor) 308s to the PM hub.
- * Sits after the exact 51 long-tail → parent-hub rules so those never
+ * Sits after the exact long-tail → parent-hub rules so those never
  * collapse to the category hub. Negative lookaheads keep Reflektive 410s
  * and `-for-{persona}` long-tails out of this catch-all (persona rules
  * send leftover `-for-*` to the 1:1 parent instead).
@@ -405,7 +493,7 @@ export function buildPurgedVendorRedirects() {
     if (id === 'clearco' || id === 'clear-co' || id === 'reflektive') continue;
     const escaped = escapeRegex(id);
     // Exact `{id}-vs-{partner}` hubs only. Do not swallow `-for-{persona}`
-    // long-tails (those 308 to the 1:1 parent, including the 51 mappings).
+    // long-tails (those 308 to the 1:1 parent, including exact mappings).
     pushNamed(excludeReflektive(`${escaped}-vs-${HUB_SLUG_TOKEN}`), hub);
     pushNamed(excludeReflektive(`${HUB_SLUG_TOKEN}-vs-${escaped}`), hub);
     push(`/go/${id}`, hub);
@@ -454,7 +542,7 @@ export function buildLiveMasterRedirects() {
  * Catch-all: any remaining `brand-vs-brand-for-{segment}` collapses to
  * `/{brand-vs-brand}/` in one 308 (the 1:1 parent, never a category hub).
  * Named regex + a character-class param (never `:mod*`) so Vercel can
- * compile the rule. Must sit AFTER exact 51 + purged + reverse/alias
+ * compile the rule. Must sit AFTER exact parent-hub + purged + reverse/alias
  * rules so those destinations stay 1-hop.
  *
  * Known persona suffixes are listed first (one named group, proven
@@ -496,7 +584,7 @@ export function buildGoAliasRedirects() {
 }
 
 export function buildVercelRedirects() {
-  // Exact 51 long-tails first: Vercel first-match so they win over catch-alls.
+  // Exact long-tail → parent-hub rules first: Vercel first-match so they win over catch-alls.
   const redirects = [
     ...buildExactParentHubRedirects(),
     ...buildLeapsomeCatchAllRedirects(),
