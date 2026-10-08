@@ -1373,6 +1373,16 @@
       "statusCode": 308
     },
     {
+      "source": "/privacy",
+      "destination": "/privacy-policy/",
+      "statusCode": 308
+    },
+    {
+      "source": "/privacy/",
+      "destination": "/privacy-policy/",
+      "statusCode": 308
+    },
+    {
       "source": "/:path((?!.*reflektive)(?!15five-vs-peoplefluent)(?!.*-for-).*leapsome.*)",
       "destination": "/performance-management/",
       "statusCode": 308

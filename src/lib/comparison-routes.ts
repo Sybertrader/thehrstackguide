@@ -23,6 +23,7 @@ export const RESERVED_ROUTE_SEGMENTS = [
   'how-to-build-an-hr-tech-stack',
   'methodology',
   'performance-management',
+  'privacy',
   'privacy-policy',
   'recommendation',
   'terms',

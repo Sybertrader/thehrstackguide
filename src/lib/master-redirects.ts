@@ -187,6 +187,8 @@ export function resolveMasterRedirect(pathname) {
 
   const raw = pathName.split('?')[0].split('#')[0] || '/';
   if (isGonePath(raw)) return null;
+  const staticAlias = STATIC_PAGE_ALIASES.get(stripTrailingSlash(raw));
+  if (staticAlias) return staticAlias;
   const exactHub = exactParentHubBySource.get(stripTrailingSlash(raw));
   if (exactHub) return exactHub;
   if (raw.toLowerCase().includes('leapsome')) return '/performance-management/';
@@ -300,6 +302,22 @@ export const LEGACY_PERSONA_SUFFIXES = [
   'agencies',
   'web3',
 ];
+
+/** Static page aliases (lead-modal `/privacy/` → live privacy policy). */
+const STATIC_PAGE_ALIASES = new Map([['/privacy', '/privacy-policy/']]);
+
+function buildStaticPageAliasRedirects() {
+  const redirects = [];
+  const seen = new Set();
+  for (const [source, destination] of STATIC_PAGE_ALIASES) {
+    for (const rule of slashPair(source, destination)) {
+      if (seen.has(rule.source)) continue;
+      seen.add(rule.source);
+      redirects.push(rule);
+    }
+  }
+  return redirects;
+}
 
 /**
  * Exact long-tail → 1:1 parent comparison hub. Must sit before leapsome and
@@ -587,6 +605,7 @@ export function buildVercelRedirects() {
   // Exact long-tail → parent-hub rules first: Vercel first-match so they win over catch-alls.
   const redirects = [
     ...buildExactParentHubRedirects(),
+    ...buildStaticPageAliasRedirects(),
     ...buildLeapsomeCatchAllRedirects(),
     ...buildPurgedVendorRedirects(),
     ...buildLiveMasterRedirects(),

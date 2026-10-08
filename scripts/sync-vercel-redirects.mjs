@@ -272,6 +272,15 @@ for (const [pathname, destination] of LONG_TAIL_PROBES) {
   }
 }
 
+for (const pathname of ['/privacy', '/privacy/']) {
+  const hit = firstMatchingRedirect(pathname);
+  if (!hit || hit.destination !== '/privacy-policy/' || hit.statusCode !== 308) {
+    throw new Error(
+      `${pathname} must 308 to /privacy-policy/, got ${hit?.source} → ${hit?.destination}`,
+    );
+  }
+}
+
 fs.writeFileSync(VERCEL_PATH, `${JSON.stringify(config, null, 2)}\n`);
 console.log(
   `Wrote ${config.redirects.length} HTTP 308 redirects and ${config.rewrites.length} rewrites to vercel.json`,
