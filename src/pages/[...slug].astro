@@ -30,7 +30,7 @@ import ComparisonMainBody from '../components/sections/ComparisonMainBody.astro'
 import ComparisonSchema from '../components/seo/ComparisonSchema.astro';
 import { orderByHash, selectLayoutVariant } from '../utils/layoutHasher';
 import { monthlyPlatformFee } from '../lib/tco-projection';
-import { contrastVendorA } from '../lib/vendor-contrast';
+import { contrastVendorA, contrastVendorB } from '../lib/vendor-contrast';
 import { getEntry } from 'astro:content';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
@@ -449,6 +449,19 @@ const vendorAContrast = contrastVendorA({
   aPros: toolAPros,
   aCons: toolACons,
 });
+const vendorBContrast = contrastVendorB({
+  aName: comparison.tool_a_name,
+  bName: comparison.tool_b_name,
+  aId: comparison.tool_a_id,
+  bId: comparison.tool_b_id,
+  slug: hubSlug,
+  family: hubFamily,
+  aPrice: comparison.tool_a_starting_price,
+  bPrice: comparison.tool_b_starting_price,
+  bFeatures: toolBFeatures,
+  bPros: toolBPros,
+  bCons: toolBCons,
+});
 const leadSection = (['tco', 'editorial', 'features'] as const)[layoutVariant];
 const inMainIds = ['tco', 'editorial'];
 const mainSectionOrder = [
@@ -748,14 +761,13 @@ const heroLogoPreloads = (
         toolAAffiliateHref={toolAAffiliateHref}
         toolBAffiliateHref={toolBAffiliateHref}
         vendorAContrast={vendorAContrast}
+        vendorBContrast={vendorBContrast}
         toolAContrastNuance={toolAContrastNuance}
         toolBContrastNuance={toolBContrastNuance}
         showFeatureTable={showFeatureTable}
         featureMatrixRows={featureMatrixRows}
         toolBIntegrations={toolBIntegrations}
         segmentPanels={segmentPanels}
-        toolBPros={toolBPros}
-        toolBCons={toolBCons}
         verdictTake={comparison.hr_stack_take ? cleanCopy(comparison.hr_stack_take) : ''}
       />
 
@@ -804,14 +816,13 @@ const heroLogoPreloads = (
         toolAAffiliateHref={toolAAffiliateHref}
         toolBAffiliateHref={toolBAffiliateHref}
         vendorAContrast={vendorAContrast}
+        vendorBContrast={vendorBContrast}
         toolAContrastNuance={toolAContrastNuance}
         toolBContrastNuance={toolBContrastNuance}
         showFeatureTable={showFeatureTable}
         featureMatrixRows={featureMatrixRows}
         toolBIntegrations={toolBIntegrations}
         segmentPanels={segmentPanels}
-        toolBPros={toolBPros}
-        toolBCons={toolBCons}
         verdictTake={comparison.hr_stack_take ? cleanCopy(comparison.hr_stack_take) : ''}
       />
 

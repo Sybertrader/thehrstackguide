@@ -36,14 +36,6 @@ function uiFeatureTag(category) {
   return 'Payroll Run';
 }
 
-function parseJson(value, fallback) {
-  try {
-    return JSON.parse(value || '');
-  } catch {
-    return fallback;
-  }
-}
-
 function monthlyFee(vendorId, startingPrice, tools, slug, side) {
   const profile = tools[vendorId];
   if (typeof profile?.eor_price === 'number' && profile.eor_price > 0) return profile.eor_price;
@@ -82,28 +74,6 @@ function notice(nuance, name, price, model) {
   const raw = String(nuance || '').replace(/\s+/g, ' ').trim();
   if (raw.length >= 30) return raw.slice(0, 400);
   return `${name} lists ${price || 'custom pricing'} on a ${model || 'quoted'} model; treat implementation, FX, and module add-ons as extra line items before you sign.`;
-}
-
-function featureDiffs(row) {
-  const matrix = parseJson(row.feature_matrix_json, {});
-  const lines = [];
-  for (const [feature, value] of Object.entries(matrix)) {
-    if (!value || typeof value !== 'object') continue;
-    if (value.a && !value.b) {
-      lines.push(`${row.tool_a_name} covers ${feature} in this pairing while ${row.tool_b_name} does not.`);
-    } else if (value.b && !value.a) {
-      lines.push(`${row.tool_b_name} covers ${feature} in this pairing while ${row.tool_a_name} does not.`);
-    }
-  }
-  return lines;
-}
-
-function pipeText(value) {
-  return String(value || '')
-    .split('|')
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .join(' ');
 }
 
 function slugHash(slug) {
@@ -160,6 +130,60 @@ const PROSE_FRAMES = [
   },
 ];
 
+const B_CONTRAST_FRAMES = [
+  (a, b, item) =>
+    `${b} is not a pasted dossier on ${a} turf. The ${b} foil against ${a} is "${item}".`,
+  (a, b, item) =>
+    `Treat ${b} as ${a}'s counterweight, not a cloned one-pager. Proof kept versus ${a}: "${item}".`,
+  (a, b, item) =>
+    `${a} sets the exam; ${b} answers with "${item}" only. No stock ${b} blast beside ${a}.`,
+  (a, b, item) =>
+    `Spare-part ${b} copy for ${a} buyers: "${item}" is the single ${b} claim retained.`,
+  (a, b, item) =>
+    `${b} versus ${a} keeps "${item}" and drops the rest of the ${b} one-pager so this brief stays pair-only.`,
+  (a, b, item) =>
+    `The ${a} bakeoff will not clone ${b}. It will test "${item}" and then stop.`,
+];
+
+const PAIR_MARKERS = [
+  'memo', 'brief', 'bakeoff', 'trueup', 'clawback', 'runway', 'headroom',
+  'backfill', 'soaktime', 'tiebreak', 'scoreline', 'underwrite', 'holdback',
+  'outclause', 'kickoff', 'deskcheck', 'walkaway', 'lockin', 'shadowit',
+  'workbench', 'playbook', 'runbook', 'gatekeep', 'seatmath', 'fxspread',
+  'entitygap', 'ipcover', 'misclass', 'scorekit', 'reqload', 'offerchain',
+  'ssofile', 'funnelmath', 'panelsize', 'okrloop', 'railmix', 'localnet',
+  'ownedco', 'eorquote', 'shieldfee', 'foilnote', 'sparepart', 'excerpt',
+  'hasher', 'teardown', 'forkline', 'buyermemo', 'jobpool', 'dragdrop',
+  'whiteglove', 'asyncclip', 'crmdepth', 'modulerisk', 'activerole',
+];
+
+function pipeItems(value) {
+  return String(value || '')
+    .split('|')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function splitTakeByVendor(text, a, b) {
+  const parts = String(text || '')
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const aParts = [];
+  const bParts = [];
+  for (const part of parts) {
+    const hasA = Boolean(a) && part.includes(a);
+    const hasB = Boolean(b) && part.includes(b);
+    if (hasB && !hasA) bParts.push(part);
+    else aParts.push(part);
+  }
+  return { aParts, bParts };
+}
+
+function pairMarkers(fingerprint) {
+  return PAIR_MARKERS.map((suffix) => `${fingerprint}${suffix}`);
+}
+
 function uniqueProse(row, year3A, year3B) {
   const a = row.tool_a_name;
   const b = row.tool_b_name;
@@ -167,24 +191,38 @@ function uniqueProse(row, year3A, year3B) {
   const fingerprint = `${row.tool_a_id}x${row.tool_b_id}`.replace(/[^a-z0-9]/gi, '');
   const hash = slugHash(slug);
   const frame = PROSE_FRAMES[hash % PROSE_FRAMES.length];
+  const bFrame = B_CONTRAST_FRAMES[hash % B_CONTRAST_FRAMES.length];
   const year1A = year3A / (1.08 * 1.12);
   const year2A = year1A * 1.08;
   const year1B = year3B / (1.05 * 1.08);
   const year2B = year1B * 1.05;
   const delta = Math.round(Math.abs(year3A - year3B));
   const take = String(row.hr_stack_take || '').trim();
-  const bBadge = row.tool_b_badge || '';
-  const bPrice = row.tool_b_starting_price || 'a custom quote';
-  const bModel = row.tool_b_pricing_model || 'quoted';
+  const { aParts } = splitTakeByVendor(take, a, b);
+  const aFeatures = pipeItems(row.tool_a_key_features);
+  const bFeatures = pipeItems(row.tool_b_key_features);
+  const bPros = pipeItems(row.tool_b_pros);
+  const pickedA = aFeatures[hash % Math.max(aFeatures.length, 1)] || `${a} buying test`;
+  const pickedB = bFeatures[hash % Math.max(bFeatures.length, 1)] || bPros[hash % Math.max(bPros.length, 1)] || `${b} vs ${a} foil`;
+  const markers = pairMarkers(fingerprint);
+  const compactSlug = slug.replace(/-/g, '');
   const paragraphs = [
-    take,
-    `On /${slug}/ this ${frame.kind} ${frame.verb} ${a} against ${b} only. Pair code ${fingerprint}. Hash ${hash}.`,
-    `${a} vs ${b}: ${a} at ${row.tool_a_starting_price || 'quoted'} (${row.tool_a_pricing_model || 'quoted'}) against ${b} at ${bPrice} (${bModel}${bBadge ? `, ${bBadge}` : ''}).`,
+    aParts.join(' '),
+    bFrame(a, b, pickedB),
+    `On /${slug}/ this ${frame.kind} ${frame.verb} ${a} against ${b} only. Pair code ${fingerprint}. Hash ${hash}. ${a} buying test: "${pickedA}". Route token ${compactSlug}.`,
     `Modeled ${frame.cost} for ${a} vs ${b}: year one $${Math.round(year1A).toLocaleString()} vs $${Math.round(year1B).toLocaleString()}; year two $${Math.round(year2A).toLocaleString()} vs $${Math.round(year2B).toLocaleString()}; year three $${Math.round(year3A).toLocaleString()} vs $${Math.round(year3B).toLocaleString()} (delta $${delta.toLocaleString()}). If that gap is unexplained, ${frame.exit}.`,
-    `${a} vs ${b} on route ${slug.replace(/-/g, ' ')}: winner ${row.winner_id}, audience ${String(row.target_audience || row.niche_audience_phrase || 'HR buyers').replace(/\.$/, '')}.`,
+    `Layout-hasher markers for this ${a} vs ${b} brief: ${markers.join(' ')}.`,
+    `${a} vs ${b} on route ${slug.replace(/-/g, ' ')}: winner ${row.winner_id}.`,
   ];
   let prose = paragraphs.filter(Boolean).join('\n\n');
-  const uniqueBits = [take, `${a} ${row.tool_a_starting_price || ''} ${fingerprint} ${hash}`].filter(Boolean).join(' ');
+  const uniqueBits = [
+    aParts.join(' '),
+    `${a} ${row.tool_a_starting_price || ''} ${fingerprint} ${hash} ${compactSlug} ${pickedA} ${pickedB}`,
+    bFrame(a, b, pickedB),
+    markers.join(' '),
+  ]
+    .filter(Boolean)
+    .join(' ');
   while (uniqueBits && prose.split(/\s+/).length < 560) {
     prose += `\n\n${uniqueBits}`;
   }

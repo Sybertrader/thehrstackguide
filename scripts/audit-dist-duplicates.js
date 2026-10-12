@@ -119,7 +119,7 @@ function runAudit() {
   });
 
   let duplicateCount = 0;
-  const THRESHOLD = 0.47; // Flag near-duplicate <main> copy. Same-vendor TCO stickers still overlap below this.
+  const THRESHOLD = 0.35; // Flag if unique text overlap exceeds 35%
 
   for (let i = 0; i < pages.length; i++) {
     for (let j = i + 1; j < pages.length; j++) {

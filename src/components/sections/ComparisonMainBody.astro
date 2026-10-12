@@ -16,7 +16,7 @@ import TcoAnalysisBlock from './TcoAnalysisBlock.astro';
 import EditorialBreakdown from './EditorialBreakdown.astro';
 import FeatureParityGrid from './FeatureParityGrid.astro';
 import type { Comparison, FeatureMatrixEntry } from '../../lib/comparisons';
-import type { VendorAContrast } from '../../lib/vendor-contrast';
+import type { VendorAContrast, VendorBContrast } from '../../lib/vendor-contrast';
 import type { CategoryHubFamily } from '../../lib/comparison-routes';
 import type { MasterSegmentPanel } from '../../lib/persona-evaluation';
 
@@ -59,14 +59,13 @@ interface Props {
   toolAAffiliateHref: string;
   toolBAffiliateHref: string;
   vendorAContrast: VendorAContrast;
+  vendorBContrast: VendorBContrast;
   toolAContrastNuance: string;
   toolBContrastNuance: string;
   showFeatureTable: boolean;
   featureMatrixRows: [string, FeatureMatrixEntry][];
   toolBIntegrations: string[];
   segmentPanels: MasterSegmentPanel[];
-  toolBPros: string[];
-  toolBCons: string[];
   verdictTake: string;
 }
 
@@ -96,14 +95,13 @@ const {
   toolAAffiliateHref,
   toolBAffiliateHref,
   vendorAContrast,
+  vendorBContrast,
   toolAContrastNuance,
   toolBContrastNuance,
   showFeatureTable,
   featureMatrixRows,
   toolBIntegrations,
   segmentPanels,
-  toolBPros,
-  toolBCons,
   verdictTake,
 } = Astro.props;
 ---
@@ -129,6 +127,9 @@ const {
         toolAAffiliateHref={toolAAffiliateHref}
         toolBAffiliateHref={toolBAffiliateHref}
         toolAContrastSummary={vendorAContrast.summary}
+        toolAContrastBullets={vendorAContrast.bullets}
+        toolBContrastSummary={vendorBContrast.summary}
+        toolBContrastBullets={vendorBContrast.bullets}
       />
     )}
 
@@ -300,13 +301,14 @@ const {
                 badgeColor={toolBBadgeColor}
                 size={32}
               />
-              <span>{comparison.tool_b_name}</span>
+              <span>{comparison.tool_b_name} vs {comparison.tool_a_name}</span>
             </h3>
+            <p class="mt-3 text-sm leading-relaxed text-slate-600">{vendorBContrast.summary}</p>
             <div class="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Contrast edges</h4>
                 <ul class="space-y-3">
-                  {toolBPros.map((pro) => (
+                  {vendorBContrast.bullets.map((pro) => (
                     <li class="flex items-start gap-2.5 text-sm text-slate-700">
                       <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
@@ -319,9 +321,9 @@ const {
                 </ul>
               </div>
               <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
+                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">When {comparison.tool_a_name} wins</h4>
                 <ul class="space-y-3">
-                  {toolBCons.map((con) => (
+                  {vendorBContrast.skipIf.map((con) => (
                     <li class="flex items-start gap-2.5 text-sm text-slate-700">
                       <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
@@ -336,8 +338,8 @@ const {
             </div>
             <BuyOrSkip
               vendorName={comparison.tool_b_name}
-              chooseIf={toolBNarrative.chooseIf}
-              skipIf={toolBNarrative.skipIf}
+              chooseIf={vendorBContrast.chooseIf}
+              skipIf={vendorBContrast.skipIf}
             />
           </div>
         </div>
