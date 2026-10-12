@@ -12,35 +12,25 @@ import { loadComparisons, getComparisonsLastUpdated, getComparisonsFirstPublishe
 import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { isComparisonHubSlug, comparisonHubSlug, categoryHubNav } from '../lib/comparison-routes';
 import { comparisonVendorsAreLive, getToolProfile } from '../lib/tools';
-import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel, vendorQuoteCtaLabel } from '../lib/outbound';
+import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../lib/outbound';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
-import PreferredSourceButton from '../components/PreferredSourceButton.astro';
 import DataVerificationBadge from '../components/DataVerificationBadge.astro';
-import DemoQuestions from '../components/DemoQuestions.astro';
-import AtAGlance from '../components/AtAGlance.astro';
-import PricingNuance from '../components/PricingNuance.astro';
-import VerdictCallout from '../components/VerdictCallout.astro';
-import SegmentTabEngine from '../components/SegmentTabEngine.astro';
 import StickyMobileCta from '../components/StickyMobileCta.astro';
 import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
 import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
-import VendorButton from '../components/VendorButton.astro';
-import VendorLogo from '../components/VendorLogo.astro';
 import { vendorLogoPreloadHref } from '../lib/vendor-logo';
 import { comparisonSeo } from '../lib/seo';
 import { schemaOffer } from '../lib/schema-offer';
 import { pickRelatedHubs } from '../lib/related-comparisons';
 import RelatedComparisons from '../components/RelatedComparisons.astro';
-import BuyOrSkip from '../components/BuyOrSkip.astro';
-import CostCalculator from '../components/CostCalculator.astro';
 import HeroVariantA from '../components/heroes/HeroVariantA.astro';
 import HeroVariantB from '../components/heroes/HeroVariantB.astro';
-import TcoAnalysisBlock from '../components/sections/TcoAnalysisBlock.astro';
-import EditorialBreakdown from '../components/sections/EditorialBreakdown.astro';
+import ComparisonMainBody from '../components/sections/ComparisonMainBody.astro';
 import ComparisonSchema from '../components/seo/ComparisonSchema.astro';
-import { selectLayoutVariant } from '../utils/layoutHasher';
+import { orderByHash, selectLayoutVariant } from '../utils/layoutHasher';
 import { monthlyPlatformFee } from '../lib/tco-projection';
+import { contrastVendorA } from '../lib/vendor-contrast';
 import { getEntry } from 'astro:content';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
@@ -173,6 +163,13 @@ function cleanCopy(text: string): string {
     .replace(/\.\s*,/g, ',')
     .replace(/\s{2,}/g, ' ')
     .trim();
+}
+
+function firstSentence(text: string): string {
+  const trimmed = text.trim();
+  if (!trimmed) return '';
+  const match = trimmed.match(/^[^.!?]+[.!?]/);
+  return (match?.[0] ?? trimmed).slice(0, 240).trim();
 }
 
 function logoBadgeColor(name: string): string {
@@ -440,6 +437,41 @@ const toolBIntegrations = toolBProfile?.integrations ?? [];
 const hasNativeIntegrations = toolAIntegrations.length > 0 || toolBIntegrations.length > 0;
 const showFeatureTable = isHub && (featureMatrixRows.length > 0 || hasNativeIntegrations);
 const segmentPanels = isHub ? buildMasterSegmentPanels(pairRows ?? []) : [];
+const vendorAContrast = contrastVendorA({
+  aName: comparison.tool_a_name,
+  bName: comparison.tool_b_name,
+  aId: comparison.tool_a_id,
+  bId: comparison.tool_b_id,
+  family: hubFamily,
+  aPrice: comparison.tool_a_starting_price,
+  bPrice: comparison.tool_b_starting_price,
+  aFeatures: toolAFeatures,
+  aPros: toolAPros,
+  aCons: toolACons,
+});
+const leadSection = (['tco', 'editorial', 'features'] as const)[layoutVariant];
+const inMainIds = ['tco', 'editorial'];
+const mainSectionOrder = [
+  leadSection === 'features' ? 'editorial' : leadSection,
+  ...orderByHash(
+    hubSlug,
+    inMainIds.filter((id) => id !== (leadSection === 'features' ? 'editorial' : leadSection)),
+  ),
+];
+const auxIds = ['glance', 'features', 'pricing', 'calculator', 'verdict', 'tabs', 'preferred', 'pros', 'demo'];
+const auxSectionOrder = [
+  ...(leadSection === 'features' ? (['features'] as const) : []),
+  ...orderByHash(
+    hubSlug + '-aux',
+    auxIds.filter((id) => !(leadSection === 'features' && id === 'features')),
+  ),
+];
+const toolAContrastNuance = comparison.tool_a_pricing_nuance
+  ? `${comparison.tool_a_name} vs ${comparison.tool_b_name}: ${firstSentence(cleanCopy(comparison.tool_a_pricing_nuance))}`
+  : '';
+const toolBContrastNuance = comparison.tool_b_pricing_nuance
+  ? firstSentence(cleanCopy(comparison.tool_b_pricing_nuance))
+  : '';
 
 const richSnippetSchema = [
   {
@@ -528,9 +560,6 @@ const stickyWinner = stickyWinnerIsB
       badgeColor: toolABadgeColor,
       ctaLabel: vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name, comparison.tool_a_free_trial),
     };
-const stickyFeatureCol =
-  'sticky left-0 z-20 min-w-[10rem] max-w-[12rem] border-r border-slate-200 shadow-[4px_0_12px_-6px_rgba(15,23,42,0.18)]';
-
 // Ratings always reflect the real, consistent scores from the CSV source data.
 const toolADisplayRating = comparison.tool_a_rating;
 const toolBDisplayRating = comparison.tool_b_rating;
@@ -627,31 +656,24 @@ const heroLogoPreloads = (
   <meta slot="head" property="og:updated_time" content={lastUpdatedIso} />
   <meta slot="head" name="revised" content={lastUpdatedIso} />
 
-  <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-      <!--
-        Manual lead-capture modals for brands that do not have an outbound
-        affiliate CTA. Mounted once per tool (not wrapped in display:none -
-        that permanently hid the backdrop) so every CTA below can open the
-        same instance via data-modal-target={toolXModalId}.
-        modalId is passed explicitly so it always matches the button attribute.
-      -->
-      {toolAIsManualLead && (
-        <ManualLeadModal
-          brandName={comparison.tool_a_name}
-          vendorId={comparison.tool_a_id}
-          modalId={toolAModalId}
-          partnerLandingUrl={getToolProfile(comparison.tool_a_id)?.partner_landing_url ?? ''}
-        />
-      )}
-      {toolBIsManualLead && (
-        <ManualLeadModal
-          brandName={comparison.tool_b_name}
-          vendorId={comparison.tool_b_id}
-          modalId={toolBModalId}
-          partnerLandingUrl={getToolProfile(comparison.tool_b_id)?.partner_landing_url ?? ''}
-        />
-      )}
+  {toolAIsManualLead && (
+    <ManualLeadModal
+      brandName={comparison.tool_a_name}
+      vendorId={comparison.tool_a_id}
+      modalId={toolAModalId}
+      partnerLandingUrl={getToolProfile(comparison.tool_a_id)?.partner_landing_url ?? ''}
+    />
+  )}
+  {toolBIsManualLead && (
+    <ManualLeadModal
+      brandName={comparison.tool_b_name}
+      vendorId={comparison.tool_b_id}
+      modalId={toolBModalId}
+      partnerLandingUrl={getToolProfile(comparison.tool_b_id)?.partner_landing_url ?? ''}
+    />
+  )}
 
+  <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       {layoutVariant === 1 ? (
         <HeroVariantB
           toolAName={comparison.tool_a_name}
@@ -700,8 +722,16 @@ const heroLogoPreloads = (
         </aside>
       )}
 
-      <AtAGlance
+      <ComparisonMainBody
         comparison={comparison}
+        mainSectionOrder={mainSectionOrder}
+        isHub={isHub}
+        hubFamily={hubFamily}
+        uniqueProse={uniqueProse}
+        targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
+        vendorABaseCost={vendorABaseCost}
+        vendorBBaseCost={vendorBBaseCost}
+        tcoScreenshot={tcoScreenshot}
         toolAFeatures={toolAFeatures}
         toolBFeatures={toolBFeatures}
         toolANarrative={toolANarrative}
@@ -717,257 +747,17 @@ const heroLogoPreloads = (
         toolBModalId={toolBModalId}
         toolAAffiliateHref={toolAAffiliateHref}
         toolBAffiliateHref={toolBAffiliateHref}
+        vendorAContrast={vendorAContrast}
+        toolAContrastNuance={toolAContrastNuance}
+        toolBContrastNuance={toolBContrastNuance}
+        showFeatureTable={showFeatureTable}
+        featureMatrixRows={featureMatrixRows}
+        toolBIntegrations={toolBIntegrations}
+        segmentPanels={segmentPanels}
+        toolBPros={toolBPros}
+        toolBCons={toolBCons}
+        verdictTake={comparison.hr_stack_take ? cleanCopy(comparison.hr_stack_take) : ''}
       />
-
-      {isHub && layoutVariant === 0 && (
-        <>
-          <TcoAnalysisBlock
-            vendorAName={comparison.tool_a_name}
-            vendorABaseCost={vendorABaseCost}
-            vendorBName={comparison.tool_b_name}
-            vendorBBaseCost={vendorBBaseCost}
-            screenshot={tcoScreenshot}
-          />
-          <EditorialBreakdown
-            vendorAName={comparison.tool_a_name}
-            vendorBName={comparison.tool_b_name}
-            prose={uniqueProse}
-            targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
-          />
-        </>
-      )}
-
-      {isHub && layoutVariant === 1 && (
-        <EditorialBreakdown
-          vendorAName={comparison.tool_a_name}
-          vendorBName={comparison.tool_b_name}
-          prose={uniqueProse}
-          targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
-        />
-      )}
-
-      {isHub && (
-        <PricingNuance
-          toolAName={comparison.tool_a_name}
-          toolBName={comparison.tool_b_name}
-          toolAId={comparison.tool_a_id}
-          toolBId={comparison.tool_b_id}
-          toolALogo={comparison.tool_a_logo_url}
-          toolBLogo={comparison.tool_b_logo_url}
-          toolABadgeColor={toolABadgeColor}
-          toolBBadgeColor={toolBBadgeColor}
-          toolANuance={comparison.tool_a_pricing_nuance ? cleanCopy(comparison.tool_a_pricing_nuance) : ''}
-          toolBNuance={comparison.tool_b_pricing_nuance ? cleanCopy(comparison.tool_b_pricing_nuance) : ''}
-          toolAAffiliateHref={toolAAffiliateHref}
-          toolBAffiliateHref={toolBAffiliateHref}
-          toolAIsManualLead={toolAIsManualLead}
-          toolBIsManualLead={toolBIsManualLead}
-          toolAModalId={toolAModalId}
-          toolBModalId={toolBModalId}
-        />
-      )}
-
-      {hubFamily === 'payroll' && (
-        <CostCalculator
-          vendorA={{
-            id: comparison.tool_a_id,
-            name: comparison.tool_a_name,
-            affiliateUrl: toolAAffiliateHref,
-          }}
-          vendorB={{
-            id: comparison.tool_b_id,
-            name: comparison.tool_b_name,
-            affiliateUrl: toolBAffiliateHref,
-          }}
-          toolAIsManualLead={toolAIsManualLead}
-          toolBIsManualLead={toolBIsManualLead}
-          toolAModalId={toolAModalId}
-          toolBModalId={toolBModalId}
-          toolAIsWinner={toolAIsWinner}
-          toolBIsWinner={toolBIsWinner}
-        />
-      )}
-
-      {isHub && layoutVariant === 2 && (
-        <>
-          <TcoAnalysisBlock
-            vendorAName={comparison.tool_a_name}
-            vendorABaseCost={vendorABaseCost}
-            vendorBName={comparison.tool_b_name}
-            vendorBBaseCost={vendorBBaseCost}
-            screenshot={tcoScreenshot}
-          />
-          <EditorialBreakdown
-            vendorAName={comparison.tool_a_name}
-            vendorBName={comparison.tool_b_name}
-            prose={uniqueProse}
-            targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
-          />
-        </>
-      )}
-
-      {isHub && comparison.hr_stack_take && (
-        <VerdictCallout take={cleanCopy(comparison.hr_stack_take)} />
-      )}
-
-      {isHub && layoutVariant === 1 && (
-        <TcoAnalysisBlock
-          vendorAName={comparison.tool_a_name}
-          vendorABaseCost={vendorABaseCost}
-          vendorBName={comparison.tool_b_name}
-          vendorBBaseCost={vendorBBaseCost}
-          screenshot={tcoScreenshot}
-        />
-      )}
-
-      {isHub && (
-        <SegmentTabEngine panels={segmentPanels} />
-      )}
-
-      {isHub && (
-        <aside class="mb-12" aria-label="Add as a Google preferred source">
-          <p class="text-sm font-medium text-slate-700">Save this comparison in Google Preferred Sources.</p>
-          <PreferredSourceButton theme="light" align="left" />
-        </aside>
-      )}
-
-      {showFeatureTable && (
-        <section class="mb-12" aria-label="Feature and integration comparison">
-          <h2 class="mb-6 text-2xl font-bold text-slate-900">Feature &amp; Integration Comparison</h2>
-          <p class="mb-3 text-xs font-medium text-slate-500 md:hidden">Swipe sideways to compare. The Feature column stays put.</p>
-          <div class="feature-compare-scroll isolate overflow-x-auto overscroll-x-contain rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <table class="w-full min-w-[36rem] border-separate border-spacing-0 text-left text-sm">
-                <thead>
-                  <tr class="bg-slate-50">
-                    <th scope="col" class:list={[stickyFeatureCol, 'border-b border-slate-200 bg-slate-50 px-6 py-4 align-bottom font-semibold text-slate-700']}>Feature</th>
-                    <th scope="col" class="min-w-[10rem] border-b border-slate-200 px-6 py-4 align-bottom font-semibold text-slate-700">
-                      <span class="flex items-center gap-2.5">
-                        <VendorLogo
-                          src={comparison.tool_a_logo_url}
-                          alt=""
-                          name={comparison.tool_a_name}
-                          badgeColor={toolABadgeColor}
-                          size={36}
-                        />
-                        <span>{comparison.tool_a_name}</span>
-                      </span>
-                    </th>
-                    <th scope="col" class="min-w-[10rem] border-b border-slate-200 px-6 py-4 align-bottom font-semibold text-slate-700">
-                      <span class="flex items-center gap-2.5">
-                        <VendorLogo
-                          src={comparison.tool_b_logo_url}
-                          alt=""
-                          name={comparison.tool_b_name}
-                          badgeColor={toolBBadgeColor}
-                          size={36}
-                        />
-                        <span>{comparison.tool_b_name}</span>
-                      </span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {featureMatrixRows.map(([feature, value]) => (
-                    <tr class="group transition hover:bg-slate-50/80">
-                      <th scope="row" class:list={[stickyFeatureCol, 'border-b border-slate-100 bg-white px-6 py-4 font-medium text-slate-900 group-hover:bg-slate-50']}>{feature}</th>
-                      <td class="border-b border-slate-100 px-6 py-4">
-                        {value.a ? (
-                          <span class="inline-flex items-center rounded-full bg-emerald-50 p-0.5 text-emerald-600" aria-label="Yes">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-                              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                            </svg>
-                          </span>
-                        ) : (
-                          <span class="inline-flex items-center rounded-full bg-red-50 p-0.5 text-red-500" aria-label="No">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-                              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                            </svg>
-                          </span>
-                        )}
-                      </td>
-                      <td class="border-b border-slate-100 px-6 py-4">
-                        {value.b ? (
-                          <span class="inline-flex items-center rounded-full bg-emerald-50 p-0.5 text-emerald-600" aria-label="Yes">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-                              <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                            </svg>
-                          </span>
-                        ) : (
-                          <span class="inline-flex items-center rounded-full bg-red-50 p-0.5 text-red-500" aria-label="No">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-                              <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                            </svg>
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                  {hasNativeIntegrations && (
-                    <tr class="group align-top transition hover:bg-slate-50/80">
-                      <th scope="row" class:list={[stickyFeatureCol, 'border-b border-slate-100 bg-white px-6 py-4 font-medium text-slate-900 group-hover:bg-slate-50']}>Native Integrations</th>
-                      {[toolAIntegrations, toolBIntegrations].map((integrations) => (
-                        <td class="border-b border-slate-100 px-6 py-4 text-slate-700">
-                          {integrations.length > 0 ? (
-                            <ul class="flex flex-wrap gap-1.5">
-                              {integrations.map((item) => (
-                                <li class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-                                  {item}
-                                </li>
-                              ))}
-                            </ul>
-                          ) : (
-                            <p class="text-sm text-slate-500">Not published</p>
-                          )}
-                        </td>
-                      ))}
-                    </tr>
-                  )}
-                </tbody>
-                <tfoot>
-                  <tr class="bg-slate-50">
-                    <td class:list={[stickyFeatureCol, 'border-t border-slate-200 bg-slate-50 px-6 py-4 text-sm font-medium text-slate-500']}>Get a quote</td>
-                    <td class="border-t border-slate-200 px-6 py-4 align-top">
-                      <VendorButton
-                        href={toolAAffiliateHref}
-                        modalId={toolAIsManualLead ? toolAModalId : undefined}
-                        vendorId={comparison.tool_a_id}
-                        vendorName={comparison.tool_a_name}
-                        location="feature_table"
-                        leadMagnet
-                        leadMagnetBadge={false}
-                        class={
-                          toolAIsWinner || !toolBIsWinner
-                            ? 'inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700'
-                            : 'inline-flex w-full items-center justify-center rounded-lg border border-indigo-600 bg-white px-3.5 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-50'
-                        }
-                      >
-                        {vendorQuoteCtaLabel(comparison.tool_a_name)}
-                      </VendorButton>
-                    </td>
-                    <td class="border-t border-slate-200 px-6 py-4 align-top">
-                      <VendorButton
-                        href={toolBAffiliateHref}
-                        modalId={toolBIsManualLead ? toolBModalId : undefined}
-                        vendorId={comparison.tool_b_id}
-                        vendorName={comparison.tool_b_name}
-                        location="feature_table"
-                        leadMagnet
-                        leadMagnetBadge={false}
-                        class={
-                          toolBIsWinner
-                            ? 'inline-flex w-full items-center justify-center rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700'
-                            : 'inline-flex w-full items-center justify-center rounded-lg border border-indigo-600 bg-white px-3.5 py-2 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-50'
-                        }
-                      >
-                        {vendorQuoteCtaLabel(comparison.tool_b_name)}
-                      </VendorButton>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-          </div>
-        </section>
-      )}
 
       {isChildRoute && personaEvaluation && (
         <PersonaEvaluation evaluation={personaEvaluation} />
@@ -985,140 +775,55 @@ const heroLogoPreloads = (
       {isChildRoute && (
         <WorkflowBottlenecks modifierLabel={modifierLabel} items={workflowBottlenecks} />
       )}
+    </main>
 
-      {isHub && (
-      <>
-      <section class="mb-12" aria-label="Pros and cons comparison">
-        <h2 class="mb-6 text-2xl font-bold text-slate-900">Pros &amp; Cons</h2>
-        <div class="grid gap-6 lg:grid-cols-2">
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="flex items-center gap-3 text-lg font-semibold text-slate-900">
-              <VendorLogo
-                src={comparison.tool_a_logo_url}
-                alt=""
-                name={comparison.tool_a_name}
-                badgeColor={toolABadgeColor}
-                size={32}
-              />
-              <span>{comparison.tool_a_name}</span>
-            </h3>
-            <div class="mt-6 grid gap-6 sm:grid-cols-2">
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
-                <ul class="space-y-3">
-                  {toolAPros.map((pro) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                        </svg>
-                      </span>
-                      {pro}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
-                <ul class="space-y-3">
-                  {toolACons.map((con) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                        </svg>
-                      </span>
-                      {con}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <BuyOrSkip
-              vendorName={comparison.tool_a_name}
-              chooseIf={toolANarrative.chooseIf}
-              skipIf={toolANarrative.skipIf}
-            />
-          </div>
-
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="flex items-center gap-3 text-lg font-semibold text-slate-900">
-              <VendorLogo
-                src={comparison.tool_b_logo_url}
-                alt=""
-                name={comparison.tool_b_name}
-                badgeColor={toolBBadgeColor}
-                size={32}
-              />
-              <span>{comparison.tool_b_name}</span>
-            </h3>
-            <div class="mt-6 grid gap-6 sm:grid-cols-2">
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Pros</h4>
-                <ul class="space-y-3">
-                  {toolBPros.map((pro) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                        </svg>
-                      </span>
-                      {pro}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">Cons</h4>
-                <ul class="space-y-3">
-                  {toolBCons.map((con) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                        </svg>
-                      </span>
-                      {con}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <BuyOrSkip
-              vendorName={comparison.tool_b_name}
-              chooseIf={toolBNarrative.chooseIf}
-              skipIf={toolBNarrative.skipIf}
-            />
-          </div>
-        </div>
-      </section>
-
-      <DemoQuestions
-        toolA={comparison.tool_a_name}
-        toolB={comparison.tool_b_name}
-        family={hubFamily}
-        toolAId={comparison.tool_a_id}
-        toolBId={comparison.tool_b_id}
-        toolAAffiliateHref={toolAAffiliateHref}
-        toolBAffiliateHref={toolBAffiliateHref}
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <ComparisonMainBody
+        comparison={comparison}
+        mainSectionOrder={auxSectionOrder}
+        isHub={isHub}
+        hubFamily={hubFamily}
+        uniqueProse={uniqueProse}
+        targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
+        vendorABaseCost={vendorABaseCost}
+        vendorBBaseCost={vendorBBaseCost}
+        tcoScreenshot={tcoScreenshot}
+        toolAFeatures={toolAFeatures}
+        toolBFeatures={toolBFeatures}
+        toolANarrative={toolANarrative}
+        toolBNarrative={toolBNarrative}
+        toolAIsWinner={toolAIsWinner}
+        toolBIsWinner={toolBIsWinner}
+        winnerBadgeText={winnerBadgeText}
+        toolABadgeColor={toolABadgeColor}
+        toolBBadgeColor={toolBBadgeColor}
         toolAIsManualLead={toolAIsManualLead}
         toolBIsManualLead={toolBIsManualLead}
         toolAModalId={toolAModalId}
         toolBModalId={toolBModalId}
-        toolAIsWinner={toolAIsWinner}
-        toolBIsWinner={toolBIsWinner}
+        toolAAffiliateHref={toolAAffiliateHref}
+        toolBAffiliateHref={toolBAffiliateHref}
+        vendorAContrast={vendorAContrast}
+        toolAContrastNuance={toolAContrastNuance}
+        toolBContrastNuance={toolBContrastNuance}
+        showFeatureTable={showFeatureTable}
+        featureMatrixRows={featureMatrixRows}
+        toolBIntegrations={toolBIntegrations}
+        segmentPanels={segmentPanels}
+        toolBPros={toolBPros}
+        toolBCons={toolBCons}
+        verdictTake={comparison.hr_stack_take ? cleanCopy(comparison.hr_stack_take) : ''}
       />
-      </>
-      )}
 
       <RelatedComparisons
         links={relatedLinks}
         categoryHref={categoryHub.href}
         categoryLabel={categoryHub.label}
+        currentPair={`${comparison.tool_a_name} vs ${comparison.tool_b_name}`}
       />
 
       <div class="h-20 md:hidden" aria-hidden="true"></div>
-    </main>
+    </div>
 
     <StickyMobileCta
       vendorId={stickyWinner.id}

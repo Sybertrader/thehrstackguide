@@ -13,6 +13,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "seo-audit": "node scripts/seo-audit.mjs",
+    "audit-dist": "node scripts/audit-dist-duplicates.js",
     "purge-vendors": "node scripts/purge-vendors.mjs"
   },
   "dependencies": {

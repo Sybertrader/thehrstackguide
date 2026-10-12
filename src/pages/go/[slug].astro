@@ -3,7 +3,7 @@ import VendorButton from '../../components/VendorButton.astro';
 import { affiliateLinks } from '../../config/affiliates';
 import { vendorOutboundOnclick } from '../../lib/outbound';
 import { loadComparisons } from '../../lib/comparisons';
-import { isLiveVendorId } from '../../lib/tools';
+import { getToolProfile, isLiveVendorId } from '../../lib/tools';
 
 export function getStaticPaths() {
   return Object.keys(affiliateLinks)
@@ -27,6 +27,7 @@ const vendorName =
     : match?.tool_b_id === vendorId
       ? match.tool_b_name
       : vendorId;
+const profile = getToolProfile(vendorId);
 const ctaLocation = 'go_redirect_fallback';
 
 Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
@@ -50,10 +51,22 @@ Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
   </script>
 </head>
 <body class="bg-slate-50 text-slate-700 flex items-center justify-center min-h-screen font-sans">
-  <div class="text-center p-6">
-    <p class="text-lg font-medium mb-2">Redirecting to partner site...</p>
+  <main class="text-center p-6 max-w-lg">
+    <h1 class="text-lg font-medium mb-2">Opening {vendorName} from /go/{vendorId}/</h1>
+    <p class="text-sm text-slate-500 mb-3">
+      This hop is the {vendorName} ({vendorId}) outbound fallback, not a comparison article.
+      {match
+        ? ` It belongs with the ${match.tool_a_name} vs ${match.tool_b_name} buyer page.`
+        : ''}
+    </p>
+    {profile?.positioning && (
+      <p class="text-sm text-slate-500 mb-3">{profile.positioning}</p>
+    )}
+    {profile?.skip_if && (
+      <p class="text-sm text-slate-500 mb-3">{profile.skip_if}</p>
+    )}
     <p class="text-sm text-slate-500">
-      If you are not redirected automatically,
+      If you are not redirected automatically to {vendorName},
       <VendorButton
         href={targetUrl}
         vendorId={vendorId}
@@ -62,9 +75,9 @@ Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
         class="text-blue-600 underline hover:text-blue-800"
         onclick={vendorOutboundOnclick(vendorId, 'direct_outbound', { vendorName, ctaLocation })}
       >
-        click here
+        continue to {vendorName}
       </VendorButton>.
     </p>
-  </div>
+  </main>
 </body>
 </html>

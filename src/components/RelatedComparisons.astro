@@ -13,9 +13,10 @@ interface Props {
   links: RelatedLink[];
   categoryHref: string;
   categoryLabel: string;
+  currentPair?: string;
 }
 
-const { links, categoryHref, categoryLabel } = Astro.props;
+const { links, categoryHref, categoryLabel, currentPair = '' } = Astro.props;
 
 function logoBadgeColor(name: string): string {
   const colors = ['bg-indigo-600', 'bg-violet-600', 'bg-sky-600', 'bg-emerald-600', 'bg-rose-600', 'bg-amber-600', 'bg-cyan-600', 'bg-fuchsia-600'];
@@ -29,9 +30,11 @@ function logoBadgeColor(name: string): string {
 
 {links.length > 0 && (
   <section class="mt-16" aria-label="Related comparisons">
-    <h2 class="mb-2 text-2xl font-bold text-slate-900">Related Comparisons</h2>
+    <h2 class="mb-2 text-2xl font-bold text-slate-900">Related Comparisons{currentPair ? ` after ${currentPair}` : ''}</h2>
     <p class="mb-6 text-sm text-slate-600">
-      Same category. Different pair. Read these next, or go back to the
+      {currentPair
+        ? `After ${currentPair}, these are different pairings in the same category.`
+        : 'Same category. Different pair. Read these next, or go back to the'}
       {' '}
       <a href={categoryHref} class="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900">
         {categoryLabel}

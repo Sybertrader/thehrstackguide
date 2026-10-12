@@ -269,14 +269,6 @@ const collectionSchema = {
       </div>
     </section>
 
-    <!-- Recommendation Engine -->
-    <ConciergeLeadBox
-      categoryName="Performance Management"
-      theme="sky"
-      ctaHref="/recommendation/?category=performance"
-      class="mb-16"
-    />
-
     <!-- Comparison Directory -->
     <section id="browse-comparisons" class="scroll-mt-24" aria-label="Comparison directory">
       <CategoryComparisonBrowser
@@ -288,15 +280,22 @@ const collectionSchema = {
       />
     </section>
 
-    {toolRoster
-      .filter((tool) => isManualLeadBrand(tool.id))
-      .map((tool) => (
-        <ManualLeadModal
-          brandName={tool.name}
-          vendorId={tool.id}
-          modalId={manualLeadModalId(tool.name)}
-          partnerLandingUrl={tool.partner_landing_url ?? ''}
-        />
-      ))}
   </main>
+  {toolRoster
+    .filter((tool) => isManualLeadBrand(tool.id))
+    .map((tool) => (
+      <ManualLeadModal
+        brandName={tool.name}
+        vendorId={tool.id}
+        modalId={manualLeadModalId(tool.name)}
+        partnerLandingUrl={tool.partner_landing_url ?? ''}
+      />
+    ))}
+  <div class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+    <ConciergeLeadBox
+      categoryName="Performance Management"
+      theme="sky"
+      ctaHref="/recommendation/?category=performance"
+    />
+  </div>
 </Layout>

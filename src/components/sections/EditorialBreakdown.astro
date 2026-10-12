@@ -13,7 +13,7 @@ const paragraphs = prose
   .filter(Boolean);
 ---
 
-<section class="mb-12" aria-label={`Editorial breakdown of ${vendorAName} versus ${vendorBName}`}>
+<section class="mb-12" data-pair-prose aria-label={`Editorial breakdown of ${vendorAName} versus ${vendorBName}`}>
   <h2 class="mb-4 text-2xl font-bold text-slate-900">Where {vendorAName} and {vendorBName} actually diverge</h2>
   <div class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 text-base leading-relaxed text-slate-700 shadow-sm sm:p-8">
     {paragraphs.map((paragraph) => (
