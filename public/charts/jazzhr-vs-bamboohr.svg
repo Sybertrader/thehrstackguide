@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" role="img" aria-label="3-Year TCO Chart comparing JazzHR vs BambooHR">
+  <rect width="600" height="240" fill="#0f172a"/>
+  <line x1="50" y1="20" x2="550" y2="20" stroke="#334155" stroke-dasharray="4"/>
+  <line x1="50" y1="120" x2="550" y2="120" stroke="#334155" stroke-dasharray="4"/>
+  <line x1="50" y1="220" x2="550" y2="220" stroke="#475569"/>
+  <path d="M 50 221.61313146022627 Q 175 220.8776567186353, 300 220.14218197704434 T 550 217.75924381428968" fill="none" stroke="#6366f1" stroke-width="3"/>
+  <circle cx="550" cy="217.75924381428968" r="5" fill="#6366f1"/>
+  <path d="M 50 79.666506333173 Q 175 75.65816899150234, 300 71.64983164983167 T 550 58.18181818181819" fill="none" stroke="#10b981" stroke-width="3"/>
+  <circle cx="550" cy="58.18181818181819" r="5" fill="#10b981"/>
+</svg>

@@ -1,0 +1,28 @@
+---
+interface Props {
+  vendorAName: string;
+  vendorBName: string;
+  prose: string;
+  targetTeamSizeRecommendation?: string;
+}
+
+const { vendorAName, vendorBName, prose, targetTeamSizeRecommendation } = Astro.props;
+const paragraphs = prose
+  .split(/\n{2,}/)
+  .map((block) => block.trim())
+  .filter(Boolean);
+---
+
+<section class="mb-12" aria-label={`Editorial breakdown of ${vendorAName} versus ${vendorBName}`}>
+  <h2 class="mb-4 text-2xl font-bold text-slate-900">Where {vendorAName} and {vendorBName} actually diverge</h2>
+  <div class="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 text-base leading-relaxed text-slate-700 shadow-sm sm:p-8">
+    {paragraphs.map((paragraph) => (
+      <p>{paragraph}</p>
+    ))}
+    {targetTeamSizeRecommendation && (
+      <p class="border-t border-slate-100 pt-4 text-sm font-medium text-slate-800">
+        Team-size fit: {targetTeamSizeRecommendation}
+      </p>
+    )}
+  </div>
+</section>

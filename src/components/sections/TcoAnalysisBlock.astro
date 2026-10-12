@@ -1,0 +1,43 @@
+---
+import TcoChart from '../charts/TcoChart.astro';
+
+interface Screenshot {
+  src: string;
+  alt: string;
+  caption: string;
+  uiFeatureTag?: string;
+}
+
+interface Props {
+  vendorAName: string;
+  vendorABaseCost: number;
+  vendorBName: string;
+  vendorBBaseCost: number;
+  screenshot?: Screenshot;
+}
+
+const { vendorAName, vendorABaseCost, vendorBName, vendorBBaseCost, screenshot } = Astro.props;
+---
+
+<section class="mb-12" aria-label="Three-year total cost of ownership">
+  <h2 class="mb-4 text-2xl font-bold text-slate-900">3-Year Cost Escalation: {vendorAName} vs {vendorBName}</h2>
+  <TcoChart
+    vendorAName={vendorAName}
+    vendorABaseCost={vendorABaseCost}
+    vendorBName={vendorBName}
+    vendorBBaseCost={vendorBBaseCost}
+  />
+  {screenshot && (
+    <figure class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <img src={screenshot.src} alt={screenshot.alt} class="w-full bg-slate-900" width="600" height="240" loading="lazy" />
+      <figcaption class="px-4 py-3 text-sm text-slate-600">
+        {screenshot.uiFeatureTag && (
+          <span class="mr-2 inline-flex rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
+            {screenshot.uiFeatureTag}
+          </span>
+        )}
+        {screenshot.caption}
+      </figcaption>
+    </figure>
+  )}
+</section>

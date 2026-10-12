@@ -1,0 +1,56 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  url: string;
+  vendorAName: string;
+  vendorBName: string;
+}
+
+const { title, description, url, vendorAName, vendorBName } = Astro.props;
+
+const schemaData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': url,
+      url,
+      name: title,
+      description,
+    },
+    {
+      '@type': 'ItemList',
+      name: `Software Comparison: ${vendorAName} vs ${vendorBName}`,
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          item: {
+            '@type': 'SoftwareApplication',
+            name: vendorAName,
+            applicationCategory: 'BusinessApplication',
+          },
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          item: {
+            '@type': 'SoftwareApplication',
+            name: vendorBName,
+            applicationCategory: 'BusinessApplication',
+          },
+        },
+      ],
+    },
+    {
+      '@type': 'Product',
+      name: `${vendorAName} vs ${vendorBName}`,
+      description,
+      url,
+    },
+  ],
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schemaData)} />

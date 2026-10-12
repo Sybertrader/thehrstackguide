@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" role="img" aria-label="3-Year TCO Chart comparing Breezy HR vs BambooHR">
+  <rect width="600" height="240" fill="#0f172a"/>
+  <line x1="50" y1="20" x2="550" y2="20" stroke="#334155" stroke-dasharray="4"/>
+  <line x1="50" y1="120" x2="550" y2="120" stroke="#334155" stroke-dasharray="4"/>
+  <line x1="50" y1="220" x2="550" y2="220" stroke="#475569"/>
+  <path d="M 50 212.36843193667198 Q 175 211.26316921413886, 300 210.15790649160573 T 550 206.5768552705984" fill="none" stroke="#6366f1" stroke-width="3"/>
+  <circle cx="550" cy="206.5768552705984" r="5" fill="#6366f1"/>
+  <path d="M 50 79.66650633317303 Q 175 75.65816899150236, 300 71.6498316498317 T 550 58.181818181818215" fill="none" stroke="#10b981" stroke-width="3"/>
+  <circle cx="550" cy="58.181818181818215" r="5" fill="#10b981"/>
+</svg>

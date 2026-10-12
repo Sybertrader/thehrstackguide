@@ -34,6 +34,14 @@ import { pickRelatedHubs } from '../lib/related-comparisons';
 import RelatedComparisons from '../components/RelatedComparisons.astro';
 import BuyOrSkip from '../components/BuyOrSkip.astro';
 import CostCalculator from '../components/CostCalculator.astro';
+import HeroVariantA from '../components/heroes/HeroVariantA.astro';
+import HeroVariantB from '../components/heroes/HeroVariantB.astro';
+import TcoAnalysisBlock from '../components/sections/TcoAnalysisBlock.astro';
+import EditorialBreakdown from '../components/sections/EditorialBreakdown.astro';
+import ComparisonSchema from '../components/seo/ComparisonSchema.astro';
+import { selectLayoutVariant } from '../utils/layoutHasher';
+import { monthlyPlatformFee } from '../lib/tco-projection';
+import { getEntry } from 'astro:content';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildMasterSegmentPanels,
@@ -122,6 +130,27 @@ export function getStaticPaths() {
 const { comparison, related, lastUpdatedIso, firstPublishedIso, isHub, hubSlug, pairRows } =
   Astro.props as ComparisonPageProps;
 const isChildRoute = !isHub;
+const editorialEntry = await getEntry('comparisons', hubSlug);
+const editorial = editorialEntry?.data;
+const layoutVariant = selectLayoutVariant(hubSlug, 3);
+const vendorABaseCost = monthlyPlatformFee(
+  comparison.tool_a_id,
+  comparison.tool_a_starting_price,
+  hubSlug,
+  'a',
+);
+const vendorBBaseCost = monthlyPlatformFee(
+  comparison.tool_b_id,
+  comparison.tool_b_starting_price,
+  hubSlug,
+  'b',
+);
+const uniqueProse =
+  editorial?.uniqueDifferentiatorProse ||
+  [comparison.verdict_summary, comparison.hr_stack_take, comparison.winner_reason]
+    .filter(Boolean)
+    .join('\n\n');
+const tcoScreenshot = editorial?.screenshots?.[0];
 const hubFamily = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
 
 function parsePipeList(value: string): string[] {
@@ -299,6 +328,7 @@ function buildSchemaGraph(
         dateModified,
         mainEntity: {
           '@type': 'ItemList',
+          name: `Software Comparison: ${pairName}`,
           itemListElement: [
             { '@type': 'ListItem', position: 1, item: { '@id': toolAId } },
             { '@type': 'ListItem', position: 2, item: { '@id': toolBId } },
@@ -366,6 +396,12 @@ function buildSchemaGraph(
             worstRating: '1',
           },
         },
+      },
+      {
+        '@type': 'Product',
+        name: pairName,
+        description: comparison.meta_description,
+        url: pageUrl,
       },
     ],
   };
@@ -580,6 +616,14 @@ const heroLogoPreloads = (
   {richSnippetSchema.length > 0 && (
     <script slot="head" type="application/ld+json" set:html={JSON.stringify(richSnippetSchema)} />
   )}
+  <ComparisonSchema
+    slot="head"
+    title={pageTitle}
+    description={pageDescription}
+    url={pageUrl}
+    vendorAName={comparison.tool_a_name}
+    vendorBName={comparison.tool_b_name}
+  />
   <meta slot="head" property="og:updated_time" content={lastUpdatedIso} />
   <meta slot="head" name="revised" content={lastUpdatedIso} />
 
@@ -608,77 +652,39 @@ const heroLogoPreloads = (
         />
       )}
 
-      <!-- Hero Section -->
-      <header class="mb-2" data-comparison-hero>
-        <nav aria-label="Breadcrumb">
-          <ol class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
-            <li>
-              <a href="/" class="transition hover:text-indigo-600">Home</a>
-            </li>
-            <li aria-hidden="true" class="text-slate-300">&gt;</li>
-            <li>
-              <a href={categoryHub.href} class="transition hover:text-indigo-600">{categoryHub.label}</a>
-            </li>
-            <li aria-hidden="true" class="text-slate-300">&gt;</li>
-            {isHub ? (
-              <li class="font-medium text-indigo-600" aria-current="page">
-                {comparison.tool_a_name} vs {comparison.tool_b_name}
-              </li>
-            ) : (
-              <>
-                <li>
-                  <a href={`/${hubSlug}/`} class="transition hover:text-indigo-600">
-                    {comparison.tool_a_name} vs {comparison.tool_b_name}
-                  </a>
-                </li>
-                <li aria-hidden="true" class="text-slate-300">&gt;</li>
-                <li class="font-medium text-indigo-600" aria-current="page">
-                  {modifierLabel}
-                </li>
-              </>
-            )}
-          </ol>
-        </nav>
-
-        <div class="mt-4 flex items-center gap-3">
-          <VendorLogo
-            src={comparison.tool_a_logo_url}
-            alt={`${comparison.tool_a_name} logo`}
-            name={comparison.tool_a_name}
-            badgeColor={toolABadgeColor}
-            loading="eager"
-            priority
-          />
-          <span class="text-sm font-semibold uppercase tracking-wide text-slate-400">vs</span>
-          <VendorLogo
-            src={comparison.tool_b_logo_url}
-            alt={`${comparison.tool_b_name} logo`}
-            name={comparison.tool_b_name}
-            badgeColor={toolBBadgeColor}
-            loading="eager"
-            priority
-          />
-        </div>
-
-        <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-          {pageHeading}
-        </h1>
-
-        <p class="mt-4 w-full max-w-none text-lg leading-relaxed text-slate-600">
-          {heroSubtitle}
-        </p>
-
-        <!--
-          FTC/ASA disclosure: kept in the hero so it stays above the fold,
-          immediately adjacent to the comparison that the affiliate links cover.
-        -->
-        <p class="text-xs text-slate-500 mt-2 mb-4">
-          <span class="font-medium text-slate-500">Disclosure:</span> The HR Stack Guide is an independent comparison guide. We may earn a commission if you sign up through our links at no extra cost to you.
-          <a href="/affiliate-disclosure/" class="text-slate-500 underline underline-offset-2 hover:text-indigo-600">Read full disclosure</a>.
-        </p>
-
-        <DataVerificationBadge />
-      </header>
+      {layoutVariant === 1 ? (
+        <HeroVariantB
+          toolAName={comparison.tool_a_name}
+          toolBName={comparison.tool_b_name}
+          toolALogo={comparison.tool_a_logo_url}
+          toolBLogo={comparison.tool_b_logo_url}
+          toolABadgeColor={toolABadgeColor}
+          toolBBadgeColor={toolBBadgeColor}
+          pageHeading={pageHeading}
+          heroSubtitle={heroSubtitle}
+          categoryHref={categoryHub.href}
+          categoryLabel={categoryHub.label}
+          isHub={isHub}
+          hubSlug={hubSlug}
+          modifierLabel={modifierLabel}
+        />
+      ) : (
+        <HeroVariantA
+          toolAName={comparison.tool_a_name}
+          toolBName={comparison.tool_b_name}
+          toolALogo={comparison.tool_a_logo_url}
+          toolBLogo={comparison.tool_b_logo_url}
+          toolABadgeColor={toolABadgeColor}
+          toolBBadgeColor={toolBBadgeColor}
+          pageHeading={pageHeading}
+          heroSubtitle={heroSubtitle}
+          categoryHref={categoryHub.href}
+          categoryLabel={categoryHub.label}
+          isHub={isHub}
+          hubSlug={hubSlug}
+          modifierLabel={modifierLabel}
+        />
+      )}
 
       {isChildRoute && (
         <aside class="mb-10 mt-8 rounded-2xl border border-indigo-200 bg-indigo-50/70 px-5 py-4 sm:px-6 sm:py-5" aria-label={`${modifierLabel} evaluation context`}>
@@ -712,6 +718,33 @@ const heroLogoPreloads = (
         toolAAffiliateHref={toolAAffiliateHref}
         toolBAffiliateHref={toolBAffiliateHref}
       />
+
+      {isHub && layoutVariant === 0 && (
+        <>
+          <TcoAnalysisBlock
+            vendorAName={comparison.tool_a_name}
+            vendorABaseCost={vendorABaseCost}
+            vendorBName={comparison.tool_b_name}
+            vendorBBaseCost={vendorBBaseCost}
+            screenshot={tcoScreenshot}
+          />
+          <EditorialBreakdown
+            vendorAName={comparison.tool_a_name}
+            vendorBName={comparison.tool_b_name}
+            prose={uniqueProse}
+            targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
+          />
+        </>
+      )}
+
+      {isHub && layoutVariant === 1 && (
+        <EditorialBreakdown
+          vendorAName={comparison.tool_a_name}
+          vendorBName={comparison.tool_b_name}
+          prose={uniqueProse}
+          targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
+        />
+      )}
 
       {isHub && (
         <PricingNuance
@@ -755,8 +788,36 @@ const heroLogoPreloads = (
         />
       )}
 
+      {isHub && layoutVariant === 2 && (
+        <>
+          <TcoAnalysisBlock
+            vendorAName={comparison.tool_a_name}
+            vendorABaseCost={vendorABaseCost}
+            vendorBName={comparison.tool_b_name}
+            vendorBBaseCost={vendorBBaseCost}
+            screenshot={tcoScreenshot}
+          />
+          <EditorialBreakdown
+            vendorAName={comparison.tool_a_name}
+            vendorBName={comparison.tool_b_name}
+            prose={uniqueProse}
+            targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
+          />
+        </>
+      )}
+
       {isHub && comparison.hr_stack_take && (
         <VerdictCallout take={cleanCopy(comparison.hr_stack_take)} />
+      )}
+
+      {isHub && layoutVariant === 1 && (
+        <TcoAnalysisBlock
+          vendorAName={comparison.tool_a_name}
+          vendorABaseCost={vendorABaseCost}
+          vendorBName={comparison.tool_b_name}
+          vendorBBaseCost={vendorBBaseCost}
+          screenshot={tcoScreenshot}
+        />
       )}
 
       {isHub && (

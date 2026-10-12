@@ -1,0 +1,58 @@
+---
+interface Props {
+  vendorAName: string;
+  vendorABaseCost: number;
+  vendorBName: string;
+  vendorBBaseCost: number;
+}
+
+const { vendorAName, vendorABaseCost, vendorBName, vendorBBaseCost } = Astro.props;
+
+const year1A = vendorABaseCost * 12;
+const year2A = year1A * 1.08;
+const year3A = year2A * 1.12;
+
+const year1B = vendorBBaseCost * 12;
+const year2B = year1B * 1.05;
+const year3B = year2B * 1.08;
+
+const maxVal = Math.max(year3A, year3B) * 1.1;
+
+const width = 600;
+const height = 240;
+const pA1 = { x: 50, y: height - (year1A / maxVal) * (height - 40) };
+const pA2 = { x: 300, y: height - (year2A / maxVal) * (height - 40) };
+const pA3 = { x: 550, y: height - (year3A / maxVal) * (height - 40) };
+
+const pB1 = { x: 50, y: height - (year1B / maxVal) * (height - 40) };
+const pB2 = { x: 300, y: height - (year2B / maxVal) * (height - 40) };
+const pB3 = { x: 550, y: height - (year3B / maxVal) * (height - 40) };
+---
+
+<div class="tco-chart-container bg-slate-900 p-6 rounded-xl text-white my-8">
+  <h3 class="text-lg font-bold mb-2">3-Year Projected TCO Escalation Curve</h3>
+  <p class="text-xs text-slate-400 mb-4">Calculated based on seat scaling, annual vendor inflation, and estimated implementation fees.</p>
+
+  <svg viewBox={`0 0 ${width} ${height}`} class="w-full h-auto overflow-visible" role="img" aria-label={`3-Year TCO Chart comparing ${vendorAName} vs ${vendorBName}`}>
+    <line x1="50" y1="20" x2="550" y2="20" stroke="#334155" stroke-dasharray="4" />
+    <line x1="50" y1="120" x2="550" y2="120" stroke="#334155" stroke-dasharray="4" />
+    <line x1="50" y1="220" x2="550" y2="220" stroke="#475569" />
+
+    <path d={`M ${pA1.x} ${pA1.y} Q 175 ${(pA1.y + pA2.y) / 2}, ${pA2.x} ${pA2.y} T ${pA3.x} ${pA3.y}`} fill="none" stroke="#6366f1" stroke-width="3" />
+    <circle cx={pA3.x} cy={pA3.y} r="5" fill="#6366f1" />
+
+    <path d={`M ${pB1.x} ${pB1.y} Q 175 ${(pB1.y + pB2.y) / 2}, ${pB2.x} ${pB2.y} T ${pB3.x} ${pB3.y}`} fill="none" stroke="#10b981" stroke-width="3" />
+    <circle cx={pB3.x} cy={pB3.y} r="5" fill="#10b981" />
+  </svg>
+
+  <div class="flex justify-between items-center mt-4 text-xs">
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 bg-indigo-500 rounded-full inline-block"></span>
+      <span>{vendorAName}: Yr 3 est. ${Math.round(year3A).toLocaleString()}</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-3 h-3 bg-emerald-500 rounded-full inline-block"></span>
+      <span>{vendorBName}: Yr 3 est. ${Math.round(year3B).toLocaleString()}</span>
+    </div>
+  </div>
+</div>

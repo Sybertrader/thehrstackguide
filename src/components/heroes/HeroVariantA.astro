@@ -1,0 +1,103 @@
+---
+import VendorLogo from '../VendorLogo.astro';
+import DataVerificationBadge from '../DataVerificationBadge.astro';
+
+interface Props {
+  toolAName: string;
+  toolBName: string;
+  toolALogo: string;
+  toolBLogo: string;
+  toolABadgeColor: string;
+  toolBBadgeColor: string;
+  pageHeading: string;
+  heroSubtitle: string;
+  categoryHref: string;
+  categoryLabel: string;
+  isHub: boolean;
+  hubSlug: string;
+  modifierLabel?: string;
+}
+
+const {
+  toolAName,
+  toolBName,
+  toolALogo,
+  toolBLogo,
+  toolABadgeColor,
+  toolBBadgeColor,
+  pageHeading,
+  heroSubtitle,
+  categoryHref,
+  categoryLabel,
+  isHub,
+  hubSlug,
+  modifierLabel,
+} = Astro.props;
+---
+
+<header class="mb-2" data-comparison-hero data-hero-variant="a">
+  <nav aria-label="Breadcrumb">
+    <ol class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
+      <li>
+        <a href="/" class="transition hover:text-indigo-600">Home</a>
+      </li>
+      <li aria-hidden="true" class="text-slate-300">&gt;</li>
+      <li>
+        <a href={categoryHref} class="transition hover:text-indigo-600">{categoryLabel}</a>
+      </li>
+      <li aria-hidden="true" class="text-slate-300">&gt;</li>
+      {isHub ? (
+        <li class="font-medium text-indigo-600" aria-current="page">
+          {toolAName} vs {toolBName}
+        </li>
+      ) : (
+        <>
+          <li>
+            <a href={`/${hubSlug}/`} class="transition hover:text-indigo-600">
+              {toolAName} vs {toolBName}
+            </a>
+          </li>
+          <li aria-hidden="true" class="text-slate-300">&gt;</li>
+          <li class="font-medium text-indigo-600" aria-current="page">
+            {modifierLabel}
+          </li>
+        </>
+      )}
+    </ol>
+  </nav>
+
+  <div class="mt-4 flex items-center gap-3">
+    <VendorLogo
+      src={toolALogo}
+      alt={`${toolAName} logo`}
+      name={toolAName}
+      badgeColor={toolABadgeColor}
+      loading="eager"
+      priority
+    />
+    <span class="text-sm font-semibold uppercase tracking-wide text-slate-400">vs</span>
+    <VendorLogo
+      src={toolBLogo}
+      alt={`${toolBName} logo`}
+      name={toolBName}
+      badgeColor={toolBBadgeColor}
+      loading="eager"
+      priority
+    />
+  </div>
+
+  <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+    {pageHeading}
+  </h1>
+
+  <p class="mt-4 w-full max-w-none text-lg leading-relaxed text-slate-600">
+    {heroSubtitle}
+  </p>
+
+  <p class="text-xs text-slate-500 mt-2 mb-4">
+    <span class="font-medium text-slate-500">Disclosure:</span> The HR Stack Guide is an independent comparison guide. We may earn a commission if you sign up through our links at no extra cost to you.
+    <a href="/affiliate-disclosure/" class="text-slate-500 underline underline-offset-2 hover:text-indigo-600">Read full disclosure</a>.
+  </p>
+
+  <DataVerificationBadge />
+</header>
