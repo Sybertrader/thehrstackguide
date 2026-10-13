@@ -1,0 +1,48 @@
+---
+import type { CategoryMatrix } from '../lib/category-feature-matrix';
+
+interface Props {
+  matrix: CategoryMatrix;
+}
+
+const { matrix } = Astro.props;
+const bodyColumns = matrix.columns.filter((column) => column.key !== 'platform');
+---
+
+<section class="mb-16" aria-labelledby="category-feature-matrix-heading">
+  <h2 id="category-feature-matrix-heading" class="mb-2 text-2xl font-bold text-slate-900">
+    {matrix.heading}
+  </h2>
+  <p class="mb-6 w-full max-w-none text-base leading-relaxed text-slate-600">
+    {matrix.caption}
+  </p>
+  <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+    <table class="min-w-[56rem] w-full border-collapse text-left text-sm text-slate-700">
+      <caption class="sr-only">{matrix.caption}</caption>
+      <thead class="bg-slate-50">
+        <tr>
+          {matrix.columns.map((column) => (
+            <th
+              scope="col"
+              class="sticky top-0 whitespace-nowrap border-b border-slate-200 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600"
+            >
+              {column.label}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {matrix.rows.map((row) => (
+          <tr class="border-b border-slate-100 last:border-b-0 even:bg-slate-50/60">
+            <th scope="row" class="whitespace-nowrap px-4 py-3 align-top font-semibold text-slate-900">
+              {row.platform}
+            </th>
+            {bodyColumns.map((column) => (
+              <td class="px-4 py-3 align-top leading-relaxed">{row.cells[column.key]}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ConciergeLeadBox from '../../components/ConciergeLeadBox.astro';
 import CategoryComparisonBrowser from '../../components/CategoryComparisonBrowser.astro';
+import CategoryFeatureMatrix from '../../components/CategoryFeatureMatrix.astro';
 import VendorButton from '../../components/VendorButton.astro';
 import VendorLogo from '../../components/VendorLogo.astro';
 import ManualLeadModal from '../../components/ManualLeadModal.astro';
@@ -12,6 +13,7 @@ import { comparisonHubSlug } from '../../lib/comparison-routes';
 import { schemaOffer } from '../../lib/schema-offer';
 import { eorCostCalculatorJsonLd } from '../../lib/eor-cost-api';
 import { PM_HUB_HEADING, PM_HUB_TITLE } from '../../lib/seo';
+import { PERFORMANCE_FEATURE_MATRIX } from '../../lib/category-feature-matrix';
 
 const currentMonthYear = new Date().toLocaleDateString('en-US', {
   month: 'long',
@@ -116,6 +118,13 @@ const collectionSchema = {
     '@type': 'Thing',
     name: 'Performance Management Software',
   },
+  breadcrumb: {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: siteRootUrl },
+      { '@type': 'ListItem', position: 2, name: 'Performance Management', item: pageUrl },
+    ],
+  },
   mainEntity: {
     '@type': 'ItemList',
     numberOfItems: toolRoster.length,
@@ -151,14 +160,27 @@ const collectionSchema = {
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(eorCostCalculatorJsonLd())} />
 
-  <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+  <main id="main-content" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
     <!-- Hero -->
     <header class="mb-12">
       <nav aria-label="Breadcrumb">
-        <ol class="flex flex-wrap items-center gap-2 text-sm text-slate-500">
-          <li><a href="/" class="transition hover:text-indigo-600">Home</a></li>
+        <ol
+          class="flex flex-wrap items-center gap-2 text-sm text-slate-500"
+          itemscope
+          itemtype="https://schema.org/BreadcrumbList"
+        >
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/" class="transition hover:text-indigo-600" itemprop="item">
+              <span itemprop="name">Home</span>
+            </a>
+            <meta itemprop="position" content="1" />
+          </li>
           <li aria-hidden="true" class="text-slate-300">&gt;</li>
-          <li class="font-medium text-indigo-600" aria-current="page">Performance Management</li>
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" class="font-medium text-indigo-600" aria-current="page">
+            <span itemprop="name">Performance Management</span>
+            <meta itemprop="item" content={pageUrl} />
+            <meta itemprop="position" content="2" />
+          </li>
         </ol>
       </nav>
 
@@ -250,6 +272,8 @@ const collectionSchema = {
       </div>
     </section>
 
+    <CategoryFeatureMatrix matrix={PERFORMANCE_FEATURE_MATRIX} />
+
     <!-- Category Buyer's Guide -->
     <section class="mb-16" aria-label="How to evaluate Performance Management platforms">
       <h2 class="mb-2 text-2xl font-bold text-slate-900">How to Evaluate Performance Management Platforms in {currentMonthYear}</h2>
@@ -280,6 +304,12 @@ const collectionSchema = {
       />
     </section>
 
+    <ConciergeLeadBox
+      categoryName="Performance Management"
+      theme="sky"
+      ctaHref="/recommendation/?category=performance"
+      body="Skip hours of demo calls. Answer 4 quick questions about your review cycle cadence, compensation tie-in, and team size to get an unbiased recommendation."
+    />
   </main>
   {toolRoster
     .filter((tool) => isManualLeadBrand(tool.id))
@@ -291,11 +321,4 @@ const collectionSchema = {
         partnerLandingUrl={tool.partner_landing_url ?? ''}
       />
     ))}
-  <div class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-    <ConciergeLeadBox
-      categoryName="Performance Management"
-      theme="sky"
-      ctaHref="/recommendation/?category=performance"
-    />
-  </div>
 </Layout>

@@ -6,6 +6,8 @@ interface Props {
   ctaHref?: string;
   /** Optional full H2. Defaults to “Unsure which {categoryName} platform fits your team?” */
   headline?: string;
+  /** Vertical-specific body copy. Replaces the generic 4-question boilerplate. */
+  body?: string;
   /** Extra classes on the section, so callers can set the spacing this box needs
    * wherever they place it in the page flow. */
   class?: string;
@@ -16,9 +18,13 @@ const {
   theme = 'indigo',
   ctaHref = '/recommendation/',
   headline,
+  body,
   class: className = '',
 } = Astro.props;
 const resolvedHeadline = headline ?? `Unsure which ${categoryName} platform fits your team?`;
+const resolvedBody =
+  body ??
+  'Skip hours of demo calls. Answer 4 quick questions to get an unbiased recommendation tailored to your specific requirements.';
 
 const themes = {
   indigo: {
@@ -54,7 +60,7 @@ const styles = themes[theme];
       {resolvedHeadline}
     </h2>
     <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
-      Skip hours of demo calls. Answer 4 quick questions to get an unbiased recommendation tailored to your specific requirements.
+      {resolvedBody}
     </p>
     <a
       href={ctaHref}
