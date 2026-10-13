@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "prebuild": "node scripts/audit-seo-quality.js",
     "build": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs && astro build",
     "generate-editorial": "node scripts/generate-comparison-editorial.mjs",
     "ping:indexnow": "node scripts/submit-indexnow.js",

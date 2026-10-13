@@ -2,7 +2,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { generateComparisonEditorial } from './generate-comparison-editorial.mjs';
+// Editorial markdown generation is disabled. Comparison pages render
+// CSV-backed verdict/cards/tables only; do not regenerate uniqueProse.
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -40,8 +41,6 @@ function calculateJaccardSimilarity(setA, setB) {
 
 function auditPages() {
   console.log('🔍 Starting pSEO Pre-Build Quality & Uniqueness Audit...\n');
-
-  generateComparisonEditorial();
 
   if (!fs.existsSync(CONTENT_DIR)) {
     console.error('❌ Quality Failure: src/content/comparisons is missing after generation.');

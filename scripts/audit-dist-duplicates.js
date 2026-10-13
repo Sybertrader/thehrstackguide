@@ -120,10 +120,20 @@ function runAudit() {
 
   let duplicateCount = 0;
   const THRESHOLD = 0.35; // Flag if unique text overlap exceeds 35%
+  const comparisonScores = [];
 
   for (let i = 0; i < pages.length; i++) {
     for (let j = i + 1; j < pages.length; j++) {
       const similarity = calculateJaccard(pages[i].tokens, pages[j].tokens);
+      const aIsComparison = pages[i].path.includes('-vs-');
+      const bIsComparison = pages[j].path.includes('-vs-');
+      if (aIsComparison && bIsComparison) {
+        comparisonScores.push({
+          similarity,
+          a: pages[i].path,
+          b: pages[j].path,
+        });
+      }
       if (similarity > THRESHOLD) {
         console.warn(
           `⚠️ High Similarity (${(similarity * 100).toFixed(1)}%): ${pages[i].path} <--> ${pages[j].path}`
@@ -133,8 +143,22 @@ function runAudit() {
     }
   }
 
+  comparisonScores.sort((x, y) => y.similarity - x.similarity);
+  console.log('\n--- Raw Jaccard (1-to-1 comparison hubs, descending) ---');
+  for (const score of comparisonScores) {
+    console.log(`${(score.similarity * 100).toFixed(1)}%\t${score.a}\t<-->\t${score.b}`);
+  }
+  if (comparisonScores.length > 0) {
+    const pct = comparisonScores.map((s) => s.similarity);
+    const mid = Math.floor(pct.length / 2);
+    const median = pct.length % 2 === 0 ? (pct[mid - 1] + pct[mid]) / 2 : pct[mid];
+    console.log(
+      `\nComparison-hub pairs: ${comparisonScores.length}. Highest ${(pct[0] * 100).toFixed(1)}%. Median ${(median * 100).toFixed(1)}%. Lowest ${(pct[pct.length - 1] * 100).toFixed(1)}%.`,
+    );
+  }
+
   if (duplicateCount === 0) {
-    console.log('✅ Audit Passed! All rendered HTML pages meet uniqueness criteria.');
+    console.log('\n✅ Audit Passed! All rendered HTML pages meet uniqueness criteria.');
   } else {
     console.log(`\nFound ${duplicateCount} page pair(s) exceeding similarity threshold.`);
   }

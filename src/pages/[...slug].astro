@@ -14,7 +14,6 @@ import { isComparisonHubSlug, comparisonHubSlug, categoryHubNav } from '../lib/c
 import { comparisonVendorsAreLive, getToolProfile } from '../lib/tools';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../lib/outbound';
 import ManualLeadModal from '../components/ManualLeadModal.astro';
-import DataVerificationBadge from '../components/DataVerificationBadge.astro';
 import StickyMobileCta from '../components/StickyMobileCta.astro';
 import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
@@ -25,13 +24,9 @@ import { schemaOffer } from '../lib/schema-offer';
 import { pickRelatedHubs } from '../lib/related-comparisons';
 import RelatedComparisons from '../components/RelatedComparisons.astro';
 import HeroVariantA from '../components/heroes/HeroVariantA.astro';
-import HeroVariantB from '../components/heroes/HeroVariantB.astro';
 import ComparisonMainBody from '../components/sections/ComparisonMainBody.astro';
 import ComparisonSchema from '../components/SEO/ComparisonSchema.astro';
-import { orderByHash, selectLayoutVariant } from '../utils/layoutHasher';
-import { monthlyPlatformFee } from '../lib/tco-projection';
 import { contrastVendorA, contrastVendorB } from '../lib/vendor-contrast';
-import { getEntry } from 'astro:content';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildMasterSegmentPanels,
@@ -120,27 +115,6 @@ export function getStaticPaths() {
 const { comparison, related, lastUpdatedIso, firstPublishedIso, isHub, hubSlug, pairRows } =
   Astro.props as ComparisonPageProps;
 const isChildRoute = !isHub;
-const editorialEntry = await getEntry('comparisons', hubSlug);
-const editorial = editorialEntry?.data;
-const layoutVariant = selectLayoutVariant(hubSlug, 3);
-const vendorABaseCost = monthlyPlatformFee(
-  comparison.tool_a_id,
-  comparison.tool_a_starting_price,
-  hubSlug,
-  'a',
-);
-const vendorBBaseCost = monthlyPlatformFee(
-  comparison.tool_b_id,
-  comparison.tool_b_starting_price,
-  hubSlug,
-  'b',
-);
-const uniqueProse =
-  editorial?.uniqueDifferentiatorProse ||
-  [comparison.verdict_summary, comparison.hr_stack_take, comparison.winner_reason]
-    .filter(Boolean)
-    .join('\n\n');
-const tcoScreenshot = editorial?.screenshots?.[0];
 const hubFamily = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
 
 function parsePipeList(value: string): string[] {
@@ -462,22 +436,16 @@ const vendorBContrast = contrastVendorB({
   bPros: toolBPros,
   bCons: toolBCons,
 });
-const leadSection = (['tco', 'editorial', 'features'] as const)[layoutVariant];
-const inMainIds = ['tco', 'editorial'];
 const mainSectionOrder = [
-  leadSection === 'features' ? 'editorial' : leadSection,
-  ...orderByHash(
-    hubSlug,
-    inMainIds.filter((id) => id !== (leadSection === 'features' ? 'editorial' : leadSection)),
-  ),
-];
-const auxIds = ['glance', 'features', 'pricing', 'calculator', 'verdict', 'tabs', 'preferred', 'pros', 'demo'];
-const auxSectionOrder = [
-  ...(leadSection === 'features' ? (['features'] as const) : []),
-  ...orderByHash(
-    hubSlug + '-aux',
-    auxIds.filter((id) => !(leadSection === 'features' && id === 'features')),
-  ),
+  'glance',
+  'verdict',
+  'features',
+  'pricing',
+  'pros',
+  'calculator',
+  'tabs',
+  'preferred',
+  'demo',
 ];
 const toolAContrastNuance = comparison.tool_a_pricing_nuance
   ? `${comparison.tool_a_name} vs ${comparison.tool_b_name}: ${firstSentence(cleanCopy(comparison.tool_a_pricing_nuance))}`
@@ -686,40 +654,22 @@ const heroLogoPreloads = (
     />
   )}
 
-  <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-      {layoutVariant === 1 ? (
-        <HeroVariantB
-          toolAName={comparison.tool_a_name}
-          toolBName={comparison.tool_b_name}
-          toolALogo={comparison.tool_a_logo_url}
-          toolBLogo={comparison.tool_b_logo_url}
-          toolABadgeColor={toolABadgeColor}
-          toolBBadgeColor={toolBBadgeColor}
-          pageHeading={pageHeading}
-          heroSubtitle={heroSubtitle}
-          categoryHref={categoryHub.href}
-          categoryLabel={categoryHub.label}
-          isHub={isHub}
-          hubSlug={hubSlug}
-          modifierLabel={modifierLabel}
-        />
-      ) : (
-        <HeroVariantA
-          toolAName={comparison.tool_a_name}
-          toolBName={comparison.tool_b_name}
-          toolALogo={comparison.tool_a_logo_url}
-          toolBLogo={comparison.tool_b_logo_url}
-          toolABadgeColor={toolABadgeColor}
-          toolBBadgeColor={toolBBadgeColor}
-          pageHeading={pageHeading}
-          heroSubtitle={heroSubtitle}
-          categoryHref={categoryHub.href}
-          categoryLabel={categoryHub.label}
-          isHub={isHub}
-          hubSlug={hubSlug}
-          modifierLabel={modifierLabel}
-        />
-      )}
+  <main id="main-content" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <HeroVariantA
+        toolAName={comparison.tool_a_name}
+        toolBName={comparison.tool_b_name}
+        toolALogo={comparison.tool_a_logo_url}
+        toolBLogo={comparison.tool_b_logo_url}
+        toolABadgeColor={toolABadgeColor}
+        toolBBadgeColor={toolBBadgeColor}
+        pageHeading={pageHeading}
+        heroSubtitle={heroSubtitle}
+        categoryHref={categoryHub.href}
+        categoryLabel={categoryHub.label}
+        isHub={isHub}
+        hubSlug={hubSlug}
+        modifierLabel={modifierLabel}
+      />
 
       {isChildRoute && (
         <aside class="mb-10 mt-8 rounded-2xl border border-indigo-200 bg-indigo-50/70 px-5 py-4 sm:px-6 sm:py-5" aria-label={`${modifierLabel} evaluation context`}>
@@ -740,11 +690,6 @@ const heroLogoPreloads = (
         mainSectionOrder={mainSectionOrder}
         isHub={isHub}
         hubFamily={hubFamily}
-        uniqueProse={uniqueProse}
-        targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
-        vendorABaseCost={vendorABaseCost}
-        vendorBBaseCost={vendorBBaseCost}
-        tcoScreenshot={tcoScreenshot}
         toolAFeatures={toolAFeatures}
         toolBFeatures={toolBFeatures}
         toolANarrative={toolANarrative}
@@ -787,44 +732,6 @@ const heroLogoPreloads = (
       {isChildRoute && (
         <WorkflowBottlenecks modifierLabel={modifierLabel} items={workflowBottlenecks} />
       )}
-    </main>
-
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-      <ComparisonMainBody
-        comparison={comparison}
-        mainSectionOrder={auxSectionOrder}
-        isHub={isHub}
-        hubFamily={hubFamily}
-        uniqueProse={uniqueProse}
-        targetTeamSizeRecommendation={editorial?.targetTeamSizeRecommendation}
-        vendorABaseCost={vendorABaseCost}
-        vendorBBaseCost={vendorBBaseCost}
-        tcoScreenshot={tcoScreenshot}
-        toolAFeatures={toolAFeatures}
-        toolBFeatures={toolBFeatures}
-        toolANarrative={toolANarrative}
-        toolBNarrative={toolBNarrative}
-        toolAIsWinner={toolAIsWinner}
-        toolBIsWinner={toolBIsWinner}
-        winnerBadgeText={winnerBadgeText}
-        toolABadgeColor={toolABadgeColor}
-        toolBBadgeColor={toolBBadgeColor}
-        toolAIsManualLead={toolAIsManualLead}
-        toolBIsManualLead={toolBIsManualLead}
-        toolAModalId={toolAModalId}
-        toolBModalId={toolBModalId}
-        toolAAffiliateHref={toolAAffiliateHref}
-        toolBAffiliateHref={toolBAffiliateHref}
-        vendorAContrast={vendorAContrast}
-        vendorBContrast={vendorBContrast}
-        toolAContrastNuance={toolAContrastNuance}
-        toolBContrastNuance={toolBContrastNuance}
-        showFeatureTable={showFeatureTable}
-        featureMatrixRows={featureMatrixRows}
-        toolBIntegrations={toolBIntegrations}
-        segmentPanels={segmentPanels}
-        verdictTake={comparison.hr_stack_take ? cleanCopy(comparison.hr_stack_take) : ''}
-      />
 
       <RelatedComparisons
         links={relatedLinks}
@@ -834,7 +741,7 @@ const heroLogoPreloads = (
       />
 
       <div class="h-20 md:hidden" aria-hidden="true"></div>
-    </div>
+    </main>
 
     <StickyMobileCta
       vendorId={stickyWinner.id}

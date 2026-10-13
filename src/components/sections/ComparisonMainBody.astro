@@ -1,7 +1,7 @@
 ---
 /**
- * Shuffled <main> sections for comparison hubs. Lead block is TCO, editorial,
- * or the feature grid by layout variant; the rest is orderByHash'd.
+ * Core comparison sections: scoring cards, verdict, feature grid, pricing,
+ * and pros/cons. TCO charts and synthetic editorial are not rendered.
  */
 import AtAGlance from '../AtAGlance.astro';
 import PricingNuance from '../PricingNuance.astro';
@@ -12,8 +12,6 @@ import DemoQuestions from '../DemoQuestions.astro';
 import BuyOrSkip from '../BuyOrSkip.astro';
 import CostCalculator from '../CostCalculator.astro';
 import VendorLogo from '../VendorLogo.astro';
-import TcoAnalysisBlock from './TcoAnalysisBlock.astro';
-import EditorialBreakdown from './EditorialBreakdown.astro';
 import FeatureParityGrid from './FeatureParityGrid.astro';
 import type { Comparison, FeatureMatrixEntry } from '../../lib/comparisons';
 import type { VendorAContrast, VendorBContrast } from '../../lib/vendor-contrast';
@@ -26,23 +24,11 @@ interface RatingDisplay {
   ratingSource: string | null;
 }
 
-interface Screenshot {
-  src: string;
-  alt: string;
-  caption: string;
-  uiFeatureTag?: string;
-}
-
 interface Props {
   comparison: Comparison;
   mainSectionOrder: string[];
   isHub: boolean;
   hubFamily: CategoryHubFamily | null;
-  uniqueProse: string;
-  targetTeamSizeRecommendation?: string;
-  vendorABaseCost: number;
-  vendorBBaseCost: number;
-  tcoScreenshot?: Screenshot;
   toolAFeatures: string[];
   toolBFeatures: string[];
   toolANarrative: RatingDisplay;
@@ -74,11 +60,6 @@ const {
   mainSectionOrder,
   isHub,
   hubFamily,
-  uniqueProse,
-  targetTeamSizeRecommendation,
-  vendorABaseCost,
-  vendorBBaseCost,
-  tcoScreenshot,
   toolAFeatures,
   toolBFeatures,
   toolANarrative,
@@ -130,25 +111,6 @@ const {
         toolAContrastBullets={vendorAContrast.bullets}
         toolBContrastSummary={vendorBContrast.summary}
         toolBContrastBullets={vendorBContrast.bullets}
-      />
-    )}
-
-    {sectionId === 'tco' && isHub && (
-      <TcoAnalysisBlock
-        vendorAName={comparison.tool_a_name}
-        vendorABaseCost={vendorABaseCost}
-        vendorBName={comparison.tool_b_name}
-        vendorBBaseCost={vendorBBaseCost}
-        screenshot={tcoScreenshot}
-      />
-    )}
-
-    {sectionId === 'editorial' && isHub && (
-      <EditorialBreakdown
-        vendorAName={comparison.tool_a_name}
-        vendorBName={comparison.tool_b_name}
-        prose={uniqueProse}
-        targetTeamSizeRecommendation={targetTeamSizeRecommendation}
       />
     )}
 
