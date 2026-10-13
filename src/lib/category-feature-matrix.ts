@@ -110,6 +110,30 @@ export const PAYROLL_FEATURE_MATRIX: CategoryMatrix = {
         contractors: 'From $40/mo',
       },
     },
+    {
+      platform: 'Gusto',
+      cells: {
+        specialty: 'US payroll & international contractor payments',
+        entities: 'US native; global EOR via partner integration',
+        contractors: 'Contractor-only plans from $35/mo + $6/contractor',
+      },
+    },
+    {
+      platform: 'Payoneer Workforce Management',
+      cells: {
+        specialty: 'Cross-border freelancer & contractor payouts',
+        entities: 'Payout infrastructure; partner-backed compliance',
+        contractors: 'Volume-based transfer & FX fees',
+      },
+    },
+    {
+      platform: 'Remote People',
+      cells: {
+        specialty: 'Contractor onboarding & streamlined global payouts',
+        entities: 'Partner-assisted compliance network',
+        contractors: 'Flexible flat fee per active contractor',
+      },
+    },
   ],
 };
 
