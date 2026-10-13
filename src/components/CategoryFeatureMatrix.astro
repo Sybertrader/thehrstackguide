@@ -16,18 +16,17 @@ const bodyColumns = matrix.columns.filter((column) => column.key !== 'platform')
   <p class="mb-6 w-full max-w-none text-base leading-relaxed text-slate-600">
     {matrix.caption}
   </p>
-  <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
-    <table class="w-full table-fixed border-collapse text-left text-sm text-slate-700">
+  <div
+    class="w-full overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm [-webkit-overflow-scrolling:touch]"
+  >
+    <table class="w-full min-w-[640px] border-collapse text-left text-sm text-slate-700">
       <caption class="sr-only">{matrix.caption}</caption>
       <thead class="bg-slate-50 dark:bg-slate-800">
         <tr>
           {matrix.columns.map((column) => (
             <th
               scope="col"
-              class:list={[
-                'border-b border-slate-200 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:border-slate-700 dark:text-slate-200',
-                column.key === 'platform' ? 'w-[22%]' : 'w-[26%]',
-              ]}
+              class="whitespace-nowrap border-b border-slate-200 px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-slate-600 dark:border-slate-700 dark:text-slate-200"
             >
               {column.label}
             </th>
@@ -37,7 +36,7 @@ const bodyColumns = matrix.columns.filter((column) => column.key !== 'platform')
       <tbody>
         {matrix.rows.map((row) => (
           <tr class="border-b border-slate-200 last:border-b-0 even:bg-slate-50/40">
-            <th scope="row" class="px-4 py-3.5 align-top text-base font-bold text-slate-900">
+            <th scope="row" class="whitespace-nowrap px-4 py-3.5 align-top font-semibold text-slate-900">
               {row.platform}
             </th>
             {bodyColumns.map((column) => (
