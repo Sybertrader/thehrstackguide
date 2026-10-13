@@ -411,7 +411,7 @@ const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
     'Do not pay with a US dollar wire and a country flag. Confirm tax-ID checks before local payouts in Mexico, Colombia, or Brazil, or the bank can reject the deposit while you still owe the contractor.',
     'Argentina contractor files fail on local invoices and US-to-LATAM withholding, not on currency conversion. Keep invoice evidence in the workflow or you are buying a year-end audit.',
     'Build 13th-month pay, FGTS, and social charges into the Brazil/Mexico offer before the letter goes out. If it is not in the quote, you will reopen compensation at month twelve.',
-    'Confirm whether {A} or {B} employs through their own local company in those markets or through a partner—deposits, IP assignment, and 13th-month pay change with the setup.',
+    'Confirm whether {A} or {B} employs through their own local company in those markets or through a partner: deposits, IP assignment, and 13th-month pay change with the setup.',
   ],
   'web3-crypto': [
     'A regular HR system with a separate treasury tab is not payroll. Confirm native USDC or USDT payouts on {A} or {B} before you mix contributors with W-2 staff.',

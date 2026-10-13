@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -5,68 +6,41 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DIST_DIR = path.join(__dirname, '../dist');
+const CLIENT_DIR = path.join(DIST_DIR, 'client');
+const CATALOG_PATH = path.join(__dirname, '../src/data/vendor-catalog.json');
 
-// Shared chrome, layout labels, and pSEO glue. Distinctive vendor/product
-// language is what remains for Jaccard.
-const COMMON_CORPUS_WORDS = new Set([
-  'payroll', 'software', 'management', 'features', 'pricing', 'employees',
-  'company', 'platform', 'system', 'global', 'comparison', 'vs', '2026',
-  'privacy', 'policy', 'terms', 'cookie', 'copyright', 'rights', 'reserved',
-  'glance', 'starting', 'price', 'model', 'trial', 'available', 'quote',
-  'scorecard', 'humanverified', 'verified', 'operational', 'independent',
-  'updated', 'october', 'september', 'november', 'december', 'january',
-  'preferred', 'google', 'sources', 'related', 'comparisons', 'demo',
-  'calculator', 'compare', 'guide', 'stack', 'home', 'links', 'disclosure',
-  'book', 'click', 'calculate', 'official', 'evaluation', 'continue',
-  'versus', 'year', 'three', 'yearthree', 'modeled', 'cited', 'badge',
-  'catalog', 'brochure', 'recycled', 'generic', 'profile', 'route', 'hash',
-  'pair', 'code', 'delta', 'invoice', 'contrast', 'matchup', 'hub',
-  'pairing', 'winner', 'audience', 'billed', 'fees', 'cost', 'curve',
-  'estimates', 'estimated', 'projected', 'escalation', 'buildtime',
-  'native', 'integration', 'feature', 'grid', 'column', 'parity',
-  'analysis', 'breakdown', 'actually', 'diverge', 'where', 'this', 'that',
-  'with', 'from', 'your', 'their', 'them', 'than', 'then', 'when', 'what',
-  'only', 'also', 'into', 'over', 'after', 'before', 'about', 'against',
-  'based', 'best', 'better', 'both', 'full', 'free', 'hidden', 'extra',
-  'data', 'core', 'plan', 'keep', 'keeps', 'live', 'page', 'buyer',
-  'buyers', 'team', 'teams', 'read', 'next', 'same', 'different',
-  'category', 'headline', 'subtitle', 'heading', 'button', 'label',
-  'section', 'article', 'listed', 'lists', 'again', 'restated', 'reason',
-  'exists', 'cannot', 'explain', 'unexplained', 'gap', 'near', 'puts',
-  'yearone', 'yeartwo', 'annual', 'monthly', 'quote', 'quoted', 'custom',
-  'none', 'overall', 'fit', 'stronger', 'call', 'instead', 'already',
-  'want', 'wants', 'does', 'doesn', 'while', 'without', 'inside',
-  'rather', 'bolted', 'afterwards', 'research', 'evaluated', 'evaluation',
-  'recommended', 'choice', 'starts', 'while', 'public', 'starter',
-  'human', 'verified', 'updated', 'independent', 'methodology',
-  'affiliate', 'disclosure', 'commission', 'earn', 'review', 'reviews',
-  'rating', 'ratings', 'stars', 'based', 'user', 'users', 'source',
-  'opens', 'opening', 'partner', 'outbound', 'fallback', 'article',
-  'redirected', 'automatically', 'continue', 'click', 'here',
-  'hiring', 'recruiting', 'applicant', 'tracking', 'pipeline', 'candidate',
-  'implementation', 'inflation', 'industry', 'vendor', 'startups',
-  'earlystage', 'process', 'structured', 'standalone', 'standard',
-  'product', 'sales', 'contract', 'billing', 'seat', 'seats', 'tiers',
-  'integrations', 'systems', 'teamsize', 'sidebyside', 'shortlist',
-  'reprinted', 'calculated', '3year', 'benchmark', 'building', 'builtin',
-  'boards', 'cases', 'claim', 'card', 'database', 'dedicated', 'first',
-  'higher', 'math', 'plus', 'post', 'proactively', 'scaling', 'sign',
-  'sitting', 'ships', 'through', 'widely', 'north', 'american', 'base',
-  'sourcing', 'syndication', 'unlimited', 'oneclick',   'reality', 'across', 'admin', 'allin', 'apac', 'benefit', 'between',
-  'bundled', 'burn', 'companies', 'competitors', 'concentrated',
-  'contracts', 'country', 'coverage', 'deciding', 'delivers', 'emea',
-  'employee', 'employment', 'engineers', 'factor', 'fastgrowing',
-  'finance', 'flatfee', 'globalcoverage', 'headcount', 'instant',
-  'insurance', 'localized', 'lowest', 'market', 'markets', 'models',
-  'more', 'most', 'multicurrency', 'ownedentity', 'packages', 'packet',
-  'park', 'payout', 'payouts', 'providers', 'published', 'rails',
-  'rate', 'rates', 'regional', 'remote', 'seed', 'selfserve', 'series',
-  'signature', 'since', 'specific', 'statutory', 'tech', 'technology',
-  'threeyear', 'undercuts', 'value', 'varies', 'worldwide',
-  'memo', 'walkthrough', 'weighs', 'path', 'stop', 'contrasts',
-  'stickertocash', 'walk', 'field', 'note', 'isolates', 'surcharge',
-  'trail', 'abort', 'incumbent',
-]);
+const THRESHOLD = {
+  crossVertical: 0.35,
+  independentSameVertical: 0.55,
+  sibling: 0.8,
+  identical: 0,
+};
+
+const TIER_LABEL = {
+  crossVertical: 'Cross-Vertical',
+  independentSameVertical: 'Independent Same-Vertical',
+  sibling: 'Sibling Shared Vendor',
+  identical: 'Identical Vendor Pair',
+};
+
+function loadVendorMeta() {
+  const catalog = JSON.parse(fs.readFileSync(CATALOG_PATH, 'utf-8'));
+  const idToCategory = new Map();
+  const publicToId = new Map();
+  for (const vendor of catalog.keepVendors ?? []) {
+    idToCategory.set(vendor.id, vendor.category);
+    publicToId.set(vendor.id, vendor.id);
+  }
+  for (const [publicSlug, internalId] of Object.entries(catalog.stableIdAliases ?? {})) {
+    publicToId.set(publicSlug, internalId);
+    const category = idToCategory.get(internalId);
+    if (category) idToCategory.set(publicSlug, category);
+  }
+  // Public comparison URLs remap bamboohr-ats → bamboohr.
+  publicToId.set('bamboohr', 'bamboohr-ats');
+  idToCategory.set('bamboohr', idToCategory.get('bamboohr-ats'));
+  return { idToCategory, publicToId };
+}
 
 function getAllHtmlFiles(dir) {
   let files = [];
@@ -81,87 +55,166 @@ function getAllHtmlFiles(dir) {
   return files;
 }
 
-function extractUniqueTokens(htmlContent) {
-  // Extract ONLY text inside the <main> or <article> region to ignore header/footer noise
-  const mainMatch = htmlContent.match(/<main[\s\S]*?<\/main>/gi) || htmlContent.match(/<article[\s\S]*?<\/article>/gi);
-  const targetHtml = mainMatch ? mainMatch.join(' ') : htmlContent;
+function extractMainHtml(htmlContent) {
+  const tagged = htmlContent.match(/<main\b[^>]*\bid=["']main-content["'][^>]*>[\s\S]*?<\/main>/i);
+  if (tagged) return tagged[0];
+  const anyMain = htmlContent.match(/<main\b[^>]*>[\s\S]*?<\/main>/i);
+  return anyMain ? anyMain[0] : '';
+}
 
-  const textContent = targetHtml
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '')
-    .replace(/<svg[\s\S]*?<\/svg>/gi, '')
+function extractShingles(htmlContent) {
+  const mainHtml = extractMainHtml(htmlContent);
+  const textContent = mainHtml
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<nav[\s\S]*?<\/nav>/gi, ' ')
+    .replace(/<footer[\s\S]*?<\/footer>/gi, ' ')
+    .replace(/<svg[\s\S]*?<\/svg>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
-    .toLowerCase();
+    .toLowerCase()
+    .replace(/[^\w\s]/g, ' ');
 
-  const words = textContent.replace(/[^\w\s]/g, '').split(/\s+/);
-  return new Set(words.filter(w => w.length > 3 && !COMMON_CORPUS_WORDS.has(w)));
+  const words = textContent.split(/\s+/).filter((word) => word.length > 1);
+  const shingles = new Set();
+  for (let i = 0; i < words.length - 2; i += 1) {
+    shingles.add(`${words[i]} ${words[i + 1]} ${words[i + 2]}`);
+  }
+  return shingles;
 }
 
 function calculateJaccard(setA, setB) {
-  const intersection = new Set([...setA].filter(x => setB.has(x)));
-  const union = new Set([...setA, ...setB]);
-  return union.size === 0 ? 0 : intersection.size / union.size;
+  if (setA.size === 0 && setB.size === 0) return 0;
+  let intersection = 0;
+  const [smaller, larger] = setA.size < setB.size ? [setA, setB] : [setB, setA];
+  for (const token of smaller) {
+    if (larger.has(token)) intersection += 1;
+  }
+  const union = setA.size + setB.size - intersection;
+  return union === 0 ? 0 : intersection / union;
+}
+
+function parseComparison(relPath, publicToId) {
+  const normalized = relPath.replace(/\\/g, '/');
+  const segment = normalized.split('/').find((part) => part.includes('-vs-'));
+  if (!segment) return null;
+  const vsIndex = segment.indexOf('-vs-');
+  if (vsIndex === -1) return null;
+  let toolA = segment.slice(0, vsIndex);
+  let toolB = segment.slice(vsIndex + 4);
+  const forIndex = toolB.indexOf('-for-');
+  if (forIndex !== -1) toolB = toolB.slice(0, forIndex);
+  if (!toolA || !toolB) return null;
+  return {
+    a: publicToId.get(toolA) ?? toolA,
+    b: publicToId.get(toolB) ?? toolB,
+    publicA: toolA,
+    publicB: toolB,
+  };
+}
+
+function vendorSetKey(comparison) {
+  return [comparison.a, comparison.b].sort().join('|');
+}
+
+function pairVertical(comparison, idToCategory) {
+  const catA = idToCategory.get(comparison.a);
+  const catB = idToCategory.get(comparison.b);
+  if (catA && catA === catB) return catA;
+  return null;
+}
+
+function classifyPair(pageA, pageB, idToCategory) {
+  const a = pageA.comparison;
+  const b = pageB.comparison;
+  if (!a || !b) {
+    return { tier: 'crossVertical', threshold: THRESHOLD.crossVertical };
+  }
+  if (vendorSetKey(a) === vendorSetKey(b)) {
+    return { tier: 'identical', threshold: THRESHOLD.identical };
+  }
+  const vendorsA = new Set([a.a, a.b]);
+  const shared = [b.a, b.b].filter((id) => vendorsA.has(id)).length;
+  const verticalA = pairVertical(a, idToCategory);
+  const verticalB = pairVertical(b, idToCategory);
+  if (shared === 1) {
+    return { tier: 'sibling', threshold: THRESHOLD.sibling };
+  }
+  if (shared === 0 && verticalA && verticalA === verticalB) {
+    return { tier: 'independentSameVertical', threshold: THRESHOLD.independentSameVertical };
+  }
+  return { tier: 'crossVertical', threshold: THRESHOLD.crossVertical };
 }
 
 function runAudit() {
-  if (!fs.existsSync(DIST_DIR)) {
+  const htmlRoot = fs.existsSync(CLIENT_DIR) ? CLIENT_DIR : DIST_DIR;
+  if (!fs.existsSync(htmlRoot)) {
     console.error('❌ Error: dist/ directory not found. Run "npx astro build" first.');
     process.exit(1);
   }
 
-  const htmlFiles = getAllHtmlFiles(DIST_DIR);
-  console.log(`🔍 Auditing ${htmlFiles.length} rendered HTML pages for near-duplicates...\n`);
+  const { idToCategory, publicToId } = loadVendorMeta();
+  const htmlFiles = getAllHtmlFiles(htmlRoot);
+  console.log(`Auditing ${htmlFiles.length} rendered HTML pages (trigram Jaccard on <main id="main-content">).\n`);
 
-  const pages = htmlFiles.map(filePath => {
+  const pages = htmlFiles.map((filePath) => {
     const html = fs.readFileSync(filePath, 'utf-8');
-    const relativePath = path.relative(DIST_DIR, filePath);
-    return { path: relativePath, tokens: extractUniqueTokens(html) };
+    const relativePath = path.relative(htmlRoot, filePath);
+    return {
+      path: relativePath,
+      tokens: extractShingles(html),
+      comparison: parseComparison(relativePath, publicToId),
+    };
   });
 
-  let duplicateCount = 0;
-  const THRESHOLD = 0.35; // Flag if unique text overlap exceeds 35%
-  const comparisonScores = [];
+  const counts = {
+    crossVertical: 0,
+    independentSameVertical: 0,
+    sibling: 0,
+    identical: 0,
+  };
+  const violations = [];
+  let pairCount = 0;
 
-  for (let i = 0; i < pages.length; i++) {
-    for (let j = i + 1; j < pages.length; j++) {
+  for (let i = 0; i < pages.length; i += 1) {
+    for (let j = i + 1; j < pages.length; j += 1) {
+      pairCount += 1;
+      const { tier, threshold } = classifyPair(pages[i], pages[j], idToCategory);
+      counts[tier] += 1;
       const similarity = calculateJaccard(pages[i].tokens, pages[j].tokens);
-      const aIsComparison = pages[i].path.includes('-vs-');
-      const bIsComparison = pages[j].path.includes('-vs-');
-      if (aIsComparison && bIsComparison) {
-        comparisonScores.push({
+      if (similarity > threshold) {
+        violations.push({
+          tier,
+          threshold,
           similarity,
           a: pages[i].path,
           b: pages[j].path,
         });
       }
-      if (similarity > THRESHOLD) {
-        console.warn(
-          `⚠️ High Similarity (${(similarity * 100).toFixed(1)}%): ${pages[i].path} <--> ${pages[j].path}`
-        );
-        duplicateCount++;
-      }
     }
   }
 
-  comparisonScores.sort((x, y) => y.similarity - x.similarity);
-  console.log('\n--- Raw Jaccard (1-to-1 comparison hubs, descending) ---');
-  for (const score of comparisonScores) {
-    console.log(`${(score.similarity * 100).toFixed(1)}%\t${score.a}\t<-->\t${score.b}`);
-  }
-  if (comparisonScores.length > 0) {
-    const pct = comparisonScores.map((s) => s.similarity);
-    const mid = Math.floor(pct.length / 2);
-    const median = pct.length % 2 === 0 ? (pct[mid - 1] + pct[mid]) / 2 : pct[mid];
-    console.log(
-      `\nComparison-hub pairs: ${comparisonScores.length}. Highest ${(pct[0] * 100).toFixed(1)}%. Median ${(median * 100).toFixed(1)}%. Lowest ${(pct[pct.length - 1] * 100).toFixed(1)}%.`,
-    );
+  console.log(`Total pairs audited: ${pairCount}`);
+  console.log('Breakdown by tier:');
+  console.log(`  Cross-Vertical: ${counts.crossVertical} (max ${(THRESHOLD.crossVertical * 100).toFixed(0)}%)`);
+  console.log(
+    `  Independent Same-Vertical: ${counts.independentSameVertical} (max ${(THRESHOLD.independentSameVertical * 100).toFixed(0)}%)`,
+  );
+  console.log(`  Sibling Shared Vendor: ${counts.sibling} (max ${(THRESHOLD.sibling * 100).toFixed(0)}%)`);
+  console.log(`  Identical Vendor Pair: ${counts.identical} (max ${(THRESHOLD.identical * 100).toFixed(0)}%)`);
+
+  if (violations.length === 0) {
+    console.log('\nAudit passed. 0 threshold violations.');
+    process.exit(0);
   }
 
-  if (duplicateCount === 0) {
-    console.log('\n✅ Audit Passed! All rendered HTML pages meet uniqueness criteria.');
-  } else {
-    console.log(`\nFound ${duplicateCount} page pair(s) exceeding similarity threshold.`);
+  violations.sort((x, y) => y.similarity - x.similarity);
+  console.log(`\n${violations.length} pair(s) exceeded the calibrated threshold:\n`);
+  for (const row of violations) {
+    console.error(
+      `[${TIER_LABEL[row.tier]}] ${(row.similarity * 100).toFixed(1)}% > ${(row.threshold * 100).toFixed(0)}%: ${row.a} <--> ${row.b}`,
+    );
   }
+  process.exit(1);
 }
 
 runAudit();

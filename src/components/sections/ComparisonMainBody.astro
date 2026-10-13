@@ -17,6 +17,7 @@ import type { Comparison, FeatureMatrixEntry } from '../../lib/comparisons';
 import type { VendorAContrast, VendorBContrast } from '../../lib/vendor-contrast';
 import type { CategoryHubFamily } from '../../lib/comparison-routes';
 import type { MasterSegmentPanel } from '../../lib/persona-evaluation';
+import type { MatchupVerdict } from '../../lib/matchup-verdict';
 
 interface RatingDisplay {
   rating: string;
@@ -52,7 +53,7 @@ interface Props {
   featureMatrixRows: [string, FeatureMatrixEntry][];
   toolBIntegrations: string[];
   segmentPanels: MasterSegmentPanel[];
-  verdictTake: string;
+  matchupVerdict: MatchupVerdict | null;
 }
 
 const {
@@ -83,7 +84,7 @@ const {
   featureMatrixRows,
   toolBIntegrations,
   segmentPanels,
-  verdictTake,
+  matchupVerdict,
 } = Astro.props;
 ---
 
@@ -156,8 +157,14 @@ const {
       />
     )}
 
-    {sectionId === 'verdict' && isHub && verdictTake && (
-      <VerdictCallout take={verdictTake} />
+    {sectionId === 'verdict' && isHub && matchupVerdict && (
+      <VerdictCallout
+        vendorAName={comparison.tool_a_name}
+        vendorBName={comparison.tool_b_name}
+        pickA={matchupVerdict.pickA}
+        pickB={matchupVerdict.pickB}
+        tradeoff={matchupVerdict.tradeoff}
+      />
     )}
 
     {sectionId === 'tabs' && isHub && (

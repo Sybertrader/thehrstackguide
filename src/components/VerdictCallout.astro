@@ -1,12 +1,17 @@
 ---
 interface Props {
-  take: string;
+  vendorAName: string;
+  vendorBName: string;
+  pickA: string;
+  pickB: string;
+  tradeoff: string;
 }
 
-const { take } = Astro.props;
+const { vendorAName, vendorBName, pickA, pickB, tradeoff } = Astro.props;
 ---
 
-<blockquote class="my-6 rounded-r-lg border-l-4 border-indigo-600 bg-slate-50 p-4 font-medium text-slate-800">
-  <p class="text-xs font-bold uppercase tracking-wide text-indigo-700">The HR Stack Guide Take</p>
-  <p class="mt-2 text-base leading-relaxed">{take}</p>
-</blockquote>
+<section class="my-8 rounded-2xl border border-indigo-200 bg-indigo-50/60 p-5 sm:p-6" aria-label={`${vendorAName} vs ${vendorBName} decision framework`}>
+  <h2 class="text-xs font-bold uppercase tracking-wide text-indigo-700">How to choose: {vendorAName} vs {vendorBName}</h2>
+  <p class="mt-3 text-base leading-relaxed text-slate-800">{pickA} {pickB}</p>
+  <p class="mt-3 text-base leading-relaxed text-slate-800">{tradeoff}</p>
+</section>

@@ -27,6 +27,7 @@ import HeroVariantA from '../components/heroes/HeroVariantA.astro';
 import ComparisonMainBody from '../components/sections/ComparisonMainBody.astro';
 import ComparisonSchema from '../components/SEO/ComparisonSchema.astro';
 import { contrastVendorA, contrastVendorB } from '../lib/vendor-contrast';
+import { buildMatchupVerdict } from '../lib/matchup-verdict';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import {
   buildMasterSegmentPanels,
@@ -119,7 +120,7 @@ const hubFamily = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
 
 function parsePipeList(value: string): string[] {
   if (!value?.trim()) return [];
-  return value.split('|').map((item) => item.trim()).filter(Boolean);
+  return value.split('|').map((item) => cleanCopy(item.trim())).filter(Boolean);
 }
 
 function parseFeatureMatrix(json: string): Record<string, FeatureMatrixEntry> {
@@ -135,9 +136,19 @@ function cleanCopy(text: string): string {
   return text
     .replace(/\bFiat \$/g, 'Flat $')
     .replace(/\.\s*,/g, ',')
+    .replace(/\u2014/g, '. ')
+    .replace(/(\d)\u2013(\d)/g, '$1 to $2')
+    .replace(/\u2013/g, ', ')
+    .replace(/\.\s+([a-z])/g, (_, letter: string) => `. ${letter.toUpperCase()}`)
     .replace(/\s{2,}/g, ' ')
+    .replace(/\.\s+\./g, '.')
     .trim();
 }
+
+comparison.tool_a_badge = cleanCopy(comparison.tool_a_badge ?? '');
+comparison.tool_b_badge = cleanCopy(comparison.tool_b_badge ?? '');
+comparison.tool_a_pricing_model = cleanCopy(comparison.tool_a_pricing_model ?? '');
+comparison.tool_b_pricing_model = cleanCopy(comparison.tool_b_pricing_model ?? '');
 
 function firstSentence(text: string): string {
   const trimmed = text.trim();
@@ -207,19 +218,18 @@ function resolveToolNarrative(
     ? parseInt(profile.review_count.replace(/,/g, ''), 10)
     : null;
 
-  const positioning =
+  const positioning = cleanCopy(
     profile?.positioning ??
-    cleanCopy(
       `${toolName} is built for ${nicheAudiencePhrase.toLowerCase()} that want ${
         features[0] ? features[0].toLowerCase() : 'payroll, hiring, or reviews in one place'
       }.`
-    );
+  );
 
   const chooseIf =
     profile?.choose_if && profile.choose_if.length > 0
-      ? profile.choose_if
+      ? profile.choose_if.map((item) => cleanCopy(item))
       : pros.slice(0, 4).map((pro) => `You want ${pro.toLowerCase()}`);
-  const skipIf = profile?.skip_if ? [stripSkipPrefix(profile.skip_if, toolName)] : [];
+  const skipIf = profile?.skip_if ? [cleanCopy(stripSkipPrefix(profile.skip_if, toolName))] : [];
 
   return {
     rating: profile?.rating ?? csvRating,
@@ -447,6 +457,20 @@ const mainSectionOrder = [
   'preferred',
   'demo',
 ];
+const differingFeature = featureMatrixRows.find(([, value]) => value.a !== value.b)?.[0];
+const matchupVerdict = isHub
+  ? buildMatchupVerdict({
+      aId: comparison.tool_a_id,
+      bId: comparison.tool_b_id,
+      aName: comparison.tool_a_name,
+      bName: comparison.tool_b_name,
+      aCsvPrice: comparison.tool_a_starting_price,
+      bCsvPrice: comparison.tool_b_starting_price,
+      aProfile: toolAProfile,
+      bProfile: toolBProfile,
+      differingFeature,
+    })
+  : null;
 const toolAContrastNuance = comparison.tool_a_pricing_nuance
   ? `${comparison.tool_a_name} vs ${comparison.tool_b_name}: ${firstSentence(cleanCopy(comparison.tool_a_pricing_nuance))}`
   : '';
@@ -713,7 +737,7 @@ const heroLogoPreloads = (
         featureMatrixRows={featureMatrixRows}
         toolBIntegrations={toolBIntegrations}
         segmentPanels={segmentPanels}
-        verdictTake={comparison.hr_stack_take ? cleanCopy(comparison.hr_stack_take) : ''}
+        matchupVerdict={matchupVerdict}
       />
 
       {isChildRoute && personaEvaluation && (
