@@ -1,5 +1,8 @@
-import { EOR_PLATFORM_RATES } from '../data/vendors/eor-platform-rates';
-import { getSlugHash } from '../utils/layoutHasher';
+import { EOR_PLATFORM_RATES, vendorPublishesEorRate } from '../data/vendors/eor-platform-rates';
+
+export const CUSTOM_QUOTE_LABEL = 'Custom Quote Required';
+export const CUSTOM_QUOTE_SUBTEXT =
+  'Vendor operates on custom annual contracts based on headcount, selected modules, and implementation scope. Contact vendor sales for enterprise pricing.';
 
 export interface TcoCurve {
   year1: number;
@@ -7,32 +10,30 @@ export interface TcoCurve {
   year3: number;
 }
 
-/** Monthly platform fee used for the 3-year TCO curve. */
-export function monthlyPlatformFee(
-  vendorId: string,
-  startingPrice: string,
-  slug: string,
-  side: 'a' | 'b',
-): number {
-  const rates = EOR_PLATFORM_RATES[vendorId];
-  if (rates?.eorMonthlyRate) return rates.eorMonthlyRate;
-
-  const match = String(startingPrice)
-    .replace(/,/g, '')
-    .match(/(\d+(?:\.\d+)?)/);
-  const raw = match ? Number.parseFloat(match[1]) : NaN;
-  if (Number.isFinite(raw) && raw > 0) {
-    if (/user/i.test(startingPrice) && raw < 200) return raw * 40;
-    if (raw < 15) return raw * 40;
-    return raw;
+/**
+ * Published monthly platform fee, or null when the vendor does not list one.
+ * Per-user stickers are not multiplied by an assumed headcount.
+ */
+export function monthlyPlatformFee(vendorId: string, startingPrice: string): number | null {
+  if (vendorPublishesEorRate(vendorId)) {
+    const rate = EOR_PLATFORM_RATES[vendorId]?.eorMonthlyRate;
+    if (typeof rate === 'number' && rate > 0) return rate;
   }
 
-  return 320 + (getSlugHash(`${slug}:${side}`) % 680);
+  const source = String(startingPrice).trim();
+  if (!source || /custom|quote|contact|\+|free tier/i.test(source)) return null;
+  if (/user|seat/i.test(source)) return null;
+
+  const match = source.replace(/,/g, '').match(/(\d+(?:\.\d+)?)/g);
+  if (!match || match.length !== 1) return null;
+  const raw = Number.parseFloat(match[0]);
+  if (!Number.isFinite(raw) || raw <= 0) return null;
+  return raw;
 }
 
-export function projectTco(monthly: number, inflationY2: number, inflationY3: number): TcoCurve {
+/** Annualizes a published monthly fee. Does not apply modeled inflation. */
+export function projectTco(monthly: number | null): TcoCurve | null {
+  if (monthly == null || !Number.isFinite(monthly) || monthly <= 0) return null;
   const year1 = monthly * 12;
-  const year2 = year1 * inflationY2;
-  const year3 = year2 * inflationY3;
-  return { year1, year2, year3 };
+  return { year1, year2: year1, year3: year1 };
 }

@@ -6,12 +6,12 @@ import CategoryFeatureMatrix from '../../components/CategoryFeatureMatrix.astro'
 import VendorButton from '../../components/VendorButton.astro';
 import VendorLogo from '../../components/VendorLogo.astro';
 import ManualLeadModal from '../../components/ManualLeadModal.astro';
-import { loadComparisons } from '../../lib/comparisons';
+import { getComparisonsLastUpdated, loadComparisons } from '../../lib/comparisons';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../../lib/outbound';
 import { getToolsByCategory } from '../../lib/tools';
 import { comparisonHubSlug } from '../../lib/comparison-routes';
-import { schemaOffer } from '../../lib/schema-offer';
-import { eorCostCalculatorJsonLd } from '../../lib/eor-cost-api';
+import { schemaOffer, visibleAggregateRating } from '../../lib/schema-offer';
+import AuthorByline from '../../components/common/AuthorByline.astro';
 import { ATS_HUB_HEADING, ATS_HUB_TITLE } from '../../lib/seo';
 import { ATS_FEATURE_MATRIX } from '../../lib/category-feature-matrix';
 
@@ -136,15 +136,13 @@ const collectionSchema = {
         item: {
           '@type': 'SoftwareApplication',
           name: tool.name,
-          applicationCategory: 'BusinessApplication',
-          operatingSystem: 'Web-based',
+          applicationCategory: 'Applicant Tracking Software',
+          operatingSystem: 'Web-based, SaaS',
           description: tool.positioning,
           ...(schemaOffer(tool.starting_price) ? { offers: schemaOffer(tool.starting_price) } : {}),
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: tool.rating || '4.7',
-            reviewCount: String(reviewCount ?? '100'),
-          },
+          ...(visibleAggregateRating(tool.rating, reviewCount)
+            ? { aggregateRating: visibleAggregateRating(tool.rating, reviewCount) }
+            : {}),
         },
       };
     }),
@@ -158,7 +156,6 @@ const collectionSchema = {
   description={`Independent ${currentMonthYear} applicant tracking system (ATS) comparisons. Compare Ashby, Lever, Workable, and more on features, pricing, and workflows.`}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(eorCostCalculatorJsonLd())} />
 
   <main id="main-content" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
     <!-- Hero -->
@@ -194,6 +191,7 @@ const collectionSchema = {
       <p class="mt-4 w-full max-w-none text-lg leading-relaxed text-slate-600">
         Independent, data-driven comparisons of the platforms modern talent teams use to source, screen, and hire candidates, from structured enterprise scorecards to SMB-friendly drag-and-drop pipelines. Every rating, price, and feature claim below is sourced from our {currentMonthYear} evaluation.
       </p>
+      <AuthorByline reviewedAt={getComparisonsLastUpdated()} />
     </header>
 
     <!-- Comparison Builder -->

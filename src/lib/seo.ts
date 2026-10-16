@@ -51,23 +51,12 @@ export const SEGMENT_TITLE_MODIFIERS: Record<string, string> = {
   'web3-crypto': 'Contractor Payouts & Compliance',
 };
 
-/** Hub `<title>` closers so payroll / ATS / PM pairs do not share one formula. */
-const HUB_TITLE_CLOSERS: Record<Exclude<SeoFamily, null>, string> = {
-  payroll: 'Features, Pricing & Review',
-  ats: 'Hiring Features & Pricing',
-  pm: 'Reviews, OKRs & Pricing',
-};
+const HUB_TITLE_CLOSER = 'Features, Pricing & Verdict';
 
 const TITLE_SOFT_MAX = 72;
 
 function categoryNoun(family: SeoFamily): string {
   return family ? CATEGORY_NOUN[family] : 'HR';
-}
-
-function segmentTitleModifier(nicheId: string | null | undefined, family: SeoFamily): string {
-  const key = nicheId === 'tech-startups' ? 'startups' : nicheId || '';
-  if (key && SEGMENT_TITLE_MODIFIERS[key]) return SEGMENT_TITLE_MODIFIERS[key];
-  return `${categoryNoun(family)} Features & ${SEO_TITLE_YEAR} Pricing`;
 }
 
 function firstInRange(candidates: string[]): string {
@@ -86,35 +75,32 @@ function preferIntentTitle(candidates: string[]): string {
 }
 
 /**
- * Persona child: `[A] vs [B] for [Segment] (2026): [Intent closer]`
- * Hub: `[A] vs [B] ([Category] 2026): [Family closer]`
+ * Hub and persona titles: `{A} vs {B} (2026): Features, Pricing & Verdict`.
+ * The pair name is the unique part. Family closers are not rotated.
  */
 export function comparisonPageTitle(
   vendorA: string,
   vendorB: string,
   family: SeoFamily,
   personaLabel?: string | null,
-  nicheId?: string | null
+  _nicheId?: string | null
 ): string {
   const pair = `${vendorA} vs ${vendorB}`;
   const year = SEO_TITLE_YEAR;
   const category = categoryNoun(family);
 
   if (personaLabel) {
-    const modifier = segmentTitleModifier(nicheId, family);
     return preferIntentTitle([
-      `${pair} for ${personaLabel} (${year}): ${modifier}`,
-      `${pair} for ${personaLabel}: ${modifier}`,
-      `${pair} (${personaLabel} ${year}): ${modifier}`,
-      `${pair} for ${personaLabel} (${year})`,
+      `${pair} for ${personaLabel} (${year}): ${HUB_TITLE_CLOSER}`,
+      `${pair} for ${personaLabel}: ${HUB_TITLE_CLOSER}`,
+      `${pair} (${year}): ${HUB_TITLE_CLOSER}`,
     ]);
   }
 
-  const closer = family ? HUB_TITLE_CLOSERS[family] : `Features, Pricing & Review`;
   return preferIntentTitle([
-    `${pair} (${category} ${year}): ${closer}`,
-    `${pair} ${year}: ${closer}`,
-    `${pair} (${category} ${year})`,
+    `${pair} (${year}): ${HUB_TITLE_CLOSER}`,
+    `${pair}: ${HUB_TITLE_CLOSER}`,
+    `${pair} ${category} (${year})`,
   ]);
 }
 

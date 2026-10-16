@@ -5,13 +5,14 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs && astro build",
+    "build": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs && astro build && node scripts/strip-output-trailing-slash.mjs",
     "generate-editorial": "node scripts/generate-comparison-editorial.mjs",
     "ping:indexnow": "node scripts/submit-indexnow.js",
     "sync-redirects": "node --experimental-strip-types scripts/sync-vercel-redirects.mjs",
     "preview": "astro preview",
     "astro": "astro",
     "seo-audit": "node scripts/seo-audit.mjs",
+    "audit:technical": "node scripts/audit-technical-health.mjs",
     "audit-dist": "node scripts/audit-dist-duplicates.js",
     "purge-vendors": "node scripts/purge-vendors.mjs"
   },

@@ -43,14 +43,14 @@ function auditPages() {
   console.log('🔍 Starting pSEO Pre-Build Quality & Uniqueness Audit...\n');
 
   if (!fs.existsSync(CONTENT_DIR)) {
-    console.error('❌ Quality Failure: src/content/comparisons is missing after generation.');
-    process.exit(1);
+    console.log('Comparison markdown collection retired. Pages render from comparisons.csv.');
+    process.exit(0);
   }
 
   const files = fs.readdirSync(CONTENT_DIR).filter((f) => f.endsWith('.md') || f.endsWith('.mdx'));
   if (files.length === 0) {
-    console.error('❌ Quality Failure: no comparison markdown files were generated.');
-    process.exit(1);
+    console.log('Comparison markdown collection retired. Pages render from comparisons.csv.');
+    process.exit(0);
   }
 
   const pageData = [];

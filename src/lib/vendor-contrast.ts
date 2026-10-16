@@ -1,5 +1,4 @@
 import type { CategoryHubFamily } from './comparison-routes';
-import { selectLayoutVariant } from '../utils/layoutHasher';
 
 export type ContrastLens =
   | 'pricing'
@@ -10,12 +9,12 @@ export type ContrastLens =
   | 'implementation';
 
 const LENS_LABEL: Record<ContrastLens, string> = {
-  pricing: 'pricing tiers and seat math',
-  pipeline: 'ATS pipeline depth',
-  compliance: 'owned-entity compliance and IP',
+  pricing: 'published pricing and contract terms',
+  pipeline: 'hiring pipeline and interview workflow',
+  compliance: 'owned-entity employment and IP assignment',
   reviews: 'review cycles and calibration',
   'global-coverage': 'country coverage and payout rails',
-  implementation: 'implementation speed and onboarding',
+  implementation: 'implementation scope and onboarding',
 };
 
 const LENS_KEYWORDS: Record<ContrastLens, string[]> = {
@@ -48,7 +47,13 @@ function pickMatching(items: string[], lens: ContrastLens, limit: number): strin
     const sb = keys.some((k) => b.toLowerCase().includes(k)) ? 0 : 1;
     return sa - sb;
   });
-  return ranked.slice(0, limit);
+  return ranked.filter((item) => item.trim()).slice(0, limit);
+}
+
+function lowerFirst(text: string): string {
+  const trimmed = text.trim().replace(/\.$/, '');
+  if (!trimmed) return '';
+  return trimmed.charAt(0).toLowerCase() + trimmed.slice(1);
 }
 
 export interface VendorAContrast {
@@ -74,47 +79,32 @@ export function contrastVendorA(args: {
 }): VendorAContrast {
   const lens = pickContrastLens(args.bId, args.family);
   const lensLabel = LENS_LABEL[lens];
-  const bullets = pickMatching(args.aFeatures, lens, 2);
+  const feature = pickMatching(args.aFeatures, lens, 1)[0];
   const pro = pickMatching(args.aPros, lens, 1)[0];
   const con = pickMatching(args.aCons, lens, 1)[0];
+  const focus = feature ? lowerFirst(feature) : '';
 
-  const summary = `Against ${args.bName} on ${lensLabel}, ${args.aName} is not restated as a standalone brochure. This ${args.aName} vs ${args.bName} card only keeps the ${lens} contrast: ${args.aName} at ${args.aPrice || 'quoted'} versus ${args.bName} at ${args.bPrice || 'quoted'}.`;
+  const summary = focus
+    ? `${args.aName} focuses on ${focus} rather than a broader ${args.bName} deployment when the buying test is ${lensLabel}.`
+    : '';
 
   return {
     lens,
     lensLabel,
     summary,
-    bullets,
-    chooseIf: [
-      `Choose ${args.aName} over ${args.bName} when ${lensLabel} is the buying test and ${args.aPrice || 'the quoted seat'} still clears finance.${pro ? ` ${args.aName} edge: ${pro}` : ''}`,
-    ],
-    skipIf: [
-      `Skip ${args.aName} in this ${args.aName} vs ${args.bName} matchup when ${args.bName} already wins ${lensLabel}.${con ? ` Watch: ${con}` : ''}`,
-    ],
+    bullets: [feature, pro].filter((item): item is string => Boolean(item)).slice(0, 2),
+    chooseIf: focus
+      ? [`Choose ${args.aName} over ${args.bName} when you need ${focus} and ${lensLabel} decides the purchase.`]
+      : [],
+    skipIf: con
+      ? [`Skip ${args.aName} on this ${args.aName} vs ${args.bName} shortlist when ${lowerFirst(con)}.`]
+      : [],
   };
 }
-
-const B_SUMMARY_FRAMES: Array<
-  (a: string, b: string, lensLabel: string, item: string, aPrice: string, bPrice: string) => string
-> = [
-  (a, b, lensLabel, item, aPrice, bPrice) =>
-    `${b} is not reprinted as a catalog here. Against ${a} the ${lensLabel} foil is "${item}" (${bPrice} vs ${a}'s ${aPrice}).`,
-  (a, b, lensLabel, item, aPrice, bPrice) =>
-    `Treat ${b} as ${a}'s ${lensLabel} counterweight, not a stock ${b} blast. Kept line: "${item}". Sticker ${bPrice} beside ${a} at ${aPrice}.`,
-  (a, b, lensLabel, item, aPrice, bPrice) =>
-    `This ${a} vs ${b} card keeps one ${b} proof on ${lensLabel}: "${item}". ${a} stays at ${aPrice}; ${b} stays at ${bPrice}.`,
-  (a, b, lensLabel, item, aPrice, bPrice) =>
-    `${b} overview for ${a} buyers only: ${lensLabel} via "${item}". Ignore generic ${b} pages. Math is ${aPrice} against ${bPrice}.`,
-  (a, b, lensLabel, item, aPrice, bPrice) =>
-    `Spare ${b} copy. The ${a} matchup tests ${lensLabel} with "${item}" (${bPrice}), not a duplicated ${b} feature dump beside ${aPrice}.`,
-  (a, b, lensLabel, item, aPrice, bPrice) =>
-    `${a} sets the ${lensLabel} exam; ${b} answers with "${item}" at ${bPrice} while ${a} quotes ${aPrice}. No recycled ${b} dossier.`,
-];
 
 export interface VendorBContrast {
   lens: ContrastLens;
   lensLabel: string;
-  variant: number;
   summary: string;
   bullets: string[];
   chooseIf: string[];
@@ -126,7 +116,6 @@ export function contrastVendorB(args: {
   bName: string;
   aId: string;
   bId: string;
-  slug: string;
   family: CategoryHubFamily | null;
   aPrice: string;
   bPrice: string;
@@ -136,35 +125,25 @@ export function contrastVendorB(args: {
 }): VendorBContrast {
   const lens = pickContrastLens(args.aId, args.family);
   const lensLabel = LENS_LABEL[lens];
-  const variant = selectLayoutVariant(args.slug, B_SUMMARY_FRAMES.length);
-  const ranked = pickMatching(args.bFeatures, lens, Math.max(args.bFeatures.length, 1));
-  const pickedFeature = ranked.length ? ranked[variant % ranked.length] : '';
-  const rankedPros = pickMatching(args.bPros, lens, Math.max(args.bPros.length, 1));
-  const pickedPro = rankedPros.length ? rankedPros[(variant + 1) % rankedPros.length] : '';
-  const rankedCons = pickMatching(args.bCons, lens, Math.max(args.bCons.length, 1));
-  const pickedCon = rankedCons.length ? rankedCons[(variant + 2) % rankedCons.length] : '';
-  const frame = B_SUMMARY_FRAMES[variant];
-  const item = pickedFeature || pickedPro || lensLabel;
-  const bullets = [pickedFeature, pickedPro].filter(Boolean).slice(0, 2);
+  const feature = pickMatching(args.bFeatures, lens, 1)[0];
+  const pro = pickMatching(args.bPros, lens, 1)[0];
+  const con = pickMatching(args.bCons, lens, 1)[0];
+  const focus = feature ? lowerFirst(feature) : '';
+
+  const summary = focus
+    ? `${args.bName} focuses on ${focus} rather than a broader ${args.aName} deployment when the buying test is ${lensLabel}.`
+    : '';
 
   return {
     lens,
     lensLabel,
-    variant,
-    summary: frame(
-      args.aName,
-      args.bName,
-      lensLabel,
-      item,
-      args.aPrice || 'quoted',
-      args.bPrice || 'quoted',
-    ),
-    bullets,
-    chooseIf: [
-      `Choose ${args.bName} over ${args.aName} on this hub when ${lensLabel} favors "${item}".${pickedPro ? ` ${args.bName} note vs ${args.aName}: ${pickedPro}` : ''}`,
-    ],
-    skipIf: [
-      `Skip ${args.bName} versus ${args.aName} when ${args.aName} already wins ${lensLabel}.${pickedCon ? ` ${args.bName} watch-out in this pairing: ${pickedCon}` : ''}`,
-    ],
+    summary,
+    bullets: [feature, pro].filter((item): item is string => Boolean(item)).slice(0, 2),
+    chooseIf: focus
+      ? [`Choose ${args.bName} over ${args.aName} when you need ${focus} and ${lensLabel} decides the purchase.`]
+      : [],
+    skipIf: con
+      ? [`Skip ${args.bName} on this ${args.aName} vs ${args.bName} shortlist when ${lowerFirst(con)}.`]
+      : [],
   };
 }

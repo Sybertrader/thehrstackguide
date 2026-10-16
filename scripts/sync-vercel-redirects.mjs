@@ -14,7 +14,8 @@
  *   6. /go/oyster and /go/papaya aliases
  *
  * Every rule uses statusCode 308 and destinations already include a trailing
- * slash so Vercel trailingSlash cannot insert a second hop.
+ * slash. Do not set vercel.json `trailingSlash`: Vercel inserts that redirect
+ * ahead of `redirects`, so a non-slash legacy URL becomes a second hop.
  *
  * Never emit `:param*` glued to a literal in the same path segment
  * (`/greenhouse-vs-:rest*`). That compiles locally and 502s on Vercel as
@@ -25,6 +26,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { goneVercelRewrites, isGonePath } from '../src/lib/gone.ts';
+import { applyFlattenedRedirects } from './flatten-redirects.mjs';
 import {
   buildPersonaOneHopRedirects,
   buildPurgedSlugRedirects,
@@ -91,7 +93,6 @@ const REWRITES = [
 
 const config = {
   $schema: 'https://openapi.vercel.sh/vercel.json',
-  trailingSlash: true,
   rewrites: REWRITES,
   redirects: buildVercelRedirects(),
   headers: HEADERS,
@@ -312,6 +313,11 @@ for (const pathname of ['/privacy', '/privacy/']) {
       `${pathname} must 308 to /privacy-policy/, got ${hit?.source} → ${hit?.destination}`,
     );
   }
+}
+
+const reportPath = path.join(ROOT, 'audit-report.json');
+if (fs.existsSync(reportPath)) {
+  applyFlattenedRedirects(config, JSON.parse(fs.readFileSync(reportPath, 'utf8')));
 }
 
 fs.writeFileSync(VERCEL_PATH, `${JSON.stringify(config, null, 2)}\n`);

@@ -1,43 +1,51 @@
 ---
-import TcoChart from '../charts/TcoChart.astro';
-
-interface Screenshot {
-  src: string;
-  alt: string;
-  caption: string;
-  uiFeatureTag?: string;
-}
+import { CUSTOM_QUOTE_LABEL, CUSTOM_QUOTE_SUBTEXT, monthlyPlatformFee, projectTco } from '../../lib/tco-projection';
 
 interface Props {
   vendorAName: string;
-  vendorABaseCost: number;
+  vendorAId: string;
+  vendorAStartingPrice: string;
   vendorBName: string;
-  vendorBBaseCost: number;
-  screenshot?: Screenshot;
+  vendorBId: string;
+  vendorBStartingPrice: string;
 }
 
-const { vendorAName, vendorABaseCost, vendorBName, vendorBBaseCost, screenshot } = Astro.props;
+const { vendorAName, vendorAId, vendorAStartingPrice, vendorBName, vendorBId, vendorBStartingPrice } = Astro.props;
+
+const feeA = monthlyPlatformFee(vendorAId, vendorAStartingPrice);
+const feeB = monthlyPlatformFee(vendorBId, vendorBStartingPrice);
+const curveA = projectTco(feeA);
+const curveB = projectTco(feeB);
+const canCompare = curveA != null && curveB != null;
+
+function money(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(value);
+}
 ---
 
-<section class="mb-12" aria-label="Three-year total cost of ownership">
-  <h2 class="mb-4 text-2xl font-bold text-slate-900">3-Year Cost Escalation: {vendorAName} vs {vendorBName}</h2>
-  <TcoChart
-    vendorAName={vendorAName}
-    vendorABaseCost={vendorABaseCost}
-    vendorBName={vendorBName}
-    vendorBBaseCost={vendorBBaseCost}
-  />
-  {screenshot && (
-    <figure class="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <img src={screenshot.src} alt={screenshot.alt} class="w-full bg-slate-900" width="600" height="240" loading="lazy" />
-      <figcaption class="px-4 py-3 text-sm text-slate-600">
-        {screenshot.uiFeatureTag && (
-          <span class="mr-2 inline-flex rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-slate-600">
-            {screenshot.uiFeatureTag}
-          </span>
-        )}
-        {screenshot.caption}
-      </figcaption>
-    </figure>
+<section class="mb-12" aria-label="Published platform fees">
+  <h2 class="mb-4 text-2xl font-bold text-slate-900">Published platform fees: {vendorAName} vs {vendorBName}</h2>
+  {canCompare && curveA && curveB ? (
+    <div class="grid gap-4 sm:grid-cols-2">
+      <article class="rounded-2xl border border-slate-200 bg-white p-5">
+        <h3 class="text-lg font-semibold text-slate-900">{vendorAName}</h3>
+        <p class="mt-2 text-2xl font-bold text-slate-900">{money(curveA.year1)}<span class="text-base font-semibold text-slate-500">/yr</span></p>
+        <p class="mt-1 text-sm text-slate-600">Annualized from the published monthly platform fee. No modeled inflation is applied.</p>
+      </article>
+      <article class="rounded-2xl border border-slate-200 bg-white p-5">
+        <h3 class="text-lg font-semibold text-slate-900">{vendorBName}</h3>
+        <p class="mt-2 text-2xl font-bold text-slate-900">{money(curveB.year1)}<span class="text-base font-semibold text-slate-500">/yr</span></p>
+        <p class="mt-1 text-sm text-slate-600">Annualized from the published monthly platform fee. No modeled inflation is applied.</p>
+      </article>
+    </div>
+  ) : (
+    <div class="rounded-2xl border border-slate-200 bg-white p-5">
+      <p class="text-lg font-semibold text-slate-900">{CUSTOM_QUOTE_LABEL}</p>
+      <p class="mt-2 text-sm leading-relaxed text-slate-600">{CUSTOM_QUOTE_SUBTEXT}</p>
+    </div>
   )}
 </section>

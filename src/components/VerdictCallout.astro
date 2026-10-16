@@ -12,6 +12,10 @@ const { vendorAName, vendorBName, pickA, pickB, tradeoff } = Astro.props;
 
 <section class="my-8 rounded-2xl border border-indigo-200 bg-indigo-50/60 p-5 sm:p-6" aria-label={`${vendorAName} vs ${vendorBName} decision framework`}>
   <h2 class="text-xs font-bold uppercase tracking-wide text-indigo-700">How to choose: {vendorAName} vs {vendorBName}</h2>
-  <p class="mt-3 text-base leading-relaxed text-slate-800">{pickA} {pickB}</p>
-  <p class="mt-3 text-base leading-relaxed text-slate-800">{tradeoff}</p>
+  {pickA && <p class="mt-3 text-base leading-relaxed text-slate-800">{pickA}</p>}
+  {pickB && <p class="mt-3 text-base leading-relaxed text-slate-800">{pickB}</p>}
+  {tradeoff && <p class="mt-3 text-base leading-relaxed text-slate-800">{tradeoff}</p>}
+  <p class="mt-3 text-sm leading-relaxed text-slate-600">
+    Evaluated using our independent <a href="/methodology/" class="font-semibold text-indigo-700 underline underline-offset-2 hover:text-indigo-900">4-Pillar Software Evaluation Methodology</a>.
+  </p>
 </section>

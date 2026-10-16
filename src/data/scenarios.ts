@@ -90,12 +90,76 @@ export function resolveScenarioSubtitle(
 
 type HeroVertical = 'ats' | 'payroll' | 'pm';
 
-export function resolveHubHeroSubtitle(
-  _family: HeroVertical | null | undefined,
-  toolAName: string,
-  toolBName: string
-): string {
-  return `An independent side-by-side comparison of pricing, core features, hidden contract terms, and best use cases for ${toolAName} and ${toolBName}.`;
+const DESCRIPTION_MAX = 160;
+
+/** Short procurement use, specific enough that two pairs do not share a description. */
+const PAIR_USE: Record<string, string> = {
+  deel: 'owned-entity international employment',
+  remote: 'owned local entities and IP assignment',
+  rippling: 'unified US HR, payroll, and devices',
+  gusto: 'US payroll without an EOR product',
+  'payoneer-workforce-management': 'contractor payouts at a $0 seat fee',
+  'oyster-hr': 'mid-market EOR at a published rate',
+  multiplier: 'APAC and EMEA hiring at $400 EOR',
+  'papaya-global': 'payroll across owned entities and EOR',
+  'remote-people': 'published EOR under $200 per employee',
+  ashby: 'funnel reporting on a company-size plan',
+  lever: 'sourcing and inbound on one pipeline',
+  workable: 'job-board distribution on a published plan',
+  'breezy-hr': 'a kanban pipeline with a free tier',
+  jazzhr: 'unlimited interviewer seats',
+  recruitee: 'EU residency and a multilingual careers site',
+  'bamboohr-ats': 'hiring that writes into BambooHR',
+  performyard: 'dedicated review cycles',
+  lattice: 'reviews, compensation, and career tracks',
+  'culture-amp': 'engagement surveys and benchmarks',
+};
+
+const LENS_BY_FAMILY: Record<HeroVertical, string> = {
+  payroll: 'pricing, entity coverage, and contract terms',
+  ats: 'pricing, hiring workflow, and contract terms',
+  pm: 'pricing, review cycles, and contract terms',
+};
+
+function clipDescription(text: string): string {
+  const normalized = text.replace(/\s+/g, ' ').trim();
+  if (normalized.length <= DESCRIPTION_MAX) return normalized;
+  const cut = normalized.slice(0, DESCRIPTION_MAX - 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  const trimmed = (lastSpace > 80 ? cut.slice(0, lastSpace) : cut).replace(/[;,:\s]+$/, '');
+  return `${trimmed}.`;
+}
+
+export interface HubDescriptionInput {
+  family?: HeroVertical | null;
+  toolAId: string;
+  toolBId: string;
+  toolAName: string;
+  toolBName: string;
+  winnerId?: string;
+}
+
+/**
+ * Pair-specific meta description and hero subtitle.
+ * Both vendor names and both buying uses appear, and the result stays within 160 characters.
+ */
+export function resolveHubHeroSubtitle(input: HubDescriptionInput): string {
+  const lens = input.family ? LENS_BY_FAMILY[input.family] : 'pricing, core features, and contract terms';
+  const winnerIsB = input.winnerId === input.toolBId;
+  const winnerName = winnerIsB ? input.toolBName : input.toolAName;
+  const winnerId = winnerIsB ? input.toolBId : input.toolAId;
+  const otherName = winnerIsB ? input.toolAName : input.toolBName;
+  const otherId = winnerIsB ? input.toolAId : input.toolBId;
+  const winnerUse = PAIR_USE[winnerId] ?? 'the buying test documented on this page';
+  const otherUse = PAIR_USE[otherId] ?? 'the other product scope on this shortlist';
+
+  const full = `Compare ${input.toolAName} vs ${input.toolBName} on ${lens}. ${winnerName} fits ${winnerUse}; ${otherName} fits ${otherUse}.`;
+  if (full.length <= DESCRIPTION_MAX) return full;
+
+  const shorter = `Compare ${input.toolAName} vs ${input.toolBName}. ${winnerName} fits ${winnerUse}; ${otherName} fits ${otherUse}.`;
+  if (shorter.length <= DESCRIPTION_MAX) return shorter;
+
+  return clipDescription(`Compare ${input.toolAName} vs ${input.toolBName} on ${lens}. ${winnerName} fits ${winnerUse}.`);
 }
 
 /** Child-page hero subheads: one description per vertical × persona. */

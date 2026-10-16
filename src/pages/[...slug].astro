@@ -20,15 +20,16 @@ import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro
 import WorkflowBottlenecks from '../components/WorkflowBottlenecks.astro';
 import { vendorLogoPreloadHref } from '../lib/vendor-logo';
 import { comparisonSeo } from '../lib/seo';
-import { schemaOffer } from '../lib/schema-offer';
+import { verifiedSoftwareOffer, visibleAggregateRating } from '../lib/schema-offer';
 import { pickRelatedHubs } from '../lib/related-comparisons';
 import RelatedComparisons from '../components/RelatedComparisons.astro';
 import HeroVariantA from '../components/heroes/HeroVariantA.astro';
 import ComparisonMainBody from '../components/sections/ComparisonMainBody.astro';
-import ComparisonSchema from '../components/SEO/ComparisonSchema.astro';
+import AuthorByline from '../components/common/AuthorByline.astro';
 import { contrastVendorA, contrastVendorB } from '../lib/vendor-contrast';
 import { buildMatchupVerdict } from '../lib/matchup-verdict';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
+import type { CategoryHubFamily } from '../lib/comparison-routes';
 import {
   buildMasterSegmentPanels,
   buildPersonaEvaluation,
@@ -242,6 +243,34 @@ function resolveToolNarrative(
   };
 }
 
+function softwareCategory(family: CategoryHubFamily | null): string {
+  if (family === 'pm') return 'Performance Management Software';
+  if (family === 'ats') return 'Applicant Tracking Software';
+  return 'Global Payroll & EOR';
+}
+
+function softwareNode(args: {
+  id: string;
+  name: string;
+  vendorId: string;
+  startingPrice: string;
+  family: CategoryHubFamily | null;
+  rating: string;
+  reviewCount: number | null;
+}) {
+  const offer = verifiedSoftwareOffer(args.vendorId, args.startingPrice);
+  const aggregateRating = visibleAggregateRating(args.rating, args.reviewCount);
+  return {
+    '@type': 'SoftwareApplication',
+    '@id': args.id,
+    name: args.name,
+    applicationCategory: softwareCategory(args.family),
+    operatingSystem: 'Web-based, SaaS',
+    ...(offer ? { offers: offer } : {}),
+    ...(aggregateRating ? { aggregateRating } : {}),
+  };
+}
+
 function buildSchemaGraph(
   comparison: Comparison,
   pageUrl: string,
@@ -253,14 +282,14 @@ function buildSchemaGraph(
   datePublished: string,
   dateModified: string,
   pageTitle: string,
+  pageDescription: string,
+  family: CategoryHubFamily | null,
   schemaOptions: {
     isHub: boolean;
     hubUrl: string;
     categoryName: string;
     categoryUrl: string;
     modifierLabel?: string;
-    softwareDescriptionA?: string;
-    softwareDescriptionB?: string;
   }
 ) {
   const pageId = `${pageUrl}#webpage`;
@@ -268,6 +297,7 @@ function buildSchemaGraph(
   const toolAId = `${pageUrl}#${comparison.tool_a_id}`;
   const toolBId = `${pageUrl}#${comparison.tool_b_id}`;
   const pairName = `${comparison.tool_a_name} vs ${comparison.tool_b_name}`;
+  const aboutUrl = new URL('/about/', siteRootUrl).href;
 
   const breadcrumbItems = schemaOptions.isHub
     ? [
@@ -287,10 +317,6 @@ function buildSchemaGraph(
         },
       ];
 
-  const softwareAudience = schemaOptions.modifierLabel
-    ? { '@type': 'Audience', audienceType: schemaOptions.modifierLabel }
-    : undefined;
-
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -304,9 +330,16 @@ function buildSchemaGraph(
         '@id': pageId,
         url: pageUrl,
         name: pageTitle,
-        description: comparison.meta_description,
+        description: pageDescription,
         datePublished,
         dateModified,
+        author: {
+          '@type': 'Person',
+          name: 'Dave Storey',
+          jobTitle: 'Founder',
+          url: aboutUrl,
+          sameAs: ['https://www.linkedin.com/in/dave-storey-0053b111/'],
+        },
         mainEntity: {
           '@type': 'ItemList',
           name: `Software Comparison: ${pairName}`,
@@ -316,74 +349,24 @@ function buildSchemaGraph(
           ],
         },
       },
-      {
-        '@type': 'SoftwareApplication',
-        '@id': toolAId,
+      softwareNode({
+        id: toolAId,
         name: comparison.tool_a_name,
-        applicationCategory: 'BusinessApplication',
-        operatingSystem: 'Web-based',
-        ...(schemaOptions.softwareDescriptionA ? { description: schemaOptions.softwareDescriptionA } : {}),
-        ...(softwareAudience ? { audience: softwareAudience } : {}),
-        ...(schemaOffer(comparison.tool_a_starting_price)
-          ? { offers: schemaOffer(comparison.tool_a_starting_price) }
-          : {}),
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: toolARating || '4.7',
-          reviewCount: String(toolAReviewCount ?? '100'),
-        },
-        review: {
-          '@type': 'Review',
-          author: {
-            '@type': 'Organization',
-            name: 'The HR Stack Guide',
-            url: 'https://www.thehrstackguide.com',
-          },
-          reviewRating: {
-            '@type': 'Rating',
-            ratingValue: toolARating,
-            bestRating: '5',
-            worstRating: '1',
-          },
-        },
-      },
-      {
-        '@type': 'SoftwareApplication',
-        '@id': toolBId,
+        vendorId: comparison.tool_a_id,
+        startingPrice: comparison.tool_a_starting_price,
+        family,
+        rating: toolARating,
+        reviewCount: toolAReviewCount,
+      }),
+      softwareNode({
+        id: toolBId,
         name: comparison.tool_b_name,
-        applicationCategory: 'BusinessApplication',
-        operatingSystem: 'Web-based',
-        ...(schemaOptions.softwareDescriptionB ? { description: schemaOptions.softwareDescriptionB } : {}),
-        ...(softwareAudience ? { audience: softwareAudience } : {}),
-        ...(schemaOffer(comparison.tool_b_starting_price)
-          ? { offers: schemaOffer(comparison.tool_b_starting_price) }
-          : {}),
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: toolBRating || '4.7',
-          reviewCount: String(toolBReviewCount ?? '100'),
-        },
-        review: {
-          '@type': 'Review',
-          author: {
-            '@type': 'Organization',
-            name: 'The HR Stack Guide',
-            url: 'https://www.thehrstackguide.com',
-          },
-          reviewRating: {
-            '@type': 'Rating',
-            ratingValue: toolBRating,
-            bestRating: '5',
-            worstRating: '1',
-          },
-        },
-      },
-      {
-        '@type': 'Product',
-        name: pairName,
-        description: comparison.meta_description,
-        url: pageUrl,
-      },
+        vendorId: comparison.tool_b_id,
+        startingPrice: comparison.tool_b_starting_price,
+        family,
+        rating: toolBRating,
+        reviewCount: toolBReviewCount,
+      }),
     ],
   };
 }
@@ -438,7 +421,6 @@ const vendorBContrast = contrastVendorB({
   bName: comparison.tool_b_name,
   aId: comparison.tool_a_id,
   bId: comparison.tool_b_id,
-  slug: hubSlug,
   family: hubFamily,
   aPrice: comparison.tool_a_starting_price,
   bPrice: comparison.tool_b_starting_price,
@@ -478,33 +460,6 @@ const toolBContrastNuance = comparison.tool_b_pricing_nuance
   ? firstSentence(cleanCopy(comparison.tool_b_pricing_nuance))
   : '';
 
-const richSnippetSchema = [
-  {
-    tool: comparison.tool_a_name,
-    narrative: toolANarrative,
-    startingPrice: comparison.tool_a_starting_price,
-  },
-  {
-    tool: comparison.tool_b_name,
-    narrative: toolBNarrative,
-    startingPrice: comparison.tool_b_starting_price,
-  },
-]
-  .filter((entry) => entry.narrative.reviewCountNumeric !== null)
-  .map((entry) => ({
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: entry.tool,
-    applicationCategory: 'BusinessApplication',
-    operatingSystem: 'Web-based',
-    ...(schemaOffer(entry.startingPrice) ? { offers: schemaOffer(entry.startingPrice) } : {}),
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: entry.narrative.rating,
-      reviewCount: entry.narrative.reviewCountNumeric,
-    },
-  }));
-
 /**
  * Title comes from comparisonSeo. Master-hub H1 is
  * `{A} vs {B}: {category} Comparison (2026)` with the category labels in
@@ -519,11 +474,17 @@ const { title: pageTitle, heading: pageHeading } = comparisonSeo(
   isChildRoute ? modifierLabel : undefined,
   isChildRoute ? comparison.niche_id : undefined
 );
-const pageDescription = isHub
-  ? resolveHubHeroSubtitle(hubFamily, comparison.tool_a_name, comparison.tool_b_name)
-  : `${comparison.tool_a_name} vs ${comparison.tool_b_name} for ${modifierLabel}: the buying test, the skip, and the fees that do not make the pricing page.`;
+const hubDescription = resolveHubHeroSubtitle({
+  family: hubFamily,
+  toolAId: comparison.tool_a_id,
+  toolBId: comparison.tool_b_id,
+  toolAName: comparison.tool_a_name,
+  toolBName: comparison.tool_b_name,
+  winnerId: comparison.winner_id,
+});
+const pageDescription = hubDescription;
 const heroSubtitle = isHub
-  ? resolveHubHeroSubtitle(hubFamily, comparison.tool_a_name, comparison.tool_b_name)
+  ? hubDescription
   : resolveChildHeroSubtitle(
       hubFamily,
       comparison.niche_id,
@@ -565,10 +526,6 @@ const stickyWinner = stickyWinnerIsB
       badgeColor: toolABadgeColor,
       ctaLabel: vendorCtaLabel(comparison.tool_a_id, comparison.tool_a_name, comparison.tool_a_free_trial),
     };
-// Ratings always reflect the real, consistent scores from the CSV source data.
-const toolADisplayRating = comparison.tool_a_rating;
-const toolBDisplayRating = comparison.tool_b_rating;
-
 // For comparisons against a global partner platform (Deel, Remote, Oyster HR, Gusto),
 // the verdict is framed around a specific use case (Global EOR, International
 // Contractor Management, SMB Usability) rather than a blanket "better overall"
@@ -587,25 +544,21 @@ const schemaGraph = buildSchemaGraph(
   comparison,
   pageUrl,
   siteRootUrl,
-  toolADisplayRating,
-  toolBDisplayRating,
+  toolANarrative.rating,
+  toolBNarrative.rating,
   toolANarrative.reviewCountNumeric,
   toolBNarrative.reviewCountNumeric,
   firstPublishedIso,
   lastUpdatedIso,
   pageTitle,
+  pageDescription,
+  hubFamily,
   {
     isHub,
     hubUrl,
     categoryName: categoryHub.label,
     categoryUrl,
     modifierLabel: isHub ? undefined : modifierLabel,
-    softwareDescriptionA: isHub
-      ? undefined
-      : `${comparison.tool_a_name} evaluated for ${modifierLabel}. ${personaRows[0]?.a.spec ?? comparison.tool_a_pricing_model}`,
-    softwareDescriptionB: isHub
-      ? undefined
-      : `${comparison.tool_b_name} evaluated for ${modifierLabel}. ${personaRows[0]?.b.spec ?? comparison.tool_b_pricing_model}`,
   }
 );
 
@@ -631,33 +584,10 @@ const heroLogoPreloads = (
   heading={pageHeading}
   description={pageDescription}
   lcpImages={heroLogoPreloads}
-  vendorA={{
-    name: comparison.tool_a_name,
-    category: toolAProfile?.category,
-    rating: comparison.tool_a_rating || undefined,
-    reviewCount: toolANarrative.reviewCountNumeric ?? undefined,
-    priceStartingAt: comparison.tool_a_starting_price || undefined,
-  }}
-  vendorB={{
-    name: comparison.tool_b_name,
-    category: toolBProfile?.category,
-    rating: comparison.tool_b_rating || undefined,
-    reviewCount: toolBNarrative.reviewCountNumeric ?? undefined,
-    priceStartingAt: comparison.tool_b_starting_price || undefined,
-  }}
+  includeOrganizationSchema={false}
+  emitLayoutSchema={false}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
-  {richSnippetSchema.length > 0 && (
-    <script slot="head" type="application/ld+json" set:html={JSON.stringify(richSnippetSchema)} />
-  )}
-  <ComparisonSchema
-    slot="head"
-    title={pageTitle}
-    description={pageDescription}
-    url={pageUrl}
-    vendorAName={comparison.tool_a_name}
-    vendorBName={comparison.tool_b_name}
-  />
   <meta slot="head" property="og:updated_time" content={lastUpdatedIso} />
   <meta slot="head" name="revised" content={lastUpdatedIso} />
 
@@ -694,6 +624,8 @@ const heroLogoPreloads = (
         hubSlug={hubSlug}
         modifierLabel={modifierLabel}
       />
+
+      <AuthorByline reviewedAt={lastUpdatedIso} />
 
       {isChildRoute && (
         <aside class="mb-10 mt-8 rounded-2xl border border-indigo-200 bg-indigo-50/70 px-5 py-4 sm:px-6 sm:py-5" aria-label={`${modifierLabel} evaluation context`}>
@@ -735,6 +667,7 @@ const heroLogoPreloads = (
         toolBContrastNuance={toolBContrastNuance}
         showFeatureTable={showFeatureTable}
         featureMatrixRows={featureMatrixRows}
+        toolAIntegrations={toolAIntegrations}
         toolBIntegrations={toolBIntegrations}
         segmentPanels={segmentPanels}
         matchupVerdict={matchupVerdict}

@@ -51,6 +51,7 @@ interface Props {
   toolBContrastNuance: string;
   showFeatureTable: boolean;
   featureMatrixRows: [string, FeatureMatrixEntry][];
+  toolAIntegrations: string[];
   toolBIntegrations: string[];
   segmentPanels: MasterSegmentPanel[];
   matchupVerdict: MatchupVerdict | null;
@@ -82,6 +83,7 @@ const {
   toolBContrastNuance,
   showFeatureTable,
   featureMatrixRows,
+  toolAIntegrations,
   toolBIntegrations,
   segmentPanels,
   matchupVerdict,
@@ -199,8 +201,8 @@ const {
         toolAIsWinner={toolAIsWinner}
         toolBIsWinner={toolBIsWinner}
         featureMatrixRows={featureMatrixRows}
+        toolAIntegrations={toolAIntegrations}
         toolBIntegrations={toolBIntegrations}
-        contrastNote={`Parity grid for ${comparison.tool_a_name} vs ${comparison.tool_b_name} on ${vendorAContrast.lensLabel}. ${comparison.tool_a_name} is summarized for this ${vendorAContrast.lens} contrast only.`}
       />
     )}
 
@@ -219,7 +221,7 @@ const {
               />
               <span>{comparison.tool_a_name} vs {comparison.tool_b_name}</span>
             </h3>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600">{vendorAContrast.summary}</p>
+            {vendorAContrast.summary && <p class="mt-3 text-sm leading-relaxed text-slate-600">{vendorAContrast.summary}</p>}
             <div class="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
                 <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Contrast edges</h4>
@@ -270,7 +272,7 @@ const {
               />
               <span>{comparison.tool_b_name} vs {comparison.tool_a_name}</span>
             </h3>
-            <p class="mt-3 text-sm leading-relaxed text-slate-600">{vendorBContrast.summary}</p>
+            {vendorBContrast.summary && <p class="mt-3 text-sm leading-relaxed text-slate-600">{vendorBContrast.summary}</p>}
             <div class="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
                 <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Contrast edges</h4>

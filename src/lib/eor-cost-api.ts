@@ -1,7 +1,9 @@
 /**
  * Deterministic annual EOR / contractor platform-fee formulas for the
  * public calculator API. Caps match the on-page CostCalculator.
+ * Rates come from published list prices. Unpublished EOR modules are not estimated.
  */
+import { EOR_PLATFORM_RATES } from '../data/vendors/eor-platform-rates';
 
 export const MAX_EOR_HEADCOUNT = 250;
 export const MAX_CONTRACTOR_HEADCOUNT = 500;
@@ -40,6 +42,7 @@ export interface EorCostEstimateResponse {
     data_source: string;
     last_audited: string;
     documentation: string;
+    pricing_notes: string;
   };
 }
 
@@ -57,18 +60,19 @@ export function calculateEorAnnualCosts(
   eorCount: number,
   contractorCount: number,
 ): { breakdown: EorCostBreakdown; vendorCosts: EorVendorCost[] } {
-  // Deel: EOR $599/mo ($7,188/yr), Contractor $49/mo ($588/yr)
-  const deelAnnual = eorCount * 7188 + contractorCount * 588;
+  const deel = EOR_PLATFORM_RATES.deel;
+  const remote = EOR_PLATFORM_RATES.remote;
+  const multiplier = EOR_PLATFORM_RATES.multiplier;
+  const annual = (monthly: number, headcount: number) => monthly * headcount * 12;
 
-  // Rippling: Base Platform $8/user/mo + EOR $509/mo ($6,108/yr), Contractor $10/mo ($120/yr)
-  const ripplingAnnual =
-    eorCount * 6108 + contractorCount * 120 + (eorCount + contractorCount) * 96;
-
-  // Multiplier: EOR $400/mo ($4,800/yr), Contractor $40/mo ($480/yr)
-  const multiplierAnnual = eorCount * 4800 + contractorCount * 480;
-
-  // Remote: EOR $599/mo ($7,188/yr), Contractor $29/mo ($348/yr)
-  const remoteAnnual = eorCount * 7188 + contractorCount * 348;
+  const deelAnnual = annual(deel.eorAnnualRate, eorCount) + annual(deel.contractorAnnualRate, contractorCount);
+  const multiplierAnnual =
+    annual(multiplier.eorAnnualRate, eorCount) + annual(multiplier.contractorAnnualRate, contractorCount);
+  // Annual commitment rate. Month-to-month EOR is remote.eorMonthlyRate ($699).
+  const remoteAnnual = annual(remote.eorAnnualRate, eorCount) + annual(remote.contractorAnnualRate, contractorCount);
+  // Published core platform only. Rippling does not publish an EOR module price.
+  const ripplingPlatformMonthly = 8;
+  const ripplingAnnual = annual(ripplingPlatformMonthly, eorCount + contractorCount);
 
   const breakdown: EorCostBreakdown = {
     multiplier_annual_usd: multiplierAnnual,
@@ -79,7 +83,6 @@ export function calculateEorAnnualCosts(
 
   const vendorCosts: EorVendorCost[] = [
     { name: 'Multiplier', annual_cost_usd: multiplierAnnual },
-    { name: 'Rippling', annual_cost_usd: ripplingAnnual },
     { name: 'Remote', annual_cost_usd: remoteAnnual },
     { name: 'Deel', annual_cost_usd: deelAnnual },
   ].sort((a, b) => a.annual_cost_usd - b.annual_cost_usd);
@@ -111,6 +114,8 @@ export function buildEorCostEstimate(
       data_source: 'The HR Stack Guide Independent Data Engine',
       last_audited: lastAuditedLabel(now),
       documentation: `${SITE_ORIGIN}${METHODOLOGY_PATH}`,
+      pricing_notes:
+        'Remote annual commitment is $599 per employee per month. Month-to-month EOR is $699 per employee per month. Rippling EOR is not a published list price and is excluded from the cheapest-option ranking. The Rippling figure is the published $8 per user per month platform fee only.',
     },
   };
 }

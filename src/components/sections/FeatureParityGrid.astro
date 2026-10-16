@@ -22,8 +22,9 @@ interface Props {
   toolAIsWinner: boolean;
   toolBIsWinner: boolean;
   featureMatrixRows: [string, FeatureMatrixEntry][];
+  toolAIntegrations: string[];
   toolBIntegrations: string[];
-  contrastNote: string;
+  contrastNote?: string;
 }
 
 const {
@@ -44,8 +45,9 @@ const {
   toolAIsWinner,
   toolBIsWinner,
   featureMatrixRows,
+  toolAIntegrations,
   toolBIntegrations,
-  contrastNote,
+  contrastNote = '',
 } = Astro.props;
 
 const stickyFeatureCol =
@@ -54,7 +56,7 @@ const stickyFeatureCol =
 
 <section class="mb-12" aria-label={`Feature parity grid for ${toolAName} versus ${toolBName}`}>
   <h2 class="mb-6 text-2xl font-bold text-slate-900">Feature &amp; Integration Comparison</h2>
-  <p class="mb-3 text-sm text-slate-600">{contrastNote}</p>
+  {contrastNote && <p class="mb-3 text-sm text-slate-600">{contrastNote}</p>}
   <p class="mb-3 text-xs font-medium text-slate-500 md:hidden">Swipe sideways to compare. The Feature column stays put.</p>
   <div class="feature-compare-scroll isolate overflow-x-auto overscroll-x-contain rounded-2xl border border-slate-200 bg-white shadow-sm">
     <table class="w-full min-w-[36rem] border-separate border-spacing-0 text-left text-sm">
@@ -64,13 +66,13 @@ const stickyFeatureCol =
           <th scope="col" class="min-w-[10rem] border-b border-slate-200 px-6 py-4 align-bottom font-semibold text-slate-700">
             <span class="flex items-center gap-2.5">
               <VendorLogo src={toolALogo} alt="" name={toolAName} badgeColor={toolABadgeColor} size={36} />
-              <span>{toolAName}</span>
+              <span>Key Capabilities: {toolAName}</span>
             </span>
           </th>
           <th scope="col" class="min-w-[10rem] border-b border-slate-200 px-6 py-4 align-bottom font-semibold text-slate-700">
             <span class="flex items-center gap-2.5">
               <VendorLogo src={toolBLogo} alt="" name={toolBName} badgeColor={toolBBadgeColor} size={36} />
-              <span>{toolBName}</span>
+              <span>Key Capabilities: {toolBName}</span>
             </span>
           </th>
         </tr>
@@ -130,20 +132,34 @@ const stickyFeatureCol =
           </tr>
           );
         })}
-        {toolBIntegrations.length > 0 && (
+        {(toolAIntegrations.length > 0 || toolBIntegrations.length > 0) && (
           <tr class="group align-top transition hover:bg-slate-50/80">
-            <th scope="row" class:list={[stickyFeatureCol, 'border-b border-slate-100 bg-white px-6 py-4 font-medium text-slate-900 group-hover:bg-slate-50']}>{toolBName} native stack</th>
-            <td class="border-b border-slate-100 px-6 py-4 text-sm text-slate-500">
-              Not restated. This {toolAName} column is a contrast with {toolBName}, not a {toolAName} brochure.
+            <th scope="row" class:list={[stickyFeatureCol, 'border-b border-slate-100 bg-white px-6 py-4 font-medium text-slate-900 group-hover:bg-slate-50']}>Native integrations</th>
+            <td class="border-b border-slate-100 px-6 py-4 text-slate-700">
+              {toolAIntegrations.length > 0 ? (
+                <ul class="flex flex-wrap gap-1.5">
+                  {toolAIntegrations.map((item) => (
+                    <li class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <span class="text-sm text-slate-500">Not published</span>
+              )}
             </td>
             <td class="border-b border-slate-100 px-6 py-4 text-slate-700">
-              <ul class="flex flex-wrap gap-1.5">
-                {toolBIntegrations.map((item) => (
-                  <li class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              {toolBIntegrations.length > 0 ? (
+                <ul class="flex flex-wrap gap-1.5">
+                  {toolBIntegrations.map((item) => (
+                    <li class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <span class="text-sm text-slate-500">Not published</span>
+              )}
             </td>
           </tr>
         )}

@@ -33,6 +33,11 @@ export interface Props {
   vendorA?: SoftwareVendor;
   vendorB?: SoftwareVendor;
   /**
+   * Comparison hubs emit one JSON-LD graph from the page. Set false so Layout
+   * does not add a second WebPage or ItemPage script.
+   */
+  emitLayoutSchema?: boolean;
+  /**
    * Exact on-page `<h1>` for this route. Pages render the heading once;
    * `<title>`, `og:title`, and `twitter:title` all use `title` 1:1.
    */
@@ -47,6 +52,7 @@ const {
   lcpImages = [],
   vendorA,
   vendorB,
+  emitLayoutSchema = true,
 } = Astro.props;
 const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID ?? '';
 
@@ -132,13 +138,15 @@ const organizationSchema = {
     {includeOrganizationSchema && (
       <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
     )}
-    <JsonLdSchema
-      title={title}
-      description={description ?? ''}
-      url={canonicalURL.href}
-      vendorA={vendorA}
-      vendorB={vendorB}
-    />
+    {emitLayoutSchema && (
+      <JsonLdSchema
+        title={title}
+        description={description ?? ''}
+        url={canonicalURL.href}
+        vendorA={vendorA}
+        vendorB={vendorB}
+      />
+    )}
     <slot name="head" />
   </head>
   <body class="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 antialiased">

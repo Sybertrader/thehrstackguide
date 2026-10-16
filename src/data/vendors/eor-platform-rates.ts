@@ -51,38 +51,60 @@ export const EOR_PLATFORM_RATES: Record<string, EorPlatformRates> = {
     contractorMonthlyRate: 29,
     contractorAnnualRate: 29,
   },
-  rippling: {
-    eorMonthlyRate: 599,
-    eorAnnualRate: 599,
+  /**
+   * Payoneer Workforce Management publishes a $0 contractor platform fee.
+   * It is not an Employer of Record, so EOR rates stay at 0 and are not treated as published.
+   */
+  'payoneer-workforce-management': {
+    eorMonthlyRate: 0,
+    eorAnnualRate: 0,
     contractorMonthlyRate: 0,
     contractorAnnualRate: 0,
   },
-  gusto: {
-    eorMonthlyRate: 599,
-    eorAnnualRate: 599,
-    contractorMonthlyRate: 35,
-    contractorAnnualRate: 35,
-  },
-  payoneer: {
-    eorMonthlyRate: 199,
-    eorAnnualRate: 199,
-    contractorMonthlyRate: 19,
-    contractorAnnualRate: 19,
-  },
-  'payoneer-workforce-management': {
-    eorMonthlyRate: 199,
-    eorAnnualRate: 199,
-    contractorMonthlyRate: 19,
-    contractorAnnualRate: 19,
-  },
 };
 
-/** Typical annual-commitment cut vs month-to-month rack (~15%). */
-export const ANNUAL_BILLING_DISCOUNT = 0.15;
+/** Vendors with a published EOR list price. Rippling and Gusto are excluded: EOR is unlisted or not a product. */
+const PUBLISHED_EOR_IDS = new Set([
+  'deel',
+  'remote',
+  'oyster-hr',
+  'multiplier',
+  'papaya-global',
+  'remote-people',
+]);
+
+const PUBLISHED_CONTRACTOR_IDS = new Set([
+  ...PUBLISHED_EOR_IDS,
+  'payoneer-workforce-management',
+]);
+
+export function vendorPublishesEorRate(vendorId: string): boolean {
+  const rate = EOR_PLATFORM_RATES[vendorId]?.eorMonthlyRate;
+  return PUBLISHED_EOR_IDS.has(vendorId) && typeof rate === 'number' && rate > 0;
+}
+
+export function vendorPublishesContractorRate(vendorId: string): boolean {
+  return PUBLISHED_CONTRACTOR_IDS.has(vendorId) && EOR_PLATFORM_RATES[vendorId] != null;
+}
+
+/** Buyer-facing sticker. Remote states both the month-to-month and annual-commitment rates. */
+export function publishedEorStatement(vendorId: string): string | null {
+  if (!vendorPublishesEorRate(vendorId)) return null;
+  const rates = EOR_PLATFORM_RATES[vendorId];
+  if (!rates) return null;
+  const eor =
+    rates.eorAnnualRate > 0 && rates.eorAnnualRate !== rates.eorMonthlyRate
+      ? `EOR at $${rates.eorMonthlyRate}/mo billed monthly, or $${rates.eorAnnualRate}/mo on an annual commitment`
+      : `EOR at $${rates.eorMonthlyRate}/mo`;
+  const contractor =
+    rates.contractorMonthlyRate > 0 ? `, and contractors at $${rates.contractorMonthlyRate}/mo` : '';
+  return `${eor}${contractor}`;
+}
 
 /**
- * Monthly = published rack. Annual = a lower published annual sticker when
- * the vendor actually discounts, otherwise ~15% off rack.
+ * Monthly billing uses the published month-to-month rate.
+ * Annual billing uses the published annual-commitment rate when the vendor lists one.
+ * No discount is applied when the two published rates are the same.
  */
 export function effectiveCycleRate(
   monthlyRate: number,
@@ -90,10 +112,8 @@ export function effectiveCycleRate(
   cycle: 'annual' | 'monthly',
 ): number {
   if (cycle === 'monthly') return monthlyRate;
-  if (monthlyRate <= 0 && annualRate <= 0) return 0;
-  if (annualRate > 0 && monthlyRate > 0 && annualRate < monthlyRate) return annualRate;
-  const rack = monthlyRate > 0 ? monthlyRate : annualRate;
-  return Math.round(rack * (1 - ANNUAL_BILLING_DISCOUNT));
+  if (annualRate > 0) return annualRate;
+  return monthlyRate;
 }
 
 export function resolveEorPlatformRates(

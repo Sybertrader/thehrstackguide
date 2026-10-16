@@ -612,7 +612,7 @@ function needPhrase(need: string): string {
 
 function payrollCorridorTest(comparison: Comparison, modifierLabel: string): string {
   if (comparison.niche_id === 'us-latam') {
-    return `For ${modifierLabel}, the corridor test is RFC tax ID validation, monotributista invoice auditing, MXN/COP/BRL local payout rails, cross-border contractor withholding, and 13th-month aguinaldo rules, not a generic EOR brochure.`;
+    return `For ${modifierLabel}, the corridor test is RFC tax ID validation, monotributista invoice auditing, MXN/COP/BRL local payout rails, cross-border contractor withholding, and 13th-month aguinaldo rules.`;
   }
   if (comparison.niche_id === 'web3-crypto') {
     return `For ${modifierLabel}, the corridor test is USDC/USDT stablecoin settlement, DAO contributor agreements, token grant vesting schedules, non-custodial wallet payouts, and gas fee reconciliation, not a fiat-only HRIS.`;

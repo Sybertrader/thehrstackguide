@@ -9,12 +9,12 @@ interface Props {
 const { vendorAName, vendorABaseCost, vendorBName, vendorBBaseCost } = Astro.props;
 
 const year1A = vendorABaseCost * 12;
-const year2A = year1A * 1.08;
-const year3A = year2A * 1.12;
+const year2A = year1A;
+const year3A = year1A;
 
 const year1B = vendorBBaseCost * 12;
-const year2B = year1B * 1.05;
-const year3B = year2B * 1.08;
+const year2B = year1B;
+const year3B = year1B;
 
 const maxVal = Math.max(year3A, year3B) * 1.1;
 
@@ -30,8 +30,8 @@ const pB3 = { x: 550, y: height - (year3B / maxVal) * (height - 40) };
 ---
 
 <div class="tco-chart-container bg-slate-900 p-6 rounded-xl text-white my-8">
-  <h3 class="text-lg font-bold mb-2">3-Year Projected TCO Escalation Curve</h3>
-  <p class="text-xs text-slate-400 mb-4">Calculated based on seat scaling, annual vendor inflation, and estimated implementation fees.</p>
+  <h3 class="text-lg font-bold mb-2">Published platform fee, annualized</h3>
+  <p class="text-xs text-slate-400 mb-4">Annual total of the published monthly platform fee. No inflation or implementation fee is added.</p>
 
   <svg viewBox={`0 0 ${width} ${height}`} class="w-full h-auto overflow-visible" role="img" aria-label={`3-Year TCO Chart comparing ${vendorAName} vs ${vendorBName}`}>
     <line x1="50" y1="20" x2="550" y2="20" stroke="#334155" stroke-dasharray="4" />
