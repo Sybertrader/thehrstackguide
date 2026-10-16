@@ -3,8 +3,10 @@
  * Writes vercel.json 308 rules for the master 1-1 architecture.
  *
  * Order is load-bearing:
- *   1. Exact long-tail → 1:1 parent comparison hubs (top of array)
- *   2. Leapsome contains-path catch-all → /performance-management/
+ *   1. Reflektive and 15five-vs-peoplefluent → /performance-management/
+ *   2. Persona `-for-{segment}` (slash and non-slash) → `/:hub/`
+ *   3. Exact long-tail → 1:1 parent comparison hubs
+ *   4. Leapsome contains-path catch-all → /performance-management/
  *      (excludes reflektive and `-for-*` long-tails)
  *   3. Purged vendors → category hubs (exact a-vs-b only, no `-for-*`)
  *   4. Reverse-order + alias hubs (and their `-for-*` variants) → canonical master
@@ -24,6 +26,8 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { goneVercelRewrites, isGonePath } from '../src/lib/gone.ts';
 import {
+  buildPersonaOneHopRedirects,
+  buildPurgedSlugRedirects,
   buildVercelRedirects,
   EXACT_PARENT_HUB_REDIRECTS,
   isUnsafeVercelRedirectSource,
@@ -176,7 +180,7 @@ const REFLEKTIVE_PROBES = [
   '/leapsome-vs-reflektive-for-scaleups/',
   '/foo-vs-reflektive/',
   '/reflektive-vs-lattice',
-  '/Reflektive-vs-lattice-for-enterprise',
+  '/reflektive-vs-lattice-for-enterprise',
   '/performyard-vs-reflektive-for-enterprise/',
   '/15five-vs-peoplefluent',
   '/15five-vs-peoplefluent/',
@@ -204,24 +208,39 @@ function firstMatchingRedirect(pathname) {
   return config.redirects.find((rule) => redirectSourceMatches(rule.source, pathname));
 }
 
-const REFLEKTIVE_LOOKAHEAD_TOKEN = '(?!.*reflektive)';
-const reflektiveRedirects = config.redirects.filter((rule) =>
-  rule.source.toLowerCase().replaceAll(REFLEKTIVE_LOOKAHEAD_TOKEN, '').includes('reflektive'),
+const reflektiveLookaheads = config.redirects.filter((rule) =>
+  rule.source.includes('(?!.*reflektive)') || rule.source.includes('(?!15five-vs-peoplefluent)'),
 );
-if (reflektiveRedirects.length) {
+if (reflektiveLookaheads.length) {
   throw new Error(
-    `308 sources must not contain reflektive (except negative lookahead): ${reflektiveRedirects
+    `308 sources must not use reflektive/peoplefluent negative lookaheads: ${reflektiveLookaheads
       .map((rule) => rule.source)
-      .slice(0, 8)
+      .slice(0, 4)
       .join(', ')}`,
   );
 }
 
 for (const pathname of REFLEKTIVE_PROBES) {
   const hit = firstMatchingRedirect(pathname);
-  if (hit) {
+  if (!hit || hit.destination !== '/performance-management/' || hit.statusCode !== 308) {
     throw new Error(
-      `308 ${hit.source} → ${hit.destination} must not match Reflektive path ${pathname}`,
+      `${pathname} must 308 to /performance-management/, got ${hit?.source} → ${hit?.destination}`,
+    );
+  }
+}
+
+const priorityPrefix = [...buildPurgedSlugRedirects(), ...buildPersonaOneHopRedirects()];
+for (let i = 0; i < priorityPrefix.length; i += 1) {
+  const got = config.redirects[i];
+  const want = priorityPrefix[i];
+  if (
+    !got ||
+    got.source !== want.source ||
+    got.destination !== want.destination ||
+    got.statusCode !== 308
+  ) {
+    throw new Error(
+      `Priority 308s must lead vercel.json redirects. Index ${i}: expected ${want.source} → ${want.destination}, got ${got?.source} → ${got?.destination}`,
     );
   }
 }
@@ -237,7 +256,10 @@ for (const [source, destination] of EXACT_PARENT_HUB_REDIRECTS) {
   );
 }
 
-const prefix = config.redirects.slice(0, expectedExactPrefix.length);
+const prefix = config.redirects.slice(
+  priorityPrefix.length,
+  priorityPrefix.length + expectedExactPrefix.length,
+);
 for (let i = 0; i < expectedExactPrefix.length; i += 1) {
   const got = prefix[i];
   const want = expectedExactPrefix[i];
@@ -265,10 +287,21 @@ for (const [source, destination] of EXACT_PARENT_HUB_REDIRECTS) {
 
 for (const [pathname, destination] of LONG_TAIL_PROBES) {
   const hit = firstMatchingRedirect(pathname);
-  if (!hit || hit.destination !== destination || hit.statusCode !== 308) {
+  const personaHop = hit?.destination === '/:hub/' && hit.statusCode === 308;
+  const exactHop = hit?.destination === destination && hit?.statusCode === 308;
+  if (!hit || (!personaHop && !exactHop)) {
     throw new Error(
       `Long-tail ${pathname} must 308 to ${destination}, got ${hit?.source} → ${hit?.destination}`,
     );
+  }
+  if (personaHop) {
+    const captured = pathToRegexp(hit.source).exec(pathname);
+    const hub = captured?.[1];
+    if (`/${hub}/` !== destination) {
+      throw new Error(
+        `Long-tail ${pathname} captured hub ${hub}, expected ${destination}`,
+      );
+    }
   }
 }
 

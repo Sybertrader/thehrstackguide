@@ -9,7 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'csv-parse/sync';
 import { comparisonHubSlug } from './comparison-routes.ts';
-import { DELETED_PATHS, isGonePath } from './gone.ts';
+import { isGonePath } from './gone.ts';
 
 export const SITE_ORIGIN = 'https://www.thehrstackguide.com';
 export const REDIRECT_STATUS = 308;
@@ -238,27 +238,44 @@ function namedSegment(regex) {
   return `/:path(${regex})`;
 }
 
-/**
- * Named-regex bodies that would otherwise match any `-vs-` slug, including
- * Reflektive URLs that must 410 instead of 308. Vercel/path-to-regexp accepts
- * this lookahead (same shape as the headers matcher `/((?!api/|go/).*)`).
- */
-const REFLEKTIVE_LOOKAHEAD = '(?!.*reflektive)';
-
 /** One comparison-hub token that stops before a `-for-{persona}` suffix. */
 const HUB_SLUG_TOKEN = '[a-z0-9]+(?:-(?!for-)[a-z0-9]+)*';
 
-function excludeReflektive(regex) {
-  // Non-reflektive DELETED_PATHS must not match 308 catch-alls: Vercel
-  // redirects run before rewrites, so a peoplefluent/15five hub would 308
-  // instead of rewriting to /api/gone. Reflektive URLs are already excluded
-  // by REFLEKTIVE_LOOKAHEAD.
-  const deletedLookaheads = DELETED_PATHS.filter(
-    (gonePath) => !gonePath.toLowerCase().includes('reflektive'),
-  )
-    .map((gonePath) => `(?!${escapeRegex(gonePath.replace(/^\//, ''))})`)
-    .join('');
-  return `${REFLEKTIVE_LOOKAHEAD}${deletedLookaheads}${regex}`;
+/**
+ * Persona tokens that must 308 to the 1:1 hub in one hop, with and without
+ * a trailing slash. Longer tokens precede shorter prefixes (`web3-crypto`
+ * before `web3`) so the group does not stop early.
+ */
+const PERSONA_ONE_HOP =
+  'tech-startups|web3-crypto|remote-teams|people-ops|scaleups|startups|agencies|enterprise|web3|us-latam';
+
+/**
+ * Purged vendors that must 308 to the performance hub before any other rule.
+ * Both slash forms are listed so `trailingSlash` cannot insert a second hop.
+ */
+export function buildPurgedSlugRedirects() {
+  const hub = '/performance-management/';
+  return [
+    ...slashPairNamed('.*reflektive.*', hub),
+    ...slashPairNamed('.*15five-vs-peoplefluent.*', hub),
+  ];
+}
+
+/** `/:hub(.*-vs-.*)-for-:persona(...)` and its trailing-slash twin. */
+export function buildPersonaOneHopRedirects() {
+  const source = `/:hub(.*-vs-.*)-for-:persona(${PERSONA_ONE_HOP})`;
+  return [
+    { source, destination: '/:hub/', statusCode: REDIRECT_STATUS },
+    { source: `${source}/`, destination: '/:hub/', statusCode: REDIRECT_STATUS },
+  ];
+}
+
+function slashPairNamed(regex, destination) {
+  const source = namedSegment(regex);
+  return [
+    { source, destination, statusCode: REDIRECT_STATUS },
+    { source: `${source}/`, destination, statusCode: REDIRECT_STATUS },
+  ];
 }
 
 /**
@@ -475,9 +492,10 @@ export function buildExactParentHubRedirects() {
 /**
  * Any URL containing `leapsome` (purged vendor) 308s to the PM hub.
  * Sits after the exact long-tail → parent-hub rules so those never
- * collapse to the category hub. Negative lookaheads keep Reflektive 410s
- * and `-for-{persona}` long-tails out of this catch-all (persona rules
- * send leftover `-for-*` to the 1:1 parent instead).
+ * collapse to the category hub. `(?!.*-for-)` keeps persona long-tails
+ * out of this catch-all (persona rules send leftover `-for-*` to the 1:1
+ * parent instead). Reflektive and 15five-vs-peoplefluent are handled by
+ * the leading 308 catch-alls.
  *
  * Do not use `/:path*leapsome:path*` — duplicate `:path*` names are invalid
  * path-to-regexp and can 502 at the edge. Named regex `:path(.*leapsome.*)`
@@ -485,7 +503,7 @@ export function buildExactParentHubRedirects() {
  */
 export function buildLeapsomeCatchAllRedirects() {
   const hub = '/performance-management/';
-  const body = excludeReflektive(`(?!.*-for-).*leapsome.*`);
+  const body = `(?!.*-for-).*leapsome.*`;
   return [
     { source: namedSegment(body), destination: hub, statusCode: REDIRECT_STATUS },
     { source: `${namedSegment(body)}/`, destination: hub, statusCode: REDIRECT_STATUS },
@@ -512,8 +530,8 @@ export function buildPurgedVendorRedirects() {
     const escaped = escapeRegex(id);
     // Exact `{id}-vs-{partner}` hubs only. Do not swallow `-for-{persona}`
     // long-tails (those 308 to the 1:1 parent, including exact mappings).
-    pushNamed(excludeReflektive(`${escaped}-vs-${HUB_SLUG_TOKEN}`), hub);
-    pushNamed(excludeReflektive(`${HUB_SLUG_TOKEN}-vs-${escaped}`), hub);
+    pushNamed(`${escaped}-vs-${HUB_SLUG_TOKEN}`, hub);
+    pushNamed(`${HUB_SLUG_TOKEN}-vs-${escaped}`, hub);
     push(`/go/${id}`, hub);
     push(`/go/${id}/`, hub);
   }
@@ -526,7 +544,7 @@ export function buildLiveMasterRedirects() {
   const seen = new Set();
 
   function pushAll(sourceSlug, destination) {
-    const forBody = excludeReflektive(`${escapeRegex(sourceSlug)}-for-.*`);
+    const forBody = `${escapeRegex(sourceSlug)}-for-.*`;
     for (const rule of [
       ...slashPair(`/${sourceSlug}`, destination),
       {
@@ -578,7 +596,7 @@ export function buildSegmentCatchAllRedirects() {
     redirects.push({ source, destination, statusCode: REDIRECT_STATUS });
   }
 
-  const hubGroup = `/:hub(${excludeReflektive('.*-vs-.*')})`;
+  const hubGroup = `/:hub(.*-vs-.*)`;
 
   for (const suffix of LEGACY_PERSONA_SUFFIXES) {
     const escaped = escapeRegex(suffix);
@@ -604,6 +622,8 @@ export function buildGoAliasRedirects() {
 export function buildVercelRedirects() {
   // Exact long-tail → parent-hub rules first: Vercel first-match so they win over catch-alls.
   const redirects = [
+    ...buildPurgedSlugRedirects(),
+    ...buildPersonaOneHopRedirects(),
     ...buildExactParentHubRedirects(),
     ...buildStaticPageAliasRedirects(),
     ...buildLeapsomeCatchAllRedirects(),
