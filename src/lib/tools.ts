@@ -1,5 +1,4 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import toolsData from '../data/tools.json' with { type: 'json' };
 import { isCatalogVendorId } from './vendor-catalog.js';
 
 /**
@@ -75,12 +74,10 @@ export interface ToolProfile {
 
 let cache: Record<string, ToolProfile> | null = null;
 
-/** Reads `src/data/tools.json`. Dev HMR drops this in-memory cache. */
+/** Profiles from the bundled `src/data/tools.json` import. */
 export function loadToolProfiles(): Record<string, ToolProfile> {
   if (cache) return cache;
-  const dataPath = path.join(process.cwd(), 'src/data/tools.json');
-  const content = fs.readFileSync(dataPath, 'utf-8');
-  const parsed = JSON.parse(content) as Record<string, ToolProfile>;
+  const parsed = toolsData as unknown as Record<string, ToolProfile>;
   const profiles: Record<string, ToolProfile> = {};
   for (const [id, profile] of Object.entries(parsed)) {
     if (id.startsWith('$')) continue;

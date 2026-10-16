@@ -6,7 +6,7 @@ import {
 } from '../src/lib/eor-cost-api.js';
 
 export const config = {
-  runtime: 'edge',
+  runtime: 'nodejs',
 };
 
 const CORS_HEADERS = {
