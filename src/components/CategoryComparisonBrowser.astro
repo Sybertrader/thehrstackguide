@@ -254,7 +254,10 @@ const vendorBId = `${idPrefix}-vendor-b`;
           }
           return;
         }
-        window.location.href = canonicalHref(canonicalMap, vendorA, vendorB);
+        const target = canonicalHref(canonicalMap, vendorA, vendorB);
+        if (target) {
+          window.location.href = target;
+        }
       });
 
       syncDisabledOptions(selectA, selectB);

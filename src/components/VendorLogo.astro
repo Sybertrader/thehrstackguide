@@ -25,9 +25,9 @@ const {
   priority = false,
 } = Astro.props;
 
-const local = vendorLogoAsset(src);
-const remote = /^https?:\/\//i.test(src.trim()) ? src.trim() : undefined;
-const imageSrc: ImageMetadata | string | undefined = local ?? remote;
+const logoSrc = typeof src === 'string' ? src.trim() : '';
+const local: ImageMetadata | undefined = logoSrc ? vendorLogoAsset(logoSrc) : undefined;
+const remote = /^https?:\/\//i.test(logoSrc) ? logoSrc : undefined;
 const sizeClasses: Record<24 | 32 | 36 | 40 | 64, { box: string; letter: string }> = {
   24: { box: 'h-6 w-6', letter: 'text-[10px]' },
   32: { box: 'h-8 w-8', letter: 'text-xs' },
@@ -41,9 +41,9 @@ const isLcp = priority || loading === 'eager';
 
 <div class:list={['relative inline-flex shrink-0', boxClass]}>
   {
-    imageSrc && (
+    local && (
       <Image
-        src={imageSrc}
+        src={local}
         alt={alt}
         width={size}
         height={size}
@@ -54,13 +54,26 @@ const isLcp = priority || loading === 'eager';
         decoding={isLcp ? 'sync' : 'async'}
         priority={isLcp}
         class:list={[boxClass, 'rounded-lg bg-slate-100 object-contain aspect-square']}
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      />
+    )
+  }
+  {
+    !local && remote && (
+      <img
+        src={remote}
+        alt={alt}
+        width={size}
+        height={size}
+        loading={isLcp ? 'eager' : loading}
+        fetchpriority={isLcp ? 'high' : undefined}
+        decoding={isLcp ? 'sync' : 'async'}
+        class:list={[boxClass, 'rounded-lg bg-slate-100 object-contain aspect-square']}
       />
     )
   }
   <div
     class:list={[
-      imageSrc ? 'hidden' : 'flex',
+      local || remote ? 'hidden' : 'flex',
       boxClass,
       letterClass,
       'items-center justify-center rounded-lg font-bold uppercase text-white',

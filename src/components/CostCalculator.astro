@@ -537,6 +537,7 @@ const ctaClass = (isWinner: boolean) =>
     }
 
     function update() {
+      if (!cardA || !cardB || !contractorCountEl || !eorCountEl || !contractorSlider || !eorSlider) return;
       const eorCount = clamp(Number(eorSlider.value), 0, MAX_EOR);
       const contractorCount = clamp(Number(contractorSlider.value), 0, MAX_CONTRACTORS);
       if (document.activeElement !== eorCountEl) eorCountEl.value = String(eorCount);

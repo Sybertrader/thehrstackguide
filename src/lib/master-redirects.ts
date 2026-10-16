@@ -53,38 +53,60 @@ const CANONICAL_TO_ALIASES = {
   bamboohr: ['bamboohr-ats'],
 };
 
+interface CatalogVendor {
+  id: string;
+  category: string;
+  name?: string;
+}
+
+interface VendorCatalog {
+  keepVendors?: CatalogVendor[];
+  purgeVendors?: CatalogVendor[];
+}
+
+interface ComparisonCsvRow {
+  tool_a_id: string;
+  tool_b_id: string;
+}
+
+interface VercelRedirectRule {
+  source: string;
+  destination: string;
+  statusCode: number;
+}
+
 const SEGMENT_SUFFIX_RE = /-for-[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 const VS_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*-vs-[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 const MASTER_PATH_RE = /^\/[a-z0-9]+(?:-[a-z0-9]+)*-vs-[a-z0-9]+(?:-[a-z0-9]+)*\/$/;
 
-let cachedHubs = null;
-let cachedCatalog = null;
+let cachedHubs: Set<string> | null = null;
+let cachedCatalog: VendorCatalog | null = null;
 
-function readJson(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+function readJson(filePath: string): VendorCatalog {
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8')) as VendorCatalog;
 }
 
-function loadCatalog() {
+function loadCatalog(): VendorCatalog {
   if (cachedCatalog) return cachedCatalog;
   cachedCatalog = readJson(path.join(process.cwd(), 'src/data/vendor-catalog.json'));
   return cachedCatalog;
 }
 
-function liveVendorIds() {
-  return new Set((loadCatalog().keepVendors ?? []).map((vendor) => vendor.id));
+function liveVendorIds(): Set<string> {
+  return new Set((loadCatalog().keepVendors ?? []).map((vendor: CatalogVendor) => vendor.id));
 }
 
-function purgedVendorHub() {
-  const map = new Map();
+function purgedVendorHub(): Map<string, string> {
+  const map = new Map<string, string>();
   for (const vendor of loadCatalog().purgeVendors ?? []) {
-    map.set(vendor.id, CATEGORY_HUB_BY_ID[vendor.category] ?? '/');
+    map.set(vendor.id, CATEGORY_HUB_BY_ID[vendor.category as keyof typeof CATEGORY_HUB_BY_ID] ?? '/');
   }
   map.set('clearco', '/performance-management/');
   map.set('clear-co', '/performance-management/');
   return map;
 }
 
-export function withTrailingSlash(pathname) {
+export function withTrailingSlash(pathname: string): string {
   if (!pathname || pathname === '/') return '/';
   const [pathOnly, query] = pathname.split('?');
   const [clean, hash] = pathOnly.split('#');
@@ -92,23 +114,23 @@ export function withTrailingSlash(pathname) {
   return `${slashed}${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
 }
 
-export function stripTrailingSlash(pathname) {
+export function stripTrailingSlash(pathname: string): string {
   if (!pathname || pathname === '/') return '/';
   return pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 }
 
-export function stripSegmentSuffix(slug) {
+export function stripSegmentSuffix(slug: string): string {
   return slug.replace(SEGMENT_SUFFIX_RE, '');
 }
 
-export function applyVendorAliases(slug) {
+export function applyVendorAliases(slug: string): string {
   return slug
     .split('-vs-')
-    .map((token) => ID_ALIASES[token] ?? token)
+    .map((token: string) => ID_ALIASES[token as keyof typeof ID_ALIASES] ?? token)
     .join('-vs-');
 }
 
-export function splitVs(slug) {
+export function splitVs(slug: string): { toolA: string; toolB: string } | null {
   const vsIndex = slug.indexOf('-vs-');
   if (vsIndex === -1) return null;
   const toolA = slug.slice(0, vsIndex);
@@ -117,15 +139,15 @@ export function splitVs(slug) {
   return { toolA, toolB };
 }
 
-function loadCanonicalHubs() {
+function loadCanonicalHubs(): Set<string> {
   if (cachedHubs) return cachedHubs;
   const live = liveVendorIds();
   const csvPath = path.join(process.cwd(), 'comparisons.csv');
   const rows = parse(fs.readFileSync(csvPath, 'utf-8'), {
     columns: true,
     skip_empty_lines: true,
-  });
-  const hubs = new Set();
+  }) as ComparisonCsvRow[];
+  const hubs = new Set<string>();
   for (const row of rows) {
     if (!live.has(row.tool_a_id) || !live.has(row.tool_b_id)) continue;
     const hub = comparisonHubSlug(row.tool_a_id, row.tool_b_id);
@@ -135,7 +157,7 @@ function loadCanonicalHubs() {
   return hubs;
 }
 
-function canonicalizeHub(hubSlug) {
+function canonicalizeHub(hubSlug: string): string | null {
   const hubs = loadCanonicalHubs();
   if (hubs.has(hubSlug)) return hubSlug;
   const parts = splitVs(hubSlug);
@@ -145,14 +167,15 @@ function canonicalizeHub(hubSlug) {
   return null;
 }
 
-function idVariants(id) {
-  return [id, ...(CANONICAL_TO_ALIASES[id] ?? [])];
+function idVariants(id: string): string[] {
+  const aliases = CANONICAL_TO_ALIASES[id as keyof typeof CANONICAL_TO_ALIASES];
+  return [id, ...(aliases ?? [])];
 }
 
-function nonCanonicalSources(canonicalHub) {
+function nonCanonicalSources(canonicalHub: string): string[] {
   const parts = splitVs(canonicalHub);
   if (!parts) return [];
-  const sources = new Set();
+  const sources = new Set<string>();
   for (const toolA of idVariants(parts.toolA)) {
     for (const toolB of idVariants(parts.toolB)) {
       sources.add(`${toolA}-vs-${toolB}`);
@@ -163,7 +186,7 @@ function nonCanonicalSources(canonicalHub) {
   return [...sources];
 }
 
-export function isMasterComparisonPath(pathname) {
+export function isMasterComparisonPath(pathname: string): boolean {
   let pathName = pathname;
   try {
     pathName = new URL(pathname, SITE_ORIGIN).pathname;
@@ -177,7 +200,7 @@ export function isMasterComparisonPath(pathname) {
  * Final 308 Location path (always trailing slash) or null when this URL
  * is already the canonical resource.
  */
-export function resolveMasterRedirect(pathname) {
+export function resolveMasterRedirect(pathname: string): string | null {
   let pathName = pathname || '/';
   try {
     if (/^https?:\/\//i.test(pathName)) pathName = new URL(pathName).pathname;
@@ -203,7 +226,7 @@ export function resolveMasterRedirect(pathname) {
   if (tokens) {
     const destA = purged.get(tokens.toolA);
     const destB = purged.get(tokens.toolB);
-    if (destA || destB) return destA || destB;
+    if (destA || destB) return destA ?? destB ?? null;
   }
 
   const aliased = applyVendorAliases(hubWithSegment);
@@ -217,7 +240,7 @@ export function resolveMasterRedirect(pathname) {
   return alreadyCanonical ? null : destination;
 }
 
-function slashPair(sourcePath, destination) {
+function slashPair(sourcePath: string, destination: string): VercelRedirectRule[] {
   const trimmed = sourcePath.endsWith('/') ? sourcePath.slice(0, -1) : sourcePath;
   return [
     { source: trimmed, destination, statusCode: REDIRECT_STATUS },
@@ -225,7 +248,7 @@ function slashPair(sourcePath, destination) {
   ];
 }
 
-function escapeRegex(value) {
+function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
@@ -234,8 +257,9 @@ function escapeRegex(value) {
  * in the same segment (`/greenhouse-vs-:rest*`, `/:pair*-vs-greenhouse`)
  * is not, and 502s as ROUTER_CANNOT_MATCH at the edge.
  */
-function namedSegment(regex) {
-  return `/:path(${regex})`;
+function namedSegment(regex: RegExp | string): string {
+  const source = regex instanceof RegExp ? regex.source : regex;
+  return `/:path(${source})`;
 }
 
 /** One comparison-hub token that stops before a `-for-{persona}` suffix. */
@@ -270,7 +294,7 @@ export function buildPersonaOneHopRedirects() {
   ];
 }
 
-function slashPairNamed(regex, destination) {
+function slashPairNamed(regex: RegExp | string, destination: string): VercelRedirectRule[] {
   const source = namedSegment(regex);
   return [
     { source, destination, statusCode: REDIRECT_STATUS },
@@ -283,16 +307,16 @@ function slashPairNamed(regex, destination) {
  * with a literal. `/go/:path*` is legal because the splat is the whole
  * remaining segment.
  */
-export function isUnsafeVercelRedirectSource(source) {
+export function isUnsafeVercelRedirectSource(source: string): boolean {
   if (/:[A-Za-z0-9]+\*[^/]/.test(source)) return true;
   if (/[^/]:[A-Za-z0-9]+\*/.test(source)) return true;
   return false;
 }
 
-export function assertSafeVercelRedirects(redirects) {
+export function assertSafeVercelRedirects(redirects: Array<{ source: string }>): void {
   const unsafe = redirects
-    .map((rule) => rule.source)
-    .filter((source) => isUnsafeVercelRedirectSource(source));
+    .map((rule: { source: string }) => rule.source)
+    .filter((source: string) => isUnsafeVercelRedirectSource(source));
   if (unsafe.length) {
     throw new Error(
       `Unsafe Vercel redirect sources (ROUTER_CANNOT_MATCH): ${unsafe.slice(0, 8).join(', ')}`,
@@ -323,9 +347,9 @@ export const LEGACY_PERSONA_SUFFIXES = [
 /** Static page aliases (lead-modal `/privacy/` → live privacy policy). */
 const STATIC_PAGE_ALIASES = new Map([['/privacy', '/privacy-policy/']]);
 
-function buildStaticPageAliasRedirects() {
-  const redirects = [];
-  const seen = new Set();
+function buildStaticPageAliasRedirects(): VercelRedirectRule[] {
+  const redirects: VercelRedirectRule[] = [];
+  const seen = new Set<string>();
   for (const [source, destination] of STATIC_PAGE_ALIASES) {
     for (const rule of slashPair(source, destination)) {
       if (seen.has(rule.source)) continue;
@@ -474,11 +498,11 @@ export const EXACT_PARENT_HUB_REDIRECTS = [
   ['/deel-vs-plane-for-agencies', '/deel-vs-plane/'],
 ];
 
-const exactParentHubBySource = new Map(EXACT_PARENT_HUB_REDIRECTS);
+const exactParentHubBySource = new Map<string, string>(EXACT_PARENT_HUB_REDIRECTS as [string, string][]);
 
-export function buildExactParentHubRedirects() {
-  const redirects = [];
-  const seen = new Set();
+export function buildExactParentHubRedirects(): VercelRedirectRule[] {
+  const redirects: VercelRedirectRule[] = [];
+  const seen = new Set<string>();
   for (const [source, destination] of EXACT_PARENT_HUB_REDIRECTS) {
     for (const rule of slashPair(source, destination)) {
       if (seen.has(rule.source)) continue;
@@ -510,17 +534,17 @@ export function buildLeapsomeCatchAllRedirects() {
   ];
 }
 
-export function buildPurgedVendorRedirects() {
-  const redirects = [];
-  const seen = new Set();
+export function buildPurgedVendorRedirects(): VercelRedirectRule[] {
+  const redirects: VercelRedirectRule[] = [];
+  const seen = new Set<string>();
 
-  function push(source, destination) {
+  function push(source: string, destination: string): void {
     if (seen.has(source)) return;
     seen.add(source);
     redirects.push({ source, destination, statusCode: REDIRECT_STATUS });
   }
 
-  function pushNamed(regex, destination) {
+  function pushNamed(regex: RegExp | string, destination: string): void {
     push(namedSegment(regex), destination);
     push(`${namedSegment(regex)}/`, destination);
   }
@@ -539,11 +563,11 @@ export function buildPurgedVendorRedirects() {
   return redirects;
 }
 
-export function buildLiveMasterRedirects() {
-  const redirects = [];
-  const seen = new Set();
+export function buildLiveMasterRedirects(): VercelRedirectRule[] {
+  const redirects: VercelRedirectRule[] = [];
+  const seen = new Set<string>();
 
-  function pushAll(sourceSlug, destination) {
+  function pushAll(sourceSlug: string, destination: string): void {
     const forBody = `${escapeRegex(sourceSlug)}-for-.*`;
     for (const rule of [
       ...slashPair(`/${sourceSlug}`, destination),
@@ -586,11 +610,11 @@ export function buildLiveMasterRedirects() {
  * future niche ids so they 308 to the hub instead of 502.
  * Reflektive paths are excluded so they fall through to 410.
  */
-export function buildSegmentCatchAllRedirects() {
-  const redirects = [];
-  const seen = new Set();
+export function buildSegmentCatchAllRedirects(): VercelRedirectRule[] {
+  const redirects: VercelRedirectRule[] = [];
+  const seen = new Set<string>();
 
-  function push(source, destination) {
+  function push(source: string, destination: string): void {
     if (seen.has(source)) return;
     seen.add(source);
     redirects.push({ source, destination, statusCode: REDIRECT_STATUS });
@@ -637,8 +661,8 @@ export function buildVercelRedirects() {
 }
 
 /** Reverse-order hubs only. Used by Astro preview; production 308s live in vercel.json. */
-export function reverseHubRedirects() {
-  const redirects = {};
+export function reverseHubRedirects(): Record<string, string> {
+  const redirects: Record<string, string> = {};
   for (const hub of loadCanonicalHubs()) {
     const parts = splitVs(hub);
     if (!parts) continue;
@@ -655,7 +679,7 @@ export function reverseHubRedirects() {
  * hands the filter a URL and nothing else, and it runs at `astro:build:done`
  * once every static page is already on disk.
  */
-let sitemapOutputDir = null;
+let sitemapOutputDir: string | null = null;
 
 /**
  * Registers the output directory used by `includeInSitemap`. Must be listed in
@@ -666,7 +690,7 @@ export function sitemapPolicy() {
   return {
     name: 'hrsg-sitemap-policy',
     hooks: {
-      'astro:config:done'({ config }) {
+      'astro:config:done'({ config }: { config: { build?: { client?: URL }; outDir?: URL } }) {
         const dir = config.build?.client ?? config.outDir;
         sitemapOutputDir = dir ? fileURLToPath(dir) : null;
       },
@@ -674,7 +698,7 @@ export function sitemapPolicy() {
   };
 }
 
-function rendersNoindex(normalized) {
+function rendersNoindex(normalized: string): boolean {
   if (!sitemapOutputDir) {
     // Failing loudly beats emitting a sitemap that quietly submits noindex URLs.
     throw new Error(
@@ -683,7 +707,7 @@ function rendersNoindex(normalized) {
     );
   }
 
-  let html;
+  let html: string;
   try {
     html = fs.readFileSync(path.join(sitemapOutputDir, normalized, 'index.html'), 'utf-8');
   } catch {
@@ -699,10 +723,11 @@ function rendersNoindex(normalized) {
  * rules out. Returning `true` for an unknown-but-indexable page is the
  * intended behaviour, so new pages never need an entry here.
  */
-export function includeInSitemap(page) {
-  let pathname = page;
+export function includeInSitemap(page: string | { pathname: string }): boolean {
+  const input = typeof page === 'string' ? page : page.pathname;
+  let pathname = input;
   try {
-    pathname = new URL(page).pathname;
+    pathname = new URL(input, SITE_ORIGIN).pathname;
   } catch {
     /* already a path */
   }

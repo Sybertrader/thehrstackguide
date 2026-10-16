@@ -47,13 +47,13 @@ export const GONE_HTML = `<!DOCTYPE html>
 </body>
 </html>`;
 
-export function normalizeGonePath(pathname) {
+export function normalizeGonePath(pathname: string): string {
   const pathOnly = (pathname || '/').split('?')[0].split('#')[0] || '/';
   if (pathOnly.length > 1 && pathOnly.endsWith('/')) return pathOnly.slice(0, -1);
   return pathOnly;
 }
 
-export function isGonePath(pathname) {
+export function isGonePath(pathname: string): boolean {
   const normalized = normalizeGonePath(pathname);
   if (normalized.toLowerCase().includes('reflektive')) return true;
   if (DELETED_PATHS.includes(normalized)) return true;
