@@ -1,30 +1,47 @@
 ---
 interface Props {
   reviewedAt: Date | string;
+  class?: string;
 }
 
-const { reviewedAt } = Astro.props;
+const { reviewedAt, class: className = '' } = Astro.props;
 const linkedIn = 'https://www.linkedin.com/in/dave-storey-0053b111/';
+const portrait = '/Dave Storey.png';
 const reviewedDate = reviewedAt instanceof Date ? reviewedAt : new Date(reviewedAt);
 const reviewedLabel = Number.isNaN(reviewedDate.getTime())
   ? ''
   : reviewedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 ---
 
-<p class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate-600">
-  <span>
-    Evaluated &amp; Maintained by <a href="/about/" class="font-semibold text-slate-900 underline decoration-slate-300 underline-offset-2 hover:text-indigo-700">Dave Storey, Founder</a>
-  </span>
-  <a
-    href={linkedIn}
-    class="inline-flex items-center gap-1 font-medium text-indigo-700 hover:text-indigo-900"
-    rel="noopener noreferrer"
-    target="_blank"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4" aria-hidden="true">
-      <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4V8.5zM8.5 8.5h3.8v2.1h.05c.53-1 1.82-2.1 3.75-2.1 4 0 4.75 2.63 4.75 6.05V24h-4v-7.7c0-1.84-.03-4.2-2.56-4.2-2.56 0-2.95 2-2.95 4.06V24h-4V8.5z" />
-    </svg>
-    LinkedIn
-  </a>
-  {reviewedLabel && <span class="text-slate-500">Last reviewed {reviewedLabel}</span>}
-</p>
+<div class:list={['mt-4 flex items-center gap-3 text-sm text-slate-500', className]}>
+  <img
+    src={portrait}
+    alt=""
+    width="40"
+    height="40"
+    class="h-10 w-10 shrink-0 rounded-full object-cover"
+  />
+  <div class="min-w-0 leading-snug">
+    <p class="flex flex-wrap items-center gap-x-1.5">
+      <a href="/about/" class="font-semibold text-slate-800 hover:text-indigo-700">Dave Storey</a>
+      <span aria-hidden="true">·</span>
+      <span>Founder &amp; Head of Research</span>
+      <a
+        href={linkedIn}
+        class="inline-flex text-slate-400 hover:text-indigo-700"
+        rel="noopener noreferrer"
+        target="_blank"
+        aria-label="Dave Storey on LinkedIn"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-3.5 w-3.5" aria-hidden="true">
+          <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8.5h4V24h-4V8.5zM8.5 8.5h3.8v2.1h.05c.53-1 1.82-2.1 3.75-2.1 4 0 4.75 2.63 4.75 6.05V24h-4v-7.7c0-1.84-.03-4.2-2.56-4.2-2.56 0-2.95 2-2.95 4.06V24h-4V8.5z" />
+        </svg>
+      </a>
+    </p>
+    <p class="mt-0.5 flex flex-wrap items-center gap-x-1.5">
+      {reviewedLabel && <span>Updated {reviewedLabel}</span>}
+      {reviewedLabel && <span aria-hidden="true">·</span>}
+      <a href="/methodology/" class="underline decoration-slate-300 underline-offset-2 hover:text-indigo-700">How We Evaluate</a>
+    </p>
+  </div>
+</div>

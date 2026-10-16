@@ -43,6 +43,22 @@ const hasNuance = Boolean(toolANuance || toolBNuance);
 
 const nuanceLinkClass =
   'mt-1.5 inline-block font-semibold text-indigo-800 transition hover:underline';
+
+/** Vendors whose outbound page is a sales quote, not a public plan table. */
+const ENTERPRISE_QUOTE_IDS = new Set([
+  'lattice',
+  'performyard',
+  'culture-amp',
+  'lever',
+  'bamboohr-ats',
+]);
+
+function pricingCta(vendorId: string, vendorName: string): string {
+  if (ENTERPRISE_QUOTE_IDS.has(vendorId)) {
+    return `Request enterprise pricing on ${vendorName}'s official site →`;
+  }
+  return `View ${vendorName}'s official pricing tiers & plans →`;
+}
 ---
 
 {hasNuance && (
@@ -77,7 +93,7 @@ const nuanceLinkClass =
               location="pricing_nuance"
               class={nuanceLinkClass}
             >
-              Calculate exact seat &amp; FX costs on {toolAName}'s official calculator →
+              {pricingCta(toolAId, toolAName)}
             </VendorButton>
             </div>
           </li>
@@ -106,7 +122,7 @@ const nuanceLinkClass =
               location="pricing_nuance"
               class={nuanceLinkClass}
             >
-              View {toolBName}'s official pricing tiers →
+              {pricingCta(toolBId, toolBName)}
             </VendorButton>
             </div>
           </li>

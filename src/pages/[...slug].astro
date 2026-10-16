@@ -25,7 +25,6 @@ import { pickRelatedHubs } from '../lib/related-comparisons';
 import RelatedComparisons from '../components/RelatedComparisons.astro';
 import HeroVariantA from '../components/heroes/HeroVariantA.astro';
 import ComparisonMainBody from '../components/sections/ComparisonMainBody.astro';
-import AuthorByline from '../components/common/AuthorByline.astro';
 import { contrastVendorA, contrastVendorB } from '../lib/vendor-contrast';
 import { buildMatchupVerdict } from '../lib/matchup-verdict';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
@@ -623,9 +622,8 @@ const heroLogoPreloads = (
         isHub={isHub}
         hubSlug={hubSlug}
         modifierLabel={modifierLabel}
+        reviewedAt={lastUpdatedIso}
       />
-
-      <AuthorByline reviewedAt={lastUpdatedIso} />
 
       {isChildRoute && (
         <aside class="mb-10 mt-8 rounded-2xl border border-indigo-200 bg-indigo-50/70 px-5 py-4 sm:px-6 sm:py-5" aria-label={`${modifierLabel} evaluation context`}>
