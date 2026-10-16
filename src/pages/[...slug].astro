@@ -157,6 +157,21 @@ function firstSentence(text: string): string {
   return (match?.[0] ?? trimmed).slice(0, 240).trim();
 }
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/** Drop a leading "{A} vs {B}:" so the card label is the only pair mention. */
+function stripPairPrefix(text: string, vendorA: string, vendorB: string): string {
+  const a = escapeRegExp(vendorA.trim());
+  const b = escapeRegExp(vendorB.trim());
+  if (!a || !b) return text.trim();
+  return text
+    .replace(new RegExp(`^${a}\\s+vs\\s+${b}:?\\s*`, 'i'), '')
+    .replace(new RegExp(`^${b}\\s+vs\\s+${a}:?\\s*`, 'i'), '')
+    .trim();
+}
+
 function logoBadgeColor(name: string): string {
   const colors = [
     'bg-indigo-600',
@@ -441,10 +456,18 @@ const matchupVerdict = isHub
     })
   : null;
 const toolAContrastNuance = comparison.tool_a_pricing_nuance
-  ? `${comparison.tool_a_name} vs ${comparison.tool_b_name}: ${firstSentence(cleanCopy(comparison.tool_a_pricing_nuance))}`
+  ? stripPairPrefix(
+      firstSentence(cleanCopy(comparison.tool_a_pricing_nuance)),
+      comparison.tool_a_name,
+      comparison.tool_b_name,
+    )
   : '';
 const toolBContrastNuance = comparison.tool_b_pricing_nuance
-  ? firstSentence(cleanCopy(comparison.tool_b_pricing_nuance))
+  ? stripPairPrefix(
+      firstSentence(cleanCopy(comparison.tool_b_pricing_nuance)),
+      comparison.tool_a_name,
+      comparison.tool_b_name,
+    )
   : '';
 
 /**
