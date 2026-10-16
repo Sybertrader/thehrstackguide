@@ -1,6 +1,5 @@
 ---
 import VendorLogo from '../VendorLogo.astro';
-import DataVerificationBadge from '../DataVerificationBadge.astro';
 import AuthorByline from '../common/AuthorByline.astro';
 
 interface Props {
@@ -99,10 +98,8 @@ const {
 
   <AuthorByline reviewedAt={reviewedAt} />
 
-  <p class="text-xs text-slate-500 mt-4 mb-4">
+  <p class="mb-2 mt-4 text-xs text-slate-500">
     <span class="font-medium text-slate-500">Disclosure:</span> The HR Stack Guide is an independent comparison guide. We may earn a commission if you sign up through our links at no extra cost to you.
     <a href="/affiliate-disclosure/" class="text-slate-500 underline underline-offset-2 hover:text-indigo-600">Read full disclosure</a>.
   </p>
-
-  <DataVerificationBadge />
 </header>

@@ -28,9 +28,9 @@ const CATEGORY_NOUN: Record<Exclude<SeoFamily, null>, string> = {
   pm: 'Performance',
 };
 
-/** Master 1-1 H1 category labels: `{A} vs {B}: {label} Comparison (2026)`. */
+/** Master 1-1 H1 category labels: `{A} vs {B}: {label} Comparison`. */
 export const HUB_HEADING_CATEGORY: Record<Exclude<SeoFamily, null>, string> = {
-  payroll: 'Global Payroll & EOR Software',
+  payroll: 'Global Payroll & EOR',
   ats: 'ATS & Recruiting Software',
   pm: 'Performance Management Software',
 };
@@ -105,7 +105,7 @@ export function comparisonPageTitle(
 }
 
 /**
- * Hub H1: `[A] vs [B]: [Category] Comparison (2026)`
+ * Hub H1: `[A] vs [B]: [Category] Comparison`
  * Persona H1: `[A] vs [B]: Which [Category] Tool Wins for [Segment]?`
  * Never appends “Comparison & Analysis”. Never copies `<title>` verbatim.
  */
@@ -118,7 +118,7 @@ export function comparisonPageHeading(
   const pair = `${vendorA} vs ${vendorB}`;
   if (personaLabel) return `${pair}: Which ${categoryNoun(family)} Tool Wins for ${personaLabel}?`;
   const category = family ? HUB_HEADING_CATEGORY[family] : 'HR Software';
-  return `${pair}: ${category} Comparison (2026)`;
+  return `${pair}: ${category} Comparison`;
 }
 
 /**
