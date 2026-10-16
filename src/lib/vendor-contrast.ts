@@ -1,149 +1,160 @@
-import type { CategoryHubFamily } from './comparison-routes';
+export interface VendorContrast {
+  bestFor: string;
+  strengths: string[];
+  tradeoffs: string[];
+}
 
-export type ContrastLens =
-  | 'pricing'
-  | 'pipeline'
-  | 'compliance'
-  | 'reviews'
-  | 'global-coverage'
-  | 'implementation';
-
-const LENS_LABEL: Record<ContrastLens, string> = {
-  pricing: 'published pricing and contract terms',
-  pipeline: 'hiring pipeline and interview workflow',
-  compliance: 'owned-entity employment and IP assignment',
-  reviews: 'review cycles and calibration',
-  'global-coverage': 'country coverage and payout rails',
-  implementation: 'implementation scope and onboarding',
+const ADDON_ALIASES: Record<string, string> = {
+  texting: 'SMS candidate texting',
+  'candidate texting': 'SMS candidate texting',
+  'sms': 'SMS candidate texting',
+  'video interviewing': 'Video interviewing',
+  'video interviews': 'Video interviewing',
+  'video screening': 'Video interviewing',
+  assessments: 'Assessments',
+  'candidate assessments': 'Assessments',
 };
 
-const LENS_KEYWORDS: Record<ContrastLens, string[]> = {
-  pricing: ['price', 'seat', 'fee', 'plan', 'trial', 'cost', 'module', 'fx'],
-  pipeline: ['pipeline', 'scorecard', 'sourcing', 'interview', 'crm', 'scheduling', 'hiring'],
-  compliance: ['entity', 'ip', 'gdpr', 'eor', 'statutory', 'misclassif', 'owned'],
-  reviews: ['review', 'okr', 'calibrat', 'engagement', '1:1', 'performance', 'survey'],
-  'global-coverage': ['country', 'global', 'fx', 'currency', 'local', 'payout'],
-  implementation: ['onboard', 'implement', 'sla', 'support', 'setup', 'time'],
-};
+function tidy(text: string): string {
+  return text.trim().replace(/\s+/g, ' ').replace(/[.;]+$/, '');
+}
 
-export function pickContrastLens(vendorBId: string, family: CategoryHubFamily | null): ContrastLens {
-  const id = vendorBId.toLowerCase();
-  if (family === 'ats') {
-    if (['ashby', 'lever', 'greenhouse'].includes(id)) return 'pipeline';
-    if (['workable', 'breezy-hr', 'jazzhr', 'recruitee', 'bamboohr'].includes(id)) return 'pricing';
-    return 'pipeline';
+function capitalize(text: string): string {
+  if (!text) return '';
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function finish(text: string): string {
+  const value = tidy(text);
+  if (!value) return '';
+  return `${capitalize(value)}.`;
+}
+
+function joinList(items: string[]): string {
+  if (items.length <= 1) return items[0] ?? '';
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+}
+
+function formatAddonFees(rest: string): string {
+  const parts = rest
+    .split(/\s*,\s*|\s+and\s+/i)
+    .map((part) => tidy(part))
+    .filter(Boolean);
+  const named = parts.map((part) => ADDON_ALIASES[part.toLowerCase()] ?? capitalize(part));
+  const verb = named.length === 1 ? 'requires' : 'require';
+  return `${joinList(named)} ${verb} paid add-on packages.`;
+}
+
+function readsAsClause(text: string): boolean {
+  return /[.!?;]/.test(text) || /\b(is|are|was|were|can|cannot|can't|takes|take|lacks|lack|trails|trail|requires|require|sits|sit|does|do|don't|equals|equal|fit|fits|push|pushes|advertise|advertises|confirm|complements|complement|replaces|replace|sold|focused|focuses|relies|rely|geared|holds|hold|includes|include|needs|need|costs|cost|owns|own)\b/i.test(text);
+}
+
+/** Turn a CSV con fragment into one procurement sentence. */
+export function formatWatchout(raw: string): string {
+  const text = tidy(raw);
+  if (!text) return '';
+
+  const addon = text.match(/^add-on fees for (.+)$/i);
+  if (addon?.[1]) return formatAddonFees(addon[1]);
+
+  if (/^no self-serve free trial;\s*requires a sales demo$/i.test(text)) {
+    return 'There is no self-serve free trial. Pricing requires a sales demo.';
   }
-  if (family === 'pm') return 'reviews';
-  if (['remote', 'oyster-hr'].includes(id)) return 'compliance';
-  if (['gusto', 'payoneer-workforce-management', 'rippling'].includes(id)) return 'pricing';
-  if (['multiplier', 'papaya-global', 'remote-people'].includes(id)) return 'global-coverage';
-  return 'implementation';
+  if (/^only sold\b/i.test(text)) return finish(`It is ${text.charAt(0).toLowerCase()}${text.slice(1)}`);
+  if (/^primarily focused\b/i.test(text)) return finish(`It is ${text.charAt(0).toLowerCase()}${text.slice(1)}`);
+  if (/^relies on\b/i.test(text)) return finish(`It ${text.charAt(0).toLowerCase()}${text.slice(1)}`);
+
+  const geared = text.match(/^(.+?) geared to (.+)$/i);
+  if (geared?.[1] && geared[2]) return `${capitalize(geared[1])} is geared to ${geared[2]}.`;
+
+  if (readsAsClause(text)) return finish(text);
+
+  const less = text.match(/^less depth for (.+)$/i);
+  if (less?.[1]) return `It has less depth for ${less[1]}.`;
+
+  const limited = text.match(/^limited (.+)$/i);
+  if (limited?.[1]) return `${capitalize(limited[1])} is limited.`;
+
+  const slower = text.match(/^slower (.+?) than (.+)$/i);
+  if (slower?.[1] && slower[2]) return `${capitalize(slower[1])} is slower than ${slower[2]}.`;
+
+  const fewerThan = text.match(/^fewer (.+?) than (.+)$/i);
+  if (fewerThan?.[1] && fewerThan[2]) return `It offers fewer ${fewerThan[1]} than ${fewerThan[2]}.`;
+
+  const fewer = text.match(/^fewer (.+)$/i);
+  if (fewer?.[1]) return `It offers fewer ${fewer[1]}.`;
+
+  const steeper = text.match(/^steeper (.+?) for (.+)$/i);
+  if (steeper?.[1] && steeper[2]) return `The ${steeper[1]} for ${steeper[2]} is steeper.`;
+
+  const smaller = text.match(/^smaller (.+)$/i);
+  if (smaller?.[1]) return `It has a smaller ${smaller[1]}.`;
+
+  const higher = text.match(/^higher (.+?) than (.+)$/i);
+  if (higher?.[1] && higher[2]) return `The ${higher[1]} is higher than ${higher[2]}.`;
+
+  const narrower = text.match(/^narrower (.+?) versus (.+)$/i);
+  if (narrower?.[1] && narrower[2]) return `${capitalize(narrower[1])} is narrower than ${narrower[2]}.`;
+
+  if (/^enterprise sales cycle\b/i.test(text)) {
+    return 'Full platform access requires an enterprise sales cycle.';
+  }
+
+  if (/^domestic-first /i.test(text)) {
+    return 'Benefits administration is domestic-first, with limited non-US statutory coverage.';
+  }
+
+  if (/^no published /i.test(text)) return finish(text.replace(/^no published /i, 'There is no published '));
+
+  const missing = text.match(/^no (.+)$/i);
+  if (missing?.[1]) return `There is no ${missing[1]}.`;
+
+  return finish(text);
 }
 
-function pickMatching(items: string[], lens: ContrastLens, limit: number): string[] {
-  const keys = LENS_KEYWORDS[lens];
-  const ranked = [...items].sort((a, b) => {
-    const sa = keys.some((k) => a.toLowerCase().includes(k)) ? 0 : 1;
-    const sb = keys.some((k) => b.toLowerCase().includes(k)) ? 0 : 1;
-    return sa - sb;
-  });
-  return ranked.filter((item) => item.trim()).slice(0, limit);
+function formatStrength(raw: string): string {
+  const text = tidy(raw);
+  if (!text) return '';
+  const readsAsClause = /\b(is|are|can|cannot|takes|lacks|requires|require|sits|does)\b/i.test(text);
+  if (text.length > 90 || readsAsClause) return finish(text);
+  return capitalize(text);
 }
 
-function lowerFirst(text: string): string {
-  const trimmed = text.trim().replace(/\.$/, '');
-  if (!trimmed) return '';
-  return trimmed.charAt(0).toLowerCase() + trimmed.slice(1);
+function bestForLabel(badge: string): string {
+  const stripped = tidy(badge).replace(/^best for\s+/i, '');
+  return stripped ? capitalize(stripped) : '';
 }
 
-export interface VendorAContrast {
-  lens: ContrastLens;
-  lensLabel: string;
-  summary: string;
-  bullets: string[];
-  chooseIf: string[];
-  skipIf: string[];
+function normalizeKey(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
-export function contrastVendorA(args: {
-  aName: string;
-  bName: string;
-  aId: string;
-  bId: string;
-  family: CategoryHubFamily | null;
-  aPrice: string;
-  bPrice: string;
-  aFeatures: string[];
-  aPros: string[];
-  aCons: string[];
-}): VendorAContrast {
-  const lens = pickContrastLens(args.bId, args.family);
-  const lensLabel = LENS_LABEL[lens];
-  const feature = pickMatching(args.aFeatures, lens, 1)[0];
-  const pro = pickMatching(args.aPros, lens, 1)[0];
-  const con = pickMatching(args.aCons, lens, 1)[0];
-  const focus = feature ? lowerFirst(feature) : '';
+function takeUnique(items: string[], limit: number, seen: Set<string>): string[] {
+  const picked: string[] = [];
+  for (const item of items) {
+    const key = normalizeKey(item);
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    picked.push(item);
+    if (picked.length >= limit) break;
+  }
+  return picked;
+}
 
-  const summary = focus
-    ? `${args.aName} focuses on ${focus} rather than a broader ${args.bName} deployment when the buying test is ${lensLabel}.`
-    : '';
-
+export function buildVendorContrast(args: {
+  badge?: string;
+  features?: string[];
+  pros?: string[];
+  cons?: string[];
+}): VendorContrast {
+  const seen = new Set<string>();
+  const strengthSource = [...(args.pros ?? []), ...(args.features ?? [])].map(formatStrength);
+  const strengths = takeUnique(strengthSource, 3, seen);
+  const tradeoffs = takeUnique((args.cons ?? []).map(formatWatchout), 2, seen);
   return {
-    lens,
-    lensLabel,
-    summary,
-    bullets: [feature, pro].filter((item): item is string => Boolean(item)).slice(0, 2),
-    chooseIf: focus
-      ? [`Choose ${args.aName} over ${args.bName} when you need ${focus} and ${lensLabel} decides the purchase.`]
-      : [],
-    skipIf: con
-      ? [`Skip ${args.aName} on this ${args.aName} vs ${args.bName} shortlist when ${lowerFirst(con)}.`]
-      : [],
-  };
-}
-
-export interface VendorBContrast {
-  lens: ContrastLens;
-  lensLabel: string;
-  summary: string;
-  bullets: string[];
-  chooseIf: string[];
-  skipIf: string[];
-}
-
-export function contrastVendorB(args: {
-  aName: string;
-  bName: string;
-  aId: string;
-  bId: string;
-  family: CategoryHubFamily | null;
-  aPrice: string;
-  bPrice: string;
-  bFeatures: string[];
-  bPros: string[];
-  bCons: string[];
-}): VendorBContrast {
-  const lens = pickContrastLens(args.aId, args.family);
-  const lensLabel = LENS_LABEL[lens];
-  const feature = pickMatching(args.bFeatures, lens, 1)[0];
-  const pro = pickMatching(args.bPros, lens, 1)[0];
-  const con = pickMatching(args.bCons, lens, 1)[0];
-  const focus = feature ? lowerFirst(feature) : '';
-
-  const summary = focus
-    ? `${args.bName} focuses on ${focus} rather than a broader ${args.aName} deployment when the buying test is ${lensLabel}.`
-    : '';
-
-  return {
-    lens,
-    lensLabel,
-    summary,
-    bullets: [feature, pro].filter((item): item is string => Boolean(item)).slice(0, 2),
-    chooseIf: focus
-      ? [`Choose ${args.bName} over ${args.aName} when you need ${focus} and ${lensLabel} decides the purchase.`]
-      : [],
-    skipIf: con
-      ? [`Skip ${args.bName} on this ${args.aName} vs ${args.bName} shortlist when ${lowerFirst(con)}.`]
-      : [],
+    bestFor: bestForLabel(args.badge ?? ''),
+    strengths,
+    tradeoffs,
   };
 }

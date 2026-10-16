@@ -1,7 +1,7 @@
 ---
 /**
  * Core comparison sections: scoring cards, verdict, feature grid, pricing,
- * and pros/cons. TCO charts and synthetic editorial are not rendered.
+ * and platform strengths and trade-offs. TCO charts and synthetic editorial are not rendered.
  */
 import AtAGlance from '../AtAGlance.astro';
 import PricingNuance from '../PricingNuance.astro';
@@ -9,12 +9,11 @@ import VerdictCallout from '../VerdictCallout.astro';
 import SegmentTabEngine from '../SegmentTabEngine.astro';
 import PreferredSourceButton from '../PreferredSourceButton.astro';
 import DemoQuestions from '../DemoQuestions.astro';
-import BuyOrSkip from '../BuyOrSkip.astro';
 import CostCalculator from '../CostCalculator.astro';
-import VendorLogo from '../VendorLogo.astro';
 import FeatureParityGrid from './FeatureParityGrid.astro';
+import StrengthsTradeoffs from './StrengthsTradeoffs.astro';
 import type { Comparison, FeatureMatrixEntry } from '../../lib/comparisons';
-import type { VendorAContrast, VendorBContrast } from '../../lib/vendor-contrast';
+import type { VendorContrast } from '../../lib/vendor-contrast';
 import type { CategoryHubFamily } from '../../lib/comparison-routes';
 import type { MasterSegmentPanel } from '../../lib/persona-evaluation';
 import type { MatchupVerdict } from '../../lib/matchup-verdict';
@@ -45,8 +44,8 @@ interface Props {
   toolBModalId: string;
   toolAAffiliateHref: string;
   toolBAffiliateHref: string;
-  vendorAContrast: VendorAContrast;
-  vendorBContrast: VendorBContrast;
+  vendorAContrast: VendorContrast;
+  vendorBContrast: VendorContrast;
   toolAContrastNuance: string;
   toolBContrastNuance: string;
   showFeatureTable: boolean;
@@ -110,8 +109,8 @@ const {
         toolBModalId={toolBModalId}
         toolAAffiliateHref={toolAAffiliateHref}
         toolBAffiliateHref={toolBAffiliateHref}
-        toolAContrastBullets={vendorAContrast.bullets}
-        toolBContrastBullets={vendorBContrast.bullets}
+        toolAContrastBullets={toolAFeatures.slice(0, 2)}
+        toolBContrastBullets={toolBFeatures.slice(0, 2)}
       />
     )}
 
@@ -207,112 +206,24 @@ const {
     )}
 
     {sectionId === 'pros' && isHub && (
-      <section class="mb-12" aria-label="Pros and cons comparison">
-        <h2 class="mb-6 text-2xl font-bold text-slate-900">Pros &amp; Cons</h2>
-        <div class="grid gap-6 lg:grid-cols-2">
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="flex items-center gap-3 text-lg font-semibold text-slate-900">
-              <VendorLogo
-                src={comparison.tool_a_logo_url}
-                alt=""
-                name={comparison.tool_a_name}
-                badgeColor={toolABadgeColor}
-                size={32}
-              />
-              <span>{comparison.tool_a_name} vs {comparison.tool_b_name}</span>
-            </h3>
-            {vendorAContrast.summary && <p class="mt-3 text-sm leading-relaxed text-slate-600">{vendorAContrast.summary}</p>}
-            <div class="mt-6 grid gap-6 sm:grid-cols-2">
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Contrast edges</h4>
-                <ul class="space-y-3">
-                  {vendorAContrast.bullets.map((pro) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                        </svg>
-                      </span>
-                      {pro}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">When {comparison.tool_b_name} wins</h4>
-                <ul class="space-y-3">
-                  {vendorAContrast.skipIf.map((con) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                        </svg>
-                      </span>
-                      {con}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <BuyOrSkip
-              vendorName={comparison.tool_a_name}
-              chooseIf={vendorAContrast.chooseIf}
-              skipIf={vendorAContrast.skipIf}
-            />
-          </div>
-
-          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <h3 class="flex items-center gap-3 text-lg font-semibold text-slate-900">
-              <VendorLogo
-                src={comparison.tool_b_logo_url}
-                alt=""
-                name={comparison.tool_b_name}
-                badgeColor={toolBBadgeColor}
-                size={32}
-              />
-              <span>{comparison.tool_b_name} vs {comparison.tool_a_name}</span>
-            </h3>
-            {vendorBContrast.summary && <p class="mt-3 text-sm leading-relaxed text-slate-600">{vendorBContrast.summary}</p>}
-            <div class="mt-6 grid gap-6 sm:grid-cols-2">
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Contrast edges</h4>
-                <ul class="space-y-3">
-                  {vendorBContrast.bullets.map((pro) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clip-rule="evenodd" />
-                        </svg>
-                      </span>
-                      {pro}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <h4 class="mb-3 text-sm font-semibold uppercase tracking-wide text-red-600">When {comparison.tool_a_name} wins</h4>
-                <ul class="space-y-3">
-                  {vendorBContrast.skipIf.map((con) => (
-                    <li class="flex items-start gap-2.5 text-sm text-slate-700">
-                      <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3" aria-hidden="true">
-                          <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-                        </svg>
-                      </span>
-                      {con}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <BuyOrSkip
-              vendorName={comparison.tool_b_name}
-              chooseIf={vendorBContrast.chooseIf}
-              skipIf={vendorBContrast.skipIf}
-            />
-          </div>
-        </div>
-      </section>
+      <StrengthsTradeoffs
+        vendorA={{
+          name: comparison.tool_a_name,
+          logo: comparison.tool_a_logo_url,
+          badgeColor: toolABadgeColor,
+          bestFor: vendorAContrast.bestFor,
+          strengths: vendorAContrast.strengths,
+          tradeoffs: vendorAContrast.tradeoffs,
+        }}
+        vendorB={{
+          name: comparison.tool_b_name,
+          logo: comparison.tool_b_logo_url,
+          badgeColor: toolBBadgeColor,
+          bestFor: vendorBContrast.bestFor,
+          strengths: vendorBContrast.strengths,
+          tradeoffs: vendorBContrast.tradeoffs,
+        }}
+      />
     )}
 
     {sectionId === 'demo' && isHub && (

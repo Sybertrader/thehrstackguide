@@ -25,7 +25,7 @@ import { pickRelatedHubs } from '../lib/related-comparisons';
 import RelatedComparisons from '../components/RelatedComparisons.astro';
 import HeroVariantA from '../components/heroes/HeroVariantA.astro';
 import ComparisonMainBody from '../components/sections/ComparisonMainBody.astro';
-import { contrastVendorA, contrastVendorB } from '../lib/vendor-contrast';
+import { buildVendorContrast } from '../lib/vendor-contrast';
 import { buildMatchupVerdict } from '../lib/matchup-verdict';
 import { resolveChildHeroSubtitle, resolveHubHeroSubtitle } from '../data/scenarios';
 import type { CategoryHubFamily } from '../lib/comparison-routes';
@@ -403,29 +403,17 @@ const toolBIntegrations = toolBProfile?.integrations ?? [];
 const hasNativeIntegrations = toolAIntegrations.length > 0 || toolBIntegrations.length > 0;
 const showFeatureTable = isHub && (featureMatrixRows.length > 0 || hasNativeIntegrations);
 const segmentPanels = isHub ? buildMasterSegmentPanels(pairRows ?? []) : [];
-const vendorAContrast = contrastVendorA({
-  aName: comparison.tool_a_name,
-  bName: comparison.tool_b_name,
-  aId: comparison.tool_a_id,
-  bId: comparison.tool_b_id,
-  family: hubFamily,
-  aPrice: comparison.tool_a_starting_price,
-  bPrice: comparison.tool_b_starting_price,
-  aFeatures: toolAFeatures,
-  aPros: toolAPros,
-  aCons: toolACons,
+const vendorAContrast = buildVendorContrast({
+  badge: comparison.tool_a_badge,
+  features: toolAFeatures,
+  pros: toolAPros,
+  cons: toolACons,
 });
-const vendorBContrast = contrastVendorB({
-  aName: comparison.tool_a_name,
-  bName: comparison.tool_b_name,
-  aId: comparison.tool_a_id,
-  bId: comparison.tool_b_id,
-  family: hubFamily,
-  aPrice: comparison.tool_a_starting_price,
-  bPrice: comparison.tool_b_starting_price,
-  bFeatures: toolBFeatures,
-  bPros: toolBPros,
-  bCons: toolBCons,
+const vendorBContrast = buildVendorContrast({
+  badge: comparison.tool_b_badge,
+  features: toolBFeatures,
+  pros: toolBPros,
+  cons: toolBCons,
 });
 const mainSectionOrder = [
   'glance',
