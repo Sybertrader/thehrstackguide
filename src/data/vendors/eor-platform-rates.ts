@@ -1,6 +1,6 @@
-import { getToolProfile } from '../../lib/tools';
-import { KEEP_VENDORS } from '../../lib/vendor-catalog';
-import { resolveVendorOutboundHref } from '../../lib/outbound';
+import { getToolProfile } from '../../lib/tools.js';
+import { KEEP_VENDORS } from '../../lib/vendor-catalog.js';
+import { resolveVendorOutboundHref } from '../../lib/outbound.js';
 
 /**
  * Published EOR / contractor *platform* fees (USD per worker per month).

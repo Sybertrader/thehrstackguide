@@ -3,7 +3,7 @@ import {
   MAX_EOR_HEADCOUNT,
   buildEorCostEstimate,
   parseHeadcount,
-} from '../src/lib/eor-cost-api';
+} from '../src/lib/eor-cost-api.js';
 
 export const config = {
   runtime: 'edge',

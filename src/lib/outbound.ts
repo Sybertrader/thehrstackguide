@@ -7,11 +7,11 @@
  *  2. `https://{domain}/?utm_source=hrstackguide.com&utm_medium=referral`
  *     when no active affiliate URL exists.
  */
-import { affiliateLinks } from '../config/affiliates';
-import { getToolProfile, isLiveVendorId, type ToolProfile } from './tools';
-import { affiliateGoHref, isAffiliateRedirect } from './links';
+import { affiliateLinks } from '../config/affiliates.js';
+import { getToolProfile, isLiveVendorId, type ToolProfile } from './tools.js';
+import { affiliateGoHref, isAffiliateRedirect } from './links.js';
 
-export { VENDOR_OUTBOUND_REL, outboundRel, affiliateGoHref, ensureAffiliateGoTrailingSlash, isAffiliateRedirect } from './links';
+export { VENDOR_OUTBOUND_REL, outboundRel, affiliateGoHref, ensureAffiliateGoTrailingSlash, isAffiliateRedirect } from './links.js';
 export const UTM_SOURCE = 'hrstackguide.com';
 export const UTM_MEDIUM = 'referral';
 

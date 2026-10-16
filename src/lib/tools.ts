@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { isCatalogVendorId } from './vendor-catalog';
+import { isCatalogVendorId } from './vendor-catalog.js';
 
 /**
  * Tool-level narrative content used to power the SEO deep-dive sections on

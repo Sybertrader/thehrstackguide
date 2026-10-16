@@ -1,4 +1,4 @@
-import catalog from '../data/vendor-catalog.json';
+import catalog from '../data/vendor-catalog.json' with { type: 'json' };
 
 /** Frozen category ids. Do not add values without a catalog + schema change. */
 export const VENDOR_CATEGORIES = ['payroll-eor', 'ats', 'performance-management'] as const;

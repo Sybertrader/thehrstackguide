@@ -3,7 +3,7 @@
  * public calculator API. Caps match the on-page CostCalculator.
  * Rates come from published list prices. Unpublished EOR modules are not estimated.
  */
-import { EOR_PLATFORM_RATES } from '../data/vendors/eor-platform-rates';
+import { EOR_PLATFORM_RATES } from '../data/vendors/eor-platform-rates.js';
 
 export const MAX_EOR_HEADCOUNT = 250;
 export const MAX_CONTRACTOR_HEADCOUNT = 500;
