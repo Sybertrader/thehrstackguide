@@ -5,6 +5,7 @@
 import VendorButton from './VendorButton.astro';
 import {
   annualPlatformCost,
+  monthlyFixedPlatformFees,
   resolveEorPlatformRates,
   vendorPublishesContractorRate,
   vendorPublishesEorRate,
@@ -88,12 +89,13 @@ const quoteRequired = (eorPublished: boolean, contractorPublished: boolean) =>
   (DEFAULT_EOR > 0 && !eorPublished) || (DEFAULT_CONTRACTORS > 0 && !contractorPublished);
 const aQuote = quoteRequired(aEorPublished, aContractorPublished);
 const bQuote = quoteRequired(bEorPublished, bContractorPublished);
-const initialAAnnual = aQuote
-  ? null
-  : annualPlatformCost(DEFAULT_EOR, DEFAULT_CONTRACTORS, initialA.eor, initialA.contractor);
-const initialBAnnual = bQuote
-  ? null
-  : annualPlatformCost(DEFAULT_EOR, DEFAULT_CONTRACTORS, initialB.eor, initialB.contractor);
+function annualWithFixed(countEor: number, countContractors: number, rates: EorPlatformRates, seat: { eor: number; contractor: number }) {
+  return annualPlatformCost(countEor, countContractors, seat.eor, seat.contractor) + monthlyFixedPlatformFees(countEor, countContractors, rates) * 12;
+}
+const initialAAnnual = aQuote ? null : annualWithFixed(DEFAULT_EOR, DEFAULT_CONTRACTORS, aRates, initialA);
+const initialBAnnual = bQuote ? null : annualWithFixed(DEFAULT_EOR, DEFAULT_CONTRACTORS, bRates, initialB);
+const initialAFixed = monthlyFixedPlatformFees(DEFAULT_EOR, DEFAULT_CONTRACTORS, aRates);
+const initialBFixed = monthlyFixedPlatformFees(DEFAULT_EOR, DEFAULT_CONTRACTORS, bRates);
 const initialDelta =
   initialAAnnual != null && initialBAnnual != null ? Math.abs(initialAAnnual - initialBAnnual) : 0;
 const initialAWins = initialAAnnual != null && initialBAnnual != null && initialAAnnual < initialBAnnual;
@@ -294,7 +296,10 @@ const ctaClass = (isWinner: boolean) =>
       ]}
       data-vendor-card="a"
     >
-      <h3 class="text-lg font-bold text-slate-900" data-vendor-heading>{vendorA.name}</h3>
+      <h3 class="flex items-center gap-2.5 text-lg font-bold text-slate-900" data-vendor-heading>
+        <img data-vendor-logo src={vendors.find((vendor) => vendor.id === vendorA.id)?.logo || ''} alt="" width="28" height="28" class:list={['h-7 w-7 rounded-md bg-slate-100 object-contain', !vendors.find((vendor) => vendor.id === vendorA.id)?.logo && 'hidden']} />
+        <span data-vendor-name>{vendorA.name}</span>
+      </h3>
       <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900">
         <span data-annual-total>{aQuote ? CUSTOM_QUOTE_LABEL : money(initialAAnnual ?? 0)}</span>
         <span data-annual-suffix class:list={['text-lg font-semibold text-slate-500', aQuote && 'hidden']}>/yr</span>
@@ -308,6 +313,9 @@ const ctaClass = (isWinner: boolean) =>
       <ul class:list={['mt-4 space-y-1.5 text-sm text-slate-600', aQuote && 'hidden']} data-rate-lines>
         <li data-eor-line>EOR Fees ({DEFAULT_EOR} × {money(initialA.eor)}/mo)</li>
         <li data-contractor-line>Contractor Fees ({DEFAULT_CONTRACTORS} × {money(initialA.contractor)}/mo)</li>
+        <li data-fixed-line class:list={[initialAFixed <= 0 && 'hidden']}>Base fees ({money(initialAFixed)}/mo)</li>
+        <li data-deposit-line class:list={[(aRates.depositMonths ?? 0) <= 0 && 'hidden']}>Upfront deposit: {aRates.depositMonths ?? 0} month of gross salary per EOR employee</li>
+        <li data-fx-line class:list={[(aRates.fxMarkupPercent ?? 0) <= 0 && 'hidden']}>FX markup about {aRates.fxMarkupPercent ?? 0}% of cross-border payroll</li>
       </ul>
     </article>
     <article
@@ -317,7 +325,10 @@ const ctaClass = (isWinner: boolean) =>
       ]}
       data-vendor-card="b"
     >
-      <h3 class="text-lg font-bold text-slate-900" data-vendor-heading>{vendorB.name}</h3>
+      <h3 class="flex items-center gap-2.5 text-lg font-bold text-slate-900" data-vendor-heading>
+        <img data-vendor-logo src={vendors.find((vendor) => vendor.id === vendorB.id)?.logo || ''} alt="" width="28" height="28" class:list={['h-7 w-7 rounded-md bg-slate-100 object-contain', !vendors.find((vendor) => vendor.id === vendorB.id)?.logo && 'hidden']} />
+        <span data-vendor-name>{vendorB.name}</span>
+      </h3>
       <p class="mt-3 text-3xl font-bold tracking-tight text-slate-900">
         <span data-annual-total>{bQuote ? CUSTOM_QUOTE_LABEL : money(initialBAnnual ?? 0)}</span>
         <span data-annual-suffix class:list={['text-lg font-semibold text-slate-500', bQuote && 'hidden']}>/yr</span>
@@ -331,6 +342,9 @@ const ctaClass = (isWinner: boolean) =>
       <ul class:list={['mt-4 space-y-1.5 text-sm text-slate-600', bQuote && 'hidden']} data-rate-lines>
         <li data-eor-line>EOR Fees ({DEFAULT_EOR} × {money(initialB.eor)}/mo)</li>
         <li data-contractor-line>Contractor Fees ({DEFAULT_CONTRACTORS} × {money(initialB.contractor)}/mo)</li>
+        <li data-fixed-line class:list={[initialBFixed <= 0 && 'hidden']}>Base fees ({money(initialBFixed)}/mo)</li>
+        <li data-deposit-line class:list={[(bRates.depositMonths ?? 0) <= 0 && 'hidden']}>Upfront deposit: {bRates.depositMonths ?? 0} month of gross salary per EOR employee</li>
+        <li data-fx-line class:list={[(bRates.fxMarkupPercent ?? 0) <= 0 && 'hidden']}>FX markup about {bRates.fxMarkupPercent ?? 0}% of cross-border payroll</li>
       </ul>
     </article>
   </div>
@@ -388,8 +402,25 @@ const ctaClass = (isWinner: boolean) =>
     }).format(value);
   }
 
-  function annualCost(eorCount: number, contractorCount: number, eorRate: number, contractorRate: number): number {
-    return (eorCount * eorRate + contractorCount * contractorRate) * 12;
+  function annualCost(
+    eorCount: number,
+    contractorCount: number,
+    eorRate: number,
+    contractorRate: number,
+    fixedMonthly = 0,
+  ): number {
+    return (eorCount * eorRate + contractorCount * contractorRate + fixedMonthly) * 12;
+  }
+
+  function fixedMonthly(
+    eorCount: number,
+    contractorCount: number,
+    vendor: { contractorBaseFee?: number; platformBaseFee?: number; platformPerUser?: number } | undefined,
+  ): number {
+    const headcount = eorCount + contractorCount;
+    if (!vendor || headcount <= 0) return 0;
+    const contractorBase = contractorCount > 0 ? vendor.contractorBaseFee ?? 0 : 0;
+    return contractorBase + (vendor.platformBaseFee ?? 0) + (vendor.platformPerUser ?? 0) * headcount;
   }
 
   function num(root: HTMLElement, key: string): number {
@@ -425,24 +456,22 @@ const ctaClass = (isWinner: boolean) =>
       id: string;
       name: string;
       affiliateUrl: string;
+      logo?: string;
       eorMonthlyRate: number;
       eorAnnualRate: number;
       contractorMonthlyRate: number;
       contractorAnnualRate: number;
+      contractorBaseFee?: number;
+      platformBaseFee?: number;
+      platformPerUser?: number;
+      fxMarkupPercent?: number;
+      depositMonths?: number;
     }> = {};
 
     const catalogNode = root.querySelector('[data-cost-calculator-catalog]');
     if (catalogNode?.textContent) {
       try {
-        const list = JSON.parse(catalogNode.textContent) as Array<{
-          id: string;
-          name: string;
-          affiliateUrl: string;
-          eorMonthlyRate: number;
-          eorAnnualRate: number;
-          contractorMonthlyRate: number;
-          contractorAnnualRate: number;
-        }>;
+        const list = JSON.parse(catalogNode.textContent) as Array<(typeof catalog)[string]>;
         catalog = Object.fromEntries(list.map((vendor) => [vendor.id, vendor]));
       } catch {
         catalog = {};
@@ -463,8 +492,13 @@ const ctaClass = (isWinner: boolean) =>
       root.dataset[`${prefix}ContractorPublished`] = 'true';
 
       const card = side === 'a' ? cardA : cardB;
-      const heading = card.querySelector('[data-vendor-heading]');
-      if (heading) heading.textContent = vendor.name;
+      const nameEl = card.querySelector('[data-vendor-name]');
+      if (nameEl) nameEl.textContent = vendor.name;
+      const logo = card.querySelector<HTMLImageElement>('[data-vendor-logo]');
+      if (logo) {
+        logo.src = vendor.logo || '';
+        logo.classList.toggle('hidden', !vendor.logo);
+      }
 
       const cta = root.querySelector(`[data-calc-cta="${side}"] .js-affiliate-cta`);
       if (cta instanceof HTMLAnchorElement) {
@@ -504,6 +538,7 @@ const ctaClass = (isWinner: boolean) =>
       contractorCount: number,
       eorRate: number,
       contractorRate: number,
+      vendor?: { contractorBaseFee?: number; platformBaseFee?: number; platformPerUser?: number; fxMarkupPercent?: number; depositMonths?: number },
     ): number | null {
       const annualEl = card.querySelector('[data-annual-total]');
       const suffix = card.querySelector('[data-annual-suffix]');
@@ -522,7 +557,8 @@ const ctaClass = (isWinner: boolean) =>
         rateLines?.classList.add('hidden');
         return null;
       }
-      const yearly = annualCost(eorCount, contractorCount, eorRate, contractorRate);
+      const fixed = fixedMonthly(eorCount, contractorCount, vendor);
+      const yearly = annualCost(eorCount, contractorCount, eorRate, contractorRate, fixed);
       if (annualEl) annualEl.textContent = money(yearly);
       suffix?.classList.remove('hidden');
       monthlyWrap?.classList.remove('hidden');
@@ -531,7 +567,29 @@ const ctaClass = (isWinner: boolean) =>
       if (monthlyEl) monthlyEl.textContent = money(yearly / 12);
       if (eorLine) eorLine.textContent = `EOR Fees (${eorCount} × ${money(eorRate)}/mo)`;
       if (contractorLine) {
-        contractorLine.textContent = `Contractor Fees (${contractorCount} × ${money(contractorRate)}/mo)`;
+        const base = contractorCount > 0 ? vendor?.contractorBaseFee ?? 0 : 0;
+        contractorLine.textContent =
+          base > 0
+            ? `Contractor Fees (${contractorCount} × ${money(contractorRate)}/mo + ${money(base)} base)`
+            : `Contractor Fees (${contractorCount} × ${money(contractorRate)}/mo)`;
+      }
+      const fixedLine = card.querySelector('[data-fixed-line]');
+      if (fixedLine) {
+        const platformOnly = fixed - (contractorCount > 0 ? vendor?.contractorBaseFee ?? 0 : 0);
+        fixedLine.textContent = `Platform base (${money(platformOnly)}/mo)`;
+        fixedLine.classList.toggle('hidden', platformOnly <= 0);
+      }
+      const depositLine = card.querySelector('[data-deposit-line]');
+      if (depositLine) {
+        const months = vendor?.depositMonths ?? 0;
+        depositLine.textContent = `Upfront deposit: ${months} month of gross salary per EOR employee`;
+        depositLine.classList.toggle('hidden', months <= 0 || eorCount <= 0);
+      }
+      const fxLine = card.querySelector('[data-fx-line]');
+      if (fxLine) {
+        const fx = vendor?.fxMarkupPercent ?? 0;
+        fxLine.textContent = `FX markup about ${fx}% of cross-border payroll`;
+        fxLine.classList.toggle('hidden', fx <= 0);
       }
       return yearly;
     }
@@ -545,8 +603,10 @@ const ctaClass = (isWinner: boolean) =>
 
       const a = ratesFor('a');
       const b = ratesFor('b');
-      const yearlyA = paintCard(cardA, 'a', eorCount, contractorCount, a.eor, a.contractor);
-      const yearlyB = paintCard(cardB, 'b', eorCount, contractorCount, b.eor, b.contractor);
+      const vendorA = catalog[root.dataset.aId ?? ''];
+      const vendorB = catalog[root.dataset.bId ?? ''];
+      const yearlyA = paintCard(cardA, 'a', eorCount, contractorCount, a.eor, a.contractor, vendorA);
+      const yearlyB = paintCard(cardB, 'b', eorCount, contractorCount, b.eor, b.contractor, vendorB);
       const comparable = yearlyA != null && yearlyB != null;
       const delta = comparable ? Math.abs(yearlyA - yearlyB) : 0;
       const aWins = comparable && yearlyA < yearlyB;

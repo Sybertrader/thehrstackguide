@@ -40,13 +40,19 @@ export default function handler(request: Request) {
   const url = new URL(request.url);
   const eorCount = parseHeadcount(url.searchParams.get('eor'), MAX_EOR_HEADCOUNT);
   const contractorCount = parseHeadcount(url.searchParams.get('contractors'), MAX_CONTRACTOR_HEADCOUNT);
+  const salaryRaw = Number.parseFloat(url.searchParams.get('salary') ?? '');
+  const averageMonthlySalary = Number.isFinite(salaryRaw) && salaryRaw > 0 ? salaryRaw : 0;
+  const vendor = url.searchParams.get('vendor');
 
-  return new Response(JSON.stringify(buildEorCostEstimate(eorCount, contractorCount)), {
-    status: 200,
-    headers: {
-      ...CORS_HEADERS,
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600',
+  return new Response(
+    JSON.stringify(buildEorCostEstimate(eorCount, contractorCount, new Date(), { vendor, averageMonthlySalary })),
+    {
+      status: 200,
+      headers: {
+        ...CORS_HEADERS,
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600',
+      },
     },
-  });
+  );
 }

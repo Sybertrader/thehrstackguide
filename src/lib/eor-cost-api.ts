@@ -3,7 +3,13 @@
  * public calculator API. Caps match the on-page CostCalculator.
  * Rates come from published list prices. Unpublished EOR modules are not estimated.
  */
-import { EOR_PLATFORM_RATES } from '../data/vendors/eor-platform-rates.js';
+import {
+  EOR_PLATFORM_RATES,
+  monthlyFixedPlatformFees,
+  securityDeposit,
+  fxLiability,
+  type EorPlatformRates,
+} from '../data/vendors/eor-platform-rates.js';
 
 export const MAX_EOR_HEADCOUNT = 250;
 export const MAX_CONTRACTOR_HEADCOUNT = 500;
@@ -20,6 +26,22 @@ export interface EorCostBreakdown {
   rippling_annual_usd: number;
   remote_annual_usd: number;
   deel_annual_usd: number;
+  gusto_annual_usd: number;
+  payoneer_annual_usd: number;
+}
+
+export interface EorVendorFeeDetail {
+  name: string;
+  slug: string;
+  annual_platform_usd: number;
+  monthly_platform_usd: number;
+  eor_seat_monthly_usd: number;
+  contractor_monthly_usd: number;
+  fixed_monthly_usd: number;
+  fx_markup_percent: number;
+  fx_liability_usd: number;
+  deposit_months: number;
+  security_deposit_usd: number;
 }
 
 export interface EorVendorCost {
@@ -37,6 +59,8 @@ export interface EorCostEstimateResponse {
     cheapest_option: string;
     estimated_annual_savings_vs_highest: number;
     breakdown: EorCostBreakdown;
+    vendors: EorVendorFeeDetail[];
+    selected_vendor: EorVendorFeeDetail | null;
   };
   meta: {
     data_source: string;
@@ -56,48 +80,96 @@ export function lastAuditedLabel(now = new Date()): string {
   return now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 }
 
+const RANKED_VENDORS: Array<{ slug: string; name: string; rates: EorPlatformRates }> = [
+  { slug: 'multiplier', name: 'Multiplier', rates: EOR_PLATFORM_RATES.multiplier },
+  { slug: 'remote', name: 'Remote', rates: EOR_PLATFORM_RATES.remote },
+  { slug: 'deel', name: 'Deel', rates: EOR_PLATFORM_RATES.deel },
+  { slug: 'gusto', name: 'Gusto', rates: EOR_PLATFORM_RATES.gusto },
+  { slug: 'rippling', name: 'Rippling', rates: EOR_PLATFORM_RATES.rippling },
+  { slug: 'payoneer', name: 'Payoneer', rates: EOR_PLATFORM_RATES['payoneer-workforce-management'] },
+];
+
+export function vendorPlatformAnnual(
+  eorCount: number,
+  contractorCount: number,
+  rates: EorPlatformRates,
+  cycle: 'annual' | 'monthly' = 'annual',
+): number {
+  const eorRate = cycle === 'monthly' ? rates.eorMonthlyRate : rates.eorAnnualRate;
+  const contractorRate = cycle === 'monthly' ? rates.contractorMonthlyRate : rates.contractorAnnualRate;
+  const seats = eorCount * eorRate + contractorCount * contractorRate;
+  return (seats + monthlyFixedPlatformFees(eorCount, contractorCount, rates)) * 12;
+}
+
+export function describeVendorFees(
+  slug: string,
+  name: string,
+  rates: EorPlatformRates,
+  eorCount: number,
+  contractorCount: number,
+  averageMonthlySalary = 0,
+  cycle: 'annual' | 'monthly' = 'annual',
+): EorVendorFeeDetail {
+  const eorRate = cycle === 'monthly' ? rates.eorMonthlyRate : rates.eorAnnualRate;
+  const contractorRate = cycle === 'monthly' ? rates.contractorMonthlyRate : rates.contractorAnnualRate;
+  const fixed = monthlyFixedPlatformFees(eorCount, contractorCount, rates);
+  const monthly = eorCount * eorRate + contractorCount * contractorRate + fixed;
+  const payroll = averageMonthlySalary * eorCount;
+  return {
+    name,
+    slug,
+    annual_platform_usd: monthly * 12,
+    monthly_platform_usd: monthly,
+    eor_seat_monthly_usd: eorCount * eorRate,
+    contractor_monthly_usd: contractorCount * contractorRate + (contractorCount > 0 ? rates.contractorBaseFee ?? 0 : 0),
+    fixed_monthly_usd: fixed,
+    fx_markup_percent: rates.fxMarkupPercent ?? 0,
+    fx_liability_usd: fxLiability(payroll, rates.fxMarkupPercent ?? 0),
+    deposit_months: rates.depositMonths ?? 0,
+    security_deposit_usd: securityDeposit(averageMonthlySalary, eorCount, rates.depositMonths ?? 0),
+  };
+}
+
 export function calculateEorAnnualCosts(
   eorCount: number,
   contractorCount: number,
-): { breakdown: EorCostBreakdown; vendorCosts: EorVendorCost[] } {
-  const deel = EOR_PLATFORM_RATES.deel;
-  const remote = EOR_PLATFORM_RATES.remote;
-  const multiplier = EOR_PLATFORM_RATES.multiplier;
-  const annual = (monthly: number, headcount: number) => monthly * headcount * 12;
-
-  const deelAnnual = annual(deel.eorAnnualRate, eorCount) + annual(deel.contractorAnnualRate, contractorCount);
-  const multiplierAnnual =
-    annual(multiplier.eorAnnualRate, eorCount) + annual(multiplier.contractorAnnualRate, contractorCount);
-  // Annual commitment rate. Month-to-month EOR is remote.eorMonthlyRate ($699).
-  const remoteAnnual = annual(remote.eorAnnualRate, eorCount) + annual(remote.contractorAnnualRate, contractorCount);
-  // Published core platform only. Rippling does not publish an EOR module price.
-  const ripplingPlatformMonthly = 8;
-  const ripplingAnnual = annual(ripplingPlatformMonthly, eorCount + contractorCount);
+  averageMonthlySalary = 0,
+): { breakdown: EorCostBreakdown; vendorCosts: EorVendorCost[]; vendors: EorVendorFeeDetail[] } {
+  const vendors = RANKED_VENDORS.map((vendor) =>
+    describeVendorFees(vendor.slug, vendor.name, vendor.rates, eorCount, contractorCount, averageMonthlySalary),
+  );
+  const annualOf = (slug: string) => vendors.find((vendor) => vendor.slug === slug)?.annual_platform_usd ?? 0;
 
   const breakdown: EorCostBreakdown = {
-    multiplier_annual_usd: multiplierAnnual,
-    rippling_annual_usd: ripplingAnnual,
-    remote_annual_usd: remoteAnnual,
-    deel_annual_usd: deelAnnual,
+    multiplier_annual_usd: annualOf('multiplier'),
+    rippling_annual_usd: annualOf('rippling'),
+    remote_annual_usd: annualOf('remote'),
+    deel_annual_usd: annualOf('deel'),
+    gusto_annual_usd: annualOf('gusto'),
+    payoneer_annual_usd: annualOf('payoneer'),
   };
 
-  const vendorCosts: EorVendorCost[] = [
-    { name: 'Multiplier', annual_cost_usd: multiplierAnnual },
-    { name: 'Remote', annual_cost_usd: remoteAnnual },
-    { name: 'Deel', annual_cost_usd: deelAnnual },
-  ].sort((a, b) => a.annual_cost_usd - b.annual_cost_usd);
+  const vendorCosts: EorVendorCost[] = vendors
+    .map((vendor) => ({ name: vendor.name, annual_cost_usd: vendor.annual_platform_usd }))
+    .sort((a, b) => a.annual_cost_usd - b.annual_cost_usd);
 
-  return { breakdown, vendorCosts };
+  return { breakdown, vendorCosts, vendors };
 }
 
 export function buildEorCostEstimate(
   eorCount: number,
   contractorCount: number,
   now = new Date(),
+  options: { vendor?: string | null; averageMonthlySalary?: number } = {},
 ): EorCostEstimateResponse {
-  const { breakdown, vendorCosts } = calculateEorAnnualCosts(eorCount, contractorCount);
+  const salary = options.averageMonthlySalary ?? 0;
+  const { breakdown, vendorCosts, vendors } = calculateEorAnnualCosts(eorCount, contractorCount, salary);
   const cheapest = vendorCosts[0];
   const highest = vendorCosts[vendorCosts.length - 1];
+  const requested = (options.vendor ?? '').trim().toLowerCase();
+  const selected =
+    vendors.find((vendor) => vendor.slug === requested || (requested === 'payoneer-workforce' && vendor.slug === 'payoneer')) ??
+    null;
 
   return {
     status: 'success',
@@ -109,13 +181,15 @@ export function buildEorCostEstimate(
       cheapest_option: cheapest.name,
       estimated_annual_savings_vs_highest: highest.annual_cost_usd - cheapest.annual_cost_usd,
       breakdown,
+      vendors,
+      selected_vendor: selected,
     },
     meta: {
       data_source: 'The HR Stack Guide Independent Data Engine',
       last_audited: lastAuditedLabel(now),
       documentation: `${SITE_ORIGIN}${METHODOLOGY_PATH}`,
       pricing_notes:
-        'Remote annual commitment is $599 per employee per month. Month-to-month EOR is $699 per employee per month. Rippling EOR is not a published list price and is excluded from the cheapest-option ranking. The Rippling figure is the published $8 per user per month platform fee only.',
+        'Annual totals use annual-commitment seat rates plus published base fees. Gusto and Rippling EOR are $599 per employee per month. Gusto contractors are $6 per contractor per month plus a $35 base on contractor-only plans. Rippling adds a $35 platform base and $8 per user, with contractors at $20 per month. Payoneer annual EOR is $199 per employee per month ($249 month-to-month) and contractors are $19 per month, with a refundable one-month gross salary deposit. Pass salary to include FX markup and that deposit. FX and the deposit are excluded from annual_platform_usd.',
     },
   };
 }

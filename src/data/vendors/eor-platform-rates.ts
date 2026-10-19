@@ -11,6 +11,16 @@ export interface EorPlatformRates {
   eorAnnualRate: number;
   contractorMonthlyRate: number;
   contractorAnnualRate: number;
+  /** Flat monthly fee when the roster includes contractors (Gusto contractor-only base). */
+  contractorBaseFee?: number;
+  /** Flat monthly workforce-platform fee, billed once per company. */
+  platformBaseFee?: number;
+  /** Extra monthly fee per EOR employee and contractor on the core platform. */
+  platformPerUser?: number;
+  /** Cross-border FX markup percent applied to gross payroll, not to the seat fee. */
+  fxMarkupPercent?: number;
+  /** Refundable gross-salary months collected before EOR onboarding. */
+  depositMonths?: number;
 }
 
 /** Central defaults keyed by live `tools.json` vendor ids. */
@@ -51,19 +61,41 @@ export const EOR_PLATFORM_RATES: Record<string, EorPlatformRates> = {
     contractorMonthlyRate: 29,
     contractorAnnualRate: 29,
   },
+  gusto: {
+    eorMonthlyRate: 599,
+    eorAnnualRate: 599,
+    contractorMonthlyRate: 6,
+    contractorAnnualRate: 6,
+    contractorBaseFee: 35,
+    fxMarkupPercent: 1.75,
+    depositMonths: 0,
+  },
+  rippling: {
+    eorMonthlyRate: 599,
+    eorAnnualRate: 599,
+    contractorMonthlyRate: 20,
+    contractorAnnualRate: 20,
+    platformBaseFee: 35,
+    platformPerUser: 8,
+    fxMarkupPercent: 2,
+    depositMonths: 0,
+  },
   /**
-   * Payoneer Workforce Management publishes a $0 contractor platform fee.
-   * It is not an Employer of Record, so EOR rates stay at 0 and are not treated as published.
+   * Payoneer Workforce Management (formerly Skuad). Annual commitment is the
+   * entry-country sticker; month-to-month billing is higher. One month of
+   * gross salary is a refundable deposit, not a platform fee.
    */
   'payoneer-workforce-management': {
-    eorMonthlyRate: 0,
-    eorAnnualRate: 0,
-    contractorMonthlyRate: 0,
-    contractorAnnualRate: 0,
+    eorMonthlyRate: 249,
+    eorAnnualRate: 199,
+    contractorMonthlyRate: 19,
+    contractorAnnualRate: 19,
+    fxMarkupPercent: 2,
+    depositMonths: 1,
   },
 };
 
-/** Vendors with a published EOR list price. Rippling and Gusto are excluded: EOR is unlisted or not a product. */
+/** Vendors with a published EOR list price. */
 const PUBLISHED_EOR_IDS = new Set([
   'deel',
   'remote',
@@ -71,6 +103,9 @@ const PUBLISHED_EOR_IDS = new Set([
   'multiplier',
   'papaya-global',
   'remote-people',
+  'gusto',
+  'rippling',
+  'payoneer-workforce-management',
 ]);
 
 const PUBLISHED_CONTRACTOR_IDS = new Set([
@@ -143,7 +178,36 @@ export function resolveEorPlatformRates(
     eorAnnualRate: effectiveCycleRate(eorMonthlyRate, eorAnnualPublished, 'annual'),
     contractorMonthlyRate,
     contractorAnnualRate: effectiveCycleRate(contractorMonthlyRate, contractorAnnualPublished, 'annual'),
+    contractorBaseFee: overrides.contractorBaseFee ?? catalog?.contractorBaseFee ?? 0,
+    platformBaseFee: overrides.platformBaseFee ?? catalog?.platformBaseFee ?? 0,
+    platformPerUser: overrides.platformPerUser ?? catalog?.platformPerUser ?? 0,
+    fxMarkupPercent: overrides.fxMarkupPercent ?? catalog?.fxMarkupPercent ?? 0,
+    depositMonths: overrides.depositMonths ?? catalog?.depositMonths ?? 0,
   };
+}
+
+/** Company-level monthly fees that are not a per-seat EOR or contractor rate. */
+export function monthlyFixedPlatformFees(
+  eorCount: number,
+  contractorCount: number,
+  rates: Pick<EorPlatformRates, 'contractorBaseFee' | 'platformBaseFee' | 'platformPerUser'>,
+): number {
+  const headcount = eorCount + contractorCount;
+  if (headcount <= 0) return 0;
+  const contractorBase = contractorCount > 0 ? (rates.contractorBaseFee ?? 0) : 0;
+  const platformBase = rates.platformBaseFee ?? 0;
+  const perUser = (rates.platformPerUser ?? 0) * headcount;
+  return contractorBase + platformBase + perUser;
+}
+
+export function fxLiability(totalPayroll: number, fxMarkupPercent: number): number {
+  if (totalPayroll <= 0 || fxMarkupPercent <= 0) return 0;
+  return (totalPayroll * fxMarkupPercent) / 100;
+}
+
+export function securityDeposit(averageMonthlySalary: number, eorCount: number, depositMonths: number): number {
+  if (averageMonthlySalary <= 0 || eorCount <= 0 || depositMonths <= 0) return 0;
+  return depositMonths * averageMonthlySalary * eorCount;
 }
 
 export function annualPlatformCost(
@@ -159,6 +223,7 @@ export interface EorCalculatorVendor extends EorPlatformRates {
   id: string;
   name: string;
   affiliateUrl: string;
+  logo: string;
 }
 
 export function listEorCalculatorVendors(): EorCalculatorVendor[] {
@@ -167,6 +232,7 @@ export function listEorCalculatorVendors(): EorCalculatorVendor[] {
       id: vendor.id,
       name: vendor.name,
       affiliateUrl: resolveVendorOutboundHref(vendor.id),
+      logo: getToolProfile(vendor.id)?.logo ?? '',
       ...resolveEorPlatformRates(vendor.id),
     }))
     .filter((vendor) => vendor.eorMonthlyRate > 0 || vendor.eorAnnualRate > 0);

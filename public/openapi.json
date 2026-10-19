@@ -83,7 +83,9 @@
                             "multiplier_annual_usd": { "type": "number" },
                             "rippling_annual_usd": { "type": "number" },
                             "remote_annual_usd": { "type": "number" },
-                            "deel_annual_usd": { "type": "number" }
+                            "deel_annual_usd": { "type": "number" },
+                            "gusto_annual_usd": { "type": "number" },
+                            "payoneer_annual_usd": { "type": "number" }
                           }
                         }
                       }

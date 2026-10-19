@@ -97,7 +97,9 @@
       "Your roster is US W-2 across multiple states and you want federal, state, and local filings without a payroll clerk.",
       "You pay a few overseas contractors. You do not need a foreign employer of record."
     ],
-    "starting_price": "$49/mo + $6/user",
+    "starting_price": "$599/employee/mo EOR",
+    "contractor_price": 6,
+    "eor_price": 599,
     "free_trial": true,
     "target_segment": "Startups 1–20",
     "countries": "US + 120+ contractor corridors",
@@ -260,7 +262,8 @@
     "affiliate_url": "https://payoneer557.partnerlinks.io/c9q0eynun43w",
     "has_active_affiliate": true,
     "is_partner": true,
-    "contractor_price": 0,
+    "contractor_price": 19,
+    "eor_price": 199,
     "countries": "190+",
     "target_segment": "5–250 global contractors & remote teams",
     "enterprise_analysis": {
@@ -419,6 +422,8 @@
     "affiliate_url": "https://try.rippling.com/qwo7272syugx-02q7tm",
     "has_active_affiliate": true,
     "is_partner": true,
+    "contractor_price": 20,
+    "eor_price": 599,
     "target_segment": "Scaleups 50–250",
     "countries": "Global via modular payroll/EOR",
     "enterprise_analysis": {
