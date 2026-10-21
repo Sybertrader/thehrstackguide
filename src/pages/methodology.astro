@@ -6,10 +6,10 @@ const lastUpdated = new Date().toLocaleDateString('en-US', {
   month: 'long',
   year: 'numeric',
 });
-const pageTitle = 'Our Research & Software Evaluation Methodology — The HR Stack Guide';
+const pageTitle = 'Software Evaluation Methodology | The HR Stack Guide';
 const pageHeading = 'Our Research & Software Evaluation Methodology';
 const pageDescription =
-  'The HR Stack Guide audits every platform against a 4-pillar framework covering entity architecture, total cost of ownership, administrative UX, and ecosystem integration, then rechecks pricing every 90 days.';
+  'Our 4-Pillar Software Evaluation Framework benchmarks B2B HR tech across compliance, total cost of ownership, UX, and data hygiene.';
 ---
 
 <Layout
@@ -17,149 +17,112 @@ const pageDescription =
   heading={pageHeading}
   description={pageDescription}
 >
-  <main class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-    <header class="mb-10">
-      <nav aria-label="Breadcrumb">
-        <ol class="flex items-center gap-2 text-sm text-slate-500">
-          <li><a href="/" class="transition hover:text-indigo-600">Home</a></li>
-          <li aria-hidden="true" class="text-slate-300">&gt;</li>
-          <li class="font-medium text-indigo-600" aria-current="page">Methodology</li>
-        </ol>
-      </nav>
-      <h1 class="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+  <main class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+    <header class="mb-10 text-center">
+      <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600">Scoring Framework</p>
+      <h1 class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
         {pageHeading}
       </h1>
+      <p class="mx-auto mt-4 max-w-2xl text-base text-slate-600 sm:text-lg">
+        Eliminating procurement guesswork through an objective, multi-dimensional benchmarking framework.
+      </p>
       <p class="mt-3 text-sm font-medium text-slate-500">Last updated: {lastUpdated}</p>
     </header>
 
-    <article class="space-y-10 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <section class="space-y-4">
-        <p class="text-base leading-relaxed text-slate-700">
+    <div class="max-w-none space-y-8 leading-relaxed text-slate-700">
+      <section>
+        <p>
           At The HR Stack Guide, our mission is to eliminate guesswork from B2B software procurement. We evaluate software vendors through a structured, multi-dimensional scoring framework designed to reveal operational realities that marketing materials and vendor slide decks conceal.
         </p>
-        <p class="text-base leading-relaxed text-slate-700">
+        <p class="mt-3">
           Every platform featured on The HR Stack Guide is audited against our proprietary <strong>4-Pillar Software Evaluation Framework</strong>.
         </p>
       </section>
 
-      <section class="space-y-8">
+      <section class="border-t border-slate-200 pt-8">
         <h2 class="text-2xl font-bold text-slate-900">The 4-Pillar Software Evaluation Framework</h2>
 
-        <div class="space-y-3">
-          <h3 class="text-lg font-semibold text-slate-900">Pillar 1: Entity &amp; Compliance Architecture (Global Payroll &amp; EOR)</h3>
-          <p class="text-base leading-relaxed text-slate-700">
-            For international payroll and Employer of Record platforms, software functionality is secondary to legal and regulatory infrastructure. We evaluate:
-          </p>
-          <ul class="list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-700">
-            <li>
-              <strong>Owned vs. Partner-Model Entities:</strong> Does the vendor own and operate registered local legal entities in-country, or do they route employment contracts through third-party local service providers (whitelabel EOR)? Owned infrastructure delivers faster dispute resolution, predictable onboarding timelines, and direct liability protection.
-            </li>
-            <li>
-              <strong>IP Assignment &amp; Compliance Purity:</strong> How does the platform handle the chain of intellectual property transfer between international contractors/employees and your parent entity?
-            </li>
-            <li>
-              <strong>Statutory Benefit Routing:</strong> Does the platform automate local country-specific mandates (e.g., 13th-month pay, mandatory pension contributions, statutory severance reserves) accurately within payroll runs?
-            </li>
-          </ul>
-        </div>
+        <div class="mt-6 space-y-6">
+          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900">Pillar 1: Entity &amp; Compliance Architecture (Global Payroll &amp; EOR)</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              For international payroll and Employer of Record platforms, software interface functionality is secondary to underlying legal and regulatory infrastructure:
+            </p>
+            <ul class="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-600">
+              <li><strong>Owned vs. Partner-Model Entities:</strong> We audit whether the provider operates direct, wholly-owned local legal entities in target jurisdictions or outsources employment liability to third-party local service providers (whitelabel EOR).</li>
+              <li><strong>IP Assignment &amp; Contractual Purity:</strong> We review the direct chain of intellectual property transfer between international contractors or employees and the parent entity.</li>
+              <li><strong>Statutory Benefit Automation:</strong> We benchmark platform compliance with local mandates (e.g., 13th-month bonuses, statutory severance reserves, and mandatory pension contributions).</li>
+            </ul>
+          </div>
 
-        <div class="space-y-3">
-          <h3 class="text-lg font-semibold text-slate-900">Pillar 2: Real-World Total Cost of Ownership (TCO)</h3>
-          <p class="text-base leading-relaxed text-slate-700">
-            Sticker prices rarely reflect the true cost of operating HR software. Our pricing models uncover hidden contract fees, including:
-          </p>
-          <ul class="list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-700">
-            <li>
-              <strong>Foreign Exchange (FX) &amp; Transfer Markups:</strong> We benchmark the spread vendors charge above the mid-market currency exchange rate when funding international payroll, alongside stablecoin/crypto settlement fees.
-            </li>
-            <li>
-              <strong>Contract Flexibility &amp; Offboarding Penalties:</strong> We evaluate deposit return timelines, minimum seat commitments, annual lock-in requirements, and employee offboarding fees.
-            </li>
-            <li>
-              <strong>Implementation &amp; Tiered Feature Walls:</strong> We identify critical workflow features (e.g., custom review workflows, single sign-on, advanced reporting) gated behind enterprise pricing tiers.
-            </li>
-          </ul>
-        </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900">Pillar 2: Real-World Total Cost of Ownership (TCO)</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Sticker prices rarely reflect the true cost of operating HR software. Our pricing models uncover hidden contract fees, including:
+            </p>
+            <ul class="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-600">
+              <li><strong>Foreign Exchange (FX) &amp; Transfer Spreads:</strong> We benchmark the markup charged above the mid-market rate when funding foreign payroll runs, alongside stablecoin settlement fees.</li>
+              <li><strong>Contract Lock-ins &amp; Offboarding Fees:</strong> We evaluate deposit return timelines, minimum seat commitments, annual lock-in requirements, and employee termination charges.</li>
+              <li><strong>Feature Gating:</strong> We document critical workflow capabilities (e.g., single sign-on, custom review workflows, API access) restricted behind high-tier enterprise plans.</li>
+            </ul>
+          </div>
 
-        <div class="space-y-3">
-          <h3 class="text-lg font-semibold text-slate-900">Pillar 3: Administrative Ergonomics &amp; Employee UX</h3>
-          <p class="text-base leading-relaxed text-slate-700">
-            A feature only creates value if managers, recruiters, and employees actually adopt it without friction:
-          </p>
-          <ul class="list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-700">
-            <li>
-              <strong>Self-Service Onboarding:</strong> We test employee document submission workflows, banking verification speeds, and mobile portal responsiveness.
-            </li>
-            <li>
-              <strong>Workflow Automation vs. Manual Interventions:</strong> Can People Operations teams automate cross-functional processes (e.g., triggering a background check upon offer acceptance) without third-party integration tools like Zapier?
-            </li>
-            <li>
-              <strong>Support SLA Reliability:</strong> We analyze vendor support models, measuring dedicated account management availability, ticket response times, and real-time chat reliability during payroll cutoffs.
-            </li>
-          </ul>
-        </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900">Pillar 3: Administrative Ergonomics &amp; Employee UX</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              A platform only creates value if managers, recruiters, and employees adopt it without friction:
+            </p>
+            <ul class="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-600">
+              <li><strong>Self-Service Onboarding:</strong> We test employee document submission workflows, banking verification speeds, and mobile portal responsiveness.</li>
+              <li><strong>Workflow Automation:</strong> We test whether People Operations teams can automate cross-functional processes without requiring third-party middleware like Zapier.</li>
+              <li><strong>Support SLA Reliability:</strong> We analyze vendor support models, measuring dedicated account management availability, ticket response times, and real-time chat support during payroll cutoffs.</li>
+            </ul>
+          </div>
 
-        <div class="space-y-3">
-          <h3 class="text-lg font-semibold text-slate-900">Pillar 4: Ecosystem Integration &amp; Data Hygiene</h3>
-          <p class="text-base leading-relaxed text-slate-700">
-            No HR software operates in isolation. We analyze how effectively platforms communicate with surrounding tech stacks:
-          </p>
-          <ul class="list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-700">
-            <li>
-              <strong>Bidirectional ATS/HRIS Sync:</strong> Does candidate data map cleanly into employee profiles upon hire without duplicate entry?
-            </li>
-            <li>
-              <strong>Webhook &amp; API Extensibility:</strong> Are API endpoints well-documented, rate-limited reasonably, and capable of triggering real-time webhooks for custom data warehouses?
-            </li>
-            <li>
-              <strong>Security &amp; Access Governance:</strong> Verification of SOC 2 Type II compliance, GDPR alignment, ISO 27001 certifications, and granular role-based access control (RBAC).
-            </li>
-          </ul>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-slate-900">Pillar 4: Ecosystem Integration &amp; Data Hygiene</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              No HR software operates in isolation. We analyze how effectively platforms communicate with surrounding tech stacks:
+            </p>
+            <ul class="mt-3 list-disc space-y-1.5 pl-5 text-sm text-slate-600">
+              <li><strong>Bidirectional ATS/HRIS Sync:</strong> Does candidate data map cleanly into employee profiles upon hire without manual re-entry or data corruption?</li>
+              <li><strong>Webhook &amp; API Extensibility:</strong> Are API endpoints well-documented, rate-limited reasonably, and capable of triggering real-time webhooks for custom data warehouses?</li>
+              <li><strong>Security &amp; Access Governance:</strong> We verify SOC 2 Type II compliance, GDPR alignment, ISO 27001 certifications, and granular role-based access control (RBAC).</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section class="space-y-4">
-        <h2 class="text-2xl font-bold text-slate-900">How Scores and Trade-offs Are Calculated</h2>
-        <p class="text-base leading-relaxed text-slate-700">
+      <section class="border-t border-slate-200 pt-8">
+        <h2 class="text-2xl font-bold text-slate-900">Scoring Calculation &amp; The Trade-Off Rule</h2>
+        <p class="mt-3">
           Our comparison ratings are quantitative evaluations across these four pillars:
         </p>
-        <ol class="list-decimal space-y-3 pl-5 text-base leading-relaxed text-slate-700">
-          <li>
-            <strong>Category Weighting:</strong> Weightings reflect real-world buyer priorities. For example, Entity Ownership carries a 40% weighting in our EOR index, whereas Pipeline Automation carries a 35% weighting in our ATS evaluations.
-          </li>
-          <li>
-            <strong>Persona-Specific Suitability:</strong> A platform that excels for an early-stage startup (5–25 employees) may introduce severe administrative friction for an enterprise team (500+ employees). We evaluate every tool against distinct buyer archetypes: Seed to Series B Startups, High-Volume Agencies, Scaling Mid-Market, and Distributed Multi-Country Enterprises.
-          </li>
-          <li>
-            <strong>The Trade-Off Rule:</strong> No platform is universally “the best.” Every evaluation must explicitly state when a buyer should choose Platform A and when they should pass in favor of Platform B.
-          </li>
+        <ol class="mt-4 list-decimal space-y-2 pl-6 text-sm">
+          <li><strong>Category Weighting:</strong> Weightings reflect real-world buyer priorities. For example, Entity Ownership carries a 40% weighting in our EOR index, whereas Pipeline Automation carries a 35% weighting in our ATS evaluations.</li>
+          <li><strong>Persona-Specific Suitability:</strong> A platform that excels for an early-stage startup (5–25 employees) may introduce severe administrative friction for an enterprise team (500+ employees). We evaluate every tool against distinct buyer archetypes: Seed to Series B Startups, High-Volume Agencies, Scaling Mid-Market, and Distributed Multi-Country Enterprises.</li>
+          <li><strong>The Trade-Off Rule:</strong> No platform is universally “the best.” Every evaluation must explicitly state when a buyer should choose Platform A and when they should pass in favor of Platform B.</li>
         </ol>
       </section>
 
-      <section class="space-y-4">
+      <section class="border-t border-slate-200 pt-8">
         <h2 class="text-2xl font-bold text-slate-900">Research Verification &amp; Audit Schedule</h2>
-        <p class="text-base leading-relaxed text-slate-700">
+        <p class="mt-3 text-sm">
           Software pricing and features change constantly. To ensure our data remains actionable:
         </p>
-        <ul class="list-disc space-y-2 pl-5 text-base leading-relaxed text-slate-700">
-          <li>
-            <strong>Quarterly Verification Cycles:</strong> Core feature tables, pricing tiers, and currency spreads are re-audited every 90 days.
-          </li>
-          <li>
-            <strong>Vendor Fact-Checking:</strong> We review published product documentation, API changelogs, and verified customer contracts to validate technical capabilities.
-          </li>
-          <li>
-            <strong>Change Log Documentation:</strong> All major comparison hubs document their last substantive audit date in the article byline.
-          </li>
+        <ul class="mt-3 list-disc space-y-1.5 pl-6 text-sm text-slate-600">
+          <li><strong>Quarterly Verification Cycles:</strong> Core feature tables, pricing tiers, and currency spreads are re-audited every 90 days.</li>
+          <li><strong>Vendor Fact-Checking:</strong> We review published product documentation, API changelogs, and verified customer contracts to validate technical capabilities.</li>
+          <li><strong>Change Log Documentation:</strong> All major comparison hubs document their last substantive audit date in the article byline.</li>
         </ul>
-        <p class="text-base leading-relaxed text-slate-700">
-          Comparison pages are rendered as static HTML. The feature matrix, the pair-specific editorial take, and the buyer-profile summary are written into the first response, so a reader can see the trade-off without running a script. A vendor’s affiliate relationship does not change the category weightings above, and a score cannot be purchased.
+        <p class="mt-4 text-sm text-slate-600">
+          Comparison pages are rendered as static HTML. The feature matrix, the pair-specific editorial take, and the buyer-profile summary are in the first response, so a reader can see the trade-off without running a script. A vendor’s affiliate relationship does not change the category weightings above, and a score cannot be purchased.
         </p>
-        <p class="text-base leading-relaxed text-slate-700">
+        <p class="mt-4 text-xs text-slate-500">
           For corrections, data updates, or methodology inquiries, contact <a href="mailto:research@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">research@thehrstackguide.com</a>.
         </p>
         <DataIntegrityBlock />
       </section>
-    </article>
+    </div>
   </main>
 </Layout>

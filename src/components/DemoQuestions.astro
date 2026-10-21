@@ -1,9 +1,10 @@
 ---
 /**
- * Short demo prompt for a comparison hub. The long shared question script
- * is not repeated on every pair. Booking still goes to each vendor.
+ * Pair-specific demo callout. The scorecard download is shared; the booking
+ * buttons still use each vendor's resolved outbound path.
  */
 import VendorButton from './VendorButton.astro';
+import { SCORECARD_HREF } from '../lib/lead-magnet';
 
 interface Props {
   toolA: string;
@@ -32,51 +33,116 @@ const {
   toolBIsManualLead = false,
   toolAModalId = '',
   toolBModalId = '',
-  toolAIsWinner = false,
-  toolBIsWinner = false,
 } = Astro.props;
 
-const demoCtaClass = (isWinner: boolean) =>
-  isWinner
-    ? 'inline-flex w-full items-center justify-center rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
-    : 'inline-flex w-full items-center justify-center rounded-xl border-2 border-indigo-600 bg-white px-6 py-3.5 text-sm font-semibold text-indigo-700 shadow-sm transition hover:bg-indigo-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2';
+const demoCtaClass =
+  'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-center text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2';
+
+/** Runner-up prompt. Kept pair-specific so two Deel hubs do not share the same demo sentence. */
+const runnerUpNote =
+  toolBId === 'remote'
+    ? 'On the Remote call, write the deposit-return date on the offer letter before you leave.'
+    : toolBId === 'oyster-hr'
+      ? 'On the Oyster HR call, expand the FX line in the cost calculator instead of accepting a verbal quote.'
+      : '';
 ---
 
 <section
-  class="mb-12"
-  aria-label={`Demo questions for ${toolA} and ${toolB}`}
+  class="my-12 overflow-hidden rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/70 via-white to-slate-50 p-6 shadow-sm sm:p-8"
+  aria-label={`Demo scorecard for ${toolA} and ${toolB}`}
   data-demo-questions
   data-demo-pair={`${toolA} vs ${toolB}`}
 >
-  <h2 class="text-2xl font-bold text-slate-900">Questions for the {toolA} and {toolB} demo</h2>
-  <p class="mt-2 max-w-3xl text-base leading-relaxed text-slate-700">
-    Ask what stops auto-renewal, whether the bill drops if headcount falls, and which fee is missing from the public {toolA} and {toolB} price.
-  </p>
+  <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+    <div class="max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 rounded-md bg-indigo-100 px-2.5 py-1 text-xs font-semibold text-indigo-800">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        Free Procurement Resource
+      </div>
 
-  <div class="mt-6 grid w-full gap-4 sm:grid-cols-2">
-    <VendorButton
-      href={toolAAffiliateHref}
-      modalId={toolAIsManualLead ? toolAModalId : undefined}
-      vendorId={toolAId}
-      vendorName={toolA}
-      location="demo_questions"
-      leadMagnet
-      leadMagnetBadge={false}
-      class={demoCtaClass(toolAIsWinner || !toolBIsWinner)}
-    >
-      Book {toolA} Demo →
-    </VendorButton>
-    <VendorButton
-      href={toolBAffiliateHref}
-      modalId={toolBIsManualLead ? toolBModalId : undefined}
-      vendorId={toolBId}
-      vendorName={toolB}
-      location="demo_questions"
-      leadMagnet
-      leadMagnetBadge={false}
-      class={demoCtaClass(toolBIsWinner)}
-    >
-      Book {toolB} Demo →
-    </VendorButton>
+      <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-900">
+        Demo Scorecard: {toolA} vs {toolB}
+      </h2>
+
+      <p class="mt-2 text-sm leading-relaxed text-slate-600 sm:text-base">
+        Don’t rely on vendor slide decks. Download our editable evaluation scorecard to grade both sales teams on hidden fees, entity compliance, and contract terms during your calls.
+      </p>
+      {runnerUpNote && (
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">{runnerUpNote}</p>
+      )}
+
+      <ul class="mt-4 grid grid-cols-1 gap-2 text-xs font-medium text-slate-700 sm:grid-cols-2">
+        <li class="flex items-center gap-2">
+          <svg class="h-4 w-4 shrink-0 text-emerald-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          20 red-flag demo questions
+        </li>
+        <li class="flex items-center gap-2">
+          <svg class="h-4 w-4 shrink-0 text-emerald-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          1–5 scoring rubric across 4 pillars
+        </li>
+        <li class="flex items-center gap-2">
+          <svg class="h-4 w-4 shrink-0 text-emerald-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Executive side-by-side comparison sheet
+        </li>
+        <li class="flex items-center gap-2">
+          <svg class="h-4 w-4 shrink-0 text-emerald-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+          </svg>
+          Fully editable Word doc (.docx)
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex shrink-0 flex-col gap-3 sm:flex-row lg:flex-col lg:items-stretch">
+      <a
+        href={SCORECARD_HREF}
+        download="hr-software-vendor-scorecard.docx"
+        class="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Download Scorecard (.docx)
+      </a>
+
+      <div class="flex items-center gap-2">
+        <div class="min-w-0 flex-1">
+        <VendorButton
+          href={toolAAffiliateHref}
+          modalId={toolAIsManualLead ? toolAModalId : undefined}
+          vendorId={toolAId}
+          vendorName={toolA}
+          location="demo_questions"
+          leadMagnet
+          leadMagnetBadge={false}
+          class={demoCtaClass}
+        >
+          Book {toolA} Demo →
+        </VendorButton>
+        </div>
+        <div class="min-w-0 flex-1">
+        <VendorButton
+          href={toolBAffiliateHref}
+          modalId={toolBIsManualLead ? toolBModalId : undefined}
+          vendorId={toolBId}
+          vendorName={toolB}
+          location="demo_questions"
+          leadMagnet
+          leadMagnetBadge={false}
+          class={demoCtaClass}
+        >
+          Book {toolB} Demo →
+        </VendorButton>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
