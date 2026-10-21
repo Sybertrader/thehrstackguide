@@ -25,7 +25,7 @@ export const REDIRECT_STATUS = 308;
 const SITEMAP_EXCLUDED_PREFIXES = ['/go/', '/api/'];
 
 /** Utility routes with no search intent of their own. */
-const SITEMAP_EXCLUDED_PATHS = new Set(['/404/', '/thank-you/']);
+const SITEMAP_EXCLUDED_PATHS = new Set(['/404/', '/thank-you/', '/recommendation/']);
 
 /**
  * Matches `<meta name="robots" content="noindex, nofollow">` in any attribute

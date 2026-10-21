@@ -324,6 +324,12 @@ if (fs.existsSync(reportPath)) {
   applyFlattenedRedirects(config, JSON.parse(fs.readFileSync(reportPath, 'utf8')));
 }
 
+config.redirects = config.redirects.filter(
+  (rule) =>
+    rule.source !== TRAILING_SLASH_REDIRECT.source ||
+    rule.destination !== TRAILING_SLASH_REDIRECT.destination ||
+    rule.statusCode !== TRAILING_SLASH_REDIRECT.statusCode,
+);
 config.redirects.push(TRAILING_SLASH_REDIRECT);
 if (config.redirects.length > 2048) {
   throw new Error(`Redirect array has ${config.redirects.length} rules; Vercel allows 2048`);

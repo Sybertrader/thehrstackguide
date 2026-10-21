@@ -29,6 +29,7 @@ const vendorName =
       : vendorId;
 const profile = getToolProfile(vendorId);
 const ctaLocation = 'go_redirect_fallback';
+const canonicalURL = new URL(`/go/${vendorId}/`, Astro.site);
 
 Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 ---
@@ -44,6 +45,7 @@ Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
     astro.config.mjs and disallowed in public/robots.txt.
   -->
   <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href={canonicalURL.href} />
   <meta http-equiv="refresh" content={`0;url=${targetUrl}`} />
   <title>Redirecting...</title>
   <script is:inline define:vars={{ targetUrl }}>

@@ -6,14 +6,15 @@ const categoryPrefill = Astro.url.searchParams.get('category') ?? '';
 const pageTitle = 'Get an HR Tech Recommendation (2026) | The HR Stack Guide';
 const pageHeading = 'Get an HR Tech Recommendation (2026)';
 
-// Indexable funnel: Layout emits a self-referential trailing-slash canonical.
-// Do not set noindex here - confirmation pages such as /thank-you/ do.
+// In-site quiz. Keep it out of the index; follow stays on so the result links
+// into comparison hubs can still be crawled.
 ---
 
 <Layout
   title={pageTitle}
   heading={pageHeading}
   description="Answer four quick questions about your category, headcount, budget, and workforce location to get an instant unbiased HR tech stack recommendation."
+  robots="noindex, follow"
 >
   <main class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
     <RecommendationEngine

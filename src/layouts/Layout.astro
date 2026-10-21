@@ -19,6 +19,11 @@ export interface Props {
    */
   noindex?: boolean;
   /**
+   * Overrides the `noindex` shorthand. The recommendation quiz uses
+   * `noindex, follow` so crawlers can still follow its links into comparisons.
+   */
+  robots?: 'index, follow' | 'noindex, follow' | 'noindex, nofollow';
+  /**
    * Sitewide Organization JSON-LD. The homepage emits a WebSite +
    * Organization `@graph` instead, so it turns this off to avoid two
    * competing Organization nodes.
@@ -48,6 +53,7 @@ const {
   title,
   description,
   noindex = false,
+  robots,
   includeOrganizationSchema = true,
   lcpImages = [],
   vendorA,
@@ -117,11 +123,10 @@ const organizationSchema = {
     <!-- Document title matches og:title and twitter:title 1:1. On-page H1 is set by each page. -->
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    {noindex ? (
-      <meta name="robots" content="noindex, nofollow" />
-    ) : (
-      <meta name="robots" content="index, follow" />
-    )}
+    <meta
+      name="robots"
+      content={robots ?? (noindex ? 'noindex, nofollow' : 'index, follow')}
+    />
     <link rel="canonical" href={canonicalURL} />
     <meta property="og:site_name" content="The HR Stack Guide" />
     <meta property="og:title" content={socialTitle} />
