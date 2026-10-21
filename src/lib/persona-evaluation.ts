@@ -144,78 +144,6 @@ export function startupAliasForPair(rows: Comparison[]): Comparison | null {
   };
 }
 
-const ATS_BUYER_ITEMS: Record<string, string[]> = {
-  startups: [
-    'Confirm structured scorecards can run without a dedicated recruiting-ops hire.',
-    'Price year-one cost at hiring volume (seats versus a flat fee), including job-board and background-check add-ons.',
-    'Test self-scheduling across the time zones you actually interview in.',
-    'Skip enterprise EEO/OFCCP packaging unless you will become a federal contractor this year.',
-  ],
-  scaleups: [
-    'Require interview kits that stay auditable as the hiring team grows past a handful of recruiters.',
-    'Confirm CRM or silver-medalist nurture so you are not re-sourcing the same closed roles.',
-    'Quote HRIS, background-check, and assessment integrations in the contract, not as a later marketplace surprise.',
-    'Model recruiter-seat math at twice current hiring volume before you sign an annual term.',
-  ],
-  agencies: [
-    'Confirm client portals and multi-account pipelines, not a single in-house requisition list.',
-    'Keep submissions auditable per client for retainer and placement reporting.',
-    'Check whether the sourcing CRM can run outbound without buying a second tool.',
-    'Model cost at peak req load (surge hiring), not last month’s average openings.',
-  ],
-  enterprise: [
-    'Require OFCCP/EEO reporting and structured-hiring methodology in the RFP, not a slide-deck promise.',
-    'Ask for SSO/SCIM and a named implementation owner before procurement signs.',
-    'Audit the integration catalog against your HRIS and background-check stack.',
-    'Prioritize interview-kit enforcement over unlimited-seat marketing if legal will review the file.',
-  ],
-  'remote-teams': [
-    'Require multi-time-zone self-scheduling without a shared office calendar.',
-    'Confirm async video or take-home workflows for interviewers who never overlap.',
-    'Check career-site language support if you hire outside one country.',
-    'Run a full interview loop with no overlapping working hours before you buy.',
-  ],
-};
-
-const PM_BUYER_ITEMS: Record<string, string[]> = {
-  startups: [
-    'Confirm weekly check-ins and 1:1s can run without a People Ops specialist.',
-    'Price seats at 12-month headcount, including any extra review or goals modules.',
-    'Skip compensation-calibration SKUs until you actually run a merit cycle.',
-    'Check Slack or Teams so feedback does not live behind a second login.',
-  ],
-  scaleups: [
-    'Require OKRs and reviews in one system before third-survey sprawl starts.',
-    'Test calibration with quota-carrying managers, not a sandbox demo dataset.',
-    'Quote the compensation-module sticker as a line item so Finance sees the all-in number.',
-    'Confirm HRIS and SSO sync so a series-b headcount wave is not keyed off a shadow org chart.',
-  ],
-  'people-ops': [
-    'Score whether engagement-science packs, talent calibration, and a people-analytics overlay live in one business-partner console lock.',
-    'Refuse a stack that dumps the cycle-admin runbook into a second dashboard every review cycle.',
-    'Confirm office-hours talent clinics and reviews can be templated without buying extra admin seats.',
-    'Check a succession-slate facilitation kit so People Ops is not rebuilding slates in a side file.',
-  ],
-  'remote-teams': [
-    'Require async check-ins and reviews that work across time zones without hallway context.',
-    'Reject tools that assume one office language or one shared working day.',
-    'Confirm Slack/Teams nudges reach managers who are not in the HRIS all day.',
-    'Test a full review cycle with no overlapping working hours before you buy.',
-  ],
-  agencies: [
-    'Confirm reviews can run across billable teams without assuming a single in-house org chart.',
-    'Keep cycle completion auditable per client or studio, not only company-wide.',
-    'Check whether 1:1s and feedback work for mixed employee and contractor benches.',
-    'Model seat cost at peak bench size, not last month’s average roster.',
-  ],
-  enterprise: [
-    'Require SAML 2.0 SSO and compensation calibration that survives legal review.',
-    'Ask for engagement-science or works-council evidence, not a self-serve SMB PDF.',
-    'Run a talent-calibration tabletop with HRBPs before you rip out the incumbent.',
-    'Get a named implementation SLA into the MSA before kickoff.',
-  ],
-};
-
 export type ComparisonFamily = 'payroll' | 'ats' | 'pm';
 
 export function comparisonFamily(toolAId: string, toolBId: string): ComparisonFamily | null {
@@ -225,14 +153,9 @@ export function comparisonFamily(toolAId: string, toolBId: string): ComparisonFa
   return null;
 }
 
+/** Factors are this row's CSV `verdict_summary`. Category-wide lists are not substituted. */
 function buyerItemsFor(comparison: Comparison): string[] {
-  const editorial = pipeList(comparison.verdict_summary);
-  if (editorial.length >= 3) return editorial.slice(0, 3);
-
-  const family = comparisonFamily(comparison.tool_a_id, comparison.tool_b_id);
-  const table =
-    family === 'ats' ? ATS_BUYER_ITEMS : family === 'pm' ? PM_BUYER_ITEMS : BUYER_WORKFLOW_ITEMS;
-  return (table[comparison.niche_id] ?? table.scaleups ?? BUYER_WORKFLOW_ITEMS.scaleups ?? []).slice(0, 4);
+  return pipeList(comparison.verdict_summary);
 }
 
 export interface WorkflowBottleneck {
@@ -381,63 +304,6 @@ function clipSpec(spec: string, maxWords = 24): string {
   }
   return `${words.slice(0, maxWords).join(' ').replace(/[.,;:]+$/, '')}.`;
 }
-
-const BUYER_WORKFLOW_ITEMS: Record<string, string[]> = {
-  'tech-startups': [
-    'Confirm you can run first international hires without hiring a specialist payroll or HR admin.',
-    'Price the first 12 months including EOR, contractor seats, and any IT or device modules, not just the headline rate.',
-    'Check the real onboarding SLA in the countries you will hire, not the homepage coverage map.',
-    'Decide now whether you need owned-entity employment for IP and contracts, or whether a partner-network EOR is acceptable.',
-  ],
-  startups: [
-    'Confirm you can stand up payroll or hiring without a dedicated People Ops hire in the first 90 days.',
-    'Model year-one cost at your planned headcount, including add-on modules you will actually turn on.',
-    'Verify onboarding time in your first two countries before you sign a multi-year term.',
-    'Write IP assignment and contractor-vs-employee classification into the offer process, not as a cleanup project later.',
-  ],
-  scaleups: [
-    'List every country and worker type (W-2, EOR, contractor) you will run over the next 18 months.',
-    'Require one system of record for People and Finance so month-end is not a spreadsheet merge.',
-    'Quote payroll, SSO, reporting, and workflow automation as a package, not à la carte surprises after kickoff.',
-    'Pilot onboarding and approvals with one team before you rip out the incumbent stack.',
-  ],
-  agencies: [
-    'Confirm the vendor can batch contractors and employees across client accounts, not a single in-house headcount plan.',
-    'Keep payouts, submissions, and billable time auditable per client for invoice reconciliation.',
-    'Check whether client-device and app access can sit on the same worker record as payroll.',
-    'Model cost at your busiest month (holiday and campaign spikes), not last month’s average roster.',
-  ],
-  'us-latam': [
-    'Do not pay with a US dollar wire and a country flag. Confirm tax-ID checks before local payouts in Mexico, Colombia, or Brazil, or the bank can reject the deposit while you still owe the contractor.',
-    'Argentina contractor files fail on local invoices and US-to-LATAM withholding, not on currency conversion. Keep invoice evidence in the workflow or you are buying a year-end audit.',
-    'Build 13th-month pay, FGTS, and social charges into the Brazil/Mexico offer before the letter goes out. If it is not in the quote, you will reopen compensation at month twelve.',
-    'Confirm whether {A} or {B} employs through their own local company in those markets or through a partner: deposits, IP assignment, and 13th-month pay change with the setup.',
-  ],
-  'web3-crypto': [
-    'A regular HR system with a separate treasury tab is not payroll. Confirm native USDC or USDT payouts on {A} or {B} before you mix contributors with W-2 staff.',
-    'Contributor agreements and token vesting (cliff, unlock, revocation) must attach to the same worker record as the cash portion of pay. A side letter in Notion splits legal and finance.',
-    'Require wallet payouts you control and a per-wallet network-fee line so finance can close the month.',
-    'Paying in stablecoins does not remove currency conversion fees on the bank-transfer portion. Quote both.',
-  ],
-  enterprise: [
-    'Require SAML 2.0 SSO and SCIM in the security questionnaire before procurement starts.',
-    'Ask for audit-ready EEO or works-council evidence, not a self-serve SMB PDF.',
-    'Run compensation or structured-hiring calibration with legal in the room, not only HR.',
-    'Get a named implementation SLA and data-processing addendum into the MSA before kickoff.',
-  ],
-  'remote-teams': [
-    'Require async scheduling or Slack/Teams check-ins that work across time zones without hallway context.',
-    'Reject tools that assume one office language, one calendar, or one shared working day.',
-    'Confirm contractor and employee workflows for distributed contributors in the same system.',
-    'Test a full hiring or review cycle with no overlapping working hours before you buy.',
-  ],
-  'people-ops': [
-    'Score whether engagement, talent calibration, and people analytics live in one HRBP console.',
-    'Refuse a stack that forces a CSV export into a second dashboard every review cycle.',
-    'Confirm manager 1:1s and reviews can be templated without buying extra admin seats.',
-    'Check SSO and HRIS sync so People Ops is not maintaining a shadow org chart.',
-  ],
-};
 
 export interface PersonaWinPoint {
   label: string;
@@ -748,71 +614,14 @@ function fillVendorNames(template: string, comparison: Comparison): string {
   return template.replaceAll('{A}', comparison.tool_a_name).replaceAll('{B}', comparison.tool_b_name);
 }
 
-/** Drop bolted-on “for Startups” / “for {label}” tails from generated copy. */
-function stripSegmentConcat(text: string, label: string): string {
-  if (!text || !label) return text;
-  const escaped = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return text
-    .replace(new RegExp(`\\s+for\\s+${escaped}(?=[\\s.,;:!?]|$)`, 'gi'), '')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+/** Tab verdict is this row's CSV `winner_reason`, including generated "Based on…" copy. */
+function segmentTabVerdict(comparison: Comparison): string {
+  return comparison.winner_reason?.trim() ?? '';
 }
 
-function formatStandaloneVerdict(
-  family: ComparisonFamily,
-  nicheId: string,
-  winner: string,
-  otherName: string | null
-): string {
-  const other = otherName ?? 'the other vendor';
-  const table: Record<ComparisonFamily, Record<string, string>> = {
-    payroll: {
-      startups: `Buy ${winner} if you can hire without a payroll specialist in month one. Don't buy ${other} if go-live needs a six-week implementation you cannot staff.`,
-      scaleups: `Buy ${winner} if People and Finance close the month in one system. Don't buy ${other} if month-end still means a spreadsheet merge.`,
-      agencies: `Buy ${winner} if freelancer payouts are tagged per client. Don't buy ${other} if the quote is priced on last month's average roster.`,
-      'us-latam': `Buy ${winner} if 13th-month pay is in the Mexico or Brazil offer before you send it. Don't buy ${other} if they treat those countries like a US dollar wire.`,
-      'web3-crypto': `Buy ${winner} if USDC can sit on the same worker file as bank transfers. Don't buy ${other} if crypto payouts live in treasury's spreadsheet.`,
-    },
-    ats: {
-      startups: `Buy ${winner} if founders can run scorecards without a recruiting-ops hire. Don't buy ${other} if the first job still needs an implementation manager.`,
-      scaleups: `Buy ${winner} if interview kits stay auditable as hiring volume doubles. Don't buy ${other} if conversion reporting still lives in a spreadsheet.`,
-      agencies: `Buy ${winner} if client portals and per-account pipelines are native. Don't buy ${other} if every retainer shares one requisition list.`,
-      enterprise: `Buy ${winner} if OFCCP reporting and SSO are in the contract, not the slide deck. Don't buy ${other} if legal gets a PDF and a promise.`,
-      'remote-teams': `Buy ${winner} if interviewers who never share a working day can still leave a score. Don't buy ${other} if scheduling assumes one office calendar.`,
-    },
-    pm: {
-      startups: `Buy ${winner} if weekly 1:1s run without a People Ops specialist. Don't buy ${other} if the first cycle needs a six-month implementation.`,
-      scaleups: `Buy ${winner} if OKRs and reviews live in one system before a third survey tool shows up. Don't buy ${other} if calibration is a sandbox demo with fake data.`,
-      enterprise: `Buy ${winner} if compensation calibration survives legal review. Don't buy ${other} if pay bands still live in a side spreadsheet.`,
-      'people-ops': `Buy ${winner} if engagement, calibration, and reviews sit in one console. Don't buy ${other} if every cycle starts with a CSV export.`,
-      'remote-teams': `Buy ${winner} if reviews work across time zones with no hallway context. Don't buy ${other} if the product assumes one shared working day.`,
-    },
-  };
-
-  return table[family]?.[nicheId] ?? `Buy ${winner}. Don't buy ${other} unless this is the job they were built for.`;
-}
-
-function isEditorialTabVerdict(reason: string): boolean {
-  if (!reason || /^Based on The HR Stack Guide/i.test(reason)) return false;
-  return /^(Pick |Choose |Buy |Don't |Skip )/i.test(reason);
-}
-
-function segmentTabVerdict(comparison: Comparison, label: string, family: ComparisonFamily): string {
-  const reason = comparison.winner_reason?.trim() ?? '';
-  if (isEditorialTabVerdict(reason)) {
-    return stripSegmentConcat(reason, label);
-  }
-
-  const winner = winnerNameOf(comparison);
-  const other = contrastNeed(comparison);
-  const nicheId = comparison.niche_id === 'tech-startups' ? 'startups' : comparison.niche_id;
-  return stripSegmentConcat(formatStandaloneVerdict(family, nicheId, winner, other?.name ?? null), label);
-}
-
-function segmentKeyFactors(comparison: Comparison, label: string): string[] {
+function segmentKeyFactors(comparison: Comparison): string[] {
   return buyerItemsFor(comparison)
-    .slice(0, 4)
-    .map((item) => stripSegmentConcat(fillVendorNames(item, comparison), label))
+    .map((item) => fillVendorNames(item, comparison))
     .filter(Boolean);
 }
 
@@ -837,8 +646,8 @@ export function buildMasterSegmentPanels(rows: Comparison[] = []): MasterSegment
     const row = byNiche.get(nicheId);
     if (!row) return [];
     const label = modifierTitleSuffix(nicheId, row.niche_name);
-    const verdict = segmentTabVerdict(row, label, family);
-    const key_factors = segmentKeyFactors(row, label);
+    const verdict = segmentTabVerdict(row);
+    const key_factors = segmentKeyFactors(row);
     if (!verdict && key_factors.length === 0) return [];
     return [{ id: nicheId, label, verdict, key_factors }];
   });

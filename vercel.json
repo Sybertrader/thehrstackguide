@@ -9535,6 +9535,21 @@
       "source": "/:path((?!api(?:/|$)|go(?:/|$)|_astro(?:/|$)|images(?:/|$)|old-category(?:/|$))(?!.*\\.).+[^/])",
       "destination": "/:path/",
       "statusCode": 308
+    },
+    {
+      "source": "/:path((?!api(?:/|$)|go(?:/|$)|_astro(?:/|$)|images(?:/|$)|old-category(?:/|$))(?!.*\\.).+[^/])",
+      "destination": "/:path/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path((?!api(?:/|$)|go(?:/|$)|_astro(?:/|$)|images(?:/|$)|old-category(?:/|$))(?!.*\\.).+[^/])",
+      "destination": "/:path/",
+      "statusCode": 308
+    },
+    {
+      "source": "/:path((?!api(?:/|$)|go(?:/|$)|_astro(?:/|$)|images(?:/|$)|old-category(?:/|$))(?!.*\\.).+[^/])",
+      "destination": "/:path/",
+      "statusCode": 308
     }
   ],
   "headers": [
