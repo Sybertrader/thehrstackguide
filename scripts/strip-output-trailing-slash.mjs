@@ -3,8 +3,9 @@
  * Astro's Vercel adapter writes a trailing-slash 308 at the front of
  * .vercel/output/config.json. That route matches before vercel.json redirects,
  * so /legacy-slug becomes /legacy-slug/ and then the real destination.
- * Drop those routes. Explicit redirects cover legacy URLs in one hop, and
- * directory indexes still serve the slashed canonical pages.
+ * Drop those routes. Legacy URLs stay one hop via vercel.json, and the last
+ * redirect there 308s slashless canonical pages. Directory indexes still
+ * serve the slashed HTML.
  */
 import fs from 'node:fs';
 

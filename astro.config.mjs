@@ -11,17 +11,17 @@ import {
   REDIRECT_STATUS,
   resolveMasterRedirect,
   sitemapPolicy,
+  trailingSlashRedirectPath,
   withTrailingSlash,
 } from './src/lib/master-redirects';
 
 /**
- * Astro `trailingSlash: 'always'` returns 404 for `/about` and `/methodology`
- * in `astro dev` / `astro preview` (see vite-plugin-astro-server/trailing-slash.js).
- * Vercel `trailingSlash: true` already 308s these in production. This plugin
- * unshifts after Astro's own trailing-slash middleware so local matches prod.
+ * Astro `trailingSlash: 'always'` 404s slashless pages in `astro dev` and
+ * `astro preview`. Production does not use `vercel.json` `trailingSlash`
+ * (that hop runs before redirects). This plugin 308s slashless HTML paths
+ * after legacy aliases, matching the last vercel.json redirect.
  */
 function trailingSlashPageRedirects() {
-  const pages = new Set(['/about', '/methodology']);
   function handler(req, res, next) {
     const [pathname, search] = (req.url ?? '').split('?');
     if (isGonePath(pathname)) {
@@ -34,20 +34,15 @@ function trailingSlashPageRedirects() {
       return;
     }
     const destination = resolveMasterRedirect(pathname);
-    if (destination) {
-      const query = search ? `?${search}` : '';
-      res.statusCode = REDIRECT_STATUS;
-      res.setHeader('Location', `${destination}${query}`);
-      res.end();
-      return;
-    }
-    if (!pages.has(pathname)) {
+    const slashed = trailingSlashRedirectPath(pathname);
+    const target = destination ?? slashed;
+    if (!target) {
       next();
       return;
     }
     const query = search ? `?${search}` : '';
-    res.statusCode = 308;
-    res.setHeader('Location', `${pathname}/${query}`);
+    res.statusCode = REDIRECT_STATUS;
+    res.setHeader('Location', `${target}${query}`);
     res.end();
   }
   function install(server) {

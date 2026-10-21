@@ -9530,6 +9530,11 @@
       "source": "/:hub(.*-vs-.*)-for-:mod([a-z0-9-]+)/",
       "destination": "/:hub/",
       "statusCode": 308
+    },
+    {
+      "source": "/:path((?!api(?:/|$)|go(?:/|$)|_astro(?:/|$)|images(?:/|$)|old-category(?:/|$))(?!.*\\.).+[^/])",
+      "destination": "/:path/",
+      "statusCode": 308
     }
   ],
   "headers": [

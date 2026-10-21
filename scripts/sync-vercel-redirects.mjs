@@ -16,6 +16,8 @@
  * Every rule uses statusCode 308 and destinations already include a trailing
  * slash. Do not set vercel.json `trailingSlash`: Vercel inserts that redirect
  * ahead of `redirects`, so a non-slash legacy URL becomes a second hop.
+ * Slashless canonical pages are covered by TRAILING_SLASH_REDIRECT, appended
+ * last so it cannot intercept an earlier 308.
  *
  * Never emit `:param*` glued to a literal in the same path segment
  * (`/greenhouse-vs-:rest*`). That compiles locally and 502s on Vercel as
@@ -34,6 +36,8 @@ import {
   EXACT_PARENT_HUB_REDIRECTS,
   isUnsafeVercelRedirectSource,
   resolveMasterRedirect,
+  TRAILING_SLASH_REDIRECT,
+  trailingSlashRedirectPath,
 } from '../src/lib/master-redirects.ts';
 
 const require = createRequire(import.meta.url);
@@ -318,6 +322,75 @@ for (const pathname of ['/privacy', '/privacy/']) {
 const reportPath = path.join(ROOT, 'audit-report.json');
 if (fs.existsSync(reportPath)) {
   applyFlattenedRedirects(config, JSON.parse(fs.readFileSync(reportPath, 'utf8')));
+}
+
+config.redirects.push(TRAILING_SLASH_REDIRECT);
+if (config.redirects.length > 2048) {
+  throw new Error(`Redirect array has ${config.redirects.length} rules; Vercel allows 2048`);
+}
+if (config.trailingSlash != null) {
+  throw new Error('Do not set vercel.json trailingSlash; it runs before redirects and adds a hop');
+}
+
+const slashRule = config.redirects[config.redirects.length - 1];
+const strictSlash = pathToRegexp(slashRule.source, [], { strict: true, sensitive: true, end: true });
+const slashCases = [
+  ['/deel-vs-remote', '/deel-vs-remote/'],
+  ['/deel-vs-remote/', null],
+  ['/tools/eor-cost-calculator', '/tools/eor-cost-calculator/'],
+  ['/tools/eor-cost-calculator/', null],
+  ['/api/calculate-eor', null],
+  ['/go/deel', null],
+  ['/favicon.ico', null],
+  ['/images/logo.png', null],
+  ['/sitemap-0.xml', null],
+  ['/robots.txt', null],
+  ['/', null],
+  ['/old-category', null],
+];
+for (const [pathname, expected] of slashCases) {
+  const helper = trailingSlashRedirectPath(pathname);
+  const ruleMatches = strictSlash.test(pathname);
+  if (helper !== expected) {
+    throw new Error(`trailingSlashRedirectPath(${pathname}) → ${helper}, expected ${expected}`);
+  }
+  if (ruleMatches !== (expected != null)) {
+    throw new Error(`Trailing-slash redirect ${ruleMatches ? 'matched' : 'missed'} ${pathname}`);
+  }
+}
+
+const preservedLegacy = [
+  ['/deel-vs-remote-for-startups', '/deel-vs-remote/'],
+  ['/deel-vs-remote-for-startups/', '/deel-vs-remote/'],
+  ['/privacy', '/privacy-policy/'],
+  ['/privacy/', '/privacy-policy/'],
+  ['/remote-vs-deel', '/deel-vs-remote/'],
+];
+for (const [pathname, destination] of preservedLegacy) {
+  const hit = firstMatchingRedirect(pathname);
+  if (!hit || hit.statusCode !== 308 || hit.source === TRAILING_SLASH_REDIRECT.source) {
+    throw new Error(
+      `${pathname} must stay a one-hop 308 ahead of the trailing-slash rule, got ${hit?.source} → ${hit?.destination}`,
+    );
+  }
+  const personaHop = hit.destination === '/:hub/';
+  const exactHop = hit.destination === destination;
+  const captured = personaHop ? pathToRegexp(hit.source).exec(pathname)?.[1] : null;
+  if (!exactHop && !(personaHop && `/${captured}/` === destination)) {
+    throw new Error(
+      `${pathname} must 308 to ${destination}, got ${hit.source} → ${hit.destination}`,
+    );
+  }
+}
+const canonicalBare = firstMatchingRedirect('/deel-vs-remote');
+if (
+  !canonicalBare ||
+  canonicalBare.source !== TRAILING_SLASH_REDIRECT.source ||
+  canonicalBare.destination !== '/:path/'
+) {
+  throw new Error(
+    `/deel-vs-remote must 308 via the trailing-slash rule, got ${canonicalBare?.source} → ${canonicalBare?.destination}`,
+  );
 }
 
 fs.writeFileSync(VERCEL_PATH, `${JSON.stringify(config, null, 2)}\n`);

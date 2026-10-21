@@ -114,6 +114,38 @@ export function withTrailingSlash(pathname: string): string {
   return `${slashed}${query ? `?${query}` : ''}${hash ? `#${hash}` : ''}`;
 }
 
+/**
+ * Files, APIs, affiliate cloaks, image directories, and the gone prefix.
+ * A dot anywhere in the path is treated as a static file (`favicon.ico`,
+ * `sitemap-0.xml`, `site.webmanifest`).
+ */
+const TRAILING_SLASH_EXCLUDED =
+  /^\/(?:api|go|_astro|images)(?:\/|$)|^\/old-category(?:\/|$)/;
+
+/**
+ * Path to 308 when the request is a slashless HTML page. Null for `/`,
+ * paths that already end in `/`, files, and the excluded prefixes above.
+ */
+export function trailingSlashRedirectPath(pathname: string): string | null {
+  if (!pathname || pathname === '/' || pathname.endsWith('/')) return null;
+  if (pathname.includes('.')) return null;
+  if (TRAILING_SLASH_EXCLUDED.test(pathname)) return null;
+  return `${pathname}/`;
+}
+
+/**
+ * Last vercel.json redirect. Vercel compiles sources with strict trailing
+ * slashes, so `/deel-vs-remote/` does not match and cannot loop.
+ * Do not set `trailingSlash: true`: that redirect runs before `redirects`
+ * and turns every slashless legacy URL into a second hop.
+ */
+export const TRAILING_SLASH_REDIRECT = {
+  source:
+    '/:path((?!api(?:/|$)|go(?:/|$)|_astro(?:/|$)|images(?:/|$)|old-category(?:/|$))(?!.*\\.).+[^/])',
+  destination: '/:path/',
+  statusCode: REDIRECT_STATUS,
+};
+
 export function stripTrailingSlash(pathname: string): string {
   if (!pathname || pathname === '/') return '/';
   return pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;

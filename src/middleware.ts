@@ -8,10 +8,12 @@
  */
 import { defineMiddleware } from 'astro:middleware';
 import { goneHtmlResponse, isGonePath } from './lib/gone';
-import { REDIRECT_STATUS, SITE_ORIGIN, resolveMasterRedirect } from './lib/master-redirects';
-
-/** Static HTML routes that 404 without a trailing slash under Astro `always`. */
-const TRAILING_SLASH_PAGES = new Set(['/about', '/methodology']);
+import {
+  REDIRECT_STATUS,
+  SITE_ORIGIN,
+  resolveMasterRedirect,
+  trailingSlashRedirectPath,
+} from './lib/master-redirects';
 
 function redirectTo(url: URL) {
   return new Response(null, {
@@ -36,9 +38,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return redirectTo(location);
   }
 
-  if (TRAILING_SLASH_PAGES.has(pathname)) {
+  const slashed = trailingSlashRedirectPath(pathname);
+  if (slashed) {
     const location = new URL(context.url.href);
-    location.pathname = `${pathname}/`;
+    location.pathname = slashed;
     return redirectTo(location);
   }
 
