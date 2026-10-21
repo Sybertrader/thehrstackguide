@@ -6,7 +6,7 @@ import DataIntegrityBlock from '../components/DataIntegrityBlock.astro';
 const pageTitle = 'About - The HR Stack Guide | Independent HR Tech Analysis';
 const pageHeading = 'About The HR Stack Guide';
 const pageDescription =
-  'Independent B2B HR technology analysis, pricing calculation engines, and software procurement benchmarking.';
+  'The HR Stack Guide is an independent software evaluation publication for People Operations leaders, CFOs, and founders comparing EOR, payroll, ATS, and performance tools.';
 
 const founderName = 'Dave Storey';
 const founderLinkedIn = 'https://www.linkedin.com/in/dave-storey-0053b111/';
@@ -41,7 +41,7 @@ const aboutSchema = {
       '@type': 'Person',
       '@id': daveId,
       name: founderName,
-      jobTitle: 'Founder',
+      jobTitle: 'Founder & Principal Researcher',
       nationality: 'British',
       url: aboutUrl,
       image: founderImageUrl,
@@ -56,8 +56,17 @@ const aboutSchema = {
       legalName: 'Lonestar Assets LLC',
       url: siteUrl,
       logo: 'https://www.thehrstackguide.com/icon-512.png',
-      description: 'An independent B2B HR technology comparison engine and global hiring pricing calculator.',
+      description:
+        'An independent software evaluation publication covering Employer of Record, global payroll, applicant tracking, and performance management.',
       founder: { '@id': daveId },
+      email: 'contact@thehrstackguide.com',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '71-75 Shelton Street, Covent Garden',
+        addressLocality: 'London',
+        postalCode: 'WC2H 9JQ',
+        addressCountry: 'GB',
+      },
       sameAs: [...ORGANIZATION_SAME_AS],
     },
   ],
@@ -73,64 +82,141 @@ const aboutSchema = {
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(aboutSchema)} />
 
   <main class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-    <div class="space-y-8 text-slate-800">
+    <article class="space-y-10 text-slate-800">
       <header class="border-b border-slate-200 pb-6">
         <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">{pageHeading}</h1>
-        <p class="mt-2 text-xl text-slate-600">{pageDescription}</p>
       </header>
 
       <section class="space-y-4">
-        <h2 class="text-2xl font-bold text-slate-900">What We Do</h2>
         <p class="text-lg leading-relaxed">
-          <strong>The HR Stack Guide</strong> is an independent B2B HR technology evaluation platform. The HR Stack Guide provides live financial calculation tools for Global Payroll, Applicant Tracking Systems (ATS), and Employer of Record (EOR) software. The HR Stack Guide operates in the United Kingdom and serves an international audience of Chief Financial Officers, Chief People Officers, and HR Operations leaders.
+          The HR Stack Guide is an independent software evaluation publication designed to help People Operations leaders, CFOs, and founders build scalable, compliant, and cost-effective human resources technology stacks.
+        </p>
+        <p class="text-lg leading-relaxed">
+          We publish side-by-side software comparisons, total cost of ownership models, and buyer profile guides focused on three core pillars of modern workforce infrastructure: Employer of Record (EOR) and Global Payroll, Applicant Tracking Systems (ATS), and Continuous Performance Management.
         </p>
       </section>
 
       <section class="space-y-4">
-        <h2 class="text-2xl font-bold text-slate-900">About the Founder</h2>
+        <h2 class="text-2xl font-bold text-slate-900">Why We Built This</h2>
+        <p class="text-lg leading-relaxed">
+          Most B2B software review platforms rely on two monetization models that distort buyer decisions:
+        </p>
+        <ol class="list-decimal space-y-3 pl-6 text-lg leading-relaxed">
+          <li>
+            <strong>Pay-for-Placement Lead Generation:</strong> Category rankings and “top pick” badges are frequently auctioned to the highest bidder in pay-per-click bidding wars.
+          </li>
+          <li>
+            <strong>Unverified Volume Reviews:</strong> Aggregators incentivize entry-level users with gift cards to post short, superficial reviews that fail to evaluate contract lock-ins, API limits, or real-world onboarding friction.
+          </li>
+        </ol>
+        <p class="text-lg leading-relaxed">
+          Selecting HR software is fundamentally different from buying consumer tools. Choosing the wrong Employer of Record can expose a business to permanent establishment liabilities, intellectual property misassignment, and surprise currency conversion markups. Implementing the wrong ATS can stall hiring pipelines across an entire engineering organization.
+        </p>
+        <p class="text-lg leading-relaxed">
+          The HR Stack Guide was created to provide transparent, unvarnished trade-offs. We do not write surface-level product tours; we contrast technical architectures, contract renewal terms, and operational limitations across competing platforms.
+        </p>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-slate-900">What We Publish</h2>
+        <p class="text-lg leading-relaxed">
+          The public catalog is 60 side-by-side comparison hubs, three category guides, and an Employer of Record cost calculator. Each category guide links to every live hub in that pillar. Every comparison is a static page. The feature table, the cost model, and the buyer-profile verdict are in the first HTML response. They are written for that pair. A note written for one matchup is not reused as the verdict on another.
+        </p>
+        <ul class="list-disc space-y-3 pl-6 text-lg leading-relaxed">
+          <li>
+            <a href="/global-payroll-eor/" class="font-medium text-indigo-600 hover:underline">Global Payroll &amp; EOR</a> covers Deel, Remote, Rippling, Oyster HR, Gusto, Papaya Global, Multiplier, Payoneer Workforce Management, and Remote People.
+          </li>
+          <li>
+            <a href="/applicant-tracking-systems/" class="font-medium text-indigo-600 hover:underline">Applicant Tracking Systems</a> covers Ashby, Lever, Workable, Breezy HR, JazzHR, Recruitee, and BambooHR.
+          </li>
+          <li>
+            <a href="/performance-management/" class="font-medium text-indigo-600 hover:underline">Performance Management</a> covers PerformYard, Lattice, and Culture Amp.
+          </li>
+          <li>
+            The <a href="/tools/eor-cost-calculator/" class="font-medium text-indigo-600 hover:underline">EOR cost calculator</a> prices a hiring scenario from published platform fees, foreign-exchange assumptions, and deposit rules. The calculation logic is open source, and the data shape is published as an OpenAPI schema.
+          </li>
+          <li>
+            <a href="/how-to-build-an-hr-tech-stack/" class="font-medium text-indigo-600 hover:underline">How to Build an HR Tech Stack</a> walks a buyer from category choice to a shortlist before any demo is booked.
+          </li>
+        </ul>
+      </section>
+
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-slate-900">Editorial Leadership &amp; Background</h2>
+        <h3 id="dave-storey" class="text-xl font-semibold text-slate-900">Dave Storey — Founder &amp; Principal Researcher</h3>
         <div class="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
           <img
             src={founderImagePath}
-            alt="Dave Storey - Founder of The HR Stack Guide"
+            alt="Dave Storey, Founder and Principal Researcher of The HR Stack Guide"
             class="h-32 w-32 flex-shrink-0 rounded-full border-2 border-gray-100 object-cover shadow-md"
             width="128"
             height="128"
           />
-          <p class="text-lg leading-relaxed">
-            <strong>Dave Storey</strong> is a UK entrepreneur and technology strategist. Dave Storey founded The HR Stack Guide in 2026. Dave Storey specializes in B2B software evaluation, human resource management systems, and financial vendor modeling.
-          </p>
+          <div class="space-y-4">
+            <p class="text-lg leading-relaxed">
+              Dave Storey has spent over 15 years evaluating, architecting, and optimizing workplace technology and operational systems for high-growth companies. Having guided talent acquisition, people operations, and workforce planning across early-stage startups through international scale-ups, Dave established The HR Stack Guide to address the lack of transparent, data-driven software evaluation in the mid-market.
+            </p>
+            <p class="text-lg leading-relaxed">
+              His research focuses specifically on the unit economics of global hiring, cross-border compliance routing, and integration ergonomics between core HRIS platforms and modern sourcing tools.
+            </p>
+          </div>
         </div>
-      </section>
-
-      <section class="space-y-4">
-        <h2 class="text-2xl font-bold text-slate-900">Methodology &amp; Data Integrity</h2>
         <p class="text-lg leading-relaxed">
-          The HR Stack Guide collects verified software pricing data, fee schedules, and enterprise contract benchmarks directly from platform documentation and user disclosures. The HR Stack Guide does not accept financial compensation to alter scorecard verdicts or calculation outputs.
+          Every comparison framework, cost calculator algorithm, and buyer profile evaluation published on The HR Stack Guide is developed under Dave’s editorial direction and verified against live platform documentation and contract terms.
         </p>
-      </section>
-
-      <section class="space-y-4 border-t border-slate-200 pt-6">
-        <h2 class="text-2xl font-bold text-slate-900">Verified Entity Links</h2>
         <ul class="list-disc space-y-2 pl-6 font-medium text-indigo-600">
           <li>
             <a href={founderLinkedIn} target="_blank" rel="noopener noreferrer" class="hover:underline">
-              Dave Storey on LinkedIn (Founder)
+              Dave Storey on LinkedIn
             </a>
           </li>
           <li>
             <a href={brandLinkedIn} target="_blank" rel="noopener noreferrer" class="hover:underline">
-              The HR Stack Guide on LinkedIn (Organization)
-            </a>
-          </li>
-          <li>
-            <a href="/methodology/" class="hover:underline">
-              Data &amp; Scoring Methodology
+              The HR Stack Guide on LinkedIn
             </a>
           </li>
         </ul>
       </section>
 
+      <section class="space-y-4">
+        <h2 class="text-2xl font-bold text-slate-900">Our Editorial Independence Principles</h2>
+        <p class="text-lg leading-relaxed">
+          Our editorial integrity is the foundation of our publication:
+        </p>
+        <ul class="list-disc space-y-3 pl-6 text-lg leading-relaxed">
+          <li>
+            <strong>No Sponsored Rankings:</strong> Software vendors cannot purchase higher comparison scores, favorable feature verdicts, or placement on our recommendation shortlists.
+          </li>
+          <li>
+            <strong>Symmetrical Evaluation:</strong> Every tool in a comparison is subjected to the identical <a href="/methodology/" class="font-medium text-indigo-600 hover:underline">4-pillar evaluation criteria</a>, regardless of commercial relationships.
+          </li>
+          <li>
+            <strong>Affiliate Disclosure Transparency:</strong> The HR Stack Guide is funded through affiliate referral agreements with select software providers. If you click an outbound link to schedule a software demo or request pricing, we may receive compensation. This compensation never alters our quantitative scores, editorial verdicts, or listed platform limitations.
+          </li>
+        </ul>
+      </section>
+
+      <section class="space-y-4 border-t border-slate-200 pt-6">
+        <h2 class="text-2xl font-bold text-slate-900">Contact &amp; Corrections</h2>
+        <p class="text-lg leading-relaxed">
+          We conduct quarterly audits across our entire comparison catalog. If you represent a software vendor covered on our site and have updated pricing tiers, revised feature sets, or compliance changes to report, contact our editorial team directly:
+        </p>
+        <ul class="list-disc space-y-2 pl-6 text-lg leading-relaxed">
+          <li>
+            <strong>Editorial Inquiries &amp; Corrections:</strong>{' '}
+            <a href="mailto:editorial@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">editorial@thehrstackguide.com</a>
+          </li>
+          <li>
+            <strong>General Operations:</strong>{' '}
+            <a href="mailto:contact@thehrstackguide.com" class="font-medium text-indigo-600 hover:underline">contact@thehrstackguide.com</a>
+          </li>
+          <li>
+            <strong>Mailing Address:</strong> The HR Stack Guide, 71-75 Shelton Street, Covent Garden, London, WC2H 9JQ, United Kingdom
+          </li>
+        </ul>
+      </section>
+
       <DataIntegrityBlock />
-    </div>
+    </article>
   </main>
 </Layout>
