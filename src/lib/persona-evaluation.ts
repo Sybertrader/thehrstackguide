@@ -614,8 +614,10 @@ function fillVendorNames(template: string, comparison: Comparison): string {
   return template.replaceAll('{A}', comparison.tool_a_name).replaceAll('{B}', comparison.tool_b_name);
 }
 
-/** Tab verdict is this row's CSV `winner_reason`, including generated "Based on…" copy. */
+/** Tab verdict is this row's CSV `hr_stack_take`. `winner_reason` is only the empty-field fallback. */
 function segmentTabVerdict(comparison: Comparison): string {
+  const take = comparison.hr_stack_take?.trim() ?? '';
+  if (take) return take;
   return comparison.winner_reason?.trim() ?? '';
 }
 
