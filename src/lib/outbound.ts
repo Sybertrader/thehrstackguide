@@ -111,9 +111,15 @@ export function isManualLeadBrand(toolId: string): boolean {
   return (MANUAL_LEAD_BRANDS as readonly string[]).includes(id) && isLiveVendorId(id);
 }
 
-/** Must match ManualLeadModal default `modalId` (spaces become hyphens). */
-export function manualLeadModalId(brandName: string): string {
-  return `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`;
+/** Single lead-capture dialog, mounted once in the root layout. */
+export const LEAD_MODAL_ID = 'lead-modal';
+
+/**
+ * Every manual-lead CTA targets the layout singleton. The click handler
+ * copies the clicked vendor onto that dialog, so the brand argument is unused.
+ */
+export function manualLeadModalId(_brandName = ''): string {
+  return LEAD_MODAL_ID;
 }
 
 export function normalizeVendorDomain(value: string): string {

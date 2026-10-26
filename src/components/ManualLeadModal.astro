@@ -1,8 +1,9 @@
 ---
-import { nonAffiliateVendorHomeUrl, vendorLeadModalHeading } from '../lib/outbound';
+import { LEAD_MODAL_ID, nonAffiliateVendorHomeUrl, vendorLeadModalHeading } from '../lib/outbound';
+import { loadToolProfiles } from '../lib/tools';
 
 interface Props {
-  brandName: string;
+  brandName?: string;
   vendorId?: string;
   modalId?: string;
   partnerLandingUrl?: string;
@@ -11,17 +12,21 @@ interface Props {
 }
 
 const {
-  brandName,
+  brandName = '',
   vendorId = '',
-  // Must match [slug].astro / [...slug].astro manualLeadModalId() - spaces become hyphens.
-  modalId = `lead-modal-${brandName.toLowerCase().replace(/\s+/g, '-')}`,
+  // Every CTA targets this singleton. Vendor identity is copied from the button on open.
+  modalId = LEAD_MODAL_ID,
   partnerLandingUrl = '',
   formActionUrl = '/api/leads',
 } = Astro.props;
 
-const resolvedVendorId = vendorId || brandName.toLowerCase().replace(/\s+/g, '-');
-const headingText = vendorLeadModalHeading(brandName);
-const vendorHomeUrl = nonAffiliateVendorHomeUrl(resolvedVendorId);
+const resolvedVendorId = vendorId || (brandName ? brandName.toLowerCase().replace(/\s+/g, '-') : '');
+const headingText = brandName ? vendorLeadModalHeading(brandName) : 'Get Custom Pricing';
+const vendorHomeUrl = resolvedVendorId ? nonAffiliateVendorHomeUrl(resolvedVendorId) : '';
+const partnerUrls: Record<string, string> = {};
+for (const [id, profile] of Object.entries(loadToolProfiles())) {
+  if (profile.partner_landing_url) partnerUrls[id] = profile.partner_landing_url;
+}
 
 // Needs the PUBLIC_ prefix to survive into the browser bundle. Falls back to the
 // same key api/leads.js uses so a deploy without the env var still collects
@@ -35,9 +40,10 @@ const WEB3FORMS_KEY =
   id={modalId}
   class="modal-backdrop fixed inset-0 z-[9999] hidden bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
   aria-hidden="true"
-  data-vendor-id={resolvedVendorId}
-  data-brand-name={brandName}
-  data-partner-landing-url={partnerLandingUrl}
+  data-vendor-id={resolvedVendorId || undefined}
+  data-brand-name={brandName || undefined}
+  data-partner-landing-url={partnerLandingUrl || undefined}
+  data-partner-urls={JSON.stringify(partnerUrls)}
   data-vendor-url={vendorHomeUrl || undefined}
 >
   <div class="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 text-left my-auto z-[10000]">
@@ -64,6 +70,7 @@ const WEB3FORMS_KEY =
         action={formActionUrl}
         method="POST"
         class="space-y-4"
+        data-lead-form
         data-access-key={WEB3FORMS_KEY}
       >
         <input type="hidden" name="vendorId" value={resolvedVendorId} />
@@ -209,7 +216,7 @@ const WEB3FORMS_KEY =
         </button>
 
         <p class="text-xs text-gray-400 mt-3 text-center">
-          We respect your <a href="/privacy/" target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-500">privacy</a>. Your information is encrypted and shared exclusively with an authorized <span class="lead-modal-brand">{brandName}</span> representative to prepare your quote.
+          We respect your <a href="/privacy/" target="_blank" rel="noopener noreferrer" class="underline hover:text-blue-500">privacy</a>. Your information is encrypted and shared exclusively with an authorized <span class="lead-modal-brand">{brandName || 'vendor'}</span> representative to prepare your quote.
         </p>
       </form>
 
@@ -232,406 +239,8 @@ const WEB3FORMS_KEY =
   </div>
 </div>
 
-<script is:inline>
-  (function initModalHandlers() {
-    if (window.__leadModalScriptInitialized) return;
-    window.__leadModalScriptInitialized = true;
+<script>
+  import { initLeadModal } from '../scripts/lead-modal';
 
-    var blockedDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com'];
-
-    var PERFORMYARD_ZAPIER_WEBHOOK = 'https://hooks.zapier.com/hooks/catch/17923801/46vtmid/';
-    var PERFORMYARD_REDIRECT_URL = 'https://www.performyard.com/';
-
-    // Client-side Web3Forms (same payload as Lever / JazzHR / Culture Amp).
-    // PerformYard is also listed so it can send the email after Zapier.
-    // Remaining non-affiliate vendors use this path too, then POST /api/leads
-    // and redirect. Zapier stays gated on vendorId === 'performyard'.
-    var EMAIL_SEND_VENDORS = [
-      'lever',
-      'jazzhr',
-      'culture-amp',
-      'performyard',
-      'workable',
-    ];
-    var REQUEST_DEMO_VENDORS = [
-      'workable',
-    ];
-    var NON_AFFILIATE_HOME_URLS = {
-      workable: 'https://www.workable.com',
-    };
-    var WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
-
-    function trackGenerateLead(vendorId) {
-      if (typeof window.gtag === 'function' && vendorId) {
-        window.gtag('event', 'generate_lead', {
-          vendor_id: vendorId,
-          page_location: window.location.pathname,
-        });
-      }
-    }
-
-    /**
-     * Web3Forms supports browser-side posting, so this is a normal CORS fetch
-     * the caller can await. Pass keepalive when a redirect follows immediately,
-     * otherwise the navigation cancels the request.
-     */
-    function sendWeb3FormsEmail(payload, keepalive) {
-      return fetch(WEB3FORMS_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(payload),
-        keepalive: Boolean(keepalive),
-      });
-    }
-
-    /** Plain object of every named field on the submitted modal form. */
-    function payloadFromForm(formElement) {
-      var formData = new FormData(formElement);
-      return Object.fromEntries(formData.entries());
-    }
-
-    function splitFullName(value) {
-      var parts = String(value || '').replace(/\s+/g, ' ').trim().split(' ').filter(Boolean);
-      return {
-        firstName: parts[0] || '',
-        lastName: parts.slice(1).join(' '),
-      };
-    }
-
-    function applyClickedVendorToModal(modal, vendorId, vendorName, vendorUrl) {
-      if (vendorId) {
-        modal.setAttribute('data-vendor-id', vendorId);
-        var vendorInput = modal.querySelector('input[name="vendorId"]');
-        if (vendorInput) vendorInput.value = vendorId;
-      }
-      if (vendorName) {
-        modal.setAttribute('data-brand-name', vendorName);
-        var brandInput = modal.querySelector('input[name="brandName"]');
-        var targetInput = modal.querySelector('input[name="target_software"]');
-        if (brandInput) brandInput.value = vendorName;
-        if (targetInput) targetInput.value = vendorName;
-        var brandEls = modal.querySelectorAll('.lead-modal-brand');
-        for (var i = 0; i < brandEls.length; i++) {
-          brandEls[i].textContent = vendorName;
-        }
-        var heading = modal.querySelector('.lead-modal-heading');
-        if (heading) heading.textContent = 'Get Custom ' + vendorName + ' Pricing';
-      }
-      if (vendorUrl) {
-        modal.setAttribute('data-vendor-url', vendorUrl);
-      }
-
-      var form = modal.querySelector('form');
-      var successMessage = modal.querySelector('.success-message');
-      if (form) form.classList.remove('hidden');
-      if (successMessage) successMessage.classList.add('hidden');
-    }
-
-    document.addEventListener('click', function(e) {
-      var target = e.target;
-      if (!target || !target.closest) return;
-
-      var openBtn = target.closest('[data-modal-target], .open-modal-btn, .open-lead-modal');
-      var closeBtn = target.closest('.close-modal-btn');
-
-      if (openBtn) {
-        var clickedVendorId = (openBtn.getAttribute('data-vendor-id') || '').toLowerCase().trim();
-        var clickedVendorName = (openBtn.getAttribute('data-vendor-name') || '').trim();
-        var clickedVendorUrl = (openBtn.getAttribute('data-vendor-url') || '').trim();
-
-        // Prefer explicit data attribute - avoid innerText (forces layout / hurts INP).
-        var modalId = openBtn.getAttribute('data-modal-target');
-        if (!modalId && clickedVendorName) {
-          modalId = 'lead-modal-' + clickedVendorName.toLowerCase().replace(/\s+/g, '-');
-        }
-        if (!modalId) {
-          var label = (openBtn.getAttribute('aria-label') || openBtn.textContent || '').toLowerCase();
-          if (label.indexOf('lever') !== -1) modalId = 'lead-modal-lever';
-          else if (label.indexOf('jazzhr') !== -1) modalId = 'lead-modal-jazzhr';
-          else if (label.indexOf('culture amp') !== -1) modalId = 'lead-modal-culture-amp';
-          else if (label.indexOf('performyard') !== -1) modalId = 'lead-modal-performyard';
-        }
-
-        if (modalId) {
-          var modal = document.getElementById(modalId);
-          if (modal) {
-            e.preventDefault();
-            // Teleport to body so fixed positioning is never trapped by
-            // ancestor overflow/transform stacking contexts.
-            if (modal.parentElement !== document.body) {
-              document.body.appendChild(modal);
-            }
-            applyClickedVendorToModal(modal, clickedVendorId, clickedVendorName, clickedVendorUrl);
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-          }
-        }
-        return;
-      }
-
-      if (closeBtn) {
-        var activeModal = closeBtn.closest('.modal-backdrop');
-        if (activeModal) {
-          activeModal.classList.add('hidden');
-          document.body.style.overflow = '';
-        }
-        return;
-      }
-
-      if (target.classList && target.classList.contains('modal-backdrop')) {
-        target.classList.add('hidden');
-        document.body.style.overflow = '';
-      }
-    }, { passive: false });
-
-    document.addEventListener('submit', async function(event) {
-      var form = event.target;
-      if (!form || !form.id || form.id.indexOf('form-lead-modal-') !== 0) return;
-
-      event.preventDefault();
-
-      var emailInput = form.querySelector('.work-email-input');
-      var emailError = form.querySelector('.email-error');
-      var fullNameInput = form.querySelector('.full-name-input');
-      var fullNameError = form.querySelector('.fullname-error');
-      var timelineSelect = form.querySelector('.timeline-select');
-      var timelineError = form.querySelector('.timeline-error');
-      var submitBtn = form.querySelector('.submit-btn');
-      var btnText = form.querySelector('.btn-text');
-      var spinner = form.querySelector('.spinner');
-      var successMessage = form.closest('.p-6') ? form.closest('.p-6').querySelector('.success-message') : null;
-      var backdrop = form.closest('.modal-backdrop');
-
-      var fullName = fullNameInput ? String(fullNameInput.value || '').replace(/\s+/g, ' ').trim() : '';
-      if (fullNameInput) fullNameInput.value = fullName;
-      if (!fullName || fullName.length < 2) {
-        if (fullNameError) fullNameError.classList.remove('hidden');
-        if (fullNameInput) {
-          fullNameInput.classList.add('border-red-500');
-          fullNameInput.focus();
-        }
-        return;
-      }
-      if (fullNameError) fullNameError.classList.add('hidden');
-      if (fullNameInput) fullNameInput.classList.remove('border-red-500');
-
-      var timeline = timelineSelect ? String(timelineSelect.value || '').trim() : '';
-      if (!timeline) {
-        if (timelineError) timelineError.classList.remove('hidden');
-        if (timelineSelect) {
-          timelineSelect.classList.add('border-red-500');
-          timelineSelect.focus();
-        }
-        return;
-      }
-      if (timelineError) timelineError.classList.add('hidden');
-      if (timelineSelect) timelineSelect.classList.remove('border-red-500');
-
-      if (emailInput) {
-        var emailValue = emailInput.value.toLowerCase().trim();
-        var domain = emailValue.split('@')[1];
-
-        if (blockedDomains.indexOf(domain) !== -1) {
-          if (emailError) emailError.classList.remove('hidden');
-          emailInput.classList.add('border-red-500');
-          return;
-        } else {
-          if (emailError) emailError.classList.add('hidden');
-          emailInput.classList.remove('border-red-500');
-        }
-      }
-
-      if (submitBtn) submitBtn.disabled = true;
-      if (btnText) btnText.classList.add('hidden');
-      if (spinner) spinner.classList.remove('hidden');
-
-      // Read through FormData scoped to the submitted form: comparison pages
-      // render two modal instances, so a document-wide id lookup could pick up
-      // the other vendor's fields.
-      var fields = payloadFromForm(form);
-      var fullNameValue = String(fields.fullName || fullName || '').replace(/\s+/g, ' ').trim();
-      var nameParts = splitFullName(fullNameValue);
-      var firstName = nameParts.firstName;
-      var lastName = nameParts.lastName;
-      var vendorId = String(fields.vendorId || (backdrop && backdrop.getAttribute('data-vendor-id')) || '').trim();
-      var vendor = vendorId.toLowerCase();
-
-      if (EMAIL_SEND_VENDORS.indexOf(vendor) !== -1) {
-        var accessKey = form.dataset.accessKey || '';
-        if (!accessKey) {
-          console.error('Web3Forms access key missing - set PUBLIC_WEB3FORMS_KEY. Lead will not be emailed.');
-        }
-
-        var company = String(fields.company || '').trim();
-        var emailPayload = {
-          access_key: accessKey,
-          subject: 'New Lead: ' + vendor.toUpperCase() + ' - ' + company,
-          from_name: 'The HR Stack Guide',
-          firstName: firstName,
-          lastName: lastName,
-          fullName: fullNameValue,
-          email: String(fields.email || '').trim(),
-          company: company,
-          jobTitle: String(fields.jobTitle || '').trim(),
-          employeeCount: String(fields.employeeCount || '').trim(),
-          region: String(fields.region || '').trim(),
-          phone: String(fields.phone || '').trim(),
-          requirements: String(fields.requirements || '').trim(),
-          vendor: vendor,
-        };
-
-        // PerformYard only: Zapier Catch Hook. Other modal vendors never enter.
-        if (vendor === 'performyard') {
-          const rawData = Object.fromEntries(new FormData(event.target).entries());
-          const { vendorId, target_software, partnerLandingUrl, brandName, ...cleanPayload } = rawData;
-          console.log('PerformYard Zapier payload', cleanPayload);
-
-          try {
-            await fetch(PERFORMYARD_ZAPIER_WEBHOOK, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'text/plain;charset=utf-8',
-              },
-              body: JSON.stringify(Object.assign({}, cleanPayload, {
-                firstName: firstName,
-                lastName: lastName,
-                fullName: fullNameValue,
-              })),
-            });
-
-            sendWeb3FormsEmail(emailPayload, true).catch(function (err) {
-              console.error('Web3Forms notification failed', err);
-            });
-            trackGenerateLead(vendor);
-          } catch (zapErr) {
-            console.error('PerformYard Zapier webhook failed', zapErr);
-          } finally {
-            if (backdrop) {
-              backdrop.classList.add('hidden');
-              document.body.style.overflow = '';
-            }
-            window.location.href = PERFORMYARD_REDIRECT_URL;
-          }
-          return;
-        }
-
-        var isNonAffiliateLead = REQUEST_DEMO_VENDORS.indexOf(vendor) !== -1;
-        var targetVendorUrl =
-          (backdrop && backdrop.getAttribute('data-vendor-url')) ||
-          NON_AFFILIATE_HOME_URLS[vendor] ||
-          '';
-
-        // Lever / JazzHR / Culture Amp / the nine non-affiliate vendors:
-        // identical Web3Forms payload. Non-affiliate leads then log to
-        // /api/leads and redirect; the original three stay on the success UI.
-        try {
-          var emailResponse = await sendWeb3FormsEmail(emailPayload, isNonAffiliateLead);
-          if (!emailResponse.ok) {
-            console.error('Web3Forms notification rejected', emailResponse.status);
-          }
-        } catch (err) {
-          // Deliberately swallowed: a delivery problem must not block the
-          // visitor. Failures surface in the console and in Web3Forms.
-          console.error('Web3Forms notification failed', err);
-        }
-
-        if (isNonAffiliateLead) {
-          try {
-            await fetch(form.action || '/api/leads', {
-              method: 'POST',
-              headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                vendorId: vendorId,
-                brandName: String(fields.brandName || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
-                firstName: firstName,
-                lastName: lastName,
-                fullName: fullNameValue,
-                workEmail: String(fields.email || '').trim(),
-                companyName: company,
-                jobTitle: String(fields.jobTitle || '').trim(),
-                headcount: String(fields.employeeCount || '').trim(),
-                region: String(fields.region || '').trim(),
-                phone: String(fields.phone || '').trim(),
-                needs: String(fields.requirements || '').trim(),
-                partnerLandingUrl: targetVendorUrl || null,
-                clientNotified: true,
-                source: 'The HR Stack Guide',
-              }),
-              keepalive: true,
-            });
-          } catch (logErr) {
-            console.error('Lead API log failed', logErr);
-          }
-
-          trackGenerateLead(vendor);
-          if (targetVendorUrl) {
-            window.location.href = targetVendorUrl;
-            return;
-          }
-        } else {
-          trackGenerateLead(vendor);
-        }
-
-        form.classList.add('hidden');
-        if (successMessage) successMessage.classList.remove('hidden');
-        if (submitBtn) submitBtn.disabled = false;
-        if (btnText) btnText.classList.remove('hidden');
-        if (spinner) spinner.classList.add('hidden');
-        return;
-      }
-
-      try {
-        var payload = {
-          vendorId: vendorId,
-          brandName: String(fields.brandName || (backdrop && backdrop.getAttribute('data-brand-name')) || '').trim(),
-          firstName: firstName,
-          lastName: lastName,
-          fullName: fullNameValue,
-          workEmail: String(fields.email || '').trim(),
-          companyName: String(fields.company || '').trim(),
-          jobTitle: String(fields.jobTitle || '').trim(),
-          headcount: String(fields.employeeCount || '').trim(),
-          region: String(fields.region || '').trim(),
-          phone: String(fields.phone || '').trim(),
-          needs: String(fields.requirements || '').trim(),
-          partnerLandingUrl:
-            String(fields.partnerLandingUrl || (backdrop && backdrop.getAttribute('data-partner-landing-url')) || '').trim() ||
-            null,
-          source: 'The HR Stack Guide',
-        };
-
-        var response = await fetch(form.action || '/api/leads', {
-          method: 'POST',
-          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        var result = null;
-        try {
-          result = await response.json();
-        } catch (_) {
-          result = null;
-        }
-
-        if (response.ok) {
-          trackGenerateLead(vendorId);
-          var redirectUrl = result && result.redirectUrl ? String(result.redirectUrl) : '';
-          if (redirectUrl) {
-            window.location.href = redirectUrl;
-            return;
-          }
-          form.classList.add('hidden');
-          if (successMessage) successMessage.classList.remove('hidden');
-        } else {
-          console.error('Lead submission rejected', response.status);
-        }
-      } catch (err) {
-        console.error('Lead submission failed', err);
-      } finally {
-        if (submitBtn) submitBtn.disabled = false;
-        if (btnText) btnText.classList.remove('hidden');
-        if (spinner) spinner.classList.add('hidden');
-      }
-    });
-  })();
+  initLeadModal();
 </script>

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import Footer from '../components/Footer.astro';
+import ManualLeadModal from '../components/ManualLeadModal.astro';
 import BaseHead from '../components/BaseHead.astro';
 import { ORGANIZATION_SAME_AS } from '../lib/organization';
 import JsonLdSchema from '../components/SEO/JsonLdSchema.astro';
@@ -208,6 +209,7 @@ const organizationSchema = {
 
     <Footer />
     <SpeedInsights />
+    <ManualLeadModal />
 
     <a
       id="js-scorecard-download"

@@ -13,7 +13,6 @@ import type { Comparison, FeatureMatrixEntry } from '../lib/comparisons';
 import { isComparisonHubSlug, comparisonHubSlug, categoryHubNav } from '../lib/comparison-routes';
 import { comparisonVendorsAreLive, getToolProfile } from '../lib/tools';
 import { isManualLeadBrand, manualLeadModalId, resolveVendorOutboundHref, vendorCtaLabel } from '../lib/outbound';
-import ManualLeadModal from '../components/ManualLeadModal.astro';
 import StickyMobileCta from '../components/StickyMobileCta.astro';
 import PersonaEvaluation from '../components/PersonaEvaluation.astro';
 import PersonaEvaluationMatrix from '../components/PersonaEvaluationMatrix.astro';
@@ -40,8 +39,8 @@ import {
 } from '../lib/persona-evaluation';
 
 /**
- * Vendors whose CTAs open the lead capture modal (see
- * src/components/ManualLeadModal.astro) instead of linking out.
+ * Vendors whose CTAs open the lead capture modal (mounted once in
+ * src/layouts/Layout.astro) instead of linking out.
  * `isManualLeadBrand` in src/lib/outbound.ts is the allowlist.
  * EMAIL_SEND_VENDORS in the modal covers Lever, JazzHR, Culture Amp,
  * PerformYard, and the nine non-affiliate brands (Web3Forms). The nine
@@ -600,23 +599,6 @@ const heroLogoPreloads = (
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
   <meta slot="head" property="og:updated_time" content={lastUpdatedIso} />
   <meta slot="head" name="revised" content={lastUpdatedIso} />
-
-  {toolAIsManualLead && (
-    <ManualLeadModal
-      brandName={comparison.tool_a_name}
-      vendorId={comparison.tool_a_id}
-      modalId={toolAModalId}
-      partnerLandingUrl={getToolProfile(comparison.tool_a_id)?.partner_landing_url ?? ''}
-    />
-  )}
-  {toolBIsManualLead && (
-    <ManualLeadModal
-      brandName={comparison.tool_b_name}
-      vendorId={comparison.tool_b_id}
-      modalId={toolBModalId}
-      partnerLandingUrl={getToolProfile(comparison.tool_b_id)?.partner_landing_url ?? ''}
-    />
-  )}
 
   <main id="main-content" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       <HeroVariantA
