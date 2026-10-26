@@ -26,7 +26,7 @@ const cards = [vendorA, vendorB];
       cards.map((vendor) => (
         <article class="rounded-xl border border-slate-200 bg-white p-6">
           <header class="flex items-center gap-3">
-            <VendorLogo src={vendor.logo} alt="" name={vendor.name} badgeColor={vendor.badgeColor} size={36} />
+            <VendorLogo src={vendor.logo} alt={`${vendor.name} logo`} name={vendor.name} badgeColor={vendor.badgeColor} size={36} />
             <div class="min-w-0">
               <h3 class="text-lg font-semibold text-slate-900">{vendor.name}</h3>
               {

@@ -77,6 +77,16 @@ export default defineConfig({
   },
   vite: {
     plugins: [trailingSlashPageRedirects(), tailwindcss()],
+    build: {
+      // Astro inlines script chunks under 4 kB into the HTML. That trips the
+      // indexing audit. Keep page scripts as external files; other assets
+      // stay on Vite's 4 kB default.
+      assetsInlineLimit(filePath, content) {
+        if (String(filePath).includes('astro_type_script')) return false;
+        const size = content instanceof Uint8Array ? content.byteLength : Buffer.byteLength(content ?? '');
+        return size < 4096;
+      },
+    },
   },
 
   integrations: [

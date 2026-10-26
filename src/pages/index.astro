@@ -205,7 +205,7 @@ const searchData = JSON.stringify({ tools: searchTools, comparisons: searchCompa
 const pageTitle = 'HR Software Comparisons & Buyer Guides | The HR Stack Guide';
 const pageHeading = 'Data-Driven HR Software Comparisons & Buyer Guides';
 const pageDescription =
-  'Compare B2B HR software, global EOR pricing, and payroll platform fees side-by-side. Use our interactive headcount cost calculator to model total vendor fees without demo call surprises.';
+  'Compare B2B HR software, global EOR pricing, and payroll platform fees side by side. Model headcount costs before you book a vendor demo.';
 
 const homepageSchema = {
   '@context': 'https://schema.org',
@@ -541,133 +541,9 @@ const homepageSchema = {
   <script type="application/json" id="hero-search-data" set:html={searchData} />
 
   <script>
-    function escapeHtml(value: string): string {
-      const entities: Record<string, string> = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;',
-      };
-      return value.replace(/[&<>"']/g, (char) => entities[char] ?? char);
-    }
+    import { initHeroSearch } from '../scripts/hero-search';
 
-    interface SearchTool {
-      name: string;
-      href: string;
-    }
-    interface SearchComparison {
-      slug: string;
-      a: string;
-      b: string;
-    }
-    interface SearchData {
-      tools: SearchTool[];
-      comparisons: SearchComparison[];
-    }
-
-    function initHeroSearch() {
-      const dataEl = document.getElementById('hero-search-data');
-      const input = document.getElementById('hero-search-input') as HTMLInputElement | null;
-      const results = document.getElementById('hero-search-results');
-      const form = document.getElementById('hero-search-form') as HTMLFormElement | null;
-      if (!dataEl?.textContent || !input || !results || !form) return;
-
-      let data: SearchData;
-      try {
-        data = JSON.parse(dataEl.textContent) as SearchData;
-      } catch {
-        return;
-      }
-
-      function findMatches(query: string) {
-        const q = query.trim().toLowerCase();
-        if (!q) return { tools: [] as SearchTool[], comparisons: [] as SearchComparison[], exactTool: null as SearchTool | null };
-
-        const exactTool = data.tools.find((tool) => tool.name.toLowerCase() === q) ?? null;
-        const tools = data.tools.filter((tool) => tool.name.toLowerCase().includes(q)).slice(0, 4);
-        const comparisons = data.comparisons
-          .filter((c) => c.a.toLowerCase().includes(q) || c.b.toLowerCase().includes(q))
-          .slice(0, 5);
-
-        return { tools, comparisons, exactTool };
-      }
-
-      function render(query: string) {
-        if (!results) return;
-        const { tools, comparisons } = findMatches(query);
-
-        if (!tools.length && !comparisons.length) {
-          results.classList.add('hidden');
-          results.innerHTML = '';
-          return;
-        }
-
-        let html = '';
-        if (tools.length) {
-          html += '<p class="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Software</p>';
-          html += tools
-            .map(
-              (tool) =>
-                `<a href="${tool.href}" class="flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-700"><span>${escapeHtml(tool.name)}</span><span class="text-xs text-slate-400">View category</span></a>`
-            )
-            .join('');
-        }
-        if (comparisons.length) {
-          html += '<p class="px-3 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Comparisons</p>';
-          html += comparisons
-            .map(
-              (c) =>
-                `<a href="/${c.slug}/" class="flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-700"><span>${escapeHtml(c.a)} vs ${escapeHtml(c.b)}</span></a>`
-            )
-            .join('');
-        }
-
-        results.innerHTML = html;
-        results.classList.remove('hidden');
-      }
-
-      let debounceTimer = 0;
-      input.addEventListener('input', () => {
-        window.clearTimeout(debounceTimer);
-        debounceTimer = window.setTimeout(() => render(input.value), 120);
-      });
-      input.addEventListener('focus', () => {
-        if (input.value) render(input.value);
-      });
-      document.addEventListener('click', (event) => {
-        if (!form.contains(event.target as Node)) {
-          results?.classList.add('hidden');
-        }
-      });
-
-      // Supports the WebSite/SearchAction structured data: when a visitor
-      // arrives via a Google Sitelinks Searchbox (e.g. "/?q=deel"), prefill
-      // and run the search immediately instead of landing on an empty box.
-      const initialQuery = new URLSearchParams(window.location.search).get('q');
-      if (initialQuery) {
-        input.value = initialQuery;
-        render(initialQuery);
-      }
-
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const query = input.value.trim();
-        if (!query) return;
-
-        const { tools, comparisons, exactTool } = findMatches(query);
-        if (exactTool) {
-          window.location.href = exactTool.href;
-        } else if (comparisons.length) {
-          window.location.href = `/${comparisons[0].slug}/`;
-        } else if (tools.length) {
-          window.location.href = tools[0].href;
-        }
-      });
-    }
-
-    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-      initHeroSearch();
-    }
+    initHeroSearch();
   </script>
+
 </Layout>

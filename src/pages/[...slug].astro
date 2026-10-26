@@ -702,26 +702,8 @@ const heroLogoPreloads = (
     />
 
     <script>
-      // Client-only: Astro scripts never execute during SSR, and `track()`
-      // itself no-ops outside the browser, so this is safe on the server.
-      import { track } from '@vercel/analytics';
+      import { initOutboundAnalytics } from '../scripts/outbound-analytics';
 
-      if (typeof window !== 'undefined' && typeof document !== 'undefined') {
-        document.querySelectorAll('.js-affiliate-cta[data-track-vendor], .js-affiliate-cta[data-vendor-name]').forEach((link) => {
-          link.addEventListener('click', () => {
-            const vendor =
-              link.getAttribute('data-vendor-name') || link.getAttribute('data-track-vendor');
-            const location =
-              link.getAttribute('data-cta-location') ||
-              link.getAttribute('data-track-location') ||
-              'unknown';
-            const url = link.getAttribute('href');
-
-            if (!vendor || !url) return;
-
-            track('Outbound Click', { vendor, location, url });
-          });
-        });
-      }
+      initOutboundAnalytics();
     </script>
 </Layout>

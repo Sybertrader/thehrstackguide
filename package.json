@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "seo-audit": "node scripts/seo-audit.mjs",
+    "audit:indexing": "node --experimental-strip-types scripts/technical-seo-audit.mjs",
     "audit:technical": "node scripts/audit-technical-health.mjs",
     "audit-dist": "node scripts/audit-dist-duplicates.js",
     "purge-vendors": "node scripts/purge-vendors.mjs"

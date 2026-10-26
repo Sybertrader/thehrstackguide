@@ -193,21 +193,8 @@ const primaryBClass =
   </div>
 </section>
 
-<script define:vars={{ scorecardHref: SCORECARD_HREF, scorecardName: SCORECARD_FILENAME }}>
-  function attachScorecardDownload() {
-    const buttons = document.querySelectorAll('[data-download-scorecard]');
-    buttons.forEach((btn) => {
-      if (btn.dataset.scorecardBound === 'true') return;
-      btn.dataset.scorecardBound = 'true';
-      btn.addEventListener('click', () => {
-        const link = document.createElement('a');
-        link.href = scorecardHref;
-        link.download = scorecardName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      });
-    });
-  }
-  attachScorecardDownload();
+<script>
+  import { initScorecardDownload } from '../scripts/scorecard';
+
+  initScorecardDownload();
 </script>

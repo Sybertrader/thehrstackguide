@@ -70,6 +70,8 @@ function firstInRange(candidates: string[]): string {
 /** Prefer the intent-led candidate; only shorten when the string is too long for SERPs. */
 function preferIntentTitle(candidates: string[]): string {
   const unique = [...new Set(candidates.filter(Boolean))];
+  const inAuditBand = unique.find((title) => title.length >= 30 && title.length <= 65);
+  if (inAuditBand) return inAuditBand;
   const fit = unique.find((title) => title.length <= TITLE_SOFT_MAX);
   return fit ?? unique.reduce((shortest, title) => (title.length < shortest.length ? title : shortest));
 }
